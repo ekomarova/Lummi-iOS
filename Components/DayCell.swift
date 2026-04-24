@@ -1,58 +1,45 @@
+//
+//  Calendar Cell
+//
+
+
 import SwiftUI
 
 struct DayCell: View {
+    @EnvironmentObject var tm: ThemeManager
     let day: Int
     let isFilled: Bool
     let isToday: Bool
     let isSelected: Bool
     
-    private var today: Int { Calendar.current.component(.day, from: Date()) }
+    private var theme: AppTheme { tm.currentTheme }
     
     var body: some View {
-        VStack(spacing: 6) {
-            ZStack {
-                if isSelected {
-                    Circle()
-                        .fill(Color.white.opacity(0.1))
-                        .frame(width: 40, height: 40)
-                }
-                
-                if isFilled {
-                    ZStack {
-                        Image(systemName: "star.fill")
-                            .font(.system(size: 55))
-                            .foregroundColor(.yellow.opacity(0.1))
-                            .blur(radius: 25)
-                        
-                        Image(systemName: "star.fill")
-                            .font(.system(size: 42))
-                            .foregroundColor(.yellow.opacity(0.25))
-                            .blur(radius: 8)
-                        
-                        Image(systemName: "star.fill")
-                            .font(.system(size: 32))
-                            .foregroundColor(Color(red: 1.0, green: 0.98, blue: 0.8))
-                            .blur(radius: 2)
-                            .opacity(0.9)
-                    }
-                    .scaleEffect(x: 1.1, y: 1.0)
-                }
-                
-                Text("\(day)")
-                    .font(.system(
-                        size: 18,
-                        weight: isToday ? .black : .semibold,
-                        design: .rounded
-                    ))
-                    .foregroundColor(
-                        isToday ? Color(red: 0.5, green: 0.9, blue: 1.0) :
-                        (isFilled ? .white : .white.opacity(0.25))
-                    )
-                    .shadow(color: isToday ? Color.blue.opacity(0.9) : .clear, radius: isToday ? 8 : 0)
-                    .shadow(color: isToday ? Color.cyan.opacity(0.6) : .clear, radius: 2)
+        ZStack {
+            if isSelected {
+                Circle().fill(theme.textColor.opacity(0.1)).frame(width: 40)
             }
+            
+            if isFilled {
+                NeonStarView(primary: theme.starPrimary,
+                             secondary: theme.starSecondary,
+                             blur: theme.starBlurRadius)
+            }
+            
+            if isToday {
+                Circle()
+                    .fill(theme.todayGlow.opacity(0.3))
+                    .frame(width: 35).blur(radius: 10)
+            }
+            
+            Text("\(day)")
+                .font(.system(size: 16, weight: isToday ? .black : .light, design: .rounded))
+                .foregroundColor(
+                    isToday ? theme.todayColor :
+                    (isFilled ? theme.textColor : theme.textColor.opacity(theme.inactiveOpacity))
+                )
+                .shadow(color: .black.opacity(isFilled || isToday ? 0.8 : 0), radius: 1)
         }
-        .frame(maxWidth: .infinity)
-        .frame(height: 50)
+        .frame(height: 32)
     }
 }
