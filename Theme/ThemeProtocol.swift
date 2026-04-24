@@ -17,7 +17,5 @@ protocol AppTheme {
     // Bottom panel
     var bottomPanelBackground: Color { get }
     var bottomPanelBorder: Color { get }
-    var bottomPanelButtonColor: Color { get }
-    var bottomPanelButtonShadow: Color { get }
     var bottomPanelIconColor: Color { get }
 }

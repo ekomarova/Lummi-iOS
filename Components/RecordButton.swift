@@ -50,17 +50,12 @@ struct RecordButton: View {
                 } else if selected == today {
                     BottomPanel(theme: themeManager.currentTheme) {
                         Button(action: onTap) {
-                            ZStack {
-                                Circle()
-                                    .fill(themeManager.currentTheme.bottomPanelButtonColor)
-                                    .shadow(color: themeManager.currentTheme.bottomPanelButtonShadow, radius: 12, y: 6)
-
-                                Image(systemName: "star.fill")
-                                    .font(.system(size: 22, weight: .black))
-                                    .foregroundColor(themeManager.currentTheme.bottomPanelIconColor)
-                            }
-                            .frame(width: 56, height: 56)
+                            Image(systemName: "star.fill")
+                                .font(.system(size: 32, weight: .black))
+                                .foregroundColor(themeManager.currentTheme.bottomPanelIconColor)
+                                .frame(maxWidth: .infinity, minHeight: 48)
                         }
+                        .buttonStyle(.plain)
                         .accessibilityLabel("Record the joy")
                     }
                     

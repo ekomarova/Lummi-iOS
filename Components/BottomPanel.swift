@@ -6,13 +6,13 @@ struct BottomPanel<Content: View>: View {
 
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 28)
+            RoundedRectangle(cornerRadius: 24)
                 .fill(theme.bottomPanelBackground)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 28)
+                    RoundedRectangle(cornerRadius: 24)
                         .stroke(theme.bottomPanelBorder, lineWidth: 1)
                 )
-                .frame(height: 84)
+                .frame(height: 68)
 
             HStack(spacing: 12) {
                 content()
