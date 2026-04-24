@@ -47,7 +47,7 @@ struct MainCalendarView: View {
                         }
                 }
 
-                LazyVGrid(columns: columns, spacing: 8) {
+                LazyVGrid(columns: columns, spacing: 4) {
                     ForEach(0..<firstDayOffset, id: \.self) { index in
                         Color.clear
                                 .frame(height: 28)
