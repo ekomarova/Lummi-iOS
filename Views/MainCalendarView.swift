@@ -1,12 +1,13 @@
 import SwiftUI
 
 struct MainCalendarView: View {
+    @ObservedObject var themeManager: ThemeManager
     @Binding var selectedDay: Int?
     @Binding var joyEntries: [Int: String]
     
     private let calendar = Calendar.current
     private let now = Date()
-    let columns = Array(repeating: GridItem(.flexible(), spacing: 10), count: 7)
+    let columns = Array(repeating: GridItem(.flexible(), spacing: 7), count: 7)
     
     var daysInMonth: Int { calendar.range(of: .day, in: .month, for: now)?.count ?? 31 }
     var today: Int { calendar.component(.day, from: now) }
@@ -33,7 +34,7 @@ struct MainCalendarView: View {
                 .font(.system(size: 14, weight: .medium, design: .rounded))
                 .kerning(3)
                 .textCase(.uppercase)
-                .foregroundColor(.white.opacity(0.6))
+                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
                 .frame(maxWidth: .infinity, alignment: .center)
 
             VStack(spacing: 15) {
@@ -41,7 +42,7 @@ struct MainCalendarView: View {
                     ForEach(weekdayLabels.indices, id: \.self) { index in
                             Text(weekdayLabels[index])
                                 .font(.system(size: 10, weight: .bold))
-                                .foregroundColor(.white.opacity(0.4))
+                                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.4))
                                 .frame(maxWidth: .infinity)
                         }
                 }

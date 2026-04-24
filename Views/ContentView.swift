@@ -45,7 +45,11 @@ struct ContentView: View {
                 
                 HeaderView()
                 
-                MainCalendarView(selectedDay: $selectedDay, joyEntries: $joyEntries)
+                MainCalendarView(
+                    themeManager: themeManager,
+                    selectedDay: $selectedDay,
+                    joyEntries: $joyEntries
+                )
                 
                 Spacer()
                 
@@ -61,7 +65,8 @@ struct ContentView: View {
         }
         .environmentObject(themeManager)
                 .sheet(isPresented: $isShowingSheet) {
-                    // Окно записи (можно тоже вынести в компонент)
+                    // The recording window
+                    // Add it to the components
                     JoyInputSheet(joyEntries: $joyEntries, selectedDay: selectedDay)
                         .environmentObject(themeManager)
         }
