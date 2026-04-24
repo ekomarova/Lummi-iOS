@@ -17,7 +17,7 @@ struct DayCell: View {
         ZStack {
             if isSelected {
                 Circle()
-                    .fill(themeManager.currentTheme.textColor.opacity(0.1))
+                    .fill(themeManager.currentTheme.calendarContentColor.opacity(0.1))
                     .frame(width: 40, height: 40)
             }
 
@@ -32,7 +32,7 @@ struct DayCell: View {
                 if isFilled {
                     Image(systemName: "star.fill")
                         .font(.system(size: 8, weight: .bold))
-                        .foregroundColor(themeManager.currentTheme.textColor)
+                        .foregroundColor(themeManager.currentTheme.calendarContentColor)
                         .frame(width: 12, height: 12)
                 } else {
                     Color.clear
@@ -43,7 +43,7 @@ struct DayCell: View {
                     .font(.system(size: 15, weight: isToday ? .black : .bold, design: .monospaced))
                     .foregroundColor(
                         isToday ? themeManager.currentTheme.todayColor :
-                        (isFilled ? themeManager.currentTheme.textColor : themeManager.currentTheme.textColor.opacity(themeManager.currentTheme.inactiveOpacity))
+                        (isFilled ? themeManager.currentTheme.calendarContentColor : themeManager.currentTheme.calendarContentColor.opacity(themeManager.currentTheme.inactiveOpacity))
                     )
                     .shadow(color: .black.opacity(isToday ? 0.8 : 0), radius: 1)
             }

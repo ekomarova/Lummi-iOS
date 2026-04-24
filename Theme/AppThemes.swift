@@ -9,6 +9,7 @@ struct DarkTheme: AppTheme {
         colors: [.black, .black],
         startPoint: .top, endPoint: .bottom
     )
+    var backgroundColor: Color = .black
     
     var textColor: Color = .white
     var inactiveOpacity: Double = 0.35
@@ -23,6 +24,7 @@ struct DarkTheme: AppTheme {
     var bottomPanelBackground: Color = .white
     var bottomPanelBorder: Color = .white
     var bottomPanelIconColor: Color = .black
+    var calendarContentColor: Color = .black
 }
 
 struct LightTheme: AppTheme {
@@ -30,6 +32,7 @@ struct LightTheme: AppTheme {
         colors: [.white, .white],
         startPoint: .top, endPoint: .bottom
     )
+    var backgroundColor: Color = .white
     
     var textColor: Color = .black
     var inactiveOpacity: Double = 0.2
@@ -44,4 +47,5 @@ struct LightTheme: AppTheme {
     var bottomPanelBackground: Color = .black
     var bottomPanelBorder: Color = .black
     var bottomPanelIconColor: Color = .white
+    var calendarContentColor: Color = .white
 }

@@ -34,7 +34,7 @@ struct MainCalendarView: View {
                 ForEach(weekdayLabels.indices, id: \.self) { index in
                     Text(weekdayLabels[index])
                         .font(.system(size: 11, weight: .bold))
-                        .foregroundColor(themeManager.currentTheme.textColor.opacity(0.4))
+                        .foregroundColor(themeManager.currentTheme.calendarContentColor.opacity(0.4))
                         .frame(maxWidth: .infinity)
                 }
             }

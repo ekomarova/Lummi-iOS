@@ -46,13 +46,23 @@ struct ContentView: View {
                     .environmentObject(themeManager)
 
                     if isCalendarExpanded {
-                        MainCalendarView(
-                            themeManager: themeManager,
-                            selectedDay: $selectedDay,
-                            joyEntries: $joyEntries
-                        )
-                        .frame(maxHeight: geometry.size.height * 0.5, alignment: .top)
-                        .padding(.top, 14)
+                        ZStack(alignment: .top) {
+                            RoundedRectangle(cornerRadius: 24)
+                                .fill(themeManager.currentTheme.bottomPanelBackground)
+
+                            MainCalendarView(
+                                themeManager: themeManager,
+                                selectedDay: $selectedDay,
+                                joyEntries: $joyEntries
+                            )
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 18)
+                        }
+                        .fixedSize(horizontal: false, vertical: true)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                        .clipShape(RoundedRectangle(cornerRadius: 24))
+                        .padding(.top, 28)
+                        .padding(.horizontal, 20)
                         .transition(.move(edge: .top).combined(with: .opacity))
                     }
                     

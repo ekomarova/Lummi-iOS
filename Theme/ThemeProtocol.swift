@@ -2,6 +2,7 @@ import SwiftUI
 
 protocol AppTheme {
     var bgGradient: LinearGradient { get }
+    var backgroundColor: Color { get }
     var textColor: Color { get }
     var inactiveOpacity: Double { get }
     
@@ -18,4 +19,7 @@ protocol AppTheme {
     var bottomPanelBackground: Color { get }
     var bottomPanelBorder: Color { get }
     var bottomPanelIconColor: Color { get }
+
+    // Expanded calendar
+    var calendarContentColor: Color { get }
 }
