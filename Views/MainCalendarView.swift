@@ -29,47 +29,39 @@ struct MainCalendarView: View {
     }
 
     var body: some View {
-        VStack(spacing: 30) {
-            Text(now.formatted(.dateTime.month(.wide).year()))
-                .font(.system(size: 14, weight: .medium, design: .rounded))
-                .kerning(3)
-                .textCase(.uppercase)
-                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
-                .frame(maxWidth: .infinity, alignment: .center)
-
-            VStack(spacing: 15) {
-                HStack(spacing: 0) {
-                    ForEach(weekdayLabels.indices, id: \.self) { index in
-                            Text(weekdayLabels[index])
-                                .font(.system(size: 10, weight: .bold))
-                                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.4))
-                                .frame(maxWidth: .infinity)
-                        }
+        VStack(spacing: 15) {
+            HStack(spacing: 0) {
+                ForEach(weekdayLabels.indices, id: \.self) { index in
+                    Text(weekdayLabels[index])
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundColor(themeManager.currentTheme.textColor.opacity(0.4))
+                        .frame(maxWidth: .infinity)
                 }
+            }
 
-                LazyVGrid(columns: columns, spacing: 4) {
-                    ForEach(0..<firstDayOffset, id: \.self) { index in
-                        Color.clear
-                                .frame(height: 28)
-                                .id("empty-\(index)")
-                    }
-                    
-                    ForEach(1...daysInMonth, id: \.self) { day in
-                        DayCell(
-                            day: day,
-                            isFilled: joyEntries.keys.contains(day),
-                            isToday: day == today,
-                            isSelected: day == selectedDay
-                        )
-                        .id("day-\(day)")
-                        .onTapGesture {
-                            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-                                selectedDay = day
-                            }
+            LazyVGrid(columns: columns, spacing: 4) {
+                ForEach(0..<firstDayOffset, id: \.self) { index in
+                    Color.clear
+                        .frame(height: 28)
+                        .id("empty-\(index)")
+                }
+                
+                ForEach(1...daysInMonth, id: \.self) { day in
+                    DayCell(
+                        day: day,
+                        isFilled: joyEntries.keys.contains(day),
+                        isToday: day == today,
+                        isSelected: day == selectedDay
+                    )
+                    .id("day-\(day)")
+                    .onTapGesture {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                            selectedDay = day
                         }
                     }
                 }
             }
         }
+        .padding(.horizontal)
     }
 }

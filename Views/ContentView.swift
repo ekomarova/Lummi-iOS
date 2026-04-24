@@ -20,6 +20,9 @@ struct ContentView: View {
     
     @State private var selectedDay: Int? = Calendar.current.component(.day, from: Date())
     @State private var isShowingSheet = false
+    @State private var isCalendarExpanded = false
+
+    private let currentDate = Date()
 
     private var today: Int {
         Calendar.current.component(.day, from: Date())
@@ -33,7 +36,10 @@ struct ContentView: View {
                 // --TEST-- Theme switch
                 HStack {
                     Spacer()
-                    Button(action: { themeManager.isDark.toggle() }) {
+                    Button(action: {
+                        isCalendarExpanded = false
+                        themeManager.isDark.toggle()
+                    }) {
                         Image(systemName: themeManager.isDark ? "moon.stars.fill" : "sun.max.fill")
                             .foregroundColor(themeManager.currentTheme.todayColor)
                             .padding()
@@ -43,13 +49,25 @@ struct ContentView: View {
                 // --END--
                 .padding(.horizontal)
                 
-                HeaderView()
-                
-                MainCalendarView(
-                    themeManager: themeManager,
-                    selectedDay: $selectedDay,
-                    joyEntries: $joyEntries
+                HeaderView(
+                    date: currentDate,
+                    isExpanded: isCalendarExpanded,
+                    onTap: {
+                        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                            isCalendarExpanded.toggle()
+                        }
+                    }
                 )
+                .environmentObject(themeManager)
+
+                if isCalendarExpanded {
+                    MainCalendarView(
+                        themeManager: themeManager,
+                        selectedDay: $selectedDay,
+                        joyEntries: $joyEntries
+                    )
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                }
                 
                 Spacer()
                 
@@ -61,7 +79,10 @@ struct ContentView: View {
                 selectedDay: selectedDay,
                 today: today,
                 joyEntries: joyEntries,
-                onTap: { isShowingSheet = true }
+                onTap: {
+                    isCalendarExpanded = false
+                    isShowingSheet = true
+                }
             )
             .environmentObject(themeManager)
         }
