@@ -29,26 +29,10 @@ struct ContentView: View {
     }
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .top) {
             themeManager.currentTheme.bgGradient.ignoresSafeArea()
             
             VStack(spacing: 15) {
-                // --TEST-- Theme switch
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        isCalendarExpanded = false
-                        themeManager.isDark.toggle()
-                    }) {
-                        Image(systemName: themeManager.isDark ? "moon.stars.fill" : "sun.max.fill")
-                            .foregroundColor(themeManager.currentTheme.todayColor)
-                            .padding()
-                            .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.1)))
-                    }
-                }
-                // --END--
-                .padding(.horizontal)
-                
                 HeaderView(
                     date: currentDate,
                     isExpanded: isCalendarExpanded,
@@ -72,6 +56,20 @@ struct ContentView: View {
                 Spacer()
                 
             }
+            .padding(.top, 8)
+
+            Button(action: {
+                isCalendarExpanded = false
+                themeManager.isDark.toggle()
+            }) {
+                Image(systemName: themeManager.isDark ? "moon.stars.fill" : "sun.max.fill")
+                    .foregroundColor(themeManager.currentTheme.todayColor)
+                    .padding()
+                    .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.1)))
+            }
+            .padding(.top, 8)
+            .padding(.horizontal)
+            .frame(maxWidth: .infinity, alignment: .trailing)
         }
         .environmentObject(themeManager)
         .safeAreaInset(edge: .bottom, spacing: 0) {
