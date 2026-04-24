@@ -14,10 +14,6 @@ struct DarkTheme: AppTheme {
     var textColor: Color = .white
     var inactiveOpacity: Double = 0.35
     
-    var starPrimary: Color = .yellow
-    var starSecondary: Color = .orange
-    var starBlurRadius: CGFloat = 20
-    
     var todayColor: Color = Color(red: 0.5, green: 0.9, blue: 1.0)
     var todayGlow: Color = .blue
 
@@ -35,11 +31,7 @@ struct LightTheme: AppTheme {
     var backgroundColor: Color = .white
     
     var textColor: Color = .black
-    var inactiveOpacity: Double = 0.2
-    
-    var starPrimary: Color = .orange
-    var starSecondary: Color = .yellow.opacity(0.5)
-    var starBlurRadius: CGFloat = 15
+    var inactiveOpacity: Double = 0.35
     
     var todayColor: Color = .blue
     var todayGlow: Color = .cyan
