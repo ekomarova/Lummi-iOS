@@ -53,7 +53,7 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                JoyActionArea(
+                RecordButton(
                     selectedDay: selectedDay,
                     today: today,
                     joyEntries: joyEntries,
@@ -67,7 +67,7 @@ struct ContentView: View {
                 .sheet(isPresented: $isShowingSheet) {
                     // The recording window
                     // Add it to the components
-                    JoyInputSheet(joyEntries: $joyEntries, selectedDay: selectedDay)
+                    RecordInput(joyEntries: $joyEntries, selectedDay: selectedDay)
                         .environmentObject(themeManager)
         }
     }
