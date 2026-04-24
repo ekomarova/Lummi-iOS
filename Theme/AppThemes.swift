@@ -23,6 +23,12 @@ struct DarkTheme: AppTheme {
     
     var todayColor: Color = Color(red: 0.5, green: 0.9, blue: 1.0)
     var todayGlow: Color = .blue
+
+    var bottomPanelBackground: Color = .white.opacity(0.08)
+    var bottomPanelBorder: Color = .white.opacity(0.08)
+    var bottomPanelButtonColor: Color = Color(red: 0.5, green: 0.9, blue: 1.0)
+    var bottomPanelButtonShadow: Color = .blue.opacity(0.25)
+    var bottomPanelIconColor: Color = .black
 }
 
 struct LightTheme: AppTheme {
@@ -40,4 +46,10 @@ struct LightTheme: AppTheme {
     
     var todayColor: Color = .blue
     var todayGlow: Color = .cyan
+
+    var bottomPanelBackground: Color = .black.opacity(0.08)
+    var bottomPanelBorder: Color = .black.opacity(0.08)
+    var bottomPanelButtonColor: Color = .blue
+    var bottomPanelButtonShadow: Color = .cyan.opacity(0.25)
+    var bottomPanelIconColor: Color = .black
 }

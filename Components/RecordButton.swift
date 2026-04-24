@@ -48,22 +48,21 @@ struct RecordButton: View {
                     .padding(.horizontal)
 
                 } else if selected == today {
-                    Button(action: onTap) {
-                        HStack(spacing: 12) {
-                            Image(systemName: "sparkles")
-                            Text("Record the joy")
+                    BottomPanel(theme: themeManager.currentTheme) {
+                        Button(action: onTap) {
+                            ZStack {
+                                Circle()
+                                    .fill(themeManager.currentTheme.bottomPanelButtonColor)
+                                    .shadow(color: themeManager.currentTheme.bottomPanelButtonShadow, radius: 12, y: 6)
+
+                                Image(systemName: "star.fill")
+                                    .font(.system(size: 22, weight: .black))
+                                    .foregroundColor(themeManager.currentTheme.bottomPanelIconColor)
+                            }
+                            .frame(width: 56, height: 56)
                         }
-                        .font(.system(size: 18, weight: .bold, design: .rounded))
-                        .foregroundColor(themeManager.currentTheme.textColor)
-                        .padding(.vertical, 18)
-                        .frame(maxWidth: .infinity)
-                        .background(
-                            RoundedRectangle(cornerRadius: 20)
-                                .fill(themeManager.currentTheme.todayColor)
-                                .shadow(color: themeManager.currentTheme.todayColor.opacity(0.2), radius: 15)
-                        )
+                        .accessibilityLabel("Record the joy")
                     }
-                    .padding(.horizontal)
                     
                 } else {
                     Text("No records for this day")

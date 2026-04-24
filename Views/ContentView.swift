@@ -53,22 +53,23 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                RecordButton(
-                    selectedDay: selectedDay,
-                    today: today,
-                    joyEntries: joyEntries,
-                    onTap: { isShowingSheet = true }
-                )
-                .padding(.bottom, 30)
-                .padding(.bottom, 30)
             }
         }
         .environmentObject(themeManager)
-                .sheet(isPresented: $isShowingSheet) {
-                    // The recording window
-                    // Add it to the components
-                    RecordInput(joyEntries: $joyEntries, selectedDay: selectedDay)
-                        .environmentObject(themeManager)
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            RecordButton(
+                selectedDay: selectedDay,
+                today: today,
+                joyEntries: joyEntries,
+                onTap: { isShowingSheet = true }
+            )
+            .environmentObject(themeManager)
+        }
+        .sheet(isPresented: $isShowingSheet) {
+            // The recording window
+            // Add it to the components
+            RecordInput(joyEntries: $joyEntries, selectedDay: selectedDay)
+                .environmentObject(themeManager)
         }
     }
 }

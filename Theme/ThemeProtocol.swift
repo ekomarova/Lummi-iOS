@@ -13,4 +13,11 @@ protocol AppTheme {
     // Today day
     var todayColor: Color { get }
     var todayGlow: Color { get }
+
+    // Bottom panel
+    var bottomPanelBackground: Color { get }
+    var bottomPanelBorder: Color { get }
+    var bottomPanelButtonColor: Color { get }
+    var bottomPanelButtonShadow: Color { get }
+    var bottomPanelIconColor: Color { get }
 }
