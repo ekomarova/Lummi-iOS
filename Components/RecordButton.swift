@@ -19,7 +19,7 @@ struct RecordButton: View {
                             .foregroundColor(themeManager.currentTheme.textColor.opacity(0.2))
                         
                         Text("Oops! This day has not started yet")
-                            .font(.system(size: 16, weight: .bold, design: .rounded))
+                            .font(.system(size: 16, weight: .bold, design: .monospaced))
                             .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
                         
                         Text("✨ Lumens will light up when the time is right ✨")
@@ -32,7 +32,7 @@ struct RecordButton: View {
                 } else if let note = joyEntries[selected] {
                     VStack(alignment: .leading, spacing: 10) {
                         Text(note)
-                            .font(.system(size: 16, weight: .light, design: .rounded))
+                            .font(.system(size: 16, weight: .light, design: .monospaced))
                             .foregroundColor(themeManager.currentTheme.textColor)
                             .padding(20)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -66,7 +66,7 @@ struct RecordButton: View {
                     
                 } else {
                     Text("No records for this day")
-                        .font(.system(size: 14, design: .rounded))
+                        .font(.system(size: 14, design: .monospaced))
                         .foregroundColor(themeManager.currentTheme.textColor.opacity(0.3))
                 }
             }

@@ -33,7 +33,7 @@ struct MainCalendarView: View {
             HStack(spacing: 0) {
                 ForEach(weekdayLabels.indices, id: \.self) { index in
                     Text(weekdayLabels[index])
-                        .font(.system(size: 10, weight: .bold))
+                        .font(.system(size: 11, weight: .bold))
                         .foregroundColor(themeManager.currentTheme.textColor.opacity(0.4))
                         .frame(maxWidth: .infinity)
                 }

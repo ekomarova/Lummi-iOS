@@ -6,11 +6,7 @@ import SwiftUI
 
 struct DarkTheme: AppTheme {
     var bgGradient = LinearGradient(
-        stops: [
-            .init(color: Color(red: 0.25, green: 0.28, blue: 0.45), location: 0.0),
-            .init(color: Color(red: 0.10, green: 0.10, blue: 0.22), location: 0.45),
-            .init(color: .black, location: 1.0)
-        ],
+        colors: [.black, .black],
         startPoint: .top, endPoint: .bottom
     )
     
@@ -33,7 +29,7 @@ struct DarkTheme: AppTheme {
 
 struct LightTheme: AppTheme {
     var bgGradient = LinearGradient(
-        colors: [Color(red: 0.9, green: 0.95, blue: 1.0), .white],
+        colors: [.white, .white],
         startPoint: .top, endPoint: .bottom
     )
     

@@ -17,7 +17,7 @@ struct RecordInput: View {
                 
                 VStack(spacing: 25) {
                     Text("What made you happy?")
-                        .font(.system(size: 24, weight: .bold, design: .rounded))
+                        .font(.system(size: 24, weight: .bold, design: .monospaced))
                         .foregroundColor(themeManager.currentTheme.textColor)
                         .padding(.top, 40)
                     
@@ -35,7 +35,7 @@ struct RecordInput: View {
                                 )
                         )
                         .foregroundColor(themeManager.currentTheme.textColor)
-                        .font(.system(size: 18, weight: .light, design: .rounded))
+                        .font(.system(size: 18, weight: .light, design: .monospaced))
                     
                     // Save button
                     Button(action: {
@@ -45,7 +45,7 @@ struct RecordInput: View {
                         }
                     }) {
                         Text("Lume the Star ✨")
-                            .font(.system(size: 18, weight: .bold, design: .rounded))
+                            .font(.system(size: 18, weight: .bold, design: .monospaced))
                             .foregroundColor(themeManager.currentTheme.textColor)
                             .frame(maxWidth: .infinity)
                             .padding()

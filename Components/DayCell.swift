@@ -30,25 +30,22 @@ struct DayCell: View {
 
             VStack(spacing: 4) {
                 if isFilled {
-                    NeonStarView(
-                        primary: themeManager.currentTheme.starPrimary,
-                        secondary: themeManager.currentTheme.starSecondary,
-                        blur: themeManager.currentTheme.starBlurRadius
-                    )
-                    .frame(width: 12, height: 12)
-                    .scaleEffect(0.35)
+                    Image(systemName: "star.fill")
+                        .font(.system(size: 8, weight: .bold))
+                        .foregroundColor(themeManager.currentTheme.textColor)
+                        .frame(width: 12, height: 12)
                 } else {
                     Color.clear
                         .frame(width: 12, height: 12)
                 }
 
                 Text("\(day)")
-                    .font(.system(size: 12, weight: isToday ? .black : .light, design: .rounded))
+                    .font(.system(size: 15, weight: isToday ? .black : .bold, design: .monospaced))
                     .foregroundColor(
                         isToday ? themeManager.currentTheme.todayColor :
                         (isFilled ? themeManager.currentTheme.textColor : themeManager.currentTheme.textColor.opacity(themeManager.currentTheme.inactiveOpacity))
                     )
-                    .shadow(color: .black.opacity(isFilled || isToday ? 0.8 : 0), radius: 1)
+                    .shadow(color: .black.opacity(isToday ? 0.8 : 0), radius: 1)
             }
         }
         .frame(height: 38)

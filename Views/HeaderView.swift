@@ -19,12 +19,12 @@ struct HeaderView: View {
         Button(action: onTap) {
             HStack(spacing: 6) {
                 Text(headerDateText)
-                    .font(.system(size: 18, weight: .regular, design: .rounded))
-                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.72))
+                    .font(.system(size: 24, weight: .black, design: .monospaced))
+                    .foregroundColor(themeManager.currentTheme.textColor)
 
                 Image(systemName: "chevron.down")
-                    .font(.system(size: 18, weight: .regular))
-                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.72))
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundColor(themeManager.currentTheme.textColor)
                     .rotationEffect(.degrees(isExpanded ? 180 : 0))
                     .offset(y: 1)
             }

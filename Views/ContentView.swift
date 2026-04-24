@@ -29,47 +29,51 @@ struct ContentView: View {
     }
 
     var body: some View {
-        ZStack(alignment: .top) {
-            themeManager.currentTheme.bgGradient.ignoresSafeArea()
-            
-            VStack(spacing: 15) {
-                HeaderView(
-                    date: currentDate,
-                    isExpanded: isCalendarExpanded,
-                    onTap: {
-                        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                            isCalendarExpanded.toggle()
+        GeometryReader { geometry in
+            ZStack(alignment: .top) {
+                themeManager.currentTheme.bgGradient.ignoresSafeArea()
+                
+                VStack(spacing: 15) {
+                    HeaderView(
+                        date: currentDate,
+                        isExpanded: isCalendarExpanded,
+                        onTap: {
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                isCalendarExpanded.toggle()
+                            }
                         }
-                    }
-                )
-                .environmentObject(themeManager)
-
-                if isCalendarExpanded {
-                    MainCalendarView(
-                        themeManager: themeManager,
-                        selectedDay: $selectedDay,
-                        joyEntries: $joyEntries
                     )
-                    .transition(.move(edge: .top).combined(with: .opacity))
-                }
-                
-                Spacer()
-                
-            }
-            .padding(.top, 8)
+                    .environmentObject(themeManager)
 
-            Button(action: {
-                isCalendarExpanded = false
-                themeManager.isDark.toggle()
-            }) {
-                Image(systemName: themeManager.isDark ? "moon.stars.fill" : "sun.max.fill")
-                    .foregroundColor(themeManager.currentTheme.todayColor)
-                    .padding()
-                    .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.1)))
+                    if isCalendarExpanded {
+                        MainCalendarView(
+                            themeManager: themeManager,
+                            selectedDay: $selectedDay,
+                            joyEntries: $joyEntries
+                        )
+                        .frame(maxHeight: geometry.size.height * 0.5, alignment: .top)
+                        .padding(.top, 14)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                    }
+                    
+                    Spacer()
+                    
+                }
+                .padding(.top, 8)
+
+                Button(action: {
+                    isCalendarExpanded = false
+                    themeManager.isDark.toggle()
+                }) {
+                    Image(systemName: themeManager.isDark ? "moon.stars.fill" : "sun.max.fill")
+                        .foregroundColor(themeManager.currentTheme.todayColor)
+                        .padding()
+                        .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.1)))
+                }
+                .padding(.top, 8)
+                .padding(.horizontal)
+                .frame(maxWidth: .infinity, alignment: .trailing)
             }
-            .padding(.top, 8)
-            .padding(.horizontal)
-            .frame(maxWidth: .infinity, alignment: .trailing)
         }
         .environmentObject(themeManager)
         .safeAreaInset(edge: .bottom, spacing: 0) {
