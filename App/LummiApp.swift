@@ -1,10 +1,3 @@
-//
-//  LummiApp.swift
-//  Lummi
-//
-//  Created by Evseniia Komarova on 23.04.26.
-//
-
 import SwiftUI
 
 @main

@@ -21,12 +21,12 @@ struct DayCell: View {
                     ZStack {
                         Image(systemName: "star.fill")
                             .font(.system(size: 55))
-                            .foregroundColor(.yellow.opacity(0.3))
+                            .foregroundColor(.yellow.opacity(0.1))
                             .blur(radius: 25)
                         
                         Image(systemName: "star.fill")
                             .font(.system(size: 42))
-                            .foregroundColor(.yellow.opacity(0.6))
+                            .foregroundColor(.yellow.opacity(0.25))
                             .blur(radius: 8)
                         
                         Image(systemName: "star.fill")
@@ -39,12 +39,17 @@ struct DayCell: View {
                 }
                 
                 Text("\(day)")
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .font(.system(
+                        size: 18,
+                        weight: isToday ? .black : .semibold,
+                        design: .rounded
+                    ))
                     .foregroundColor(
-                        day > today ? .white.opacity(0.15) :
-                        (isToday ? .yellow : .white)
+                        isToday ? Color(red: 0.5, green: 0.9, blue: 1.0) :
+                        (isFilled ? .white : .white.opacity(0.25))
                     )
-                    .shadow(color: .black.opacity(isFilled ? 0.7 : 0), radius: 2)
+                    .shadow(color: isToday ? Color.blue.opacity(0.9) : .clear, radius: isToday ? 8 : 0)
+                    .shadow(color: isToday ? Color.cyan.opacity(0.6) : .clear, radius: 2)
             }
         }
         .frame(maxWidth: .infinity)

@@ -36,20 +36,20 @@ struct MainCalendarView: View {
                 .foregroundColor(.white.opacity(0.6))
                 .frame(maxWidth: .infinity, alignment: .center)
 
-            VStack(spacing: 20) {
+            VStack(spacing: 15) {
                 HStack(spacing: 0) {
                     ForEach(weekdayLabels.indices, id: \.self) { index in
                             Text(weekdayLabels[index])
                                 .font(.system(size: 10, weight: .bold))
-                                .foregroundColor(.white.opacity(0.2))
+                                .foregroundColor(.white.opacity(0.4))
                                 .frame(maxWidth: .infinity)
                         }
                 }
 
-                LazyVGrid(columns: columns, spacing: 15) {
+                LazyVGrid(columns: columns, spacing: 8) {
                     ForEach(0..<firstDayOffset, id: \.self) { index in
                         Color.clear
-                                .frame(height: 40)
+                                .frame(height: 28)
                                 .id("empty-\(index)")
                     }
                     
