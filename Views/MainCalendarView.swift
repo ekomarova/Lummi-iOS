@@ -55,8 +55,9 @@ struct MainCalendarView: View {
                         isSelected: day == selectedDay
                     )
                     .id("day-\(day)")
+                    .contentShape(Rectangle())
                     .onTapGesture {
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
                             selectedDay = day
                             // Fold the calendar when a day is selected
                             isCalendarExpanded = false
@@ -66,5 +67,6 @@ struct MainCalendarView: View {
             }
         }
         .padding(.horizontal)
+        .contentShape(Rectangle())
     }
 }

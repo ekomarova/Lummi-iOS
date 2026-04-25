@@ -1,9 +1,17 @@
 import SwiftUI
 
+/// PreferenceKey used to resolve potential layout dependencies, 
+/// although we use a ZStack overlay for the tap-to-collapse behavior.
+struct CalendarFramePreferenceKey: PreferenceKey {
+    static var defaultValue: CGRect = .zero
+    static func reduce(value: inout CGRect, nextValue: () -> CGRect) {
+        value = nextValue()
+    }
+}
+
 struct ContentView: View {
     @StateObject private var themeManager = ThemeManager()
 
-    // @State private var joyEntries: [Int: String] = [:]
     // --TEST-- Input
     @State private var joyEntries: [Int: [String]] = {
         let calendar = Calendar.current
@@ -12,12 +20,11 @@ struct ContentView: View {
         return [
             (today - 1): ["I ate a lot of chips and it was amazing!"],
             (today - 2): ["Watched a beautiful sunset"],
-            (today - 4): ["I slept a lot"],
-            //(today): ["I watched the starfall"]
+            (today - 4): ["I slept a lot"]
         ]
     }()
-    // --END--
     
+    // Initial state: folded (false) and selected day is today.
     @State private var selectedDay: Int? = Calendar.current.component(.day, from: Date())
     @State private var isShowingSheet = false
     @State private var isCalendarExpanded = false
@@ -31,8 +38,22 @@ struct ContentView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .top) {
+                // 1. Theme Background
                 themeManager.currentTheme.bgGradient.ignoresSafeArea()
                 
+                // 2. Tap-to-Collapse Overlay
+                // Only active when the calendar is expanded. It catches taps outside the calendar.
+                if isCalendarExpanded {
+                    Color.black.opacity(0.001)
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                isCalendarExpanded = false
+                            }
+                        }
+                }
+
+                // 3. Main Content
                 VStack(spacing: 15) {
                     HeaderView(
                         date: currentDate,
@@ -64,7 +85,9 @@ struct ContentView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 24))
                         .padding(.top, 28)
                         .padding(.horizontal, 20)
-                    } else if selectedDay != nil { // Show SelectedDayDetailView when calendar is folded
+                        // Prevents taps inside the calendar from triggering the background overlay
+                        .onTapGesture { } 
+                    } else if selectedDay != nil { 
                         SelectedDayDetailView(
                             selectedDay: selectedDay,
                             today: today,
@@ -75,13 +98,12 @@ struct ContentView: View {
                     }
                     
                     Spacer()
-                    
                 }
                 .padding(.top, 8)
 
-                // Theme toggle button
+                // 4. Theme toggle button
                 Button(action: {
-                    isCalendarExpanded = false // Collapse calendar when changing theme for consistency
+                    isCalendarExpanded = false 
                     themeManager.isDark.toggle()
                 }) {
                     Image(systemName: themeManager.isDark ? "moon.stars.fill" : "sun.max.fill")
@@ -101,7 +123,7 @@ struct ContentView: View {
                 today: today,
                 joyEntries: joyEntries,
                 onTap: {
-                    isCalendarExpanded = false // Ensure calendar folds when recording
+                    isCalendarExpanded = false 
                     isShowingSheet = true
                 }
             )
