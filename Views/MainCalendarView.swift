@@ -3,8 +3,8 @@ import SwiftUI
 struct MainCalendarView: View {
     @ObservedObject var themeManager: ThemeManager
     @Binding var selectedDay: Int?
-    @Binding var joyEntries: [Int: String]
-    @Binding var isCalendarExpanded: Bool // Added binding for expanded state
+    @Binding var joyEntries: [Int: [String]]
+    @Binding var isCalendarExpanded: Bool
     
     private let calendar = Calendar.current
     private let now = Date()
@@ -50,7 +50,7 @@ struct MainCalendarView: View {
                 ForEach(1...daysInMonth, id: \.self) { day in
                     DayCell(
                         day: day,
-                        isFilled: joyEntries.keys.contains(day),
+                        isFilled: joyEntries[day]?.isEmpty == false,
                         isToday: day == today,
                         isSelected: day == selectedDay
                     )

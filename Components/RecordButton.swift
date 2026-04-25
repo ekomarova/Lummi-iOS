@@ -5,7 +5,7 @@ struct RecordButton: View {
     
     let selectedDay: Int?
     let today: Int
-    let joyEntries: [Int: String]
+    let joyEntries: [Int: [String]]
     var onTap: () -> Void
 
     

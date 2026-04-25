@@ -5,15 +5,15 @@ struct ContentView: View {
 
     // @State private var joyEntries: [Int: String] = [:]
     // --TEST-- Input
-    @State private var joyEntries: [Int: String] = {
+    @State private var joyEntries: [Int: [String]] = {
         let calendar = Calendar.current
         let today = calendar.component(.day, from: Date())
         
         return [
-            (today - 1): "I ate a lot of chips and it was amazing!",
-            (today - 2): "Watched a beautiful sunset",
-            (today - 4): "I slept a lot",
-            (today): "I watched the starfall"
+            (today - 1): ["I ate a lot of chips and it was amazing!"],
+            (today - 2): ["Watched a beautiful sunset"],
+            (today - 4): ["I slept a lot"],
+            //(today): ["I watched the starfall"]
         ]
     }()
     // --END--

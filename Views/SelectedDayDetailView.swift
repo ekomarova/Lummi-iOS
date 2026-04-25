@@ -5,7 +5,7 @@ struct SelectedDayDetailView: View {
     
     let selectedDay: Int?
     let today: Int
-    let joyEntries: [Int: String]
+    let joyEntries: [Int: [String]]
     
     var body: some View {
         Group {
@@ -28,27 +28,34 @@ struct SelectedDayDetailView: View {
                     }
                     .frame(maxWidth: .infinity)
                     
-                } else if let note = joyEntries[selected] {
-                    // Display existing note for selected day
+                } else if let notes = joyEntries[selected], !notes.isEmpty {
+                    // Display existing notes for selected day
                     VStack(alignment: .leading, spacing: 10) {
-                        Text(note)
-                            .font(.system(size: 16, weight: .light, design: .monospaced))
-                            .foregroundColor(themeManager.currentTheme.textColor)
-                            .padding(20)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 20)
-                                            .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
-                                    )
-                            )
+                        ForEach(notes, id: \.self) { note in // Iterate over each note
+                            Text(note)
+                                .font(.system(size: 16, weight: .light, design: .monospaced))
+                                .foregroundColor(themeManager.currentTheme.textColor)
+                                .padding(20)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 20)
+                                                .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
+                                        )
+                                )
+                        }
                     }
                     .padding(.horizontal)
 
                 } else if selected < today {
                     // Past days with no records
+                    Text("No records for this day")
+                        .font(.system(size: 14, design: .monospaced))
+                        .foregroundColor(themeManager.currentTheme.textColor.opacity(0.3))
+                        .frame(maxWidth: .infinity)
+                } else {
                     Text("No records for this day")
                         .font(.system(size: 14, design: .monospaced))
                         .foregroundColor(themeManager.currentTheme.textColor.opacity(0.3))

@@ -4,7 +4,7 @@ struct RecordInput: View {
     @EnvironmentObject var themeManager: ThemeManager
     @Environment(\.dismiss) var dismiss
     
-    @Binding var joyEntries: [Int: String]
+    @Binding var joyEntries: [Int: [String]]
     let selectedDay: Int?
     
     @State private var text: String = ""
@@ -40,7 +40,7 @@ struct RecordInput: View {
                     // Save button
                     Button(action: {
                         if let day = selectedDay, !text.isEmpty {
-                            joyEntries[day] = text
+                            joyEntries[day, default: []].append(text)
                             dismiss()
                         }
                     }) {
