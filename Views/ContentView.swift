@@ -1,7 +1,5 @@
 import SwiftUI
 
-/// PreferenceKey used to resolve potential layout dependencies, 
-/// although we use a ZStack overlay for the tap-to-collapse behavior.
 struct CalendarFramePreferenceKey: PreferenceKey {
     static var defaultValue: CGRect = .zero
     static func reduce(value: inout CGRect, nextValue: () -> CGRect) {
@@ -29,10 +27,16 @@ struct ContentView: View {
     @State private var isShowingSheet = false
     @State private var isCalendarExpanded = false
 
-    private let currentDate = Date()
-
     private var today: Int {
         Calendar.current.component(.day, from: Date())
+    }
+
+    // Derives the Date to display in the Header based on the selectedDay
+    private var displayDate: Date {
+        let calendar = Calendar.current
+        var components = calendar.dateComponents([.year, .month], from: Date())
+        components.day = selectedDay ?? today
+        return calendar.date(from: components) ?? Date()
     }
 
     var body: some View {
@@ -56,11 +60,13 @@ struct ContentView: View {
                 // 3. Main Content
                 VStack(spacing: 15) {
                     HeaderView(
-                        date: currentDate,
+                        date: displayDate,
                         isExpanded: isCalendarExpanded,
                         onTap: {
                             withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
                                 isCalendarExpanded.toggle()
+                                // Reset to today when the date button is pressed
+                                selectedDay = today
                             }
                         }
                     )
@@ -105,6 +111,8 @@ struct ContentView: View {
                 Button(action: {
                     isCalendarExpanded = false 
                     themeManager.isDark.toggle()
+                    // Reset to today when the theme toggle is pressed
+                    selectedDay = today
                 }) {
                     Image(systemName: themeManager.isDark ? "moon.stars.fill" : "sun.max.fill")
                         .foregroundColor(themeManager.currentTheme.dayFilledColor)
@@ -124,6 +132,8 @@ struct ContentView: View {
                 joyEntries: joyEntries,
                 onTap: {
                     isCalendarExpanded = false 
+                    // Reset to today when the record button is pressed
+                    selectedDay = today
                     isShowingSheet = true
                 }
             )
