@@ -132,15 +132,14 @@ struct ContentView: View {
                 joyEntries: joyEntries,
                 onTap: {
                     isCalendarExpanded = false 
-                    // Reset to today when the record button is pressed
-                    selectedDay = today
                     isShowingSheet = true
                 }
             )
             .environmentObject(themeManager)
         }
         .sheet(isPresented: $isShowingSheet) {
-            RecordInput(joyEntries: $joyEntries, selectedDay: selectedDay)
+            // Ensure the entry is always added to the current date.
+            RecordInput(joyEntries: $joyEntries, selectedDay: today)
                 .environmentObject(themeManager)
         }
     }

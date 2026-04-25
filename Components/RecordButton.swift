@@ -11,7 +11,7 @@ struct RecordButton: View {
     
     var body: some View {
         Group {
-            if let selected = selectedDay, selected == today { // Only show button if selected day is today
+            if selectedDay != nil { 
                 Button(action: onTap) {
                     Image(systemName: "star.fill")
                         .font(.system(size: 32, weight: .black))
@@ -21,7 +21,6 @@ struct RecordButton: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel("Record the joy")
             } else {
-                // For any other selected day (past, future) or no selection, show nothing in the button area.
                 EmptyView()
             }
         }
