@@ -13,7 +13,7 @@ struct ContentView: View {
             (today - 1): "I ate a lot of chips and it was amazing!",
             (today - 2): "Watched a beautiful sunset",
             (today - 4): "I slept a lot",
-            //(today): "I watched the starfall"
+            (today): "I watched the starfall"
         ]
     }()
     // --END--
@@ -53,7 +53,8 @@ struct ContentView: View {
                             MainCalendarView(
                                 themeManager: themeManager,
                                 selectedDay: $selectedDay,
-                                joyEntries: $joyEntries
+                                joyEntries: $joyEntries,
+                                isCalendarExpanded: $isCalendarExpanded
                             )
                             .padding(.horizontal, 8)
                             .padding(.vertical, 18)
@@ -63,6 +64,13 @@ struct ContentView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 24))
                         .padding(.top, 28)
                         .padding(.horizontal, 20)
+                    } else if selectedDay != nil { // Show SelectedDayDetailView when calendar is folded
+                        SelectedDayDetailView(
+                            selectedDay: selectedDay,
+                            today: today,
+                            joyEntries: joyEntries
+                        )
+                        .environmentObject(themeManager)
                         .transition(.move(edge: .top).combined(with: .opacity))
                     }
                     
@@ -71,8 +79,9 @@ struct ContentView: View {
                 }
                 .padding(.top, 8)
 
+                // Theme toggle button
                 Button(action: {
-                    isCalendarExpanded = false
+                    isCalendarExpanded = false // Collapse calendar when changing theme for consistency
                     themeManager.isDark.toggle()
                 }) {
                     Image(systemName: themeManager.isDark ? "moon.stars.fill" : "sun.max.fill")
@@ -92,15 +101,13 @@ struct ContentView: View {
                 today: today,
                 joyEntries: joyEntries,
                 onTap: {
-                    isCalendarExpanded = false
+                    isCalendarExpanded = false // Ensure calendar folds when recording
                     isShowingSheet = true
                 }
             )
             .environmentObject(themeManager)
         }
         .sheet(isPresented: $isShowingSheet) {
-            // The recording window
-            // Add it to the components
             RecordInput(joyEntries: $joyEntries, selectedDay: selectedDay)
                 .environmentObject(themeManager)
         }

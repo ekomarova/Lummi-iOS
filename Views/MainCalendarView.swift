@@ -4,6 +4,7 @@ struct MainCalendarView: View {
     @ObservedObject var themeManager: ThemeManager
     @Binding var selectedDay: Int?
     @Binding var joyEntries: [Int: String]
+    @Binding var isCalendarExpanded: Bool // Added binding for expanded state
     
     private let calendar = Calendar.current
     private let now = Date()
@@ -57,6 +58,8 @@ struct MainCalendarView: View {
                     .onTapGesture {
                         withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
                             selectedDay = day
+                            // Fold the calendar when a day is selected
+                            isCalendarExpanded = false
                         }
                     }
                 }
