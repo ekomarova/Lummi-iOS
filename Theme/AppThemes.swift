@@ -16,11 +16,10 @@ struct DarkTheme: AppTheme {
     
     var todayColor: Color = .black
     var dayFilledColor: Color = .orange
-
-    var bottomPanelBackground: Color = .white
-    var bottomPanelBorder: Color = .white
-    var bottomPanelStarIconColor: Color = .orange
+    var calendarBackground: Color = .white
     var calendarContentColor: Color = .black
+    
+    var bottomPanelStarIconColor: Color = .orange
 }
 
 struct LightTheme: AppTheme {
@@ -35,9 +34,8 @@ struct LightTheme: AppTheme {
     
     var todayColor: Color = .white
     var dayFilledColor: Color = .orange
-
-    var bottomPanelBackground: Color = .black
-    var bottomPanelBorder: Color = .black
-    var bottomPanelStarIconColor: Color = .orange
+    var calendarBackground: Color = .black
     var calendarContentColor: Color = .white
+    
+    var bottomPanelStarIconColor: Color = .orange
 }

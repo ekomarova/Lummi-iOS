@@ -48,7 +48,7 @@ struct ContentView: View {
                     if isCalendarExpanded {
                         ZStack(alignment: .top) {
                             RoundedRectangle(cornerRadius: 24)
-                                .fill(themeManager.currentTheme.bottomPanelBackground)
+                                .fill(themeManager.currentTheme.calendarBackground)
 
                             MainCalendarView(
                                 themeManager: themeManager,

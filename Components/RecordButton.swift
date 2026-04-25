@@ -48,7 +48,6 @@ struct RecordButton: View {
                     .padding(.horizontal)
 
                 } else if selected == today {
-                    BottomPanel(theme: themeManager.currentTheme) {
                         Button(action: onTap) {
                             Image(systemName: "star.fill")
                                 .font(.system(size: 32, weight: .black))
@@ -57,7 +56,6 @@ struct RecordButton: View {
                         }
                         .buttonStyle(.plain)
                         .accessibilityLabel("Record the joy")
-                    }
                     
                 } else {
                     Text("No records for this day")
