@@ -76,7 +76,7 @@ struct ContentView: View {
                     themeManager.isDark.toggle()
                 }) {
                     Image(systemName: themeManager.isDark ? "moon.stars.fill" : "sun.max.fill")
-                        .foregroundColor(themeManager.currentTheme.todayColor)
+                        .foregroundColor(themeManager.currentTheme.dayFilledColor)
                         .padding()
                         .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.1)))
                 }

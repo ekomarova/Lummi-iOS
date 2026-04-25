@@ -14,12 +14,12 @@ struct DarkTheme: AppTheme {
     var textColor: Color = .white
     var inactiveOpacity: Double = 0.35
     
-    var todayColor: Color = Color(red: 0.5, green: 0.9, blue: 1.0)
-    var todayGlow: Color = .blue
+    var todayColor: Color = .black
+    var dayFilledColor: Color = .orange
 
     var bottomPanelBackground: Color = .white
     var bottomPanelBorder: Color = .white
-    var bottomPanelIconColor: Color = .black
+    var bottomPanelStarIconColor: Color = .orange
     var calendarContentColor: Color = .black
 }
 
@@ -33,11 +33,11 @@ struct LightTheme: AppTheme {
     var textColor: Color = .black
     var inactiveOpacity: Double = 0.35
     
-    var todayColor: Color = .blue
-    var todayGlow: Color = .cyan
+    var todayColor: Color = .white
+    var dayFilledColor: Color = .orange
 
     var bottomPanelBackground: Color = .black
     var bottomPanelBorder: Color = .black
-    var bottomPanelIconColor: Color = .white
+    var bottomPanelStarIconColor: Color = .orange
     var calendarContentColor: Color = .white
 }

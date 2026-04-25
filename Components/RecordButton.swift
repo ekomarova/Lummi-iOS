@@ -52,7 +52,7 @@ struct RecordButton: View {
                         Button(action: onTap) {
                             Image(systemName: "star.fill")
                                 .font(.system(size: 32, weight: .black))
-                                .foregroundColor(themeManager.currentTheme.bottomPanelIconColor)
+                                .foregroundColor(themeManager.currentTheme.bottomPanelStarIconColor)
                                 .frame(maxWidth: .infinity, minHeight: 48)
                         }
                         .buttonStyle(.plain)
