@@ -107,6 +107,7 @@ struct ContentView: View {
         }
         .environmentObject(themeManager)
         .safeAreaInset(edge: .bottom, spacing: 0) {
+            // 1. Record button
             RecordButton(
                 selectedDate: selectedDate,
                 joyEntries: joyEntries,
@@ -116,6 +117,24 @@ struct ContentView: View {
                 }
             )
             .environmentObject(themeManager)
+            
+            HStack {
+                // 2. Home button
+                HomeButton(
+                    isActive: !isCalendarExpanded && Calendar.current.isDateInToday(selectedDate ?? Date()),
+                    onTap: {
+                        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                            isCalendarExpanded = false
+                            selectedDate = Date()
+                            visibleMonth = Date().startOfMonth
+                        }
+                    }
+                )
+                .environmentObject(themeManager)
+                .padding(.leading, 40)
+                
+                Spacer()
+            }
         }
         .sheet(isPresented: $isShowingSheet) {
             RecordInput(joyEntries: $joyEntries, selectedDate: Date())
