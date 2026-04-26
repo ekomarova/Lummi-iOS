@@ -102,11 +102,7 @@ struct SingleMonthView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Text(monthDate.formatted(.dateTime.month(.wide).year()))
-                .font(.system(size: 14, weight: .bold, design: .monospaced))
-                .foregroundColor(themeManager.currentTheme.textColor)
-                .frame(maxWidth: .infinity, alignment: .leading)
-
+            Spacer()
             LazyVGrid(columns: columns, spacing: 4) {
                 ForEach((-firstDayOffset)..<0, id: \.self) { index in
                     Color.clear.frame(height: 38)

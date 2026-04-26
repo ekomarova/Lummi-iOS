@@ -6,7 +6,7 @@ struct ContentView: View {
     @State private var joyEntries: [String: [String]] = {
         let today = Date()
         let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today)!
-        let manyDaysAgo = Calendar.current.date(byAdding: .day, value: -26, to: today)!
+        let manyDaysAgo = Calendar.current.date(byAdding: .day, value: -32, to: today)!
         
         return [
             yesterday.stringKey: ["I ate a lot of chips and it was amazing!"],
@@ -54,7 +54,11 @@ struct ContentView: View {
                     if isCalendarExpanded {
                         ZStack(alignment: .top) {
                             RoundedRectangle(cornerRadius: 24)
-                                .fill(themeManager.currentTheme.calendarBackground)
+                                .fill(themeManager.currentTheme.calendarBackground.opacity(0.83))
+                                .background(
+                                    RoundedRectangle(cornerRadius: 24)
+                                        .fill(.ultraThinMaterial)
+                                )
 
                             MainCalendarView(
                                 themeManager: themeManager,
