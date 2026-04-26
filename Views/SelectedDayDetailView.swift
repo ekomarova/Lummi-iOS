@@ -3,15 +3,15 @@ import SwiftUI
 struct SelectedDayDetailView: View {
     @EnvironmentObject var themeManager: ThemeManager
     
-    let selectedDay: Int?
-    let today: Int
-    let joyEntries: [Int: [String]]
+    let selectedDate: Date?
+    let joyEntries: [String: [String]]
+    
+    private var today: Date { Date() }
     
     var body: some View {
         Group {
-            if let selected = selectedDay {
-                if selected > today {
-                    // Future days
+            if let selected = selectedDate {
+                if Calendar.current.startOfDay(for: selected) > Calendar.current.startOfDay(for: today) {
                     VStack(spacing: 12) {
                         Image(systemName: "moon.stars.fill")
                             .font(.system(size: 40))
@@ -28,10 +28,9 @@ struct SelectedDayDetailView: View {
                     }
                     .frame(maxWidth: .infinity)
                     
-                } else if let notes = joyEntries[selected], !notes.isEmpty {
-                    // Display existing notes for selected day
+                } else if let notes = joyEntries[selected.stringKey], !notes.isEmpty {
                     VStack(alignment: .leading, spacing: 10) {
-                        ForEach(notes, id: \.self) { note in // Iterate over each note
+                        ForEach(notes, id: \.self) { note in
                             Text(note)
                                 .font(.system(size: 16, weight: .light, design: .monospaced))
                                 .foregroundColor(themeManager.currentTheme.textColor)
@@ -49,12 +48,6 @@ struct SelectedDayDetailView: View {
                     }
                     .padding(.horizontal)
 
-                } else if selected < today {
-                    // Past days with no records
-                    Text("No records for this day")
-                        .font(.system(size: 14, design: .monospaced))
-                        .foregroundColor(themeManager.currentTheme.textColor.opacity(0.3))
-                        .frame(maxWidth: .infinity)
                 } else {
                     Text("No records for this day")
                         .font(.system(size: 14, design: .monospaced))
@@ -63,6 +56,6 @@ struct SelectedDayDetailView: View {
                 }
             }
         }
-        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: selectedDay)
+        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: selectedDate)
     }
 }

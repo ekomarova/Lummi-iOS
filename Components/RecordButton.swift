@@ -3,15 +3,13 @@ import SwiftUI
 struct RecordButton: View {
     @EnvironmentObject var themeManager: ThemeManager
     
-    let selectedDay: Int?
-    let today: Int
-    let joyEntries: [Int: [String]]
+    let selectedDate: Date?
+    let joyEntries: [String: [String]]
     var onTap: () -> Void
 
-    
     var body: some View {
         Group {
-            if selectedDay != nil { 
+            if selectedDate != nil {
                 Button(action: onTap) {
                     Image(systemName: "star.fill")
                         .font(.system(size: 32, weight: .black))
@@ -24,6 +22,6 @@ struct RecordButton: View {
                 EmptyView()
             }
         }
-        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: selectedDay)
+        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: selectedDate)
     }
 }

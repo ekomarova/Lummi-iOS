@@ -4,12 +4,11 @@ struct RecordInput: View {
     @EnvironmentObject var themeManager: ThemeManager
     @Environment(\.dismiss) var dismiss
     
-    @Binding var joyEntries: [Int: [String]]
-    let selectedDay: Int?
+    @Binding var joyEntries: [String: [String]]
+    let selectedDate: Date?
     
     @State private var text: String = ""
 
-    
     var body: some View {
         NavigationView {
             ZStack {
@@ -21,7 +20,6 @@ struct RecordInput: View {
                         .foregroundColor(themeManager.currentTheme.textColor)
                         .padding(.top, 40)
                     
-                    // Text input field
                     TextEditor(text: $text)
                         .frame(height: 150)
                         .padding()
@@ -37,10 +35,9 @@ struct RecordInput: View {
                         .foregroundColor(themeManager.currentTheme.textColor)
                         .font(.system(size: 18, weight: .light, design: .monospaced))
                     
-                    // Save button
                     Button(action: {
-                        if let day = selectedDay, !text.isEmpty {
-                            joyEntries[day, default: []].append(text)
+                        if let date = selectedDate, !text.isEmpty {
+                            joyEntries[date.stringKey, default: []].append(text)
                             dismiss()
                         }
                     }) {

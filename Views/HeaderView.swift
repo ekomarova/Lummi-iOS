@@ -8,12 +8,16 @@ struct HeaderView: View {
     let onTap: () -> Void
 
     private var headerDateText: String {
-        let calendar = Calendar.current
-        let day = calendar.component(.day, from: date)
-        let month = date.formatted(.dateTime.month(.wide)).uppercased()
-        let year = date.formatted(.dateTime.year())
-        return "\(day) \(month) \(year)"
-    }
+            let month = date.formatted(.dateTime.month(.wide)).uppercased()
+            let year = date.formatted(.dateTime.year())
+            
+            if isExpanded {
+                return "\(month) \(year)"
+            } else {
+                let day = Calendar.current.component(.day, from: date)
+                return "\(day) \(month) \(year)"
+            }
+        }
 
     var body: some View {
         Button(action: onTap) {
