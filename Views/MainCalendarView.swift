@@ -76,6 +76,9 @@ struct MainCalendarView: View {
         }
     }
 }
+
+// MARK: - Single Month View
+
 struct SingleMonthView: View {
     @ObservedObject var themeManager: ThemeManager
     let monthDate: Date
@@ -134,6 +137,8 @@ struct SingleMonthView: View {
         .padding(.horizontal)
     }
 }
+
+// MARK: - Weekday Header View
 
 struct WeekdayHeaderView: View {
     @ObservedObject var themeManager: ThemeManager

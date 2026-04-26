@@ -18,6 +18,8 @@ struct ContentView: View {
     @State private var selectedDate: Date? = Date()
     @State private var isShowingSheet = false
     @State private var isCalendarExpanded = false
+    
+    @State private var isKeyboardVisible = false
 
     var body: some View {
         GeometryReader { geometry in
@@ -79,7 +81,7 @@ struct ContentView: View {
                     } else {
                         SelectedDayDetailView(
                             selectedDate: selectedDate,
-                            joyEntries: joyEntries
+                            joyEntries: $joyEntries
                         )
                         .environmentObject(themeManager)
                         .transition(.move(edge: .top).combined(with: .opacity))
@@ -104,36 +106,52 @@ struct ContentView: View {
                 .padding(.horizontal)
                 .frame(maxWidth: .infinity, alignment: .trailing)
             }
+            // Listenen to system keyboard notifications
+            .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+                withAnimation(.easeOut(duration: 0.2)) {
+                    isKeyboardVisible = true
+                }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+                withAnimation(.easeOut(duration: 0.2)) {
+                    isKeyboardVisible = false
+                }
+            }
         }
         .environmentObject(themeManager)
         .safeAreaInset(edge: .bottom, spacing: 0) {
-            // 1. Record button
-            RecordButton(
-                selectedDate: selectedDate,
-                joyEntries: joyEntries,
-                onTap: {
-                    isCalendarExpanded = false
-                    isShowingSheet = true
-                }
-            )
-            .environmentObject(themeManager)
-            
-            HStack {
-                // 2. Home button
-                HomeButton(
-                    isActive: !isCalendarExpanded && Calendar.current.isDateInToday(selectedDate ?? Date()),
-                    onTap: {
-                        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+            if !isKeyboardVisible {
+                ZStack {
+                    // 1. Record button
+                    RecordButton(
+                        selectedDate: selectedDate,
+                        joyEntries: joyEntries,
+                        onTap: {
                             isCalendarExpanded = false
-                            selectedDate = Date()
-                            visibleMonth = Date().startOfMonth
+                            isShowingSheet = true
                         }
+                    )
+                    .environmentObject(themeManager)
+                    
+                    HStack {
+                        // 2. Home button
+                        HomeButton(
+                            isActive: !isCalendarExpanded && Calendar.current.isDateInToday(selectedDate ?? Date()),
+                            onTap: {
+                                withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                    isCalendarExpanded = false
+                                    selectedDate = Date()
+                                    visibleMonth = Date().startOfMonth
+                                }
+                            }
+                        )
+                        .environmentObject(themeManager)
+                        .padding(.leading, 40)
+                        
+                        Spacer()
                     }
-                )
-                .environmentObject(themeManager)
-                .padding(.leading, 40)
-                
-                Spacer()
+                }
+                .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
         .sheet(isPresented: $isShowingSheet) {
