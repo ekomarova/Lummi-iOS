@@ -13,5 +13,6 @@ struct HomeButton: View {
                 .frame(width: 44, height: 44)
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier(isActive ? "HomeButton_Active" : "HomeButton_Inactive")
     }
 }

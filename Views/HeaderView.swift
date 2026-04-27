@@ -25,6 +25,7 @@ struct HeaderView: View {
                 Text(headerDateText)
                     .font(.system(size: 24, weight: .black, design: .monospaced))
                     .foregroundColor(themeManager.currentTheme.textColor)
+                    .accessibilityIdentifier("HeaderDateText")
 
                 Image(systemName: "chevron.down")
                     .font(.system(size: 20, weight: .bold))
