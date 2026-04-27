@@ -18,6 +18,7 @@ struct RecordButton: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("Record the joy")
+                .accessibilityIdentifier("MainRecordButton")
             } else {
                 EmptyView()
             }

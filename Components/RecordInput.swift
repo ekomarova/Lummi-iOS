@@ -34,6 +34,7 @@ struct RecordInput: View {
                         )
                         .foregroundColor(themeManager.currentTheme.textColor)
                         .font(.system(size: 18, weight: .light, design: .monospaced))
+                        .accessibilityIdentifier("RecordInputTextEditor")
                     
                     Button(action: {
                         if let date = selectedDate, !text.isEmpty {
@@ -51,6 +52,7 @@ struct RecordInput: View {
                                     .fill(themeManager.currentTheme.todayColor)
                                     .shadow(color: themeManager.currentTheme.todayColor, radius: 10)
                             )
+                            .accessibilityIdentifier("SaveRecordButton")
                     }
                     .disabled(text.isEmpty)
                     .opacity(text.isEmpty ? 0.5 : 1.0)
