@@ -18,40 +18,44 @@ struct SelectedDayDetailView: View {
     }
     
     var body: some View {
-        ZStack {
-            // Global full-screen tap interceptor
-            Color.black.opacity(0.001)
-                .ignoresSafeArea()
-                .onTapGesture {
-                    saveAndDismiss()
-                }
-
-            ScrollView(.vertical, showsIndicators: false) {
-                ScrollViewReader { proxy in
-                    VStack(spacing: 15) {
-                        if let selected = selectedDate {
-                            if Calendar.current.startOfDay(for: selected) > Calendar.current.startOfDay(for: today) {
-                                futureDayView
-                                    .blur(radius: activeMenuIndex != nil ? 6 : 0)
-                                    .opacity(activeMenuIndex != nil ? 0.5 : 1.0)
-                                    .padding(.top, 40)
-                            } else if let notes = joyEntries[selected.stringKey], !notes.isEmpty {
-                                notesListView(notes: notes, proxy: proxy)
-                                    .padding(.top, 10)
-                            } else {
-                                noRecordsView
-                                    .blur(radius: activeMenuIndex != nil ? 6 : 0)
-                                    .opacity(activeMenuIndex != nil ? 0.5 : 1.0)
-                                    .padding(.top, 40)
-                            }
-                        }
-                    }
-                    .frame(maxWidth: .infinity)
-                    .contentShape(Rectangle())
+        GeometryReader { geometry in
+            ZStack {
+                // Global full-screen tap interceptor
+                Color.black.opacity(0.001)
+                    .ignoresSafeArea()
                     .onTapGesture {
                         saveAndDismiss()
                     }
-                    .padding(.bottom, 160)
+
+                ScrollView(.vertical, showsIndicators: false) {
+                    ScrollViewReader { proxy in
+                        VStack(spacing: 15) {
+                            if let selected = selectedDate {
+                                if Calendar.current.startOfDay(for: selected) > Calendar.current.startOfDay(for: today) {
+                                    futureDayView
+                                        .blur(radius: activeMenuIndex != nil ? 6 : 0)
+                                        .opacity(activeMenuIndex != nil ? 0.5 : 1.0)
+                                        .padding(.top, 40)
+                                } else if let notes = joyEntries[selected.stringKey], !notes.isEmpty {
+                                    notesListView(notes: notes, proxy: proxy)
+                                        .padding(.top, 10)
+                                } else {
+                                    noRecordsView
+                                        .blur(radius: activeMenuIndex != nil ? 6 : 0)
+                                        .opacity(activeMenuIndex != nil ? 0.5 : 1.0)
+                                        .padding(.top, 40)
+                                }
+                            }
+                        }
+                        .padding(.horizontal)
+                        .padding(.bottom, 160)
+                        .frame(maxWidth: .infinity)
+                        .frame(minHeight: geometry.size.height, alignment: .top)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            saveAndDismiss()
+                        }
+                    }
                 }
             }
         }
@@ -92,7 +96,6 @@ struct SelectedDayDetailView: View {
                 noteCell(for: index, note: notes[index], proxy: proxy)
             }
         }
-        .padding(.horizontal)
     }
     
     // MARK: - Interactive Cell
