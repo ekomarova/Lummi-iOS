@@ -37,6 +37,7 @@ struct HeaderView: View {
             .frame(maxWidth: .infinity)
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("HeaderToggleButton")
         .frame(maxWidth: .infinity, alignment: .center)
         .animation(.spring(response: 0.3, dampingFraction: 0.8), value: isExpanded)
     }

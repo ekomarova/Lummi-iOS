@@ -4,15 +4,19 @@ struct ContentView: View {
     @StateObject private var themeManager = ThemeManager()
 
     @State private var joyEntries: [String: [String]] = {
-        let today = Date()
-        let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today)!
-        let manyDaysAgo = Calendar.current.date(byAdding: .day, value: -32, to: today)!
-        
-        return [
-            yesterday.stringKey: ["I ate a lot of chips and it was amazing!"],
-            manyDaysAgo.stringKey: ["Watched a beautiful sunset"]
-        ]
+        if ProcessInfo.processInfo.arguments.contains("-UI_TESTING_CALENDAR") {
+            let today = Date()
+            let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today)!
+            let manyDaysAgo = Calendar.current.date(byAdding: .day, value: -32, to: today)!
+            
+            return [
+                yesterday.stringKey: ["I ate a lot of chips and it was amazing!"],
+                manyDaysAgo.stringKey: ["Watched a beautiful sunset"]
+            ]
+        }
+        return [:]
     }()
+
     @State private var visibleMonth: Date = Date().startOfMonth
     
     @State private var selectedDate: Date? = Date()

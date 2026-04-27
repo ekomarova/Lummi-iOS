@@ -11,6 +11,8 @@ struct DayCell: View {
     let isFilled: Bool
     let isToday: Bool
     let isSelected: Bool
+    
+    let dateKey: String
 
     
     var body: some View {
@@ -35,5 +37,10 @@ struct DayCell: View {
             }
         }
         .frame(height: 38)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(day)")
+        .accessibilityIdentifier("DayCell_\(dateKey)")
+        .accessibilityAddTraits(.isButton)
+        .accessibilityValue(isFilled ? "Filled" : "Empty")
     }
 }

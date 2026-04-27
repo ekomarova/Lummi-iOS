@@ -121,7 +121,8 @@ struct SingleMonthView: View {
                         day: day,
                         isFilled: joyEntries[dateKey]?.isEmpty == false,
                         isToday: isToday,
-                        isSelected: isSelected
+                        isSelected: isSelected,
+                        dateKey: dateKey
                     )
                     .contentShape(Rectangle())
                     .onTapGesture {

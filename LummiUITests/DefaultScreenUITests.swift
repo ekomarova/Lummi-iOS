@@ -16,23 +16,23 @@ final class DefaultScreenUITests: XCTestCase {
 
     // MARK: - Tests
     
-    func test1_CurrentDateOnLaunch() throws {
+    func test_CurrentDateOnLaunch() throws {
         verifyCurrentDate()
     }
     
-    func test2_HomeButtonIsActive() throws {
+    func test_HomeButtonIsActive() throws {
         verifyHomeButton()
     }
     
-    func test3_EmptyRecordsState() throws {
+    func test_EmptyRecordsState() throws {
         verifyRecords()
     }
     
-    func test4_CalendarIsCollapsed() throws {
+    func test_CalendarIsCollapsed() throws {
         verifyCalendarCollapsed()
     }
     
-    func test5_AllDefaultStatesTogether() throws {
+    func test_AllDefaultStatesTogether() throws {
         verifyCurrentDate()
         verifyHomeButton()
         verifyRecords()
@@ -42,8 +42,9 @@ final class DefaultScreenUITests: XCTestCase {
     // MARK: - Helpers
     
     private func verifyCurrentDate() {
-        let headerText = app.staticTexts["HeaderDateText"]
-        XCTAssertTrue(headerText.exists, "No Header text date on the screen")
+        let headerButton = app.buttons["HeaderToggleButton"]
+            
+        XCTAssertTrue(headerButton.waitForExistence(timeout: 2.0), "No Header text date on the screen")
         
         let today = Date()
         let month = today.formatted(.dateTime.month(.wide)).uppercased()
@@ -51,7 +52,7 @@ final class DefaultScreenUITests: XCTestCase {
         let day = Calendar.current.component(.day, from: today)
         let expectedDateString = "\(day) \(month) \(year)"
         
-        XCTAssertEqual(headerText.label, expectedDateString, "Header does not display today's date")
+        XCTAssertEqual(headerButton.label, expectedDateString, "Header does not display today's date")
     }
     
     private func verifyHomeButton() {
@@ -65,7 +66,11 @@ final class DefaultScreenUITests: XCTestCase {
     }
     
     private func verifyCalendarCollapsed() {
-        let mondayLabel = app.staticTexts["MON"]
-        XCTAssertFalse(mondayLabel.exists, "The calendar is not collapsed")
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let todayKey = formatter.string(from: Date())
+        
+        let todayCell = app.buttons["DayCell_\(todayKey)"]
+        XCTAssertFalse(todayCell.exists, "The calendar is not collapsed")
     }
 }
