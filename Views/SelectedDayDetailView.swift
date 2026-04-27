@@ -18,26 +18,41 @@ struct SelectedDayDetailView: View {
     }
     
     var body: some View {
-        VStack {
-            if let selected = selectedDate {
-                if Calendar.current.startOfDay(for: selected) > Calendar.current.startOfDay(for: today) {
-                    futureDayView
-                        .blur(radius: activeMenuIndex != nil ? 6 : 0)
-                        .opacity(activeMenuIndex != nil ? 0.5 : 1.0)
-                } else if let notes = joyEntries[selected.stringKey], !notes.isEmpty {
-                    notesListView(notes: notes)
-                } else {
-                    noRecordsView
-                        .blur(radius: activeMenuIndex != nil ? 6 : 0)
-                        .opacity(activeMenuIndex != nil ? 0.5 : 1.0)
+        ZStack {
+            // Global full-screen tap interceptor
+            Color.black.opacity(0.001)
+                .ignoresSafeArea()
+                .onTapGesture {
+                    saveAndDismiss()
                 }
-            }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .contentShape(Rectangle())
-        .onTapGesture {
-            if activeMenuIndex != nil {
-                saveAndDismiss()
+
+            ScrollView(.vertical, showsIndicators: false) {
+                ScrollViewReader { proxy in
+                    VStack(spacing: 15) {
+                        if let selected = selectedDate {
+                            if Calendar.current.startOfDay(for: selected) > Calendar.current.startOfDay(for: today) {
+                                futureDayView
+                                    .blur(radius: activeMenuIndex != nil ? 6 : 0)
+                                    .opacity(activeMenuIndex != nil ? 0.5 : 1.0)
+                                    .padding(.top, 40)
+                            } else if let notes = joyEntries[selected.stringKey], !notes.isEmpty {
+                                notesListView(notes: notes, proxy: proxy)
+                                    .padding(.top, 10)
+                            } else {
+                                noRecordsView
+                                    .blur(radius: activeMenuIndex != nil ? 6 : 0)
+                                    .opacity(activeMenuIndex != nil ? 0.5 : 1.0)
+                                    .padding(.top, 40)
+                            }
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        saveAndDismiss()
+                    }
+                    .padding(.bottom, 160)
+                }
             }
         }
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: selectedDate)
@@ -63,20 +78,18 @@ struct SelectedDayDetailView: View {
                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.4))
                 .multilineTextAlignment(.center)
         }
-        .frame(maxWidth: .infinity)
     }
     
     private var noRecordsView: some View {
         Text("No records for this day")
             .font(.system(size: 14, design: .monospaced))
             .foregroundColor(themeManager.currentTheme.textColor.opacity(0.3))
-            .frame(maxWidth: .infinity)
     }
     
-    private func notesListView(notes: [String]) -> some View {
+    private func notesListView(notes: [String], proxy: ScrollViewProxy) -> some View {
         VStack(alignment: .leading, spacing: 15) {
             ForEach(notes.indices, id: \.self) { index in
-                noteCell(for: index, note: notes[index])
+                noteCell(for: index, note: notes[index], proxy: proxy)
             }
         }
         .padding(.horizontal)
@@ -85,12 +98,11 @@ struct SelectedDayDetailView: View {
     // MARK: - Interactive Cell
     
     @ViewBuilder
-    private func noteCell(for index: Int, note: String) -> some View {
+    private func noteCell(for index: Int, note: String, proxy: ScrollViewProxy) -> some View {
         let isActive = (activeMenuIndex == index)
         
         VStack(alignment: .trailing, spacing: 8) {
             
-            // Round context menu buttons
             if isActive && !isEditing {
                 HStack(spacing: 12) {
                     Button(action: {
@@ -98,6 +110,9 @@ struct SelectedDayDetailView: View {
                         isEditing = true
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                             isTextFieldFocused = true
+                            withAnimation(.spring()) {
+                                proxy.scrollTo(index, anchor: .center)
+                            }
                         }
                     }) {
                         Image(systemName: "pencil")
@@ -128,7 +143,7 @@ struct SelectedDayDetailView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(
                             RoundedRectangle(cornerRadius: 20)
-                                .fill(themeManager.currentTheme.textColor.opacity(0.1))
+                                .fill(themeManager.currentTheme.textColor.opacity(0.12))
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 20)
                                         .stroke(themeManager.currentTheme.textColor.opacity(0.3), lineWidth: 1)
@@ -148,22 +163,23 @@ struct SelectedDayDetailView: View {
                                         .stroke(themeManager.currentTheme.textColor.opacity(isActive ? 0.3 : 0.1), lineWidth: isActive ? 2 : 1)
                                 )
                         )
-                }
-            }
-            .contentShape(Rectangle())
-            .onTapGesture {}
-            .onLongPressGesture {
-                // Open the menu only if it is today
-                if isSelectedToday && !isActive {
-                    saveAndDismiss()
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                        activeMenuIndex = index
-                        isEditing = false
-                    }
+                        .onTapGesture {
+                            if activeMenuIndex != nil { saveAndDismiss() }
+                        }
+                        .onLongPressGesture {
+                            if isSelectedToday && !isActive {
+                                saveAndDismiss()
+                                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                    activeMenuIndex = index
+                                    isEditing = false
+                                }
+                                withAnimation { proxy.scrollTo(index, anchor: .center) }
+                            }
+                        }
                 }
             }
         }
-        // Blur and obscure all other inactive messages
+        .id(index)
         .blur(radius: (activeMenuIndex != nil && !isActive) ? 6 : 0)
         .opacity((activeMenuIndex != nil && !isActive) ? 0.4 : 1.0)
     }
@@ -179,12 +195,15 @@ struct SelectedDayDetailView: View {
     }
     
     private func saveAndDismiss() {
-        guard activeMenuIndex != nil else { return }
+        isTextFieldFocused = false
         
-        if isEditing, let index = activeMenuIndex, let key = selectedDate?.stringKey {
+        guard let index = activeMenuIndex, let key = selectedDate?.stringKey else {
+            return
+        }
+        
+        if isEditing {
             let trimmed = editingText.trimmingCharacters(in: .whitespacesAndNewlines)
             if trimmed.isEmpty {
-                // If the user erased the entire text, delete the empty entry
                 joyEntries[key]?.remove(at: index)
             } else {
                 joyEntries[key]?[index] = trimmed
@@ -194,7 +213,6 @@ struct SelectedDayDetailView: View {
         withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
             activeMenuIndex = nil
             isEditing = false
-            isTextFieldFocused = false
         }
     }
 }
