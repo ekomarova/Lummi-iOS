@@ -8,7 +8,7 @@ struct HomeButton: View {
     var body: some View {
         Button(action: onTap) {
             Image(systemName: isActive ? "house.fill" : "house")
-                .font(.system(size: 22, weight: .medium))
+                .font(.lummiFont(size: 25))
                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.8))
                 .frame(width: 44, height: 44)
         }

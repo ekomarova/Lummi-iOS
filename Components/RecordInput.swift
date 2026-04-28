@@ -9,6 +9,10 @@ struct RecordInput: View {
     
     @State private var text: String = ""
 
+    var isSaveEnabled: Bool {
+        !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
     var body: some View {
         NavigationView {
             ZStack {
@@ -16,9 +20,10 @@ struct RecordInput: View {
                 
                 VStack(spacing: 25) {
                     Text("What made you happy?")
-                        .font(.system(size: 24, weight: .bold, design: .monospaced))
+                        .textCase(.uppercase)
+                        .font(.lummiFont(size: 24))
                         .foregroundColor(themeManager.currentTheme.textColor)
-                        .padding(.top, 40)
+                        .padding(.top, 5)
                     
                     TextEditor(text: $text)
                         .frame(height: 150)
@@ -33,38 +38,53 @@ struct RecordInput: View {
                                 )
                         )
                         .foregroundColor(themeManager.currentTheme.textColor)
-                        .font(.system(size: 18, weight: .light, design: .monospaced))
+                        .font(.lummiFont(size: 18))
                         .accessibilityIdentifier("RecordInputTextEditor")
-                    
-                    Button(action: {
-                        if let date = selectedDate, !text.isEmpty {
-                            joyEntries[date.stringKey, default: []].append(text)
-                            dismiss()
-                        }
-                    }) {
-                        Text("Lume the Star ✨")
-                            .font(.system(size: 18, weight: .bold, design: .monospaced))
-                            .foregroundColor(themeManager.currentTheme.textColor)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .fill(themeManager.currentTheme.todayColor)
-                                    .shadow(color: themeManager.currentTheme.todayColor, radius: 10)
-                            )
-                            .accessibilityIdentifier("SaveRecordButton")
-                    }
-                    .disabled(text.isEmpty)
-                    .opacity(text.isEmpty ? 0.5 : 1.0)
-                    
+
                     Spacer()
                 }
                 .padding(.horizontal, 20)
             }
             .toolbar {
+                // Cancel button
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") { dismiss() }
-                        .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .font(.lummiFont(size: 15))
+                            .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
+                            .background(
+                                Circle().stroke(Color.clear)
+                            )
+                            .frame(width: 34, height: 34)
+                            .contentShape(Circle())
+                    }
+                    .accessibilityLabel("Cancel")
+                    .accessibilityIdentifier("CancelRecordButton")
+                }
+                
+                // Save button
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        if let date = selectedDate, isSaveEnabled {
+                            joyEntries[date.stringKey, default: []].append(text)
+                            dismiss()
+                        }
+                    }) {
+                        Image(systemName: "checkmark")
+                            .font(.lummiFont(size: 15))
+                            .foregroundColor(themeManager.currentTheme.textColor.opacity(isSaveEnabled ? 0.6 : 0.2))
+                            //.padding(10)
+                            .background(
+                                Circle().stroke(Color.clear)
+                            )
+                            .frame(width: 34, height: 34)
+                            .contentShape(Circle())
+                    }
+                    .disabled(!isSaveEnabled)
+                    .accessibilityLabel("Save")
+                    .accessibilityIdentifier("SaveRecordButton")
                 }
             }
         }

@@ -153,7 +153,7 @@ struct WeekdayHeaderView: View {
         HStack(spacing: 0) {
             ForEach(weekdayLabels.indices, id: \.self) { index in
                 Text(weekdayLabels[index])
-                    .font(.system(size: 11, weight: .bold))
+                    .font(.lummiFont(size: 13))
                     .foregroundColor(themeManager.currentTheme.calendarContentColor.opacity(0.4))
                     .frame(maxWidth: .infinity)
             }

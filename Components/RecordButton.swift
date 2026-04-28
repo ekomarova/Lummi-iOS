@@ -12,7 +12,7 @@ struct RecordButton: View {
             if selectedDate != nil {
                 Button(action: onTap) {
                     Image(systemName: "star.fill")
-                        .font(.system(size: 32, weight: .black))
+                        .font(.lummiFont(size: 43))
                         .foregroundColor(themeManager.currentTheme.bottomPanelStarIconColor)
                         .frame(maxWidth: .infinity, minHeight: 48)
                 }

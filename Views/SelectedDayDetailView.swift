@@ -75,18 +75,14 @@ struct SelectedDayDetailView: View {
                 .font(.system(size: 40))
                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.2))
             Text("Oops! This day has not started yet")
-                .font(.system(size: 16, weight: .bold, design: .monospaced))
+                .font(.lummiFont(size: 16))
                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
-            Text("✨ Lumens will light up when the time is right ✨")
-                .font(.system(size: 13))
-                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.4))
-                .multilineTextAlignment(.center)
         }
     }
     
     private var noRecordsView: some View {
         Text("No records for this day")
-            .font(.system(size: 14, design: .monospaced))
+            .font(.lummiFont(size: 16))
             .foregroundColor(themeManager.currentTheme.textColor.opacity(0.3))
     }
     
@@ -119,7 +115,7 @@ struct SelectedDayDetailView: View {
                         }
                     }) {
                         Image(systemName: "pencil")
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.lummiFont(size: 16))
                             .foregroundColor(themeManager.currentTheme.backgroundColor)
                             .frame(width: 44, height: 44)
                             .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.85)))
@@ -127,7 +123,7 @@ struct SelectedDayDetailView: View {
                     
                     Button(action: { deleteNote(at: index) }) {
                         Image(systemName: "trash")
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.lummiFont(size: 16))
                             .foregroundColor(themeManager.currentTheme.backgroundColor)
                             .frame(width: 44, height: 44)
                             .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.85)))
@@ -140,7 +136,7 @@ struct SelectedDayDetailView: View {
                 if isActive && isEditing {
                     TextField("What made you happy?", text: $editingText, axis: .vertical)
                         .focused($isTextFieldFocused)
-                        .font(.system(size: 16, weight: .light, design: .monospaced))
+                        .font(.lummiFont(size: 16))
                         .foregroundColor(themeManager.currentTheme.textColor)
                         .padding(20)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -154,7 +150,7 @@ struct SelectedDayDetailView: View {
                         )
                 } else {
                     Text(note)
-                        .font(.system(size: 16, weight: .light, design: .monospaced))
+                        .font(.lummiFont(size: 16))
                         .foregroundColor(themeManager.currentTheme.textColor)
                         .padding(20)
                         .frame(maxWidth: .infinity, alignment: .leading)

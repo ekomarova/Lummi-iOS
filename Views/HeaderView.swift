@@ -23,13 +23,13 @@ struct HeaderView: View {
         Button(action: onTap) {
             HStack(spacing: 6) {
                 Text(headerDateText)
-                    .font(.system(size: 24, weight: .black, design: .monospaced))
+                    .font(.lummiFont(size: 24))
                     .foregroundColor(themeManager.currentTheme.textColor)
                     .accessibilityIdentifier("HeaderDateText")
 
                 Image(systemName: "chevron.down")
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(themeManager.currentTheme.textColor)
+                    .font(.lummiFont(size: 20))
+                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
                     .rotationEffect(.degrees(isExpanded ? 180 : 0))
                     .offset(y: 1)
             }

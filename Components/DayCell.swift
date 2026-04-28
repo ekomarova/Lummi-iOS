@@ -29,7 +29,7 @@ struct DayCell: View {
                 }
 
                 Text("\(day)")
-                    .font(.system(size: 15, weight: isToday ? .black : .bold, design: .monospaced))
+                    .font(.system(size: 15, weight: isToday ? .bold : .light, design: .monospaced))
                     .foregroundColor(
                         isToday ? themeManager.currentTheme.todayColor :
                         (isFilled ? themeManager.currentTheme.dayFilledColor : themeManager.currentTheme.calendarContentColor.opacity(themeManager.currentTheme.inactiveOpacity))
