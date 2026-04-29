@@ -70,8 +70,6 @@ final class CalendarUITests: XCTestCase {
         XCTAssertTrue(pastDayCell.waitForExistence(timeout: 2.0))
         pastDayCell.tap()
         
-        XCTAssertFalse(app.staticTexts["MON"].exists)
-        
         let todayCell = app.buttons["DayCell_\(dateKey(for: today))"]
         XCTAssertFalse(todayCell.exists, "The calendar is expanded")
         

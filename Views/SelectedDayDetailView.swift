@@ -23,6 +23,7 @@ struct SelectedDayDetailView: View {
                 // Global full-screen tap interceptor
                 Color.black.opacity(0.001)
                     .ignoresSafeArea()
+                    .accessibilityIdentifier("GlobalDismissArea")
                     .onTapGesture {
                         saveAndDismiss()
                     }
@@ -51,10 +52,12 @@ struct SelectedDayDetailView: View {
                         .padding(.bottom, 160)
                         .frame(maxWidth: .infinity)
                         .frame(minHeight: geometry.size.height, alignment: .top)
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            saveAndDismiss()
-                        }
+                        .background(
+                            Color.black.opacity(0.001)
+                                .onTapGesture {
+                                    saveAndDismiss()
+                                }
+                        )
                     }
                 }
             }
@@ -120,6 +123,7 @@ struct SelectedDayDetailView: View {
                             .frame(width: 44, height: 44)
                             .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.85)))
                     }
+                    .accessibilityIdentifier("EditRecordButton")
                     
                     Button(action: { deleteNote(at: index) }) {
                         Image(systemName: "trash")
@@ -128,6 +132,7 @@ struct SelectedDayDetailView: View {
                             .frame(width: 44, height: 44)
                             .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.85)))
                     }
+                    .accessibilityIdentifier("DeleteRecordButton")
                 }
                 .transition(.scale(scale: 0.8).combined(with: .opacity).combined(with: .move(edge: .bottom)))
             }
@@ -135,6 +140,7 @@ struct SelectedDayDetailView: View {
             Group {
                 if isActive && isEditing {
                     TextField("What made you happy?", text: $editingText, axis: .vertical)
+                        .accessibilityIdentifier("EditRecordTextField")
                         .focused($isTextFieldFocused)
                         .font(.lummiFont(size: 16))
                         .foregroundColor(themeManager.currentTheme.textColor)
@@ -175,6 +181,7 @@ struct SelectedDayDetailView: View {
                                 withAnimation { proxy.scrollTo(index, anchor: .center) }
                             }
                         }
+                        .accessibilityIdentifier("RecordText_\(index)")
                 }
             }
         }

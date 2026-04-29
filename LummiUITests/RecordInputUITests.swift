@@ -38,7 +38,7 @@ final class RecordInputUITests: XCTestCase {
         XCTAssertFalse(textEditor.exists, "The input window did not close")
     }
 
-    // Chech input state after text filed editing
+    // Chech input state after text field editing
     func test_TypingTextEnablesSaveAndCreatesRecord() throws {
         app.buttons["MainRecordButton"].tap()
         
