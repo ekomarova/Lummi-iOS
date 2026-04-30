@@ -12,6 +12,7 @@ struct ContentView: View {
     @State private var isShowingSheet = false
     @State private var isCalendarExpanded = false
     @State private var isKeyboardVisible = false
+    @State private var isShowingSettings = false
 
     var body: some View {
         GeometryReader { geometry in
@@ -31,21 +32,28 @@ struct ContentView: View {
                 }
 
                 VStack(spacing: 15) {
-                    HeaderView(
-                        date: isCalendarExpanded ? visibleMonth : (selectedDate ?? Date()),
-                        isExpanded: isCalendarExpanded,
-                        onTap: {
-                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                                isCalendarExpanded.toggle()
-                                if !isCalendarExpanded {
-                                    visibleMonth = (selectedDate ?? Date()).startOfMonth
+                    if !isShowingSettings {
+                        HeaderView(
+                            date: isCalendarExpanded ? visibleMonth : (selectedDate ?? Date()),
+                            isExpanded: isCalendarExpanded,
+                            onTap: {
+                                withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                    isCalendarExpanded.toggle()
+                                    if !isCalendarExpanded {
+                                        visibleMonth = (selectedDate ?? Date()).startOfMonth
+                                    }
                                 }
                             }
-                        }
-                    )
-                    .environmentObject(themeManager)
-
-                    if isCalendarExpanded {
+                        )
+                        .environmentObject(themeManager)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                    }
+                        
+                    if isShowingSettings {
+                        SettingsView()
+                            .environmentObject(themeManager)
+                            .transition(.move(edge: .trailing).combined(with: .opacity))
+                    } else if isCalendarExpanded {
                         ZStack(alignment: .top) {
                             RoundedRectangle(cornerRadius: 24)
                                 .fill(themeManager.currentTheme.calendarBackground.opacity(0.83))
@@ -53,7 +61,7 @@ struct ContentView: View {
                                     RoundedRectangle(cornerRadius: 24)
                                         .fill(.ultraThinMaterial)
                                 )
-
+                            
                             MainCalendarView(
                                 themeManager: themeManager,
                                 selectedDate: $selectedDate,
@@ -80,22 +88,8 @@ struct ContentView: View {
                     Spacer()
                 }
                 .padding(.top, 8)
-
-                // Theme button
-                Button(action: {
-                    isCalendarExpanded = false
-                    themeManager.isDark.toggle()
-                    selectedDate = Date()
-                }) {
-                    Image(systemName: themeManager.isDark ? "moon.stars.fill" : "sun.max.fill")
-                        .foregroundColor(themeManager.currentTheme.dayFilledColor)
-                        .padding()
-                        .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.1)))
-                }
-                .padding(.top, 8)
-                .padding(.horizontal)
-                .frame(maxWidth: .infinity, alignment: .trailing)
             }
+
             // Listenen to system keyboard notifications
             .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
                 withAnimation(.easeOut(duration: 0.2)) {
@@ -125,9 +119,10 @@ struct ContentView: View {
                     HStack {
                         // 2. Home button
                         HomeButton(
-                            isActive: !isCalendarExpanded && Calendar.current.isDateInToday(selectedDate ?? Date()),
+                            isActive: !isCalendarExpanded && !isShowingSettings && Calendar.current.isDateInToday(selectedDate ?? Date()),
                             onTap: {
                                 withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                    isShowingSettings = false
                                     isCalendarExpanded = false
                                     selectedDate = Date()
                                     visibleMonth = Date().startOfMonth
@@ -138,6 +133,19 @@ struct ContentView: View {
                         .padding(.leading, 40)
                         
                         Spacer()
+                        
+                        // 3. Settings button
+                        SettingsButton(
+                            isActive: isShowingSettings,
+                            onTap: {
+                                withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                    isCalendarExpanded = false
+                                    isShowingSettings = true
+                                }
+                            }
+                        )
+                        .environmentObject(themeManager)
+                        .padding(.trailing, 40)
                     }
                 }
                 .transition(.move(edge: .bottom).combined(with: .opacity))
