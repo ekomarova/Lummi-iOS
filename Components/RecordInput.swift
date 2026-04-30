@@ -1,10 +1,11 @@
 import SwiftUI
+import SwiftData
 
 struct RecordInput: View {
     @EnvironmentObject var themeManager: ThemeManager
     @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) private var modelContext
     
-    @Binding var joyEntries: [String: [String]]
     let selectedDate: Date?
     
     @State private var text: String = ""
@@ -68,14 +69,15 @@ struct RecordInput: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         if let date = selectedDate, isSaveEnabled {
-                            joyEntries[date.stringKey, default: []].append(text)
+                            let newEntry = JoyEntry(text: text, date: date, dateKey: date.stringKey)
+                            modelContext.insert(newEntry)
+                            try? modelContext.save()
                             dismiss()
                         }
                     }) {
                         Image(systemName: "checkmark")
                             .font(.lummiFont(size: 15))
                             .foregroundColor(themeManager.currentTheme.textColor.opacity(isSaveEnabled ? 0.6 : 0.2))
-                            //.padding(10)
                             .background(
                                 Circle().stroke(Color.clear)
                             )

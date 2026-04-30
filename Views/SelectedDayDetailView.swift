@@ -1,10 +1,13 @@
 import SwiftUI
+import SwiftData
 
 struct SelectedDayDetailView: View {
     @EnvironmentObject var themeManager: ThemeManager
+    @Environment(\.modelContext) private var modelContext
     
     let selectedDate: Date?
-    @Binding var joyEntries: [String: [String]]
+
+    @Query(sort: \JoyEntry.date) private var allEntries: [JoyEntry]
     
     @State private var activeMenuIndex: Int? = nil
     @State private var editingText: String = ""
@@ -15,6 +18,11 @@ struct SelectedDayDetailView: View {
     private var isSelectedToday: Bool {
         guard let selected = selectedDate else { return false }
         return Calendar.current.isDate(selected, inSameDayAs: today)
+    }
+    
+    private var todaysEntries: [JoyEntry] {
+        guard let key = selectedDate?.stringKey else { return [] }
+        return allEntries.filter { $0.dateKey == key }
     }
     
     var body: some View {
@@ -37,8 +45,8 @@ struct SelectedDayDetailView: View {
                                         .blur(radius: activeMenuIndex != nil ? 6 : 0)
                                         .opacity(activeMenuIndex != nil ? 0.5 : 1.0)
                                         .padding(.top, 40)
-                                } else if let notes = joyEntries[selected.stringKey], !notes.isEmpty {
-                                    notesListView(notes: notes, proxy: proxy)
+                                } else if !todaysEntries.isEmpty {
+                                    notesListView(entries: todaysEntries, proxy: proxy)
                                         .padding(.top, 10)
                                 } else {
                                     noRecordsView
@@ -65,9 +73,7 @@ struct SelectedDayDetailView: View {
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: selectedDate)
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: activeMenuIndex)
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: isEditing)
-        .onChange(of: selectedDate) { oldValue, newValue in
-            saveAndDismiss()
-        }
+        .onChange(of: selectedDate) { _, _ in saveAndDismiss() }
     }
     
     // MARK: - Subviews
@@ -89,10 +95,10 @@ struct SelectedDayDetailView: View {
             .foregroundColor(themeManager.currentTheme.textColor.opacity(0.3))
     }
     
-    private func notesListView(notes: [String], proxy: ScrollViewProxy) -> some View {
+    private func notesListView(entries: [JoyEntry], proxy: ScrollViewProxy) -> some View {
         VStack(alignment: .leading, spacing: 15) {
-            ForEach(notes.indices, id: \.self) { index in
-                noteCell(for: index, note: notes[index], proxy: proxy)
+            ForEach(entries.indices, id: \.self) { index in
+                noteCell(for: index, entry: entries[index], proxy: proxy)
             }
         }
     }
@@ -100,15 +106,14 @@ struct SelectedDayDetailView: View {
     // MARK: - Interactive Cell
     
     @ViewBuilder
-    private func noteCell(for index: Int, note: String, proxy: ScrollViewProxy) -> some View {
-        let isActive = (activeMenuIndex == index)
+        private func noteCell(for index: Int, entry: JoyEntry, proxy: ScrollViewProxy) -> some View {
+            let isActive = (activeMenuIndex == index)
         
         VStack(alignment: .trailing, spacing: 8) {
-            
             if isActive && !isEditing {
                 HStack(spacing: 12) {
                     Button(action: {
-                        editingText = note
+                        editingText = entry.text
                         isEditing = true
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                             isTextFieldFocused = true
@@ -155,7 +160,7 @@ struct SelectedDayDetailView: View {
                                 )
                         )
                 } else {
-                    Text(note)
+                    Text(entry.text)
                         .font(.lummiFont(size: 16))
                         .foregroundColor(themeManager.currentTheme.textColor)
                         .padding(20)
@@ -193,26 +198,26 @@ struct SelectedDayDetailView: View {
     // MARK: - Actions
     
     private func deleteNote(at index: Int) {
-        guard let key = selectedDate?.stringKey else { return }
+        let entry = todaysEntries[index]
         withAnimation {
-            joyEntries[key]?.remove(at: index)
+            modelContext.delete(entry)
             activeMenuIndex = nil
         }
     }
     
     private func saveAndDismiss() {
         isTextFieldFocused = false
-        
-        guard let index = activeMenuIndex, let key = selectedDate?.stringKey else {
-            return
-        }
+                
+        guard let index = activeMenuIndex else { return }
         
         if isEditing {
             let trimmed = editingText.trimmingCharacters(in: .whitespacesAndNewlines)
+            let entry = todaysEntries[index]
+            
             if trimmed.isEmpty {
-                joyEntries[key]?.remove(at: index)
+                modelContext.delete(entry)
             } else {
-                joyEntries[key]?[index] = trimmed
+                entry.text = trimmed
             }
         }
         

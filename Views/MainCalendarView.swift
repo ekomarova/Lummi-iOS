@@ -1,32 +1,33 @@
 import SwiftUI
+import SwiftData
 
 struct MainCalendarView: View {
     @ObservedObject var themeManager: ThemeManager
     @Binding var selectedDate: Date?
-    @Binding var joyEntries: [String: [String]]
     @Binding var isCalendarExpanded: Bool
     @Binding var visibleMonth: Date
     
+    @Query(sort: \JoyEntry.date, order: .forward) private var allEntries: [JoyEntry]
+    
     @State private var scrollID: Date?
+    
+    // Search for days with stars
+    private var filledDateKeys: Set<String> {
+        Set(allEntries.map { $0.dateKey })
+    }
     
     private var months: [Date] {
         let calendar = Calendar.current
         let today = Date()
         let currentMonthStart = today.startOfMonth
         
-        // 1. Find the earliest entry in the dictionary
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        
-        let entryDates = joyEntries.keys.compactMap { formatter.date(from: $0) }
-        
-        // 2. Defining the initial month
+        // Defining the initial month
         // If there are no records, start with the current month
         // If there is, take the earliest date and get the beginning of its month
-        let firstEntryDate = entryDates.min() ?? today
+        let firstEntryDate = allEntries.first?.date ?? today
         let startMonth = firstEntryDate.startOfMonth
         
-        // 3. Generate array from the earliest record up to and including the current month
+        // Generate array from the earliest record up to and including the current month
         var result: [Date] = []
         var iterator = startMonth
         
@@ -54,8 +55,8 @@ struct MainCalendarView: View {
                             themeManager: themeManager,
                             monthDate: monthDate,
                             selectedDate: $selectedDate,
-                            joyEntries: $joyEntries,
-                            isCalendarExpanded: $isCalendarExpanded
+                            isCalendarExpanded: $isCalendarExpanded,
+                            filledDates: filledDateKeys
                         )
                         .containerRelativeFrame(.vertical, alignment: .top)
                         .id(monthDate)
@@ -83,8 +84,9 @@ struct SingleMonthView: View {
     @ObservedObject var themeManager: ThemeManager
     let monthDate: Date
     @Binding var selectedDate: Date?
-    @Binding var joyEntries: [String: [String]]
     @Binding var isCalendarExpanded: Bool
+    
+    let filledDates: Set<String>
     
     private let calendar = Calendar.current
     let columns = Array(repeating: GridItem(.flexible(), spacing: 7), count: 7)
@@ -119,7 +121,7 @@ struct SingleMonthView: View {
                     
                     DayCell(
                         day: day,
-                        isFilled: joyEntries[dateKey]?.isEmpty == false,
+                        isFilled: filledDates.contains(dateKey),
                         isToday: isToday,
                         isSelected: isSelected,
                         dateKey: dateKey

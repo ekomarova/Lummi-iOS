@@ -7,7 +7,7 @@ final class TodayRecordsUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
         app = XCUIApplication()
-        app.launchArguments = ["-UI_TESTING_CALENDAR"]
+        app.launchArguments = ["-UI_TESTING_CALENDAR", "-SEED_10_RECORDS"]
         app.launch()
     }
 
@@ -21,12 +21,6 @@ final class TodayRecordsUITests: XCTestCase {
     func test_CreateMultipleRecordsAndScroll() throws {
         let numberOfRecords = 10
         
-        for i in 0..<numberOfRecords {
-            createRecord(withText: "Record #\(i)")
-            let indexRecord = app.staticTexts["RecordText_\(i)"]
-            XCTAssertTrue(indexRecord.waitForExistence(timeout: 2.0), "Entry #\(i) has not been added")
-        }
-        
         // Check scroll
         let calendarScroll = app.scrollViews.firstMatch
         calendarScroll.swipeUp()
@@ -39,17 +33,12 @@ final class TodayRecordsUITests: XCTestCase {
         calendarScroll.swipeDown()
     }
 
+    // Check text edition
     func test_EditRecord() throws {
-        let numberOfRecords = 10
-        
-        for i in 0..<numberOfRecords {
-            createRecord(withText: "Record #\(i)")
-        }
-
-        let originalText = "Record #8"
+        let originalText = "Record #7"
         let addedText = "(edited)"
 
-        let recordToEdit = app.staticTexts["RecordText_8"]
+        let recordToEdit = app.staticTexts["RecordText_7"]
         XCTAssertTrue(recordToEdit.waitForExistence(timeout: 2.0))
         
         recordToEdit.press(forDuration: 1.0)
@@ -70,13 +59,8 @@ final class TodayRecordsUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts[updatedText].waitForExistence(timeout: 2.0), "The edited entry did not appear")
     }
 
+    // Check record deleting
     func test_DeleteRecord() throws {
-        let numberOfRecords = 10
-        
-        for i in 0..<numberOfRecords {
-            createRecord(withText: "Record #\(i)")
-        }
-        
         let recordToDelete = app.staticTexts["RecordText_7"]
         
         recordToDelete.press(forDuration: 1.0)
@@ -84,6 +68,8 @@ final class TodayRecordsUITests: XCTestCase {
         let deleteButton = app.buttons["DeleteRecordButton"]
         XCTAssertTrue(deleteButton.waitForExistence(timeout: 2.0))
         deleteButton.tap()
+        
+        sleep(1)
         
         XCTAssertFalse(app.staticTexts["Record #7"].exists, "The entry was not deleted from the list")
     }

@@ -4,7 +4,6 @@ struct RecordButton: View {
     @EnvironmentObject var themeManager: ThemeManager
     
     let selectedDate: Date?
-    let joyEntries: [String: [String]]
     var onTap: () -> Void
 
     var body: some View {

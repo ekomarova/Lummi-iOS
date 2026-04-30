@@ -1,28 +1,16 @@
 import SwiftUI
+import SwiftData
+
 
 struct ContentView: View {
     @StateObject private var themeManager = ThemeManager()
-
-    @State private var joyEntries: [String: [String]] = {
-        if ProcessInfo.processInfo.arguments.contains("-UI_TESTING_CALENDAR") {
-            let today = Date()
-            let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today)!
-            let manyDaysAgo = Calendar.current.date(byAdding: .day, value: -32, to: today)!
-            
-            return [
-                yesterday.stringKey: ["I ate a lot of chips and it was amazing!"],
-                manyDaysAgo.stringKey: ["Watched a beautiful sunset"]
-            ]
-        }
-        return [:]
-    }()
+    @Environment(\.modelContext) private var modelContext
+    @Query private var allEntries: [JoyEntry]
 
     @State private var visibleMonth: Date = Date().startOfMonth
-    
     @State private var selectedDate: Date? = Date()
     @State private var isShowingSheet = false
     @State private var isCalendarExpanded = false
-    
     @State private var isKeyboardVisible = false
 
     var body: some View {
@@ -69,7 +57,6 @@ struct ContentView: View {
                             MainCalendarView(
                                 themeManager: themeManager,
                                 selectedDate: $selectedDate,
-                                joyEntries: $joyEntries,
                                 isCalendarExpanded: $isCalendarExpanded,
                                 visibleMonth: $visibleMonth
                             )
@@ -84,8 +71,7 @@ struct ContentView: View {
                         .onTapGesture { }
                     } else {
                         SelectedDayDetailView(
-                            selectedDate: selectedDate,
-                            joyEntries: $joyEntries
+                            selectedDate: selectedDate
                         )
                         .environmentObject(themeManager)
                         .transition(.move(edge: .top).combined(with: .opacity))
@@ -129,7 +115,6 @@ struct ContentView: View {
                     // 1. Record button
                     RecordButton(
                         selectedDate: selectedDate,
-                        joyEntries: joyEntries,
                         onTap: {
                             isCalendarExpanded = false
                             isShowingSheet = true
@@ -159,8 +144,31 @@ struct ContentView: View {
             }
         }
         .sheet(isPresented: $isShowingSheet) {
-            RecordInput(joyEntries: $joyEntries, selectedDate: Date())
+            RecordInput(selectedDate: Date())
                 .environmentObject(themeManager)
+        }
+        .onAppear {
+            if ProcessInfo.processInfo.arguments.contains("-UI_TESTING_CALENDAR") && allEntries.isEmpty {
+                let today = Date()
+                let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today)!
+                let manyDaysAgo = Calendar.current.date(byAdding: .day, value: -32, to: today)!
+                
+                modelContext.insert(JoyEntry(text: "I ate a lot of chips and it was amazing!", date: yesterday, dateKey: yesterday.stringKey))
+                modelContext.insert(JoyEntry(text: "Watched a beautiful sunset", date: manyDaysAgo, dateKey: manyDaysAgo.stringKey))
+            }
+            if ProcessInfo.processInfo.arguments.contains("-SEED_10_RECORDS") {
+                let baseDate = Date()
+                let dateString = baseDate.stringKey
+                
+                let todaysEntriesCount = allEntries.filter { $0.dateKey == dateString }.count
+                if todaysEntriesCount == 0 {
+                    for i in 0..<10 {
+                        let recordDate = Calendar.current.date(byAdding: .second, value: i, to: baseDate)!
+                        modelContext.insert(JoyEntry(text: "Record #\(i)", date: recordDate, dateKey: dateString))
+                    }
+                    try? modelContext.save()
+                }
+            }
         }
     }
 }
