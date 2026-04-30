@@ -6,13 +6,15 @@ struct SettingsView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 30) {
             Text("Settings")
-                .font(.lummiFont(size: 28))
+                .textCase(.uppercase)
+                .font(.lummiFont(size: 24))
                 .foregroundColor(themeManager.currentTheme.textColor)
                 .padding(.top, 10)
 
             HStack {
                 Text("Appearance")
-                    .font(.lummiFont(size: 20))
+                    .textCase(.uppercase)
+                    .font(.lummiFont(size: 18))
                     .foregroundColor(themeManager.currentTheme.textColor)
                 
                 Spacer()

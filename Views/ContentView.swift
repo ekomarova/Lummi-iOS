@@ -13,6 +13,7 @@ struct ContentView: View {
     @State private var isCalendarExpanded = false
     @State private var isKeyboardVisible = false
     @State private var isShowingSettings = false
+    @State private var isShowingInsights = false
 
     var body: some View {
         GeometryReader { geometry in
@@ -32,7 +33,7 @@ struct ContentView: View {
                 }
 
                 VStack(spacing: 15) {
-                    if !isShowingSettings {
+                    if !isShowingSettings && !isShowingInsights {
                         HeaderView(
                             date: isCalendarExpanded ? visibleMonth : (selectedDate ?? Date()),
                             isExpanded: isCalendarExpanded,
@@ -53,6 +54,10 @@ struct ContentView: View {
                         SettingsView()
                             .environmentObject(themeManager)
                             .transition(.move(edge: .trailing).combined(with: .opacity))
+                    } else if isShowingInsights {
+                        InsightsView()
+                            .environmentObject(themeManager)
+                            .transition(.move(edge: .leading).combined(with: .opacity))
                     } else if isCalendarExpanded {
                         ZStack(alignment: .top) {
                             RoundedRectangle(cornerRadius: 24)
@@ -105,8 +110,55 @@ struct ContentView: View {
         .environmentObject(themeManager)
         .safeAreaInset(edge: .bottom, spacing: 0) {
             if !isKeyboardVisible {
-                ZStack {
-                    // 1. Record button
+                HStack(spacing: 0) {
+                    // Home button
+                    HomeButton(
+                        isActive: !isCalendarExpanded && !isShowingSettings && !isShowingInsights && Calendar.current.isDateInToday(selectedDate ?? Date()),
+                        onTap: {
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                isShowingSettings = false
+                                isShowingInsights = false
+                                isCalendarExpanded = false
+                                selectedDate = Date()
+                                visibleMonth = Date().startOfMonth
+                            }
+                        }
+                    )
+                    .environmentObject(themeManager)
+                    
+                    Spacer()
+                    
+                    // Insights button
+                    InsightsButton(
+                        isActive: isShowingInsights,
+                        onTap: {
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                isShowingSettings = false
+                                isCalendarExpanded = false
+                                isShowingInsights = true
+                            }
+                        }
+                    )
+                    .environmentObject(themeManager)
+                    
+                    Spacer()
+                    
+                    // Settings button
+                    SettingsButton(
+                        isActive: isShowingSettings,
+                        onTap: {
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                isShowingInsights = false
+                                isCalendarExpanded = false
+                                isShowingSettings = true
+                            }
+                        }
+                    )
+                    .environmentObject(themeManager)
+                    
+                    Spacer()
+                    
+                    // Record button
                     RecordButton(
                         selectedDate: selectedDate,
                         onTap: {
@@ -115,39 +167,10 @@ struct ContentView: View {
                         }
                     )
                     .environmentObject(themeManager)
-                    
-                    HStack {
-                        // 2. Home button
-                        HomeButton(
-                            isActive: !isCalendarExpanded && !isShowingSettings && Calendar.current.isDateInToday(selectedDate ?? Date()),
-                            onTap: {
-                                withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                                    isShowingSettings = false
-                                    isCalendarExpanded = false
-                                    selectedDate = Date()
-                                    visibleMonth = Date().startOfMonth
-                                }
-                            }
-                        )
-                        .environmentObject(themeManager)
-                        .padding(.leading, 40)
-                        
-                        Spacer()
-                        
-                        // 3. Settings button
-                        SettingsButton(
-                            isActive: isShowingSettings,
-                            onTap: {
-                                withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                                    isCalendarExpanded = false
-                                    isShowingSettings = true
-                                }
-                            }
-                        )
-                        .environmentObject(themeManager)
-                        .padding(.trailing, 40)
-                    }
+                    .frame(width: 70)
                 }
+                .padding(.horizontal, 40)
+                .padding(.bottom, 10)
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }

@@ -45,6 +45,7 @@ final class CalendarUITests: XCTestCase {
         let calendarScroll = app.scrollViews.firstMatch
         calendarScroll.swipeDown()
         calendarScroll.swipeDown()
+        calendarScroll.swipeDown()
 
         let pastMonth = past32Date.formatted(.dateTime.month(.wide)).uppercased()
         let pastYear = past32Date.formatted(.dateTime.year())
@@ -62,6 +63,7 @@ final class CalendarUITests: XCTestCase {
         app.buttons["HeaderToggleButton"].tap()
         
         let calendarScroll = app.scrollViews.firstMatch
+        calendarScroll.swipeDown()
         calendarScroll.swipeDown()
         calendarScroll.swipeDown()
         
@@ -102,16 +104,15 @@ final class CalendarUITests: XCTestCase {
     // Check empty date
     func test_EmptyDayShowsNoRecords() throws {
         app.buttons["HeaderToggleButton"].tap()
+                
+
+        let emptyDayCell = app.buttons["DayCell_\(dateKey(for: today))"]
         
-        var comp = Calendar.current.dateComponents([.year, .month], from: today)
-        comp.day = 2
-        let emptyDate = Calendar.current.date(from: comp)!
+        XCTAssertTrue(emptyDayCell.waitForExistence(timeout: 2.0), "Today's cell should exist on the screen")
         
-        let emptyDayCell = app.buttons["DayCell_\(dateKey(for: emptyDate))"]
-        if emptyDayCell.waitForExistence(timeout: 2.0) {
-            emptyDayCell.tap()
-            XCTAssertTrue(app.staticTexts["No records for this day"].exists)
-        }
+        emptyDayCell.tap()
+        
+        XCTAssertTrue(app.staticTexts["No records for this day"].exists)
     }
 
     // Check future day

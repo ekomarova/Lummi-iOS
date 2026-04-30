@@ -41,6 +41,7 @@ final class RecordButtonUITests: XCTestCase {
         let calendarScroll = app.scrollViews.firstMatch
         calendarScroll.swipeDown()
         calendarScroll.swipeDown()
+        calendarScroll.swipeDown()
 
         app.buttons["DayCell_\(dateKey(for: past32Date))"].tap()
         
