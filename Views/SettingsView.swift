@@ -10,6 +10,7 @@ struct SettingsView: View {
                 .font(.lummiFont(size: 24))
                 .foregroundColor(themeManager.currentTheme.textColor)
                 .padding(.top, 10)
+                .frame(maxWidth: .infinity, alignment: .center)
 
             HStack {
                 Text("Appearance")
@@ -21,16 +22,20 @@ struct SettingsView: View {
                 
                 HStack(spacing: 0) {
                     CompactThemeButton(
-                        title: "Light",
+                        // Light
+                        title: "",
                         icon: "sun.max.fill",
                         isSelected: !themeManager.isDark,
+                        accessibilityID: "LightThemeButton",
                         action: { withAnimation(.spring()) { themeManager.isDark = false } }
                     )
                     
                     CompactThemeButton(
-                        title: "Dark",
+                        // Dark
+                        title: "",
                         icon: "moon.stars.fill",
                         isSelected: themeManager.isDark,
+                        accessibilityID: "DarkThemeButton",
                         action: { withAnimation(.spring()) { themeManager.isDark = true } }
                     )
                 }
@@ -58,6 +63,7 @@ struct CompactThemeButton: View {
     let title: String
     let icon: String
     let isSelected: Bool
+    let accessibilityID: String
     let action: () -> Void
 
     var body: some View {
@@ -79,7 +85,7 @@ struct CompactThemeButton: View {
             )
         }
         .buttonStyle(.plain)
-        .accessibilityIdentifier("\(title)ThemeButton")
+        .accessibilityIdentifier(accessibilityID)
         .accessibilityValue(isSelected ? "Selected" : "Unselected")
     }
 }
