@@ -40,12 +40,11 @@ struct MainCalendarView: View {
         return result
     }
 
-
     var body: some View {
         VStack(spacing: 0) {
             WeekdayHeaderView(themeManager: themeManager)
-                .padding(.top, 10)
-                .padding(.bottom, 10)
+                .padding(.top, AdaptiveLayout.getSize(for: 10))
+                .padding(.bottom, AdaptiveLayout.getSize(for: 10))
             
             // Vertical scroll
             ScrollView(.vertical, showsIndicators: false) {
@@ -89,7 +88,7 @@ struct SingleMonthView: View {
     let filledDates: Set<String>
     
     private let calendar = Calendar.current
-    let columns = Array(repeating: GridItem(.flexible(), spacing: 7), count: 7)
+    let columns = Array(repeating: GridItem(.flexible(), spacing: AdaptiveLayout.getSize(for: 7)), count: 7)
     
     var daysInMonth: Int { calendar.range(of: .day, in: .month, for: monthDate)?.count ?? 31 }
     
@@ -108,9 +107,9 @@ struct SingleMonthView: View {
     var body: some View {
         VStack(spacing: 0) {
             Spacer()
-            LazyVGrid(columns: columns, spacing: 4) {
+            LazyVGrid(columns: columns, spacing: AdaptiveLayout.getSize(for: 4)) {
                 ForEach((-firstDayOffset)..<0, id: \.self) { index in
-                    Color.clear.frame(height: 38)
+                    Color.clear.frame(height: AdaptiveLayout.getSize(for: 38))
                 }
                 
                 ForEach(1...daysInMonth, id: \.self) { day in

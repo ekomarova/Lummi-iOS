@@ -17,26 +17,26 @@ struct DayCell: View {
     
     var body: some View {
         ZStack {
-            VStack(spacing: 4) {
+            VStack(spacing: AdaptiveLayout.getSize(for: 4)) {
                 if isFilled {
                     Image(systemName: "star.fill")
-                        .font(.system(size: 8, weight: .bold))
+                        .font(.system(size: AdaptiveLayout.getSize(for: 8), weight: .bold))
                         .foregroundColor(themeManager.currentTheme.dayFilledColor)
-                        .frame(width: 12, height: 12)
+                        .frame(width: AdaptiveLayout.getSize(for: 12), height: AdaptiveLayout.getSize(for: 12))
                 } else {
                     Color.clear
-                        .frame(width: 12, height: 12)
+                        .frame(width: AdaptiveLayout.getSize(for: 12), height: AdaptiveLayout.getSize(for: 12))
                 }
 
                 Text("\(day)")
-                    .font(.system(size: 15, weight: isToday ? .bold : .light, design: .monospaced))
+                    .font(.system(size: AdaptiveLayout.getSize(for: 15), weight: isToday ? .bold : .light, design: .monospaced))
                     .foregroundColor(
                         isToday ? themeManager.currentTheme.todayColor :
                         (isFilled ? themeManager.currentTheme.dayFilledColor : themeManager.currentTheme.calendarContentColor.opacity(themeManager.currentTheme.inactiveOpacity))
                     )
             }
         }
-        .frame(height: 38)
+        .frame(height: AdaptiveLayout.getSize(for: 38))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(day)")
         .accessibilityIdentifier("DayCell_\(dateKey)")

@@ -1,7 +1,6 @@
 import SwiftUI
 import SwiftData
 
-
 struct ContentView: View {
     @StateObject private var themeManager = ThemeManager()
     @Environment(\.modelContext) private var modelContext
@@ -32,7 +31,7 @@ struct ContentView: View {
                         }
                 }
 
-                VStack(spacing: 15) {
+                VStack(spacing: AdaptiveLayout.getSize(for: 15)) {
                     if !isShowingSettings && !isShowingInsights {
                         HeaderView(
                             date: isCalendarExpanded ? visibleMonth : (selectedDate ?? Date()),
@@ -60,10 +59,10 @@ struct ContentView: View {
                             .transition(.move(edge: .leading).combined(with: .opacity))
                     } else if isCalendarExpanded {
                         ZStack(alignment: .top) {
-                            RoundedRectangle(cornerRadius: 24)
+                            RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 24))
                                 .fill(themeManager.currentTheme.calendarBackground.opacity(0.83))
                                 .background(
-                                    RoundedRectangle(cornerRadius: 24)
+                                    RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 24))
                                         .fill(.ultraThinMaterial)
                                 )
                             
@@ -73,14 +72,14 @@ struct ContentView: View {
                                 isCalendarExpanded: $isCalendarExpanded,
                                 visibleMonth: $visibleMonth
                             )
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 18)
+                            .padding(.horizontal, AdaptiveLayout.getSize(for: 8))
+                            .padding(.vertical, AdaptiveLayout.getSize(for: 18))
                         }
-                        .frame(height: 340)
+                        .frame(height: AdaptiveLayout.getSize(for: 340))
                         .transition(.move(edge: .top).combined(with: .opacity))
-                        .clipShape(RoundedRectangle(cornerRadius: 24))
-                        .padding(.top, 28)
-                        .padding(.horizontal, 20)
+                        .clipShape(RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 24)))
+                        .padding(.top, AdaptiveLayout.getSize(for: 28))
+                        .padding(.horizontal, AdaptiveLayout.getSize(for: 20))
                         .onTapGesture { }
                     } else {
                         SelectedDayDetailView(
@@ -92,7 +91,7 @@ struct ContentView: View {
                     
                     Spacer()
                 }
-                .padding(.top, 8)
+                .padding(.top, AdaptiveLayout.getSize(for: 8))
             }
 
             // Listenen to system keyboard notifications
@@ -167,10 +166,10 @@ struct ContentView: View {
                         }
                     )
                     .environmentObject(themeManager)
-                    .frame(width: 70)
+                    .frame(width: AdaptiveLayout.getSize(for: 70))
                 }
-                .padding(.horizontal, 40)
-                .padding(.bottom, 10)
+                .padding(.horizontal, AdaptiveLayout.getSize(for: 40))
+                .padding(.bottom, AdaptiveLayout.getSize(for: 10))
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
