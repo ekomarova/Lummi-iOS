@@ -39,10 +39,8 @@ struct InsightsCalculator {
         case 0:
             return isCurrentMonth ? "Ready for some joy? Record a moment today to start your streak!" : "No daily streaks were built this month"
         case 1:
-            // Кружок показывает "1", а текст рядом говорит: "Day of joy down!..."
             return isCurrentMonth ? "Day of joy down! Come back tomorrow to keep it going" : "Day of joy found. Every moment counts!"
         default:
-            // Кружок показывает "5", а текст рядом: "Days of joy in a row!..."
             return isCurrentMonth ? "Days of joy in a row! Keep this beautiful momentum going!" : "Days of joy in a row! That was your best streak"
         }
     }

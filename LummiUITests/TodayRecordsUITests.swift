@@ -7,7 +7,7 @@ final class TodayRecordsUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
         app = XCUIApplication()
-        app.launchArguments = ["-UI_TESTING_CALENDAR", "-SEED_10_RECORDS"]
+        app.launchArguments = ["-UI_TESTING_CALENDAR", "-UI_TESTING_10_RECORDS"]
         app.launch()
     }
 

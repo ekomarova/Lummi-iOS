@@ -177,28 +177,9 @@ struct ContentView: View {
             RecordInput(selectedDate: Date())
                 .environmentObject(themeManager)
         }
+        // MARK: For tests only
         .onAppear {
-            if ProcessInfo.processInfo.arguments.contains("-UI_TESTING_CALENDAR") && allEntries.isEmpty {
-                let today = Date()
-                let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today)!
-                let manyDaysAgo = Calendar.current.date(byAdding: .day, value: -32, to: today)!
-                
-                modelContext.insert(JoyEntry(text: "I ate a lot of chips and it was amazing!", date: yesterday, dateKey: yesterday.stringKey))
-                modelContext.insert(JoyEntry(text: "Watched a beautiful sunset", date: manyDaysAgo, dateKey: manyDaysAgo.stringKey))
-            }
-            if ProcessInfo.processInfo.arguments.contains("-SEED_10_RECORDS") {
-                let baseDate = Date()
-                let dateString = baseDate.stringKey
-                
-                let todaysEntriesCount = allEntries.filter { $0.dateKey == dateString }.count
-                if todaysEntriesCount == 0 {
-                    for i in 0..<10 {
-                        let recordDate = Calendar.current.date(byAdding: .second, value: i, to: baseDate)!
-                        modelContext.insert(JoyEntry(text: "Record #\(i)", date: recordDate, dateKey: dateString))
-                    }
-                    try? modelContext.save()
-                }
+            MockDataManager.injectIfNeeded(modelContext: modelContext, allEntries: allEntries)
             }
         }
     }
-}

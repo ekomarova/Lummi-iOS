@@ -44,11 +44,13 @@ struct InsightsView: View {
                             .foregroundColor(themeManager.currentTheme.textColor.opacity(isOldestMonth ? 0.2 : 0.8))
                     }
                     .disabled(isOldestMonth)
+                    .accessibilityIdentifier("PreviousMonthButton")
                     
                     Text(formatMonth(selectedMonth))
-                        .font(.lummiFont(size: 20)) // Крупнее! Было 16
+                        .font(.lummiFont(size: 20))
                         .foregroundColor(themeManager.currentTheme.textColor.opacity(0.7))
-                        .frame(minWidth: 160, alignment: .center) // Расширили базу под длинные слова
+                        .frame(minWidth: 160, alignment: .center)
+                        .accessibilityIdentifier("CurrentMonthLabel")
                     
                     Button(action: { changeMonth(by: 1) }) {
                         Image(systemName: "chevron.right")
@@ -56,6 +58,7 @@ struct InsightsView: View {
                             .foregroundColor(themeManager.currentTheme.textColor.opacity(isCurrentMonth ? 0.2 : 0.8))
                     }
                     .disabled(isCurrentMonth)
+                    .accessibilityIdentifier("NextMonthButton")
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.bottom, 10)
@@ -74,6 +77,7 @@ struct InsightsView: View {
                                 .lineSpacing(8)
                                 .multilineTextAlignment(.center)
                                 .frame(maxWidth: .infinity, alignment: .center)
+                                .accessibilityIdentifier("MonthlyJoysMessage")
                             
                             AmbientStatBadge(
                                 value: "\(monthlyEntries.count)",
@@ -97,6 +101,7 @@ struct InsightsView: View {
                                 .lineSpacing(8)
                                 .multilineTextAlignment(.center)
                                 .frame(maxWidth: .infinity, alignment: .center)
+                                .accessibilityIdentifier("MonthlyStreakMessage")
                         }
                     }
                     .padding(.horizontal, 20)

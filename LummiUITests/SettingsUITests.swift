@@ -32,7 +32,7 @@ final class SettingsUITests: XCTestCase {
     func test_SettingsTitleExists() throws {
         app.buttons["SettingsButton_Inactive"].tap()
         
-        let title = app.staticTexts["SETTINGS"]
+        let title = app.staticTexts["Settings".uppercased()]
         XCTAssertTrue(title.waitForExistence(timeout: 2.0), "Settings header did not appear on the screen.")
     }
 
@@ -41,7 +41,7 @@ final class SettingsUITests: XCTestCase {
     func test_AppearanceSectionExists() throws {
         app.buttons["SettingsButton_Inactive"].tap()
         
-        let appearanceLabel = app.staticTexts["APPEARANCE"]
+        let appearanceLabel = app.staticTexts["Appearance".uppercased()]
         XCTAssertTrue(appearanceLabel.waitForExistence(timeout: 2.0), "Appearance label is missing")
         
         let lightBtn = app.buttons["LightThemeButton"]
