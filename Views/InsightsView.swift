@@ -10,6 +10,12 @@ struct InsightsView: View {
         let calendar = Calendar.current
         return allEntries.filter { calendar.isDate($0.date, equalTo: selectedMonth, toGranularity: .month) }
     }
+    
+    private var pastMonthEntries: [JoyEntry] {
+        let calendar = Calendar.current
+        guard let pastMonth = calendar.date(byAdding: .month, value: -1, to: selectedMonth) else { return [] }
+        return allEntries.filter { calendar.isDate($0.date, equalTo: pastMonth, toGranularity: .month) }
+    }
 
     private var monthStreak: Int {
         InsightsCalculator.longestStreak(in: monthlyEntries)
@@ -68,7 +74,7 @@ struct InsightsView: View {
                         
                         let itemSize = geometry.size.width * 0.42
 
-                        // Monthly Entries
+                        // MARK: - Monthly Entries
                         HStack(alignment: .center, spacing: 15) {
                             Text(InsightsCalculator.getMonthlyJoysMessage(count: monthlyEntries.count, isCurrentMonth: isCurrentMonth))
                                 .textCase(.uppercase)
@@ -86,7 +92,39 @@ struct InsightsView: View {
                             .frame(width: itemSize, height: itemSize)
                         }
                         
-                        // Month Streak
+                        // MARK: - Months comparison
+                        let comparisonMessage = InsightsCalculator.getMonthComparisonMessage(
+                            currentCount: monthlyEntries.count,
+                            pastCount: pastMonthEntries.count,
+                            isFirstMonth: isOldestMonth
+                        )
+                        
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 30)
+                                .fill(
+                                    LinearGradient(
+                                        colors: [Color(red: 0.4, green: 0.85, blue: 0.95), Color(red: 0.2, green: 0.5, blue: 0.9)],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .scaleEffect(0.85)
+                                .blur(radius: 20)
+                                .opacity(0.8)
+
+                            Text(comparisonMessage)
+                                .textCase(.uppercase)
+                                .font(.lummiFont(size: 15))
+                                .foregroundColor(themeManager.currentTheme.textColor)
+                                .lineSpacing(8)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 30)
+                                .padding(.vertical, 20)
+                                .accessibilityIdentifier("MonthlyComparisonMessage")
+                        }
+                        .frame(maxWidth: .infinity, minHeight: itemSize * 0.8)
+                        
+                        // MARK: - Month Streak
                         HStack(alignment: .center, spacing: 15) {
                             AmbientStatBadge(
                                 value: "\(monthStreak)",

@@ -44,4 +44,23 @@ struct InsightsCalculator {
             return isCurrentMonth ? "Days of joy in a row! Keep this beautiful momentum going!" : "Days of joy in a row! That was your best streak"
         }
     }
+    
+    static func getMonthComparisonMessage(currentCount: Int, pastCount: Int, isFirstMonth: Bool) -> String {
+        if isFirstMonth {
+            return "The beginning of a beautiful story! Let's see how many bright moments this month brings"
+        }
+        
+        if currentCount == 0 {
+            return "Your journal is ready for new entries. What joy will happen today?"
+        }
+        
+        if currentCount > pastCount {
+            return "Your ability to notice joy is growing! You have more moments this month than the last"
+        } else if currentCount == pastCount {
+            return "Wonderful consistency! You continue to find joy in your familiar rhythm"
+        } else {
+            // currentCount < pastCount
+            return "Every saved moment matters! You are continuing your collection of joy!"
+        }
+    }
 }
