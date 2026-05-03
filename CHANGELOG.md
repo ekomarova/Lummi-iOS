@@ -2,6 +2,15 @@
 
 All notable changes to the project will be documented in this file.
 
+## [0.2.0] - 2026-MM-DD
+### Added
+- **Monthly Comparison Insight**: A new analytical block that compares current month performance with the previous one
+
+### Changed
+- **Insights Layout**: Improved visual hierarchy by alternating between circular badges and wide rectangular blocks
+
+---
+
 ## [0.1.0] - 2026-05-02
 
 ### Added
