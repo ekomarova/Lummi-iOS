@@ -86,6 +86,6 @@ struct CompactThemeButton: View {
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier(accessibilityID)
-        .accessibilityValue(isSelected ? "Selected" : "Unselected")
+        .accessibilityValue(isSelected ? Text("Selected") : Text("Unselected"))
     }
 }

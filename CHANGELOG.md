@@ -5,6 +5,8 @@ All notable changes to the project will be documented in this file.
 ## [0.2.0] - 2026-MM-DD
 ### Added
 - **Monthly Comparison Insight**: A new analytical block that compares current month performance with the previous one
+- **Multi-language Support**: Full manual translation for Russian and German languages using **String Catalogs**
+- **Dynamic Test IDs**: UI tests now use language-agnostic identifiers, ensuring stability across all supported locales
 
 ### Changed
 - **Insights Layout**: Improved visual hierarchy by alternating between circular badges and wide rectangular blocks

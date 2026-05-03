@@ -75,15 +75,16 @@ struct InsightsView: View {
                         let itemSize = geometry.size.width * 0.42
 
                         // MARK: - Monthly Entries
+                        let joysData = InsightsCalculator.getMonthlyJoysMessage(count: monthlyEntries.count, isCurrentMonth: isCurrentMonth)
                         HStack(alignment: .center, spacing: 15) {
-                            Text(InsightsCalculator.getMonthlyJoysMessage(count: monthlyEntries.count, isCurrentMonth: isCurrentMonth))
+                            Text(joysData.text)
                                 .textCase(.uppercase)
                                 .font(.lummiFont(size: 15))
                                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.8))
                                 .lineSpacing(8)
                                 .multilineTextAlignment(.center)
                                 .frame(maxWidth: .infinity, alignment: .center)
-                                .accessibilityIdentifier("MonthlyJoysMessage")
+                                .accessibilityIdentifier(joysData.id)
                             
                             AmbientStatBadge(
                                 value: "\(monthlyEntries.count)",
@@ -93,7 +94,7 @@ struct InsightsView: View {
                         }
                         
                         // MARK: - Months comparison
-                        let comparisonMessage = InsightsCalculator.getMonthComparisonMessage(
+                        let comparisonData = InsightsCalculator.getMonthComparisonMessage(
                             currentCount: monthlyEntries.count,
                             pastCount: pastMonthEntries.count,
                             isFirstMonth: isOldestMonth
@@ -112,7 +113,7 @@ struct InsightsView: View {
                                 .blur(radius: 20)
                                 .opacity(0.8)
 
-                            Text(comparisonMessage)
+                            Text(comparisonData.text)
                                 .textCase(.uppercase)
                                 .font(.lummiFont(size: 15))
                                 .foregroundColor(themeManager.currentTheme.textColor)
@@ -120,11 +121,12 @@ struct InsightsView: View {
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal, 30)
                                 .padding(.vertical, 20)
-                                .accessibilityIdentifier("MonthlyComparisonMessage")
+                                .accessibilityIdentifier(comparisonData.id)
                         }
                         .frame(maxWidth: .infinity, minHeight: itemSize * 0.8)
                         
                         // MARK: - Month Streak
+                        let streakData = InsightsCalculator.getMonthlyStreakMessage(streak: monthStreak, isCurrentMonth: isCurrentMonth)
                         HStack(alignment: .center, spacing: 15) {
                             AmbientStatBadge(
                                 value: "\(monthStreak)",
@@ -132,14 +134,14 @@ struct InsightsView: View {
                             )
                             .frame(width: itemSize, height: itemSize)
                             
-                            Text(InsightsCalculator.getMonthlyStreakMessage(streak: monthStreak, isCurrentMonth: isCurrentMonth))
+                            Text(streakData.text)
                                 .textCase(.uppercase)
                                 .font(.lummiFont(size: 15))
                                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.8))
                                 .lineSpacing(8)
                                 .multilineTextAlignment(.center)
                                 .frame(maxWidth: .infinity, alignment: .center)
-                                .accessibilityIdentifier("MonthlyStreakMessage")
+                                .accessibilityIdentifier(streakData.id)
                         }
                     }
                     .padding(.horizontal, 20)
@@ -165,7 +167,7 @@ struct InsightsView: View {
     
     private func formatMonth(_ date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM yyyy"
+        formatter.dateFormat = "LLLL yyyy"
         return formatter.string(from: date).uppercased()
     }
 }

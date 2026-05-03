@@ -24,43 +24,52 @@ struct InsightsCalculator {
         return maxStreak
     }
 
-    static func getMonthlyJoysMessage(count: Int, isCurrentMonth: Bool) -> String {
+static func getMonthlyJoysMessage(count: Int, isCurrentMonth: Bool) -> (text: LocalizedStringResource, id: String) {
         if count == 0 {
-            return isCurrentMonth ? "Your journey of joy starts here. Record a moment to begin!" : "A quiet month with no recorded moments"
+            return isCurrentMonth
+                ? ("Your journey of joy starts here. Record a moment to begin!", "JoysMsg_CurrentZero")
+                : ("A quiet month with no recorded moments", "JoysMsg_PastZero")
         } else if count < 10 {
-            return isCurrentMonth ? "Beautiful moments collected so far! Keep your eyes open for more!" : "Beautiful moments collected during this month"
+            return isCurrentMonth
+                ? ("Beautiful moments collected so far! Keep your eyes open for more!", "JoysMsg_CurrentFew")
+                : ("Beautiful moments collected during this month", "JoysMsg_PastFew")
         } else {
-            return isCurrentMonth ? "Beautiful moments experienced so far! Look at you go!" : "Beautiful moments experienced during this month!"
+            return isCurrentMonth
+                ? ("Beautiful moments experienced so far! Look at you go!", "JoysMsg_CurrentMany")
+                : ("Beautiful moments experienced during this month!", "JoysMsg_PastMany")
         }
     }
 
-    static func getMonthlyStreakMessage(streak: Int, isCurrentMonth: Bool) -> String {
-        switch streak {
-        case 0:
-            return isCurrentMonth ? "Ready for some joy? Record a moment today to start your streak!" : "No daily streaks were built this month"
-        case 1:
-            return isCurrentMonth ? "Day of joy down! Come back tomorrow to keep it going" : "Day of joy found. Every moment counts!"
-        default:
-            return isCurrentMonth ? "Days of joy in a row! Keep this beautiful momentum going!" : "Days of joy in a row! That was your best streak"
+static func getMonthlyStreakMessage(streak: Int, isCurrentMonth: Bool) -> (text: LocalizedStringResource, id: String) {
+        if streak == 0 {
+            return isCurrentMonth
+                ? ("Ready for some joy? Record a moment today to start your streak!", "StreakMsg_CurrentZero")
+                : ("No daily streaks were built this month", "StreakMsg_PastZero")
+        } else if streak == 1 {
+            return isCurrentMonth
+                ? ("Day of joy down! Come back tomorrow to keep it going", "StreakMsg_CurrentOne")
+                : ("Day of joy found. Every moment counts!", "StreakMsg_PastOne")
+        } else {
+            return isCurrentMonth
+                ? ("Days of joy in a row! Keep this beautiful momentum going!", "StreakMsg_CurrentMany")
+                : ("Days of joy in a row! That was your best streak", "StreakMsg_PastMany")
         }
     }
-    
-    static func getMonthComparisonMessage(currentCount: Int, pastCount: Int, isFirstMonth: Bool) -> String {
+
+static func getMonthComparisonMessage(currentCount: Int, pastCount: Int, isFirstMonth: Bool) -> (text: LocalizedStringResource, id: String) {
         if isFirstMonth {
-            return "The beginning of a beautiful story! Let's see how many bright moments this month brings"
+            return ("The beginning of a beautiful story! Let's see how many bright moments this month brings", "CompMsg_First")
         }
-        
         if currentCount == 0 {
-            return "Your journal is ready for new entries. What joy will happen today?"
+            return ("Your journal is ready for new entries. What joy will happen today?", "CompMsg_Zero")
         }
-        
         if currentCount > pastCount {
-            return "Your ability to notice joy is growing! You have more moments this month than the last"
+            return ("Your ability to notice joy is growing! You have more moments this month than the last", "CompMsg_Growth")
         } else if currentCount == pastCount {
-            return "Wonderful consistency! You continue to find joy in your familiar rhythm"
+            return ("Wonderful consistency! You continue to find joy in your familiar rhythm", "CompMsg_Stability")
         } else {
             // currentCount < pastCount
-            return "Every saved moment matters! You are continuing your collection of joy!"
+            return ("Every saved moment matters! You are continuing your collection of joy!", "CompMsg_Decline")
         }
     }
 }
