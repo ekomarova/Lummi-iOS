@@ -144,16 +144,24 @@ struct SingleMonthView: View {
 
 struct WeekdayHeaderView: View {
     @ObservedObject var themeManager: ThemeManager
-    private let weekdayLabels: [String] = {
-        let symbols = DateFormatter().veryShortWeekdaySymbols ?? []
+    @Environment(\.locale) var locale
+    private var weekdayLabels: [String] {
+        let formatter = DateFormatter()
+        formatter.locale = locale
+
+        let symbols = formatter.veryShortWeekdaySymbols ?? []
         let firstDayIndex = Calendar.current.firstWeekday - 1
+
+        guard !symbols.isEmpty else { return [] }
+
         return Array(symbols[firstDayIndex...] + symbols[..<firstDayIndex])
-    }()
+    }
     
     var body: some View {
         HStack(spacing: 0) {
             ForEach(weekdayLabels.indices, id: \.self) { index in
                 Text(weekdayLabels[index])
+                    .textCase(.uppercase)
                     .font(.lummiFont(size: 13))
                     .foregroundColor(themeManager.currentTheme.calendarContentColor.opacity(0.4))
                     .frame(maxWidth: .infinity)

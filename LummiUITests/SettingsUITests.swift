@@ -37,6 +37,7 @@ final class SettingsUITests: XCTestCase {
     }
 
     // MARK: - Theme tests
+
     // Check Appearance section and options
     func test_AppearanceSectionExists() throws {
         app.buttons["SettingsButton_Inactive"].tap()
@@ -68,5 +69,44 @@ final class SettingsUITests: XCTestCase {
 
         XCTAssertEqual(darkBtn.value as? String, "Selected", "Dark theme is not active")
         XCTAssertEqual(lightBtn.value as? String, "Unselected", "Light theme is active")
+    }
+    
+    // MARK: - Language tests
+        
+    // Check language button
+    func test_LanguageSectionExists() throws {
+        app.buttons["SettingsButton_Inactive"].tap()
+        
+        let languageLabel = app.staticTexts["LanguageLabel"]
+        XCTAssertTrue(languageLabel.waitForExistence(timeout: 2.0), "Language label is missing")
+
+        let languagePicker = app.buttons["LanguagePicker"]
+        XCTAssertTrue(languagePicker.exists, "Language picker is missing")
+    }
+    
+    // Chech language changing
+    func test_LanguageSelectionChangesAppLanguage() throws {
+        app.buttons["SettingsButton_Inactive"].tap()
+        
+        let languageLabel = app.staticTexts["LanguageLabel"]
+        let languagePicker = app.buttons["LanguagePicker"]
+
+        XCTAssertTrue(languageLabel.waitForExistence(timeout: 2.0))
+        XCTAssertTrue(languagePicker.waitForExistence(timeout: 2.0))
+
+        languagePicker.tap()
+        app.buttons["Русский"].tap()
+
+        XCTAssertEqual(languageLabel.label.uppercased(), "Язык".uppercased(), "The language has not switched to Russian")
+
+        languagePicker.tap()
+        app.buttons["Deutsch"].tap()
+        
+        XCTAssertEqual(languageLabel.label.uppercased(), "Sprache".uppercased(), "The language has not switched to German")
+
+        languagePicker.tap()
+        app.buttons["English"].tap()
+        
+        XCTAssertEqual(languageLabel.label.uppercased(), "Language".uppercased(), "The language has not switched to English")
     }
 }

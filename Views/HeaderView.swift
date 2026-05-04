@@ -2,6 +2,7 @@ import SwiftUI
 
 struct HeaderView: View {
     @EnvironmentObject var themeManager: ThemeManager
+    @Environment(\.locale) var locale
 
     let date: Date
     let isExpanded: Bool
@@ -9,6 +10,7 @@ struct HeaderView: View {
 
     private var headerDateText: String {
         let formatter = DateFormatter()
+        formatter.locale = locale
         
         if isExpanded {
             formatter.dateFormat = "LLLL yyyy"

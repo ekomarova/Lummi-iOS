@@ -112,7 +112,7 @@ final class CalendarUITests: XCTestCase {
         
         emptyDayCell.tap()
         
-        XCTAssertTrue(app.staticTexts["No records for this day"].exists)
+        XCTAssertTrue(app.staticTexts["No records for this day".uppercased()].exists)
     }
 
     // Check future day
@@ -123,7 +123,7 @@ final class CalendarUITests: XCTestCase {
                 
         if futureDayCell.waitForExistence(timeout: 2.0) {
             futureDayCell.tap()
-            XCTAssertTrue(app.staticTexts["Oops! This day has not started yet"].exists)
+            XCTAssertTrue(app.staticTexts["Oops! This day has not started yet".uppercased()].exists)
         }
     }
 

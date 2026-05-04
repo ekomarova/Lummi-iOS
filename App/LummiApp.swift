@@ -5,6 +5,8 @@ import SwiftData
 @main
 struct LummiApp: App {
     
+    @AppStorage("appLanguage") private var selectedLanguage: AppLanguage = .english
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([JoyEntry.self])
 
@@ -24,6 +26,7 @@ struct LummiApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(\.locale, Locale(identifier: selectedLanguage.rawValue))
         }
         .modelContainer(sharedModelContainer)
     }

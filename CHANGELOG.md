@@ -6,10 +6,14 @@ All notable changes to the project will be documented in this file.
 ### Added
 - **Monthly Comparison Insight**: A new analytical block that compares current month performance with the previous one
 - **Multi-language Support**: Full manual translation for Russian and German languages using **String Catalogs**
+- **In-App Language Picker**: Users can manually switch between English, Russian, and German directly in Settings
 - **Dynamic Test IDs**: UI tests now use language-agnostic identifiers, ensuring stability across all supported locales
 
 ### Changed
 - **Insights Layout**: Improved visual hierarchy by alternating between circular badges and wide rectangular blocks
+
+### Fixed
+- **Date Localization**: Fixed a bug where dates didn't update their language
 
 ---
 

@@ -3,6 +3,7 @@ import SwiftData
 
 struct InsightsView: View {
     @EnvironmentObject var themeManager: ThemeManager
+    @Environment(\.locale) var locale
     @Query private var allEntries: [JoyEntry]
     @State private var selectedMonth: Date = Date().startOfMonth
 
@@ -167,6 +168,7 @@ struct InsightsView: View {
     
     private func formatMonth(_ date: Date) -> String {
         let formatter = DateFormatter()
+        formatter.locale = locale
         formatter.dateFormat = "LLLL yyyy"
         return formatter.string(from: date).uppercased()
     }

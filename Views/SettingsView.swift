@@ -1,7 +1,25 @@
 import SwiftUI
 
+enum AppLanguage: String, CaseIterable, Identifiable {
+    case english = "en"
+    case russian = "ru"
+    case german = "de"
+    
+    var id: String { self.rawValue }
+    
+    var displayName: LocalizedStringKey {
+        switch self {
+        case .english: return "English"
+        case .russian: return "Русский"
+        case .german: return "Deutsch"
+        }
+    }
+}
+
 struct SettingsView: View {
     @EnvironmentObject var themeManager: ThemeManager
+    
+    @AppStorage("appLanguage") private var selectedLanguage: AppLanguage = .english
 
     var body: some View {
         VStack(alignment: .leading, spacing: 30) {
@@ -12,6 +30,7 @@ struct SettingsView: View {
                 .padding(.top, 10)
                 .frame(maxWidth: .infinity, alignment: .center)
 
+            // MARK: - Appearance
             HStack {
                 Text("Appearance")
                     .textCase(.uppercase)
@@ -47,6 +66,29 @@ struct SettingsView: View {
                     Capsule()
                         .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
                 )
+            }
+            
+            // MARK: - Language
+            HStack {
+                Text("Language")
+                    .textCase(.uppercase)
+                    .font(.lummiFont(size: 18))
+                    .foregroundColor(themeManager.currentTheme.textColor)
+                    .accessibilityIdentifier("LanguageLabel")
+                
+                Spacer()
+                
+                Picker("Language", selection: $selectedLanguage) {
+                    ForEach(AppLanguage.allCases) { language in
+                        Text(language.displayName)
+                            .tag(language)
+                            .textCase(.uppercase)
+                            .font(.lummiFont(size: 17))
+                            .foregroundColor(themeManager.currentTheme.textColor)
+                    }
+                }
+                .tint(themeManager.currentTheme.textColor)
+                .accessibilityIdentifier("LanguagePicker")
             }
             
             Spacer()

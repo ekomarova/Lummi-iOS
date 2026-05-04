@@ -84,6 +84,7 @@ struct SelectedDayDetailView: View {
                 .font(.system(size: AdaptiveLayout.getSize(for: 40)))
                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.2))
             Text("Oops! This day has not started yet")
+                .textCase(.uppercase)
                 .font(.lummiFont(size: 16))
                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
         }
@@ -91,6 +92,7 @@ struct SelectedDayDetailView: View {
     
     private var noRecordsView: some View {
         Text("No records for this day")
+            .textCase(.uppercase)
             .font(.lummiFont(size: 16))
             .foregroundColor(themeManager.currentTheme.textColor.opacity(0.3))
     }
