@@ -1,0 +1,746 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4714236F2F9CFAA000C1D681 /* SelectedDayDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4714236E2F9CFAA000C1D681 /* SelectedDayDetailView.swift */; };
+		4726FFA82F9DA410008B5D3C /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFA72F9DA1FF008B5D3C /* DateExtension.swift */; };
+		4726FFAA2F9EC5EA008B5D3C /* HomeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFA92F9EC5E8008B5D3C /* HomeButton.swift */; };
+		4726FFBD2FA033FB008B5D3C /* FontExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFBC2FA033F1008B5D3C /* FontExtension.swift */; };
+		4726FFC62FA2B41F008B5D3C /* JoyEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFC52FA2B414008B5D3C /* JoyEntry.swift */; };
+		4726FFC82FA3D98E008B5D3C /* SettingsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFC72FA3D970008B5D3C /* SettingsButton.swift */; };
+		4726FFCA2FA3DA0F008B5D3C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFC92FA3DA0D008B5D3C /* SettingsView.swift */; };
+		4726FFD12FA40B00008B5D3C /* InsightsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFD02FA40AFA008B5D3C /* InsightsButton.swift */; };
+		4726FFD32FA40B29008B5D3C /* InsightsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFD22FA40B28008B5D3C /* InsightsView.swift */; };
+		473B04202F9AB1AA00C482FA /* LummiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B041F2F9AB1AA00C482FA /* LummiApp.swift */; };
+		473B04222F9AB1AA00C482FA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04212F9AB1AA00C482FA /* ContentView.swift */; };
+		473B04482F9ABD8B00C482FA /* MainCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04472F9ABC2300C482FA /* MainCalendarView.swift */; };
+		473B044A2F9ABF1D00C482FA /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04492F9ABF1800C482FA /* HeaderView.swift */; };
+		473B044E2F9ACF9D00C482FA /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B044D2F9ACF9500C482FA /* RecordButton.swift */; };
+		473B04502F9AD05200C482FA /* DayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B044F2F9AD05100C482FA /* DayCell.swift */; };
+		473B04552F9BB2F400C482FA /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04542F9BB24E00C482FA /* ThemeManager.swift */; };
+		473B04562F9BB2F800C482FA /* AppThemes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04532F9BB22F00C482FA /* AppThemes.swift */; };
+		473B04572F9BB2FD00C482FA /* ThemeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04522F9BB22000C482FA /* ThemeProtocol.swift */; };
+		473B045B2F9BB79C00C482FA /* RecordInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B045A2F9BB79B00C482FA /* RecordInput.swift */; };
+		47981E9B2FA4440C005ADAB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 47981E9A2FA4440C005ADAB1 /* Assets.xcassets */; };
+		47981EAD2FA54745005ADAB1 /* InsightsCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47981EAC2FA5473E005ADAB1 /* InsightsCalculator.swift */; };
+		47981EB82FA5928F005ADAB1 /* MockDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47981EB32FA59262005ADAB1 /* MockDataManager.swift */; };
+		47981EC02FA7E5EC005ADAB1 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 47981EBF2FA7E5EC005ADAB1 /* Localizable.xcstrings */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		473B042A2F9AB1AC00C482FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 473B04142F9AB1AA00C482FA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 473B041B2F9AB1AA00C482FA;
+			remoteInfo = Lummi;
+		};
+		473B04342F9AB1AC00C482FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 473B04142F9AB1AA00C482FA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 473B041B2F9AB1AA00C482FA;
+			remoteInfo = Lummi;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		4714236E2F9CFAA000C1D681 /* SelectedDayDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedDayDetailView.swift; sourceTree = "<group>"; };
+		4726FFA72F9DA1FF008B5D3C /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
+		4726FFA92F9EC5E8008B5D3C /* HomeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeButton.swift; sourceTree = "<group>"; };
+		4726FFBC2FA033F1008B5D3C /* FontExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontExtension.swift; sourceTree = "<group>"; };
+		4726FFC52FA2B414008B5D3C /* JoyEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoyEntry.swift; sourceTree = "<group>"; };
+		4726FFC72FA3D970008B5D3C /* SettingsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsButton.swift; sourceTree = "<group>"; };
+		4726FFC92FA3DA0D008B5D3C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		4726FFD02FA40AFA008B5D3C /* InsightsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsButton.swift; sourceTree = "<group>"; };
+		4726FFD22FA40B28008B5D3C /* InsightsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsView.swift; sourceTree = "<group>"; };
+		473B041C2F9AB1AA00C482FA /* Lummi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lummi.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		473B041F2F9AB1AA00C482FA /* LummiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LummiApp.swift; sourceTree = "<group>"; };
+		473B04212F9AB1AA00C482FA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		473B04292F9AB1AC00C482FA /* LummiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LummiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		473B04332F9AB1AC00C482FA /* LummiUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LummiUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		473B04472F9ABC2300C482FA /* MainCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCalendarView.swift; sourceTree = "<group>"; };
+		473B04492F9ABF1800C482FA /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		473B044D2F9ACF9500C482FA /* RecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
+		473B044F2F9AD05100C482FA /* DayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayCell.swift; sourceTree = "<group>"; };
+		473B04522F9BB22000C482FA /* ThemeProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeProtocol.swift; sourceTree = "<group>"; };
+		473B04532F9BB22F00C482FA /* AppThemes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppThemes.swift; sourceTree = "<group>"; };
+		473B04542F9BB24E00C482FA /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
+		473B045A2F9BB79B00C482FA /* RecordInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordInput.swift; sourceTree = "<group>"; };
+		47981E9A2FA4440C005ADAB1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		47981EAC2FA5473E005ADAB1 /* InsightsCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsCalculator.swift; sourceTree = "<group>"; };
+		47981EB32FA59262005ADAB1 /* MockDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataManager.swift; sourceTree = "<group>"; };
+		47981EBF2FA7E5EC005ADAB1 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		473B041E2F9AB1AA00C482FA /* Lummi */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Lummi;
+			sourceTree = "<group>";
+		};
+		473B042C2F9AB1AC00C482FA /* LummiTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = LummiTests;
+			sourceTree = "<group>";
+		};
+		473B04362F9AB1AC00C482FA /* LummiUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = LummiUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		473B04192F9AB1AA00C482FA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		473B04262F9AB1AC00C482FA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		473B04302F9AB1AC00C482FA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4726FFA62F9DA1F1008B5D3C /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				4726FFBC2FA033F1008B5D3C /* FontExtension.swift */,
+				4726FFA72F9DA1FF008B5D3C /* DateExtension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		4726FFC42FA2B403008B5D3C /* DataModels */ = {
+			isa = PBXGroup;
+			children = (
+				4726FFC52FA2B414008B5D3C /* JoyEntry.swift */,
+			);
+			path = DataModels;
+			sourceTree = "<group>";
+		};
+		473B04132F9AB1AA00C482FA = {
+			isa = PBXGroup;
+			children = (
+				47981EBE2FA7E5D1005ADAB1 /* Resources */,
+				47981EBB2FA596C6005ADAB1 /* Helpers */,
+				47981EBA2FA59334005ADAB1 /* TestHelpers */,
+				4726FFC42FA2B403008B5D3C /* DataModels */,
+				4726FFA62F9DA1F1008B5D3C /* Extensions */,
+				473B04512F9BB21200C482FA /* Theme */,
+				473B044C2F9ACF8D00C482FA /* Components */,
+				473B044B2F9ACF4C00C482FA /* App */,
+				473B04462F9ABC0300C482FA /* Views */,
+				473B041E2F9AB1AA00C482FA /* Lummi */,
+				473B042C2F9AB1AC00C482FA /* LummiTests */,
+				473B04362F9AB1AC00C482FA /* LummiUITests */,
+				473B041D2F9AB1AA00C482FA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		473B041D2F9AB1AA00C482FA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				473B041C2F9AB1AA00C482FA /* Lummi.app */,
+				473B04292F9AB1AC00C482FA /* LummiTests.xctest */,
+				473B04332F9AB1AC00C482FA /* LummiUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		473B04462F9ABC0300C482FA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4726FFD22FA40B28008B5D3C /* InsightsView.swift */,
+				4726FFC92FA3DA0D008B5D3C /* SettingsView.swift */,
+				473B04492F9ABF1800C482FA /* HeaderView.swift */,
+				473B04472F9ABC2300C482FA /* MainCalendarView.swift */,
+				473B04212F9AB1AA00C482FA /* ContentView.swift */,
+				4714236E2F9CFAA000C1D681 /* SelectedDayDetailView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		473B044B2F9ACF4C00C482FA /* App */ = {
+			isa = PBXGroup;
+			children = (
+				473B041F2F9AB1AA00C482FA /* LummiApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		473B044C2F9ACF8D00C482FA /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				4726FFD02FA40AFA008B5D3C /* InsightsButton.swift */,
+				4726FFC72FA3D970008B5D3C /* SettingsButton.swift */,
+				4726FFA92F9EC5E8008B5D3C /* HomeButton.swift */,
+				473B045A2F9BB79B00C482FA /* RecordInput.swift */,
+				473B044F2F9AD05100C482FA /* DayCell.swift */,
+				473B044D2F9ACF9500C482FA /* RecordButton.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		473B04512F9BB21200C482FA /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				473B04542F9BB24E00C482FA /* ThemeManager.swift */,
+				473B04532F9BB22F00C482FA /* AppThemes.swift */,
+				473B04522F9BB22000C482FA /* ThemeProtocol.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		47981EBA2FA59334005ADAB1 /* TestHelpers */ = {
+			isa = PBXGroup;
+			children = (
+				47981EB32FA59262005ADAB1 /* MockDataManager.swift */,
+			);
+			path = TestHelpers;
+			sourceTree = "<group>";
+		};
+		47981EBB2FA596C6005ADAB1 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				47981EAC2FA5473E005ADAB1 /* InsightsCalculator.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		47981EBE2FA7E5D1005ADAB1 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				47981EBF2FA7E5EC005ADAB1 /* Localizable.xcstrings */,
+				47981E9A2FA4440C005ADAB1 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		473B041B2F9AB1AA00C482FA /* Lummi */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 473B043D2F9AB1AC00C482FA /* Build configuration list for PBXNativeTarget "Lummi" */;
+			buildPhases = (
+				473B04182F9AB1AA00C482FA /* Sources */,
+				473B04192F9AB1AA00C482FA /* Frameworks */,
+				473B041A2F9AB1AA00C482FA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				473B041E2F9AB1AA00C482FA /* Lummi */,
+			);
+			name = Lummi;
+			packageProductDependencies = (
+			);
+			productName = Lummi;
+			productReference = 473B041C2F9AB1AA00C482FA /* Lummi.app */;
+			productType = "com.apple.product-type.application";
+		};
+		473B04282F9AB1AC00C482FA /* LummiTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 473B04402F9AB1AC00C482FA /* Build configuration list for PBXNativeTarget "LummiTests" */;
+			buildPhases = (
+				473B04252F9AB1AC00C482FA /* Sources */,
+				473B04262F9AB1AC00C482FA /* Frameworks */,
+				473B04272F9AB1AC00C482FA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				473B042B2F9AB1AC00C482FA /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				473B042C2F9AB1AC00C482FA /* LummiTests */,
+			);
+			name = LummiTests;
+			packageProductDependencies = (
+			);
+			productName = LummiTests;
+			productReference = 473B04292F9AB1AC00C482FA /* LummiTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		473B04322F9AB1AC00C482FA /* LummiUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 473B04432F9AB1AC00C482FA /* Build configuration list for PBXNativeTarget "LummiUITests" */;
+			buildPhases = (
+				473B042F2F9AB1AC00C482FA /* Sources */,
+				473B04302F9AB1AC00C482FA /* Frameworks */,
+				473B04312F9AB1AC00C482FA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				473B04352F9AB1AC00C482FA /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				473B04362F9AB1AC00C482FA /* LummiUITests */,
+			);
+			name = LummiUITests;
+			packageProductDependencies = (
+			);
+			productName = LummiUITests;
+			productReference = 473B04332F9AB1AC00C482FA /* LummiUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		473B04142F9AB1AA00C482FA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2640;
+				LastUpgradeCheck = 2640;
+				TargetAttributes = {
+					473B041B2F9AB1AA00C482FA = {
+						CreatedOnToolsVersion = 26.4.1;
+					};
+					473B04282F9AB1AC00C482FA = {
+						CreatedOnToolsVersion = 26.4.1;
+						TestTargetID = 473B041B2F9AB1AA00C482FA;
+					};
+					473B04322F9AB1AC00C482FA = {
+						CreatedOnToolsVersion = 26.4.1;
+						TestTargetID = 473B041B2F9AB1AA00C482FA;
+					};
+				};
+			};
+			buildConfigurationList = 473B04172F9AB1AA00C482FA /* Build configuration list for PBXProject "Lummi" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				de,
+				ru,
+			);
+			mainGroup = 473B04132F9AB1AA00C482FA;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 473B041D2F9AB1AA00C482FA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				473B041B2F9AB1AA00C482FA /* Lummi */,
+				473B04282F9AB1AC00C482FA /* LummiTests */,
+				473B04322F9AB1AC00C482FA /* LummiUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		473B041A2F9AB1AA00C482FA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				47981EC02FA7E5EC005ADAB1 /* Localizable.xcstrings in Resources */,
+				47981E9B2FA4440C005ADAB1 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		473B04272F9AB1AC00C482FA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		473B04312F9AB1AC00C482FA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		473B04182F9AB1AA00C482FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				473B04222F9AB1AA00C482FA /* ContentView.swift in Sources */,
+				4726FFA82F9DA410008B5D3C /* DateExtension.swift in Sources */,
+				4726FFBD2FA033FB008B5D3C /* FontExtension.swift in Sources */,
+				473B04562F9BB2F800C482FA /* AppThemes.swift in Sources */,
+				473B045B2F9BB79C00C482FA /* RecordInput.swift in Sources */,
+				4726FFCA2FA3DA0F008B5D3C /* SettingsView.swift in Sources */,
+				473B04202F9AB1AA00C482FA /* LummiApp.swift in Sources */,
+				473B04482F9ABD8B00C482FA /* MainCalendarView.swift in Sources */,
+				4726FFC62FA2B41F008B5D3C /* JoyEntry.swift in Sources */,
+				473B044A2F9ABF1D00C482FA /* HeaderView.swift in Sources */,
+				47981EB82FA5928F005ADAB1 /* MockDataManager.swift in Sources */,
+				47981EAD2FA54745005ADAB1 /* InsightsCalculator.swift in Sources */,
+				473B04502F9AD05200C482FA /* DayCell.swift in Sources */,
+				473B04572F9BB2FD00C482FA /* ThemeProtocol.swift in Sources */,
+				473B044E2F9ACF9D00C482FA /* RecordButton.swift in Sources */,
+				4726FFC82FA3D98E008B5D3C /* SettingsButton.swift in Sources */,
+				4714236F2F9CFAA000C1D681 /* SelectedDayDetailView.swift in Sources */,
+				473B04552F9BB2F400C482FA /* ThemeManager.swift in Sources */,
+				4726FFD32FA40B29008B5D3C /* InsightsView.swift in Sources */,
+				4726FFD12FA40B00008B5D3C /* InsightsButton.swift in Sources */,
+				4726FFAA2F9EC5EA008B5D3C /* HomeButton.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		473B04252F9AB1AC00C482FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		473B042F2F9AB1AC00C482FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		473B042B2F9AB1AC00C482FA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 473B041B2F9AB1AA00C482FA /* Lummi */;
+			targetProxy = 473B042A2F9AB1AC00C482FA /* PBXContainerItemProxy */;
+		};
+		473B04352F9AB1AC00C482FA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 473B041B2F9AB1AA00C482FA /* Lummi */;
+			targetProxy = 473B04342F9AB1AC00C482FA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		473B043B2F9AB1AC00C482FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		473B043C2F9AB1AC00C482FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		473B043E2F9AB1AC00C482FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.ekomarova.Lummi;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		473B043F2F9AB1AC00C482FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.ekomarova.Lummi;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		473B04412F9AB1AC00C482FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.ekomarova.LummiTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lummi.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Lummi";
+			};
+			name = Debug;
+		};
+		473B04422F9AB1AC00C482FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.ekomarova.LummiTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lummi.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Lummi";
+			};
+			name = Release;
+		};
+		473B04442F9AB1AC00C482FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.ekomarova.LummiUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Lummi;
+			};
+			name = Debug;
+		};
+		473B04452F9AB1AC00C482FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.ekomarova.LummiUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Lummi;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		473B04172F9AB1AA00C482FA /* Build configuration list for PBXProject "Lummi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				473B043B2F9AB1AC00C482FA /* Debug */,
+				473B043C2F9AB1AC00C482FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		473B043D2F9AB1AC00C482FA /* Build configuration list for PBXNativeTarget "Lummi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				473B043E2F9AB1AC00C482FA /* Debug */,
+				473B043F2F9AB1AC00C482FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		473B04402F9AB1AC00C482FA /* Build configuration list for PBXNativeTarget "LummiTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				473B04412F9AB1AC00C482FA /* Debug */,
+				473B04422F9AB1AC00C482FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		473B04432F9AB1AC00C482FA /* Build configuration list for PBXNativeTarget "LummiUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				473B04442F9AB1AC00C482FA /* Debug */,
+				473B04452F9AB1AC00C482FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 473B04142F9AB1AA00C482FA /* Project object */;
+}
