@@ -84,7 +84,7 @@ final class SettingsUITests: XCTestCase {
         XCTAssertTrue(languagePicker.exists, "Language picker is missing")
     }
     
-    // Chech language changing
+    // Check language changing
     func test_LanguageSelectionChangesAppLanguage() throws {
         app.buttons["SettingsButton_Inactive"].tap()
         
