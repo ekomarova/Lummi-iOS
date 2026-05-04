@@ -26,5 +26,5 @@ The project includes a dedicated `MockDataManager` (under `#if DEBUG`) that popu
 ## 💻 Setup & Requirements
 
 * **iOS 17.0+**
-* **Xcode 15.0+**
-* **Swift 5.9+**
+* **Xcode 16.0+**
+* **Swift 6.0+**
