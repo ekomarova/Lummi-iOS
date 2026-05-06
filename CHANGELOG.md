@@ -14,6 +14,7 @@ All notable changes to the project will be documented in this file.
 
 ### Fixed
 - **Date Localization**: Fixed a bug where dates didn't update their language
+- **Insights View**: Fixed a bug where the month comparison message would overflow its background container on iPad and larger screens
 
 ---
 

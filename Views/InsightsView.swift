@@ -138,7 +138,6 @@ struct InsightsView: View {
                                         endPoint: .bottomTrailing
                                     )
                                 )
-                                .scaleEffect(0.85)
                                 .blur(radius: 20)
                                 .opacity(0.8)
 
@@ -148,11 +147,12 @@ struct InsightsView: View {
                                 .foregroundColor(themeManager.currentTheme.textColor)
                                 .lineSpacing(8)
                                 .multilineTextAlignment(.center)
-                                .padding(.horizontal, 30)
-                                .padding(.vertical, 20)
+                                .padding(.horizontal, AdaptiveLayout.getSize(for: 40))
+                                .padding(.vertical, AdaptiveLayout.getSize(for: 30))
                                 .accessibilityIdentifier(comparisonData.id)
                         }
                         .frame(maxWidth: .infinity, minHeight: itemSize * 0.8)
+                        .padding(.horizontal, AdaptiveLayout.getSize(for: 15))
                         
                         // MARK: - Month Streak
                         let streakData = InsightsCalculator.getMonthlyStreakMessage(streak: monthStreak, isCurrentMonth: isCurrentMonth)

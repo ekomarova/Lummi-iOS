@@ -61,7 +61,7 @@ final class DefaultScreenUITests: XCTestCase {
     }
     
     private func verifyRecords() {
-        let noRecordsText = app.staticTexts["No records for this day"]
+        let noRecordsText = app.staticTexts["No records for this day".uppercased()]
         XCTAssertTrue(noRecordsText.exists, "There is no label w/o record")
     }
     

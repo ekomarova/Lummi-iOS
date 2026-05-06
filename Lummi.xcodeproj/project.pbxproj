@@ -78,19 +78,42 @@
 		47981EBF2FA7E5EC005ADAB1 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		47981EE32FA8F9D1005ADAB1 /* Exceptions for "LummiUITests" folder in "LummiTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				CalendarUITests.swift,
+				DefaultScreenUITests.swift,
+				InsightsUITests.swift,
+				RecordButtonUITests.swift,
+				RecordInputUITests.swift,
+				SettingsUITests.swift,
+				TodayRecordsUITests.swift,
+			);
+			target = 473B04282F9AB1AC00C482FA /* LummiTests */;
+		};
+		47981EE42FA8F9D1005ADAB1 /* Exceptions for "LummiUITests" folder in "LummiUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				CalendarUITests.swift,
+				DefaultScreenUITests.swift,
+				InsightsUITests.swift,
+				RecordButtonUITests.swift,
+				RecordInputUITests.swift,
+				SettingsUITests.swift,
+				TodayRecordsUITests.swift,
+			);
+			target = 473B04322F9AB1AC00C482FA /* LummiUITests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		473B041E2F9AB1AA00C482FA /* Lummi */ = {
+		47981EDB2FA8F9D0005ADAB1 /* LummiUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Lummi;
-			sourceTree = "<group>";
-		};
-		473B042C2F9AB1AC00C482FA /* LummiTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = LummiTests;
-			sourceTree = "<group>";
-		};
-		473B04362F9AB1AC00C482FA /* LummiUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				47981EE32FA8F9D1005ADAB1 /* Exceptions for "LummiUITests" folder in "LummiTests" target */,
+				47981EE42FA8F9D1005ADAB1 /* Exceptions for "LummiUITests" folder in "LummiUITests" target */,
+			);
 			path = LummiUITests;
 			sourceTree = "<group>";
 		};
@@ -141,18 +164,16 @@
 		473B04132F9AB1AA00C482FA = {
 			isa = PBXGroup;
 			children = (
-				47981EBE2FA7E5D1005ADAB1 /* Resources */,
-				47981EBB2FA596C6005ADAB1 /* Helpers */,
-				47981EBA2FA59334005ADAB1 /* TestHelpers */,
+				473B044B2F9ACF4C00C482FA /* App */,
+				473B044C2F9ACF8D00C482FA /* Components */,
 				4726FFC42FA2B403008B5D3C /* DataModels */,
 				4726FFA62F9DA1F1008B5D3C /* Extensions */,
+				47981EBB2FA596C6005ADAB1 /* Helpers */,
+				47981EBE2FA7E5D1005ADAB1 /* Resources */,
+				47981EBA2FA59334005ADAB1 /* TestHelpers */,
 				473B04512F9BB21200C482FA /* Theme */,
-				473B044C2F9ACF8D00C482FA /* Components */,
-				473B044B2F9ACF4C00C482FA /* App */,
 				473B04462F9ABC0300C482FA /* Views */,
-				473B041E2F9AB1AA00C482FA /* Lummi */,
-				473B042C2F9AB1AC00C482FA /* LummiTests */,
-				473B04362F9AB1AC00C482FA /* LummiUITests */,
+				47981EDB2FA8F9D0005ADAB1 /* LummiUITests */,
 				473B041D2F9AB1AA00C482FA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -251,9 +272,6 @@
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				473B041E2F9AB1AA00C482FA /* Lummi */,
-			);
 			name = Lummi;
 			packageProductDependencies = (
 			);
@@ -275,7 +293,7 @@
 				473B042B2F9AB1AC00C482FA /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				473B042C2F9AB1AC00C482FA /* LummiTests */,
+				47981EDB2FA8F9D0005ADAB1 /* LummiUITests */,
 			);
 			name = LummiTests;
 			packageProductDependencies = (
@@ -296,9 +314,6 @@
 			);
 			dependencies = (
 				473B04352F9AB1AC00C482FA /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				473B04362F9AB1AC00C482FA /* LummiUITests */,
 			);
 			name = LummiUITests;
 			packageProductDependencies = (

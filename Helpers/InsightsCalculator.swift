@@ -89,7 +89,7 @@ static func getMonthComparisonMessage(currentCount: Int, pastCount: Int, isFirst
             return ("The beginning of a beautiful story! Let's see how many bright moments this month brings", "CompMsg_First")
         }
         if currentCount == 0 {
-            return ("Your journal is ready for new entries. What joy will happen today?", "CompMsg_Zero")
+            return ("What joy will happen today?", "CompMsg_Zero")
         }
         if currentCount > pastCount {
             return ("Your ability to notice joy is growing! You have more moments this month than the last", "CompMsg_Growth")
@@ -97,7 +97,7 @@ static func getMonthComparisonMessage(currentCount: Int, pastCount: Int, isFirst
             return ("Wonderful consistency! You continue to find joy in your familiar rhythm", "CompMsg_Stability")
         } else {
             // currentCount < pastCount
-            return ("Every saved moment matters! You are continuing your collection of joy!", "CompMsg_Decline")
+            return ("Every saved moment matters!", "CompMsg_Decline")
         }
     }
 }
