@@ -2,7 +2,7 @@
 
 All notable changes to the project will be documented in this file.
 
-## [0.2.0] - 2026-MM-DD
+## [0.2.0] - 2026-05-06
 ### Added
 - **Monthly Comparison Insight**: A new analytical block that compares current month performance with the previous one
 - **Multi-language Support**: Full manual translation for Russian and German languages using **String Catalogs**
