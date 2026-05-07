@@ -2,7 +2,14 @@
 
 All notable changes to the project will be documented in this file.
 
+## [0.3.0] - 2026-MM-DD
+### Added
+- **New App Icon**: Introduced the App branding
+
+---
+
 ## [0.2.0] - 2026-05-06
+
 ### Added
 - **Monthly Comparison Insight**: A new analytical block that compares current month performance with the previous one
 - **Multi-language Support**: Full manual translation for Russian and German languages using **String Catalogs**
@@ -28,6 +35,3 @@ All notable changes to the project will be documented in this file.
 - **Monthly Insights**: Created a dedicated dashboard that calculates total joys per month and identifies the longest daily streaks
 - **Dynamic Messaging**: Implemented a system of adaptive messages for insights based on the number of entries and current streak status
 - **UI Automation Suite**: Established a comprehensive suite of **XCUITest** scenarios covering Insights navigation, record management, and settings
-
-
-
