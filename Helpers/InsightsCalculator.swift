@@ -55,27 +55,27 @@ struct InsightsCalculator {
 static func getMonthlyJoysMessage(count: Int, isCurrentMonth: Bool) -> (text: LocalizedStringResource, id: String) {
         if count == 0 {
             return isCurrentMonth
-                ? ("Your journey of joy starts here. Record a moment to begin!", "JoysMsg_CurrentZero")
+                ? ("Record your first moment!", "JoysMsg_CurrentZero")
                 : ("A quiet month with no recorded moments", "JoysMsg_PastZero")
         } else if count < 10 {
             return isCurrentMonth
-                ? ("Beautiful moments collected so far! Keep your eyes open for more!", "JoysMsg_CurrentFew")
+                ? ("Keep your eyes open for more!", "JoysMsg_CurrentFew")
                 : ("Beautiful moments collected during this month", "JoysMsg_PastFew")
         } else {
             return isCurrentMonth
                 ? ("Beautiful moments experienced so far! Look at you go!", "JoysMsg_CurrentMany")
-                : ("Beautiful moments experienced during this month!", "JoysMsg_PastMany")
+                : ("Beautiful moments collected during this month", "JoysMsg_PastMany")
         }
     }
 
 static func getMonthlyStreakMessage(streak: Int, isCurrentMonth: Bool) -> (text: LocalizedStringResource, id: String) {
         if streak == 0 {
             return isCurrentMonth
-                ? ("Ready for some joy? Record a moment today to start your streak!", "StreakMsg_CurrentZero")
+                ? ("Let's start your streak today!", "StreakMsg_CurrentZero")
                 : ("No daily streaks were built this month", "StreakMsg_PastZero")
         } else if streak == 1 {
             return isCurrentMonth
-                ? ("Day of joy down! Come back tomorrow to keep it going", "StreakMsg_CurrentOne")
+                ? ("Day of joy down! Come back tomorrow!", "StreakMsg_CurrentOne")
                 : ("Day of joy found. Every moment counts!", "StreakMsg_PastOne")
         } else {
             return isCurrentMonth
