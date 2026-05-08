@@ -48,8 +48,8 @@ final class InsightsUITests: XCTestCase {
         launchApp(with: [""])
         app.buttons["InsightsButton_Inactive"].tap()
         
-        XCTAssertTrue(app.staticTexts["JoysMsg_CurrentZero"].waitForExistence(timeout: 2.0))
-        XCTAssertTrue(app.staticTexts["StreakMsg_CurrentZero"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Joys".uppercased()].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Day streak".uppercased()].waitForExistence(timeout: 2.0))
         XCTAssertTrue(app.staticTexts["CompMsg_First"].waitForExistence(timeout: 2.0))
     }
     
@@ -58,8 +58,8 @@ final class InsightsUITests: XCTestCase {
         launchApp(with: ["-UI_TESTING_CALENDAR"])
         app.buttons["InsightsButton_Inactive"].tap()
         
-        XCTAssertTrue(app.staticTexts["JoysMsg_CurrentFew"].waitForExistence(timeout: 2.0))
-        XCTAssertTrue(app.staticTexts["StreakMsg_CurrentOne"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Joys".uppercased()].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Day streak".uppercased()].waitForExistence(timeout: 2.0))
         XCTAssertTrue(app.staticTexts["CompMsg_Stability"].waitForExistence(timeout: 2.0))
     }
     
@@ -68,8 +68,8 @@ final class InsightsUITests: XCTestCase {
         launchApp(with: ["-UI_TESTING_CALENDAR", "-UI_TESTING_10_RECORDS"])
         app.buttons["InsightsButton_Inactive"].tap()
         
-        XCTAssertTrue(app.staticTexts["JoysMsg_CurrentMany"].waitForExistence(timeout: 2.0))
-        XCTAssertTrue(app.staticTexts["StreakMsg_CurrentMany"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Joys".uppercased()].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Day streak".uppercased()].waitForExistence(timeout: 2.0))
         XCTAssertTrue(app.staticTexts["CompMsg_Growth"].waitForExistence(timeout: 2.0))
     }
     
@@ -89,8 +89,8 @@ final class InsightsUITests: XCTestCase {
         app.buttons["InsightsButton_Inactive"].tap()
         app.buttons["PreviousMonthButton"].tap()
                 
-        XCTAssertTrue(app.staticTexts["JoysMsg_PastZero"].waitForExistence(timeout: 2.0))
-        XCTAssertTrue(app.staticTexts["StreakMsg_PastZero"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Joys".uppercased()].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Day streak".uppercased()].waitForExistence(timeout: 2.0))
         XCTAssertTrue(app.staticTexts["CompMsg_Zero"].waitForExistence(timeout: 2.0))
     }
     
@@ -100,8 +100,8 @@ final class InsightsUITests: XCTestCase {
         app.buttons["InsightsButton_Inactive"].tap()
         app.buttons["PreviousMonthButton"].tap()
                 
-        XCTAssertTrue(app.staticTexts["JoysMsg_PastFew"].waitForExistence(timeout: 2.0))
-        XCTAssertTrue(app.staticTexts["StreakMsg_PastOne"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Joys".uppercased()].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Day streak".uppercased()].waitForExistence(timeout: 2.0))
         XCTAssertTrue(app.staticTexts["CompMsg_First"].waitForExistence(timeout: 2.0))
     }
     
@@ -112,8 +112,8 @@ final class InsightsUITests: XCTestCase {
         app.buttons["InsightsButton_Inactive"].tap()
         app.buttons["PreviousMonthButton"].tap()
                 
-        XCTAssertTrue(app.staticTexts["JoysMsg_PastFew"].waitForExistence(timeout: 2.0))
-        XCTAssertTrue(app.staticTexts["StreakMsg_PastMany"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Joys".uppercased()].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Day streak".uppercased()].waitForExistence(timeout: 2.0))
         XCTAssertTrue(app.staticTexts["CompMsg_First"].waitForExistence(timeout: 2.0))
     }
 }

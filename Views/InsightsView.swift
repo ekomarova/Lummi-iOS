@@ -72,6 +72,7 @@ struct InsightsView: View {
                     .padding(.top, 10)
                     .frame(maxWidth: .infinity, alignment: .center)
 
+                // MARK: - Month Selector
                 HStack(spacing: 20) {
                     Button(action: { changeMonth(by: -1) }) {
                         Image(systemName: "chevron.left")
@@ -98,83 +99,45 @@ struct InsightsView: View {
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.bottom, 10)
 
+                // MARK: - Insights Grid
                 ScrollView(showsIndicators: false) {
-                    VStack(spacing: AdaptiveLayout.getSize(for: 40)) {
+                    VStack(spacing: AdaptiveLayout.getSize(for: 35)) {
                         
                         let itemSize = geometry.size.width * 0.42
-
-                        // MARK: - Monthly Entries
-                        let joysData = InsightsCalculator.getMonthlyJoysMessage(count: monthlyEntries.count, isCurrentMonth: isCurrentMonth)
-                        HStack(alignment: .center, spacing: 15) {
-                            Text(joysData.text)
-                                .textCase(.uppercase)
-                                .font(.lummiFont(size: 15))
-                                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.8))
-                                .lineSpacing(8)
-                                .multilineTextAlignment(.center)
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .accessibilityIdentifier(joysData.id)
-                            
-                            AmbientStatBadge(
-                                value: "\(monthlyEntries.count)",
-                                colors: [Color(red: 1.0, green: 0.7, blue: 0.75), Color(red: 0.95, green: 0.4, blue: 0.55)]
-                            )
-                            .frame(width: itemSize, height: itemSize)
-                        }
                         
-                        // MARK: - Months comparison
                         let comparisonData = InsightsCalculator.getMonthComparisonMessage(
                             currentCount: monthlyEntries.count,
                             pastCount: pastMonthEntries.count,
                             isFirstMonth: isOldestMonth
                         )
-                        
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 30)
-                                .fill(
-                                    LinearGradient(
-                                        colors: [Color(red: 0.4, green: 0.85, blue: 0.95), Color(red: 0.2, green: 0.5, blue: 0.9)],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .blur(radius: 20)
-                                .opacity(0.8)
 
-                            Text(comparisonData.text)
-                                .textCase(.uppercase)
-                                .font(.lummiFont(size: 15))
-                                .foregroundColor(themeManager.currentTheme.textColor)
-                                .lineSpacing(8)
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal, AdaptiveLayout.getSize(for: 40))
-                                .padding(.vertical, AdaptiveLayout.getSize(for: 30))
-                                .accessibilityIdentifier(comparisonData.id)
+                        HStack(spacing: AdaptiveLayout.getSize(for: 15)) {
+                            InsightGlowCard(
+                                value: "\(monthlyEntries.count)",
+                                subtitle: "Joys",
+                                gradientColors: [Color(red: 1.0, green: 0.7, blue: 0.75), Color(red: 0.95, green: 0.4, blue: 0.55)]
+                            )
+                            
+                            InsightGlowCard(
+                                value: "\(monthStreak)",
+                                subtitle: "Day streak",
+                                gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)]
+                            )
                         }
                         .frame(maxWidth: .infinity, minHeight: itemSize * 0.8)
-                        .padding(.horizontal, AdaptiveLayout.getSize(for: 15))
                         
-                        // MARK: - Month Streak
-                        let streakData = InsightsCalculator.getMonthlyStreakMessage(streak: monthStreak, isCurrentMonth: isCurrentMonth)
-                        HStack(alignment: .center, spacing: 15) {
-                            AmbientStatBadge(
-                                value: "\(monthStreak)",
-                                colors: [.yellow, .orange, .red]
-                            )
-                            .frame(width: itemSize, height: itemSize)
-                            
-                            Text(streakData.text)
-                                .textCase(.uppercase)
-                                .font(.lummiFont(size: 15))
-                                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.8))
-                                .lineSpacing(8)
-                                .multilineTextAlignment(.center)
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .accessibilityIdentifier(streakData.id)
-                        }
+                        InsightGlowCard(
+                            value: "",
+                            subtitle: comparisonData.text,
+                            gradientColors: [Color(red: 0.4, green: 0.85, blue: 0.95), Color(red: 0.2, green: 0.5, blue: 0.9)],
+                            isWide: true
+                        )
+                        .accessibilityIdentifier(comparisonData.id)
+                        
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 100)
+                    .padding(.top, AdaptiveLayout.getSize(for: 30))
+                    .padding(.horizontal, AdaptiveLayout.getSize(for: 10))
+                    .padding(.bottom, AdaptiveLayout.getSize(for: 100))
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -184,46 +147,79 @@ struct InsightsView: View {
         }
     }
     
-    // MARK: - Helpers
+// MARK: - Helpers
     
-    private func changeMonth(by value: Int) {
-        if let newMonth = Calendar.current.date(byAdding: .month, value: value, to: selectedMonth) {
-            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                selectedMonth = newMonth
-            }
+private func changeMonth(by value: Int) {
+    if let newMonth = Calendar.current.date(byAdding: .month, value: value, to: selectedMonth) {
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+            selectedMonth = newMonth
         }
-    }
-    
-    private func formatMonth(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.locale = locale
-        formatter.dateFormat = "LLLL yyyy"
-        return formatter.string(from: date).uppercased()
     }
 }
 
-struct AmbientStatBadge: View {
+private func formatMonth(_ date: Date) -> String {
+    let formatter = DateFormatter()
+    formatter.locale = locale
+    formatter.dateFormat = "LLLL yyyy"
+    return formatter.string(from: date).uppercased()
+    }
+}
+
+struct InsightGlowCard: View {
     @EnvironmentObject var themeManager: ThemeManager
-    
-    let value: String
-    let colors: [Color]
+    var value: String
+    var subtitle: LocalizedStringResource
+    var gradientColors: [Color]
+    var isWide: Bool = false
     
     var body: some View {
         ZStack {
-            Circle()
-                .fill(
-                    LinearGradient(colors: colors, startPoint: .topLeading, endPoint: .bottomTrailing)
-                )
-                .scaleEffect(0.6)
-                .blur(radius: 14)
-                .opacity(0.85)
-            
-            Text(value)
-                .font(.lummiFont(size: 30))
-                .minimumScaleFactor(0.5)
-                .lineLimit(1)
-                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.8))
-                .padding(.horizontal, 10)
+            if isWide {
+                Text(subtitle)
+                    .textCase(.uppercase)
+                    .font(.lummiFont(size: 15))
+                    .foregroundColor(themeManager.currentTheme.textColor)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(4)
+                    .minimumScaleFactor(0.8)
+                    .padding(.horizontal, AdaptiveLayout.getSize(for: 16))
+            } else {
+                VStack(spacing: 0) {
+                    Spacer()
+                    
+                    Text(value)
+                        .font(.lummiFont(size: 45))
+                        .foregroundColor(themeManager.currentTheme.textColor)
+                        .minimumScaleFactor(0.5)
+                        .lineLimit(1)
+                    
+                    Spacer()
+                    
+                    Text(subtitle)
+                        .textCase(.uppercase)
+                        .font(.lummiFont(size: 12))
+                        .foregroundColor(themeManager.currentTheme.textColor.opacity(0.85))
+                        .padding(.bottom, AdaptiveLayout.getSize(for: 16))
+                }
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: AdaptiveLayout.getSize(for: isWide ? 130 : 170))
+        .background {
+            ZStack {
+                RoundedRectangle(cornerRadius: 30)
+                    .fill(
+                        LinearGradient(
+                            colors: gradientColors,
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .blur(radius: 15)
+                    .opacity(0.8)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, AdaptiveLayout.getSize(for: 15))
         }
     }
 }
