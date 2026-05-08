@@ -6,6 +6,9 @@ All notable changes to the project will be documented in this file.
 ### Added
 - **New App Icon**: Introduced the App branding
 
+### Changed
+- **Metric Cards**: Simplified "Joys" and "Day streak" cards for better readability
+
 ---
 
 ## [0.2.0] - 2026-05-06
