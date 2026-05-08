@@ -3,11 +3,19 @@
 All notable changes to the project will be documented in this file.
 
 ## [0.3.0] - 2026-MM-DD
+
+---
+
+## [0.2.1] - 2026-05-08
 ### Added
 - **New App Icon**: Introduced the App branding
+- **Interactive Monthly Archive**: A new expandable section in Insights that lets you revisit all joys from a specific month
 
 ### Changed
 - **Metric Cards**: Simplified "Joys" and "Day streak" cards for better readability
+
+### Fixed
+- **Grid Consistency**: Standardized the width and spacing of all insight cards to ensure a perfect vertical flow
 
 ---
 

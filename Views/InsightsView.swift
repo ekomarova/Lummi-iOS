@@ -34,6 +34,7 @@ struct InsightsView: View {
     @Environment(\.locale) var locale
     @Query private var allEntries: [JoyEntry]
     @State private var selectedMonth: Date = Date().startOfMonth
+    @State private var isListExpanded: Bool = false
 
     private var monthlyEntries: [JoyEntry] {
         let calendar = Calendar.current
@@ -110,7 +111,15 @@ struct InsightsView: View {
                             pastCount: pastMonthEntries.count,
                             isFirstMonth: isOldestMonth
                         )
-
+                        
+                        InsightGlowCard(
+                            value: "",
+                            subtitle: comparisonData.text,
+                            gradientColors: [Color(red: 0.4, green: 0.85, blue: 0.95), Color(red: 0.2, green: 0.5, blue: 0.9)],
+                            isWide: true
+                        )
+                        .accessibilityIdentifier(comparisonData.id)
+                        
                         HStack(spacing: AdaptiveLayout.getSize(for: 15)) {
                             InsightGlowCard(
                                 value: "\(monthlyEntries.count)",
@@ -125,22 +134,67 @@ struct InsightsView: View {
                             )
                         }
                         .frame(maxWidth: .infinity, minHeight: itemSize * 0.8)
-                        
-                        InsightGlowCard(
-                            value: "",
-                            subtitle: comparisonData.text,
-                            gradientColors: [Color(red: 0.4, green: 0.85, blue: 0.95), Color(red: 0.2, green: 0.5, blue: 0.9)],
-                            isWide: true
-                        )
-                        .accessibilityIdentifier(comparisonData.id)
-                        
+                    
+                    // MARK: - Full joy list
+                        if !monthlyEntries.isEmpty {
+                            VStack(spacing: 0) {
+                                Button(action: {
+                                    withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                        isListExpanded.toggle()
+                                    }
+                                }) {
+                                    ZStack {
+                                        HStack(spacing: 8) {
+                                            Text("Want to see all moments?")
+                                                .textCase(.uppercase)
+                                                .font(.lummiFont(size: 15))
+                                                .foregroundColor(themeManager.currentTheme.textColor)
+                                            
+                                            Image(systemName: "chevron.down")
+                                                .font(.system(size: 14, weight: .bold))
+                                                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
+                                                .rotationEffect(.degrees(isListExpanded ? 180 : 0))
+                                        }
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: AdaptiveLayout.getSize(for: 130))
+                                    .background {
+                                        ZStack {
+                                            RoundedRectangle(cornerRadius: 30)
+                                                .fill(
+                                                    LinearGradient(
+                                                        colors: [Color(red: 0.4, green: 0.8, blue: 0.4), Color(red: 0.2, green: 0.6, blue: 0.2)],
+                                                        startPoint: .topLeading,
+                                                        endPoint: .bottomTrailing
+                                                    )
+                                                )
+                                                .blur(radius: 15)
+                                                .opacity(0.8)
+                                        }
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.horizontal, AdaptiveLayout.getSize(for: 15))
+                                    }
+                                }
+                                .buttonStyle(.plain)
+
+                                if isListExpanded {
+                                    VStack(spacing: AdaptiveLayout.getSize(for: 12)) {
+                                        ForEach(monthlyEntries.sorted(by: { $0.date > $1.date })) { entry in
+                                            MonthlyMomentCell(entry: entry)
+                                        }
+                                    }
+                                    .padding(.top, AdaptiveLayout.getSize(for: 35))
+                                    .transition(.move(edge: .top).combined(with: .opacity))
+                                }
+                            }
+                            .padding(.bottom, AdaptiveLayout.getSize(for: 40))
+                        }
                     }
                     .padding(.top, AdaptiveLayout.getSize(for: 30))
                     .padding(.horizontal, AdaptiveLayout.getSize(for: 10))
                     .padding(.bottom, AdaptiveLayout.getSize(for: 100))
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .onAppear {
             selectedMonth = Date().startOfMonth
@@ -221,5 +275,52 @@ struct InsightGlowCard: View {
             .frame(maxWidth: .infinity)
             .padding(.horizontal, AdaptiveLayout.getSize(for: 15))
         }
+    }
+}
+
+struct MonthlyMomentCell: View {
+    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(\.locale) var locale
+    let entry: JoyEntry
+    
+    var body: some View {
+        HStack(alignment: .top, spacing: AdaptiveLayout.getSize(for: 12)) {
+            VStack(alignment: .center, spacing: 2) {
+                Text(entry.date.format("dd", locale: locale))
+                    .font(.lummiFont(size: 18))
+                    .foregroundColor(themeManager.currentTheme.textColor)
+                
+                Text(entry.date.format("MMM", locale: locale).uppercased())
+                    .font(.lummiFont(size: 11))
+                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.5))
+            }
+            .frame(width: AdaptiveLayout.getSize(for: 35))
+            .padding(.top, AdaptiveLayout.getSize(for: 4))
+
+            Text(entry.text)
+                .font(.lummiFont(size: 16))
+                .foregroundColor(themeManager.currentTheme.textColor)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(AdaptiveLayout.getSize(for: 16))
+                .background(
+                    RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 16))
+                        .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 16))
+                                .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
+                        )
+                )
+        }
+        .padding(.leading, AdaptiveLayout.getSize(for: 4))
+        .padding(.trailing, AdaptiveLayout.getSize(for: 15))
+    }
+}
+
+extension Date {
+    func format(_ format: String, locale: Locale = .current) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = format
+        formatter.locale = locale
+        return formatter.string(from: self)
     }
 }
