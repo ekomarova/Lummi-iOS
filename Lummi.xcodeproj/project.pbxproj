@@ -15,7 +15,7 @@
 		4726FFC82FA3D98E008B5D3C /* SettingsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFC72FA3D970008B5D3C /* SettingsButton.swift */; };
 		4726FFCA2FA3DA0F008B5D3C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFC92FA3DA0D008B5D3C /* SettingsView.swift */; };
 		4726FFD12FA40B00008B5D3C /* InsightsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFD02FA40AFA008B5D3C /* InsightsButton.swift */; };
-		4726FFD32FA40B29008B5D3C /* InsightsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFD22FA40B28008B5D3C /* InsightsView.swift */; };
+		47289DCE2FAED17700E46B84 /* InsightsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFD22FA40B28008B5D3C /* InsightsView.swift */; };
 		473B04202F9AB1AA00C482FA /* LummiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B041F2F9AB1AA00C482FA /* LummiApp.swift */; };
 		473B04222F9AB1AA00C482FA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04212F9AB1AA00C482FA /* ContentView.swift */; };
 		473B04482F9ABD8B00C482FA /* MainCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04472F9ABC2300C482FA /* MainCalendarView.swift */; };
@@ -414,10 +414,10 @@
 				473B04502F9AD05200C482FA /* DayCell.swift in Sources */,
 				473B04572F9BB2FD00C482FA /* ThemeProtocol.swift in Sources */,
 				473B044E2F9ACF9D00C482FA /* RecordButton.swift in Sources */,
+				47289DCE2FAED17700E46B84 /* InsightsView.swift in Sources */,
 				4726FFC82FA3D98E008B5D3C /* SettingsButton.swift in Sources */,
 				4714236F2F9CFAA000C1D681 /* SelectedDayDetailView.swift in Sources */,
 				473B04552F9BB2F400C482FA /* ThemeManager.swift in Sources */,
-				4726FFD32FA40B29008B5D3C /* InsightsView.swift in Sources */,
 				4726FFD12FA40B00008B5D3C /* InsightsButton.swift in Sources */,
 				4726FFAA2F9EC5EA008B5D3C /* HomeButton.swift in Sources */,
 			);

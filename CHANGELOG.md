@@ -3,8 +3,13 @@
 All notable changes to the project will be documented in this file.
 
 ## [0.3.0] - 2026-MM-DD
+### Added
+- **Joyful Hours Field**: A new analytical metric that identifies the time of day when you capture the most joy
+- **Interactive All Moments**: Added a "Tap here" guide to the monthly list card to make it more intuitive
 
----
+### Changed
+- **Architecture**: Migrated analytics logic to a dedicated `InsightsCalculator` for better performance
+- **Insights Redesign**: Completely updated the visual language of the Insights screen for a more cohesive and balanced look
 
 ## [0.2.1] - 2026-05-08
 ### Added
@@ -17,7 +22,6 @@ All notable changes to the project will be documented in this file.
 ### Fixed
 - **Grid Consistency**: Standardized the width and spacing of all insight cards to ensure a perfect vertical flow
 
----
 
 ## [0.2.0] - 2026-05-06
 
@@ -34,7 +38,6 @@ All notable changes to the project will be documented in this file.
 - **Date Localization**: Fixed a bug where dates didn't update their language
 - **Insights View**: Fixed a bug where the month comparison message would overflow its background container on iPad and larger screens
 
----
 
 ## [0.1.0] - 2026-05-02
 

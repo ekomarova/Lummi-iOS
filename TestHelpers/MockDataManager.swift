@@ -60,6 +60,30 @@ struct MockDataManager {
                 try? modelContext.save()
             }
         }
+        
+        if arguments.contains("-UI_TESTING_4_DAYS_FILLED") {
+            if allEntries.isEmpty {
+                let today = Date()
+                let calendar = Calendar.current
+
+                for dayOffset in 0..<4 {
+                    guard let date = calendar.date(byAdding: .day, value: -dayOffset, to: today) else { continue }
+
+                    var components = calendar.dateComponents([.year, .month, .day], from: date)
+                    components.hour = 20
+                    components.minute = 15
+                    
+                    if let recordDate = calendar.date(from: components) {
+                        modelContext.insert(JoyEntry(
+                            text: "Evening mock moment \(dayOffset + 1)",
+                            date: recordDate,
+                            dateKey: recordDate.stringKey
+                        ))
+                    }
+                }
+                try? modelContext.save()
+            }
+        }
     }
 }
 #endif

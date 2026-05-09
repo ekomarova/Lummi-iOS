@@ -6,7 +6,10 @@
 
 * **Joy Journal**: Create, edit, and delete daily "moments of joy".
 * **Smart Calendar**: Intuitive navigation through days and months to review your history.
-* **Insights**: Comprehensive monthly analytics, including total entry counts, calculation of your longest streak, and **intelligent month-to-month comparisons** to track your emotional well-being growth.
+* **Insights**: Comprehensive monthly analytics designed to help you understand your happiness patterns: 
+    *   Track the volume of positive moments captured each month
+    *   Discover your "peak joy" time window through intelligent time-density analysis
+    *   Instant access to your full monthly history with interactive, beautifully blurred data cards
 * **Dynamic Themes**: Full support for Light and Dark modes managed via a custom `ThemeManager`.
 * **Multi-language Support**: 
     *   English

@@ -60,6 +60,7 @@ struct ContentView: View {
                 }
 
                 VStack(spacing: AdaptiveLayout.getSize(for: 15)) {
+                    // MARK: - Header View
                     if !isShowingSettings && !isShowingInsights {
                         HeaderView(
                             date: isCalendarExpanded ? visibleMonth : (selectedDate ?? Date()),
@@ -78,10 +79,12 @@ struct ContentView: View {
                     }
                         
                     if isShowingSettings {
+                        // MARK: - Settings View
                         SettingsView()
                             .environmentObject(themeManager)
                             .transition(.move(edge: .trailing).combined(with: .opacity))
                     } else if isShowingInsights {
+                        // MARK: - Insights View
                         InsightsView()
                             .environmentObject(themeManager)
                             .transition(.move(edge: .leading).combined(with: .opacity))
@@ -94,6 +97,7 @@ struct ContentView: View {
                                         .fill(.ultraThinMaterial)
                                 )
                             
+                            // MARK: - Calenadar View
                             MainCalendarView(
                                 themeManager: themeManager,
                                 selectedDate: $selectedDate,
@@ -110,6 +114,7 @@ struct ContentView: View {
                         .padding(.horizontal, AdaptiveLayout.getSize(for: 20))
                         .onTapGesture { }
                     } else {
+                        // MARK: - Selected Day View
                         SelectedDayDetailView(
                             selectedDate: selectedDate
                         )
@@ -138,7 +143,7 @@ struct ContentView: View {
         .safeAreaInset(edge: .bottom, spacing: 0) {
             if !isKeyboardVisible {
                 HStack(spacing: 0) {
-                    // Home button
+                    // MARK: - Home button
                     HomeButton(
                         isActive: !isCalendarExpanded && !isShowingSettings && !isShowingInsights && Calendar.current.isDateInToday(selectedDate ?? Date()),
                         onTap: {
@@ -155,7 +160,7 @@ struct ContentView: View {
                     
                     Spacer()
                     
-                    // Insights button
+                    // MARK: - Insights button
                     InsightsButton(
                         isActive: isShowingInsights,
                         onTap: {
@@ -170,7 +175,7 @@ struct ContentView: View {
                     
                     Spacer()
                     
-                    // Settings button
+                    // MARK: - Settings button
                     SettingsButton(
                         isActive: isShowingSettings,
                         onTap: {
@@ -185,7 +190,7 @@ struct ContentView: View {
                     
                     Spacer()
                     
-                    // Record button
+                    // MARK: - Record button
                     RecordButton(
                         selectedDate: selectedDate,
                         onTap: {
@@ -202,6 +207,7 @@ struct ContentView: View {
             }
         }
         .sheet(isPresented: $isShowingSheet) {
+            // MARK: - Record Input
             RecordInput(selectedDate: Date())
                 .environmentObject(themeManager)
         }

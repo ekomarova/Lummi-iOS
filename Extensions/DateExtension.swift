@@ -47,4 +47,22 @@ extension Date {
     func previousMonth() -> Date {
         return Calendar.current.date(byAdding: .month, value: -1, to: self) ?? self
     }
+    
+    static func isCurrentMonth(_ date: Date) -> Bool {
+        Calendar.current.isDate(date, equalTo: Date(), toGranularity: .month)
+    }
+    
+    static func isOldestMonth(selectedMonth: Date, allEntries: [JoyEntry]) -> Bool {
+        guard let oldestEntry = allEntries.min(by: { $0.date < $1.date }) else { return true }
+        let oldestMonth = oldestEntry.date.startOfMonth
+        return selectedMonth <= oldestMonth
+    }
+    
+    func format(_ format: String, locale: Locale = .current) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = format
+        formatter.locale = locale
+        return formatter.string(from: self)
+    }
+
 }
