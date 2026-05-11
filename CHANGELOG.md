@@ -7,8 +7,11 @@ All notable changes to the project will be documented in this file.
 - **iCloud Sync:** You can now seamlessly sync your joy entries across all your Apple devices! This feature is strictly opt-in and can be enabled in Settings
 
 ### Changed
-- **Settings UI:** Redesigned the settings switches with a new segment control for both Appearance and iCloud Sync
+- **Settings:** Redesigned the settings switches with a new segment control for both Appearance and iCloud Sync
 - **System Requirements:** Lummi now requires iOS 17.0 or newer to provide the best performance and take full advantage of native SwiftData architecture
+
+### Fixed
+- **Settings:** Fixed an issue on iPad where the language selection text was too small compared to other menu items. The picker now correctly uses an adaptive font size while maintaining native system behavior
 
 ## [0.3.0] - 2026-05-11
 ### Added

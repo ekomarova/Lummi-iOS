@@ -137,17 +137,29 @@ struct SettingsView: View {
                 
                 Spacer()
                 
-                Picker("Language", selection: $selectedLanguage) {
-                    ForEach(AppLanguage.allCases) { language in
-                        Text(language.displayName)
-                            .tag(language)
+                ZStack {
+                    HStack(spacing: 4) {
+                        Text(selectedLanguage.displayName)
                             .textCase(.uppercase)
                             .font(.lummiFont(size: 17))
-                            .foregroundColor(themeManager.currentTheme.textColor)
+                        
+                        Image(systemName: "chevron.up.chevron.down")
+                            .font(.system(size: 15, weight: .medium))
                     }
+                    .foregroundColor(themeManager.currentTheme.textColor)
+
+                    Picker("Language", selection: $selectedLanguage) {
+                        ForEach(AppLanguage.allCases) { language in
+                            Text(language.displayName)
+                                .tag(language)
+                                .textCase(.uppercase)
+                                .font(.lummiFont(size: 17))
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .tint(.clear)
+                    .accessibilityIdentifier("LanguagePicker")
                 }
-                .tint(themeManager.currentTheme.textColor)
-                .accessibilityIdentifier("LanguagePicker")
             }
             
             Spacer()
