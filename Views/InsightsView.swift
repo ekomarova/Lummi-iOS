@@ -177,6 +177,7 @@ struct InsightsView: View {
                                     }
                                 }
                                 .buttonStyle(.plain)
+                                .zIndex(1)
                                 
                                 if isListExpanded {
                                     VStack(spacing: AdaptiveLayout.getSize(for: 12)) {
@@ -185,7 +186,8 @@ struct InsightsView: View {
                                         }
                                     }
                                     .padding(.top, AdaptiveLayout.getSize(for: 35))
-                                    .transition(.move(edge: .top).combined(with: .opacity))
+                                    .zIndex(0)
+                                    .transition(.opacity.combined(with: .offset(y: -40)))
                                 }
                             }
                             .padding(.bottom, AdaptiveLayout.getSize(for: 40))

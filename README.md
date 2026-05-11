@@ -1,16 +1,16 @@
 # Lummi 🌟
 
-**Lummi** is a minimalist joy journal designed to capture happy moments and track emotional progress. The application is built using the **SwiftUI + SwiftData** stack, with a strong emphasis on high testability and modularity.
+**Lummi** is a minimalist joy journal designed to capture happy moments and track emotional progress. The application is built using the **SwiftUI + SwiftData** stack, with a strong emphasis on high testability and modularity
 
 ## 🚀 Features
 
-* **Joy Journal**: Create, edit, and delete daily "moments of joy".
-* **Smart Calendar**: Intuitive navigation through days and months to review your history.
+* **Joy Journal**: Create, edit, and delete daily "moments of joy"
+* **Smart Calendar**: Intuitive navigation through days and months to review your history
 * **Insights**: Comprehensive monthly analytics designed to help you understand your happiness patterns: 
     *   Track the volume of positive moments captured each month
     *   Discover your "peak joy" time window through intelligent time-density analysis
     *   Instant access to your full monthly history with interactive, beautifully blurred data cards
-* **Dynamic Themes**: Full support for Light and Dark modes managed via a custom `ThemeManager`.
+* **Dynamic Themes**: Full support for Light and Dark modes managed via a custom `ThemeManager`
 * **Multi-language Support**: 
     *   English
     *   Russian
@@ -18,13 +18,13 @@
 
 ## 🏗 Architecture
 
-* **Localization**: Uses modern **String Catalogs (.xcstrings)** for manageable translations and **LocalizedStringResource** for type-safe code strings.
-* **Data Layer**: Powered by **SwiftData** for reliable persistence.
-* **Testing Support**: Features a specialized `isStoredInMemoryOnly` mode for UI testing to ensure user data remains untouched during automation.
+* **Localization**: Uses modern **String Catalogs (.xcstrings)** for manageable translations and **LocalizedStringResource** for type-safe code strings
+* **Data Layer**: Powered by **SwiftData** for reliable persistence
+* **Testing Support**: Features a specialized `isStoredInMemoryOnly` mode for UI testing to ensure user data remains untouched during automation
 
 ## 🧪 Mocking & UI Testing
 
-The project includes a dedicated `MockDataManager` (under `#if DEBUG`) that populates the database with specific states based on launch arguments. This allows for robust UI testing of various scenarios.
+The project includes a dedicated `MockDataManager` (under `#if DEBUG`) that populates the database with specific states based on launch arguments. This allows for robust UI testing of various scenarios
 
 ## 💻 Setup & Requirements
 

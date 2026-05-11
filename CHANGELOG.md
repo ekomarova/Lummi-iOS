@@ -11,6 +11,9 @@ All notable changes to the project will be documented in this file.
 - **Architecture**: Migrated analytics logic to a dedicated `InsightsCalculator` for better performance
 - **Insights Redesign**: Completely updated the visual language of the Insights screen for a more cohesive and balanced look
 
+### Fixed
+- **Smooth Animations**: Fixed a UI glitch where the moments list would fly through the entire Insights screen when expanded
+
 ## [0.2.1] - 2026-05-08
 ### Added
 - **New App Icon**: Introduced the App branding
