@@ -109,4 +109,42 @@ final class SettingsUITests: XCTestCase {
         
         XCTAssertEqual(languageLabel.label.uppercased(), "Language".uppercased(), "The language has not switched to English")
     }
+    
+    // MARK: - iCloud Sync tests
+        
+    // Check iCloud Sync section and options
+    func test_iCloudSyncSectionExists() throws {
+        app.buttons["SettingsButton_Inactive"].tap()
+        
+        let iCloudLabel = app.staticTexts["ICLOUD SYNC"]
+        XCTAssertTrue(iCloudLabel.waitForExistence(timeout: 2.0), "iCloud Sync label is missing")
+        
+        let disabledBtn = app.buttons["iCloudDisabledButton"]
+        let enabledBtn = app.buttons["iCloudEnabledButton"]
+        
+        XCTAssertTrue(disabledBtn.exists, "iCloud disabled button is missing")
+        XCTAssertTrue(enabledBtn.exists, "iCloud enabled button is missing")
+    }
+
+    // Check iCloud sync state change
+    func test_iCloudSyncSelectionSwitchesState() throws {
+        app.buttons["SettingsButton_Inactive"].tap()
+        
+        let disabledBtn = app.buttons["iCloudDisabledButton"]
+        let enabledBtn = app.buttons["iCloudEnabledButton"]
+        XCTAssertTrue(disabledBtn.waitForExistence(timeout: 2.0))
+
+        XCTAssertEqual(disabledBtn.value as? String, "Selected", "iCloud Sync should be disabled by default")
+        XCTAssertEqual(enabledBtn.value as? String, "Unselected", "iCloud enabled button should not be active")
+        
+        enabledBtn.tap()
+
+        XCTAssertEqual(enabledBtn.value as? String, "Selected", "iCloud Sync did not become enabled")
+        XCTAssertEqual(disabledBtn.value as? String, "Unselected", "iCloud disabled button is still active")
+
+        disabledBtn.tap()
+
+        XCTAssertEqual(disabledBtn.value as? String, "Selected", "iCloud Sync did not become disabled")
+        XCTAssertEqual(enabledBtn.value as? String, "Unselected", "iCloud enabled button is still active")
+    }
 }

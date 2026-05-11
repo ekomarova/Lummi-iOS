@@ -2,6 +2,14 @@
 
 All notable changes to the project will be documented in this file.
 
+## [1.0.0] - 2026-MM-DD
+### Added
+- **iCloud Sync:** You can now seamlessly sync your joy entries across all your Apple devices! This feature is strictly opt-in and can be enabled in Settings
+
+### Changed
+- **Settings UI:** Redesigned the settings switches with a new segment control for both Appearance and iCloud Sync
+- **System Requirements:** Lummi now requires iOS 17.0 or newer to provide the best performance and take full advantage of native SwiftData architecture
+
 ## [0.3.0] - 2026-05-11
 ### Added
 - **Joyful Hours Field**: A new analytical metric that identifies the time of day when you capture the most joy
