@@ -59,6 +59,8 @@
 		4726FFC92FA3DA0D008B5D3C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4726FFD02FA40AFA008B5D3C /* InsightsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsButton.swift; sourceTree = "<group>"; };
 		4726FFD22FA40B28008B5D3C /* InsightsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsView.swift; sourceTree = "<group>"; };
+		47289DCF2FB2754200E46B84 /* Lummi-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Lummi-Info.plist"; sourceTree = "<group>"; };
+		47289DD02FB275BA00E46B84 /* Lummi.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Lummi.entitlements; sourceTree = "<group>"; };
 		473B041C2F9AB1AA00C482FA /* Lummi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lummi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		473B041F2F9AB1AA00C482FA /* LummiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LummiApp.swift; sourceTree = "<group>"; };
 		473B04212F9AB1AA00C482FA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -164,6 +166,8 @@
 		473B04132F9AB1AA00C482FA = {
 			isa = PBXGroup;
 			children = (
+				47289DD02FB275BA00E46B84 /* Lummi.entitlements */,
+				47289DCF2FB2754200E46B84 /* Lummi-Info.plist */,
 				473B044B2F9ACF4C00C482FA /* App */,
 				473B044C2F9ACF8D00C482FA /* Components */,
 				4726FFC42FA2B403008B5D3C /* DataModels */,
@@ -579,16 +583,21 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Lummi.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = U9A68FWNJ8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Lummi-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Lummi;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -611,16 +620,21 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Lummi.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = U9A68FWNJ8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Lummi-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Lummi;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

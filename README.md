@@ -11,6 +11,7 @@
     *   Discover your "peak joy" time window through intelligent time-density analysis
     *   Instant access to your full monthly history with interactive, beautifully blurred data cards
 * **Dynamic Themes**: Full support for Light and Dark modes managed via a custom `ThemeManager`
+* **Seamless iCloud Sync:** Keep your joyful moments safe and synchronized across your iPhone and iPad (Opt-in via Settings)
 * **Multi-language Support**: 
     *   English
     *   Russian
@@ -19,7 +20,7 @@
 ## 🏗 Architecture
 
 * **Localization**: Uses modern **String Catalogs (.xcstrings)** for manageable translations and **LocalizedStringResource** for type-safe code strings
-* **Data Layer**: Powered by **SwiftData** for reliable persistence
+* **Data Layer & Sync**: Powered by **SwiftData** for reliable persistence + **CloudKit**
 * **Testing Support**: Features a specialized `isStoredInMemoryOnly` mode for UI testing to ensure user data remains untouched during automation
 
 ## 🧪 Mocking & UI Testing
