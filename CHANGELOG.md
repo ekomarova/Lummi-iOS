@@ -2,7 +2,7 @@
 
 All notable changes to the project will be documented in this file.
 
-## [0.3.0] - 2026-MM-DD
+## [0.3.0] - 2026-05-11
 ### Added
 - **Joyful Hours Field**: A new analytical metric that identifies the time of day when you capture the most joy
 - **Interactive All Moments**: Added a "Tap here" guide to the monthly list card to make it more intuitive
