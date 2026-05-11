@@ -29,25 +29,38 @@
 import SwiftUI
 import SwiftData
 
-
 @main
 struct LummiApp: App {
     
     @AppStorage("appLanguage") private var selectedLanguage: AppLanguage = .english
-    
-    var sharedModelContainer: ModelContainer = {
+    @AppStorage("isICloudSyncEnabled") private var isICloudSyncEnabled: Bool = false
+
+    var sharedModelContainer: ModelContainer {
         let schema = Schema([JoyEntry.self])
 
         let isUITesting = ProcessInfo.processInfo.arguments.contains(where: { $0.hasPrefix("-UI_TESTING") })
 
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: isUITesting)
+        let modelConfiguration: ModelConfiguration
+        
+        if isUITesting {
+            modelConfiguration = ModelConfiguration(
+                schema: schema,
+                isStoredInMemoryOnly: true,
+                cloudKitDatabase: .none
+            )
+        } else {
+            modelConfiguration = ModelConfiguration(
+                schema: schema,
+                cloudKitDatabase: isICloudSyncEnabled ? .automatic : .none
+            )
+        }
 
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
-    }()
+    }
 
     var body: some Scene {
         WindowGroup {

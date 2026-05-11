@@ -48,6 +48,7 @@ struct SettingsView: View {
     @EnvironmentObject var themeManager: ThemeManager
     
     @AppStorage("appLanguage") private var selectedLanguage: AppLanguage = .english
+    @AppStorage("isICloudSyncEnabled") private var isICloudSyncEnabled: Bool = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 30) {
@@ -68,18 +69,16 @@ struct SettingsView: View {
                 Spacer()
                 
                 HStack(spacing: 0) {
-                    CompactThemeButton(
+                    LummiSegmentButton(
                         // Light
-                        title: "",
                         icon: "sun.max.fill",
                         isSelected: !themeManager.isDark,
                         accessibilityID: "LightThemeButton",
                         action: { withAnimation(.spring()) { themeManager.isDark = false } }
                     )
                     
-                    CompactThemeButton(
+                    LummiSegmentButton(
                         // Dark
-                        title: "",
                         icon: "moon.stars.fill",
                         isSelected: themeManager.isDark,
                         accessibilityID: "DarkThemeButton",
@@ -94,6 +93,38 @@ struct SettingsView: View {
                     Capsule()
                         .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
                 )
+            }
+            
+            // MARK: - iCloud sync
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("iCloud Sync")
+                        .textCase(.uppercase)
+                        .font(.lummiFont(size: 17))
+                        .foregroundColor(themeManager.currentTheme.textColor)
+                }
+                
+                Spacer()
+                
+                HStack(spacing: 0) {
+                    LummiSegmentButton(
+                        icon: "xmark.circle.fill",
+                        isSelected: !isICloudSyncEnabled,
+                        color: isICloudSyncEnabled ? nil : Color(red: 0.95, green: 0.2, blue: 0.3),
+                        accessibilityID: "iCloudDisabledButton",
+                        action: { withAnimation(.spring()) { isICloudSyncEnabled = false } }
+                    )
+
+                    LummiSegmentButton(
+                        icon: "checkmark.circle.fill",
+                        isSelected: isICloudSyncEnabled,
+                        color: !isICloudSyncEnabled ? nil : Color(red: 0.2, green: 0.9, blue: 0.4),
+                        accessibilityID: "iCloudEnabledButton",
+                        action: { withAnimation(.spring()) { isICloudSyncEnabled = true } }
+                    )
+                }
+                .background(Capsule().fill(themeManager.currentTheme.textColor.opacity(0.05)))
+                .overlay(Capsule().stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1))
             }
             
             // MARK: - Language
@@ -127,32 +158,22 @@ struct SettingsView: View {
 }
 
 
-struct CompactThemeButton: View {
+struct LummiSegmentButton: View {
     @EnvironmentObject var themeManager: ThemeManager
     
-    let title: String
     let icon: String
     let isSelected: Bool
+    var color: Color? = nil
     let accessibilityID: String
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 6) {
-                Image(systemName: icon)
-                    .font(.lummiFont(size: 14))
-                Text(title)
-                    .font(.lummiFont(size: 14))
-                    .lineLimit(1)
-                    .fixedSize(horizontal: true, vertical: false)
-            }
-            .padding(.vertical, 8)
-            .padding(.horizontal, 16)
-            .foregroundColor(isSelected ? themeManager.currentTheme.backgroundColor : themeManager.currentTheme.textColor.opacity(0.5))
-            .background(
-                Capsule()
-                    .fill(isSelected ? themeManager.currentTheme.textColor : Color.clear)
-            )
+            Image(systemName: icon)
+                .font(.lummiFont(size: 16))
+                .foregroundColor(isSelected ? themeManager.currentTheme.backgroundColor : themeManager.currentTheme.textColor.opacity(0.4))
+                .frame(width: AdaptiveLayout.getSize(for: 60), height: AdaptiveLayout.getSize(for: 36))
+                .background(Capsule().fill(isSelected ? (color ?? themeManager.currentTheme.textColor.opacity(0.85)) : Color.clear))
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier(accessibilityID)
