@@ -32,3 +32,9 @@ The project includes a dedicated `MockDataManager` (under `#if DEBUG`) that popu
 * **iOS 17.0+**
 * **Xcode 16.0+**
 * **Swift 6.0+**
+
+## How to run:
+**To enable iCloud sync in your own fork**:
+* Change the Bundle Identifier in Target Settings
+* Select your own Development Team
+* In Signing & Capabilities, remove the existing iCloud container and add a new one with your own identifier
