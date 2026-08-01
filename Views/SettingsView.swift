@@ -49,123 +49,172 @@ struct SettingsView: View {
     
     @AppStorage("appLanguage") private var selectedLanguage: AppLanguage = .english
     @AppStorage("isICloudSyncEnabled") private var isICloudSyncEnabled: Bool = false
+    
+    @State private var showRestartAlert: Bool = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 30) {
-            Text("Settings")
-                .textCase(.uppercase)
-                .font(.lummiFont(size: 24))
-                .foregroundColor(themeManager.currentTheme.textColor)
-                .padding(.top, 10)
-                .frame(maxWidth: .infinity, alignment: .center)
-
-            // MARK: - Appearance
-            HStack {
-                Text("Appearance")
+        ZStack {
+            VStack(alignment: .leading, spacing: 30) {
+                Text("Settings")
                     .textCase(.uppercase)
-                    .font(.lummiFont(size: 18))
+                    .font(.lummiFont(size: 24))
                     .foregroundColor(themeManager.currentTheme.textColor)
-                
-                Spacer()
-                
-                HStack(spacing: 0) {
-                    LummiSegmentButton(
-                        // Light
-                        icon: "sun.max.fill",
-                        isSelected: !themeManager.isDark,
-                        accessibilityID: "LightThemeButton",
-                        action: { withAnimation(.spring()) { themeManager.isDark = false } }
-                    )
-                    
-                    LummiSegmentButton(
-                        // Dark
-                        icon: "moon.stars.fill",
-                        isSelected: themeManager.isDark,
-                        accessibilityID: "DarkThemeButton",
-                        action: { withAnimation(.spring()) { themeManager.isDark = true } }
-                    )
-                }
-                .background(
-                    Capsule()
-                        .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                )
-                .overlay(
-                    Capsule()
-                        .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
-                )
-            }
-            
-            // MARK: - iCloud sync
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("iCloud Sync")
+                    .padding(.top, 10)
+                    .frame(maxWidth: .infinity, alignment: .center)
+
+                // MARK: - Appearance
+                HStack {
+                    Text("Appearance")
                         .textCase(.uppercase)
-                        .font(.lummiFont(size: 17))
+                        .font(.lummiFont(size: 18))
                         .foregroundColor(themeManager.currentTheme.textColor)
+                    
+                    Spacer()
+                    
+                    HStack(spacing: 0) {
+                        LummiSegmentButton(
+                            // Light
+                            icon: "sun.max.fill",
+                            isSelected: !themeManager.isDark,
+                            accessibilityID: "LightThemeButton",
+                            action: { withAnimation(.spring()) { themeManager.isDark = false } }
+                        )
+                        
+                        LummiSegmentButton(
+                            // Dark
+                            icon: "moon.stars.fill",
+                            isSelected: themeManager.isDark,
+                            accessibilityID: "DarkThemeButton",
+                            action: { withAnimation(.spring()) { themeManager.isDark = true } }
+                        )
+                    }
+                    .background(
+                        Capsule()
+                            .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                    )
+                    .overlay(
+                        Capsule()
+                            .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
+                    )
                 }
                 
-                Spacer()
-                
-                HStack(spacing: 0) {
-                    LummiSegmentButton(
-                        icon: "xmark.circle.fill",
-                        isSelected: !isICloudSyncEnabled,
-                        color: isICloudSyncEnabled ? nil : Color(red: 0.95, green: 0.2, blue: 0.3),
-                        accessibilityID: "iCloudDisabledButton",
-                        action: { withAnimation(.spring()) { isICloudSyncEnabled = false } }
-                    )
-
-                    LummiSegmentButton(
-                        icon: "checkmark.circle.fill",
-                        isSelected: isICloudSyncEnabled,
-                        color: !isICloudSyncEnabled ? nil : Color(red: 0.2, green: 0.9, blue: 0.4),
-                        accessibilityID: "iCloudEnabledButton",
-                        action: { withAnimation(.spring()) { isICloudSyncEnabled = true } }
-                    )
-                }
-                .background(Capsule().fill(themeManager.currentTheme.textColor.opacity(0.05)))
-                .overlay(Capsule().stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1))
-            }
-            
-            // MARK: - Language
-            HStack {
-                Text("Language")
-                    .textCase(.uppercase)
-                    .font(.lummiFont(size: 18))
-                    .foregroundColor(themeManager.currentTheme.textColor)
-                    .accessibilityIdentifier("LanguageLabel")
-                
-                Spacer()
-                
-                ZStack {
-                    HStack(spacing: 4) {
-                        Text(selectedLanguage.displayName)
+                // MARK: - iCloud sync
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("iCloud Sync")
                             .textCase(.uppercase)
                             .font(.lummiFont(size: 17))
-                        
-                        Image(systemName: "chevron.up.chevron.down")
-                            .font(.system(size: 15, weight: .medium))
+                            .foregroundColor(themeManager.currentTheme.textColor)
                     }
-                    .foregroundColor(themeManager.currentTheme.textColor)
+                    
+                    Spacer()
+                    
+                    HStack(spacing: 0) {
+                        LummiSegmentButton(
+                            icon: "xmark.circle.fill",
+                            isSelected: !isICloudSyncEnabled,
+                            color: isICloudSyncEnabled ? nil : Color(red: 0.95, green: 0.2, blue: 0.3),
+                            accessibilityID: "iCloudDisabledButton",
+                            action: { withAnimation(.spring()) { isICloudSyncEnabled = false } }
+                        )
 
-                    Picker("Language", selection: $selectedLanguage) {
-                        ForEach(AppLanguage.allCases) { language in
-                            Text(language.displayName)
-                                .tag(language)
+                        LummiSegmentButton(
+                            icon: "checkmark.circle.fill",
+                            isSelected: isICloudSyncEnabled,
+                            color: !isICloudSyncEnabled ? nil : Color(red: 0.2, green: 0.9, blue: 0.4),
+                            accessibilityID: "iCloudEnabledButton",
+                            action: { withAnimation(.spring()) { isICloudSyncEnabled = true } }
+                        )
+                    }
+                    .background(Capsule().fill(themeManager.currentTheme.textColor.opacity(0.05)))
+                    .overlay(Capsule().stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1))
+                }
+                
+                // MARK: - Language
+                HStack {
+                    Text("Language")
+                        .textCase(.uppercase)
+                        .font(.lummiFont(size: 18))
+                        .foregroundColor(themeManager.currentTheme.textColor)
+                        .accessibilityIdentifier("LanguageLabel")
+                    
+                    Spacer()
+                    
+                    ZStack {
+                        HStack(spacing: 4) {
+                            Text(selectedLanguage.displayName)
                                 .textCase(.uppercase)
                                 .font(.lummiFont(size: 17))
+                            
+                            Image(systemName: "chevron.up.chevron.down")
+                                .font(.system(size: 15, weight: .medium))
                         }
+                        .foregroundColor(themeManager.currentTheme.textColor)
+
+                        Picker("Language", selection: $selectedLanguage) {
+                            ForEach(AppLanguage.allCases) { language in
+                                Text(language.displayName)
+                                    .tag(language)
+                                    .textCase(.uppercase)
+                                    .font(.lummiFont(size: 17))
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .tint(.clear)
+                        .accessibilityIdentifier("LanguagePicker")
                     }
-                    .pickerStyle(.menu)
-                    .tint(.clear)
-                    .accessibilityIdentifier("LanguagePicker")
+                }
+                
+                Spacer()
+            }
+            .padding(.horizontal, 20)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .onChange(of: isICloudSyncEnabled) { _, _ in
+                withAnimation {
+                    showRestartAlert = true
                 }
             }
             
-            Spacer()
+            if showRestartAlert {
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        withAnimation { showRestartAlert = false }
+                    }
+                
+                VStack(spacing: 20) {
+                    Text("Restart Required")
+                        .font(.lummiFont(size: 20))
+                        .foregroundColor(themeManager.currentTheme.backgroundColor)
+                        .accessibilityIdentifier("RestartAlertTitle")
+                    
+                    Text("To apply the synchronization settings, you need to restart the application")
+                        .font(.lummiFont(size: 16))
+                        .foregroundColor(themeManager.currentTheme.backgroundColor)
+                        .multilineTextAlignment(.center)
+                    
+                    Button(action: {
+                        withAnimation { showRestartAlert = false }
+                    }) {
+                        Text("OK")
+                            .textCase(.uppercase)
+                            .font(.lummiFont(size: 18))
+                            .foregroundColor(themeManager.currentTheme.textColor)
+                            .padding(.vertical, 12)
+                            .padding(.horizontal, 40)
+                            .background(Capsule().fill(themeManager.currentTheme.backgroundColor))
+                    }
+                    .accessibilityIdentifier("RestartAlertOKButton")
+                }
+                .padding(24)
+                .background(
+                    RoundedRectangle(cornerRadius: 24)
+                        .fill(themeManager.currentTheme.textColor)
+                )
+                .padding(40)
+                .transition(.scale.combined(with: .opacity))
+            }
         }
-        .padding(.horizontal, 20)
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 

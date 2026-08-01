@@ -141,10 +141,25 @@ final class SettingsUITests: XCTestCase {
 
         XCTAssertEqual(enabledBtn.value as? String, "Selected", "iCloud Sync did not become enabled")
         XCTAssertEqual(disabledBtn.value as? String, "Unselected", "iCloud disabled button is still active")
+        
+        // Check for Custom Restart Alert
+        let alertTitle = app.staticTexts["RestartAlertTitle"]
+        let okButton = app.buttons["RestartAlertOKButton"]
+        
+        XCTAssertTrue(alertTitle.waitForExistence(timeout: 2.0), "The restart alert title should appear when toggling iCloud sync")
+        XCTAssertTrue(okButton.exists, "The OK button should exist.")
+        
+        okButton.tap()
+        XCTAssertFalse(alertTitle.exists, "The alert should dismiss after tapping OK")
 
         disabledBtn.tap()
 
         XCTAssertEqual(disabledBtn.value as? String, "Selected", "iCloud Sync did not become disabled")
         XCTAssertEqual(enabledBtn.value as? String, "Unselected", "iCloud enabled button is still active")
+        
+        // Check for Custom Restart Alert again
+        XCTAssertTrue(alertTitle.waitForExistence(timeout: 2.0), "The restart alert should appear when toggling iCloud sync back")
+        okButton.tap()
+        XCTAssertFalse(alertTitle.exists, "The alert should dismiss after tapping OK")
     }
 }
