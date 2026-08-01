@@ -35,11 +35,11 @@ struct LummiApp: App {
     @AppStorage("appLanguage") private var selectedLanguage: AppLanguage = .english
     @AppStorage("isICloudSyncEnabled") private var isICloudSyncEnabled: Bool = false
 
-    var sharedModelContainer: ModelContainer {
+    static let sharedModelContainer: ModelContainer = {
         let schema = Schema([JoyEntry.self])
-
         let isUITesting = ProcessInfo.processInfo.arguments.contains(where: { $0.hasPrefix("-UI_TESTING") })
-
+        
+        let isICloudSyncEnabled = UserDefaults.standard.bool(forKey: "isICloudSyncEnabled")
         let modelConfiguration: ModelConfiguration
         
         if isUITesting {
@@ -60,13 +60,13 @@ struct LummiApp: App {
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
-    }
+    }()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(\.locale, Locale(identifier: selectedLanguage.rawValue))
         }
-        .modelContainer(sharedModelContainer)
+        .modelContainer(Self.sharedModelContainer)
     }
 }

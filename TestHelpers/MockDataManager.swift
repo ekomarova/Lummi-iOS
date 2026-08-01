@@ -65,9 +65,13 @@ struct MockDataManager {
             if allEntries.isEmpty {
                 let today = Date()
                 let calendar = Calendar.current
+                
+                var midMonthComps = calendar.dateComponents([.year, .month], from: today)
+                midMonthComps.day = 15
+                let baseDate = calendar.date(from: midMonthComps) ?? today
 
                 for dayOffset in 0..<4 {
-                    guard let date = calendar.date(byAdding: .day, value: -dayOffset, to: today) else { continue }
+                    guard let date = calendar.date(byAdding: .day, value: -dayOffset, to: baseDate) else { continue }
 
                     var components = calendar.dateComponents([.year, .month, .day], from: date)
                     components.hour = 20

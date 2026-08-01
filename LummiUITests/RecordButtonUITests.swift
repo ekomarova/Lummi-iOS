@@ -65,12 +65,12 @@ final class RecordButtonUITests: XCTestCase {
         let futureDayCell = app.buttons["DayCell_\(dateKey(for: future1Date))"]
         if futureDayCell.waitForExistence(timeout: 2.0) {
             futureDayCell.tap()
-            XCTAssertTrue(app.staticTexts["Oops! This day has not started yet"].exists)
+            XCTAssertTrue(app.staticTexts["OOPS! THIS DAY HAS NOT STARTED YET"].exists)
         }
         
         createRecord(withText: recordText)
         
-        XCTAssertTrue(app.staticTexts["Oops! This day has not started yet"].exists)
+        XCTAssertTrue(app.staticTexts["OOPS! THIS DAY HAS NOT STARTED YET"].exists)
         XCTAssertFalse(app.staticTexts[recordText].exists)
         
         app.buttons["HomeButton_Inactive"].tap()
