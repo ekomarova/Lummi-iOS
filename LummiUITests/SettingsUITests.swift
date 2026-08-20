@@ -7,18 +7,23 @@ final class SettingsUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
         app = XCUIApplication()
-        app.launchArguments = ["-UI_TESTING_CALENDAR"]
-        app.launch()
     }
 
     override func tearDownWithError() throws {
         app = nil
+    }
+    
+    private func launchApp(with arguments: [String]) {
+        app.launchArguments = arguments
+        app.launch()
     }
 
     // MARK: - Default tests
 
     // Check the button color change
     func test_SettingsButtonChangesState() throws {
+        launchApp(with: ["-UI_TESTING_CALENDAR"])
+        
         let inactiveSettingsBtn = app.buttons["SettingsButton_Inactive"]
         XCTAssertTrue(inactiveSettingsBtn.waitForExistence(timeout: 2.0), "Settings button was not found")
         
@@ -30,6 +35,7 @@ final class SettingsUITests: XCTestCase {
 
     // Check Settings header existence
     func test_SettingsTitleExists() throws {
+        launchApp(with: ["-UI_TESTING_CALENDAR"])
         app.buttons["SettingsButton_Inactive"].tap()
         
         let title = app.staticTexts["Settings".uppercased()]
@@ -40,6 +46,7 @@ final class SettingsUITests: XCTestCase {
 
     // Check Appearance section and options
     func test_AppearanceSectionExists() throws {
+        launchApp(with: ["-UI_TESTING_CALENDAR"])
         app.buttons["SettingsButton_Inactive"].tap()
         
         let appearanceLabel = app.staticTexts["Appearance".uppercased()]
@@ -54,6 +61,7 @@ final class SettingsUITests: XCTestCase {
 
     // Check theme change
     func test_ThemeSelectionSwitchesState() throws {
+        launchApp(with: ["-UI_TESTING_CALENDAR"])
         app.buttons["SettingsButton_Inactive"].tap()
         
         let lightBtn = app.buttons["LightThemeButton"]
@@ -75,6 +83,7 @@ final class SettingsUITests: XCTestCase {
         
     // Check language button
     func test_LanguageSectionExists() throws {
+        launchApp(with: ["-UI_TESTING_CALENDAR"])
         app.buttons["SettingsButton_Inactive"].tap()
         
         let languageLabel = app.staticTexts["LanguageLabel"]
@@ -86,6 +95,7 @@ final class SettingsUITests: XCTestCase {
     
     // Check language changing
     func test_LanguageSelectionChangesAppLanguage() throws {
+        launchApp(with: ["-UI_TESTING_CALENDAR"])
         app.buttons["SettingsButton_Inactive"].tap()
         
         let languageLabel = app.staticTexts["LanguageLabel"]
@@ -114,6 +124,7 @@ final class SettingsUITests: XCTestCase {
         
     // Check iCloud Sync section and options
     func test_iCloudSyncSectionExists() throws {
+        launchApp(with: ["-UI_TESTING_CALENDAR"])
         app.buttons["SettingsButton_Inactive"].tap()
         
         let iCloudLabel = app.staticTexts["ICLOUD SYNC"]
@@ -128,6 +139,7 @@ final class SettingsUITests: XCTestCase {
 
     // Check iCloud sync state change
     func test_iCloudSyncSelectionSwitchesState() throws {
+        launchApp(with: ["-UI_TESTING_CALENDAR"])
         app.buttons["SettingsButton_Inactive"].tap()
         
         let disabledBtn = app.buttons["iCloudDisabledButton"]
@@ -150,7 +162,11 @@ final class SettingsUITests: XCTestCase {
         XCTAssertTrue(okButton.exists, "The OK button should exist.")
         
         okButton.tap()
-        XCTAssertFalse(alertTitle.exists, "The alert should dismiss after tapping OK")
+        
+        // Wait for the alert to completely dismiss
+        let doesNotExistPredicate = NSPredicate(format: "exists == false")
+        let okExpectation = expectation(for: doesNotExistPredicate, evaluatedWith: alertTitle, handler: nil)
+        wait(for: [okExpectation], timeout: 2.0)
 
         disabledBtn.tap()
 
@@ -160,6 +176,76 @@ final class SettingsUITests: XCTestCase {
         // Check for Custom Restart Alert again
         XCTAssertTrue(alertTitle.waitForExistence(timeout: 2.0), "The restart alert should appear when toggling iCloud sync back")
         okButton.tap()
-        XCTAssertFalse(alertTitle.exists, "The alert should dismiss after tapping OK")
+        
+        let okExpectation2 = expectation(for: doesNotExistPredicate, evaluatedWith: alertTitle, handler: nil)
+        wait(for: [okExpectation2], timeout: 2.0)
+    }
+    
+    // MARK: - Clear Data tests
+    
+    func test_ClearAllDataSectionExistsAndDeletes() throws {
+        launchApp(with: ["-UI_TESTING_CALENDAR"])
+        app.buttons["SettingsButton_Inactive"].tap()
+        
+        let clearDataBtn = app.buttons["ClearAllDataButton"]
+        XCTAssertTrue(clearDataBtn.waitForExistence(timeout: 2.0), "Clear All Data button is missing")
+        
+        clearDataBtn.tap()
+        
+        let alertTitle = app.staticTexts["ClearDataAlertTitle"]
+        XCTAssertTrue(alertTitle.waitForExistence(timeout: 2.0), "Clear Data alert should appear")
+        
+        let cancelButton = app.buttons["ClearDataCancelButton"]
+        let confirmButton = app.buttons["ClearDataConfirmButton"]
+        
+        XCTAssertTrue(cancelButton.exists, "Cancel button is missing")
+        XCTAssertTrue(confirmButton.exists, "Confirm button is missing")
+        
+        // Cancel first
+        cancelButton.tap()
+        
+        // Wait for the alert to completely disappear
+        let doesNotExistPredicate = NSPredicate(format: "exists == false")
+        let cancelExpectation = expectation(for: doesNotExistPredicate, evaluatedWith: alertTitle, handler: nil)
+        wait(for: [cancelExpectation], timeout: 2.0)
+        
+        // Tap again and confirm
+        clearDataBtn.tap()
+        XCTAssertTrue(alertTitle.waitForExistence(timeout: 2.0), "Clear Data alert should appear on second tap")
+        
+        confirmButton.tap()
+        
+        let confirmExpectation = expectation(for: doesNotExistPredicate, evaluatedWith: alertTitle, handler: nil)
+        wait(for: [confirmExpectation], timeout: 2.0)
+    }
+
+    func test_ClearAllDataActuallyRemovesRecords() throws {
+        // Launch with 10 records for the CURRENT day so they show up on the main screen immediately
+        launchApp(with: ["-UI_TESTING_10_RECORDS"])
+        
+        // Go to Settings
+        app.buttons["SettingsButton_Inactive"].tap()
+        
+        // Trigger data deletion
+        app.buttons["ClearAllDataButton"].tap()
+        
+        let alertTitle = app.staticTexts["ClearDataAlertTitle"]
+        XCTAssertTrue(alertTitle.waitForExistence(timeout: 2.0))
+        app.buttons["ClearDataConfirmButton"].tap()
+        
+        // Wait for dismissal
+        let doesNotExistPredicate = NSPredicate(format: "exists == false")
+        let confirmExpectation = expectation(for: doesNotExistPredicate, evaluatedWith: alertTitle, handler: nil)
+        wait(for: [confirmExpectation], timeout: 2.0)
+        
+        // Navigate back to the Home Screen
+        let homeBtn = app.buttons["HomeButton_Inactive"]
+        if homeBtn.waitForExistence(timeout: 2.0) {
+            homeBtn.tap()
+        }
+        
+        // Verify the empty state is shown
+        let noRecordsLabel = app.staticTexts["NO RECORDS FOR THIS DAY"]
+        XCTAssertTrue(noRecordsLabel.waitForExistence(timeout: 3.0), "Expected 'NO RECORDS FOR THIS DAY' to appear, meaning data was successfully deleted.")
     }
 }

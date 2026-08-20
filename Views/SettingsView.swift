@@ -27,6 +27,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 enum AppLanguage: String, CaseIterable, Identifiable {
     case english = "en"
@@ -46,11 +47,13 @@ enum AppLanguage: String, CaseIterable, Identifiable {
 
 struct SettingsView: View {
     @EnvironmentObject var themeManager: ThemeManager
+    @Environment(\.modelContext) private var modelContext
     
     @AppStorage("appLanguage") private var selectedLanguage: AppLanguage = .english
     @AppStorage("isICloudSyncEnabled") private var isICloudSyncEnabled: Bool = false
     
     @State private var showRestartAlert: Bool = false
+    @State private var showClearDataAlert: Bool = false
 
     var body: some View {
         ZStack {
@@ -166,6 +169,23 @@ struct SettingsView: View {
                 }
                 
                 Spacer()
+
+                // MARK: - Delete all data!
+                Button(action: {
+                    withAnimation { showClearDataAlert = true }
+                }) {
+                    Text("Clear All Data")
+                        .textCase(.uppercase)
+                        .font(.lummiFont(size: 16))
+                        .foregroundColor(Color(red: 0.95, green: 0.2, blue: 0.3))
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 40)
+                        .background(Capsule().fill(Color(red: 0.95, green: 0.2, blue: 0.3).opacity(0.1)))
+                        .overlay(Capsule().stroke(Color(red: 0.95, green: 0.2, blue: 0.3), lineWidth: 1))
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.bottom, 20)
+                .accessibilityIdentifier("ClearAllDataButton")
             }
             .padding(.horizontal, 20)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -181,7 +201,8 @@ struct SettingsView: View {
                     .onTapGesture {
                         withAnimation { showRestartAlert = false }
                     }
-                
+                    .zIndex(1)
+
                 VStack(spacing: 20) {
                     Text("Restart Required")
                         .font(.lummiFont(size: 20))
@@ -213,7 +234,81 @@ struct SettingsView: View {
                 )
                 .padding(40)
                 .transition(.scale.combined(with: .opacity))
+                .zIndex(2)
             }
+
+            if showClearDataAlert {
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        withAnimation { showClearDataAlert = false }
+                    }
+                    .zIndex(1)
+                
+                VStack(spacing: 20) {
+                    Text("Clear All Data?")
+                        .font(.lummiFont(size: 20))
+                        .foregroundColor(themeManager.currentTheme.backgroundColor)
+                        .accessibilityIdentifier("ClearDataAlertTitle")
+                    
+                    Text("This will permanently delete all your entries locally and in iCloud!")
+                        .font(.lummiFont(size: 16))
+                        .foregroundColor(themeManager.currentTheme.backgroundColor)
+                        .multilineTextAlignment(.center)
+                    
+                    HStack(spacing: 16) {
+                        Button(action: {
+                            withAnimation { showClearDataAlert = false }
+                        }) {
+                            Text("Cancel")
+                                .textCase(.uppercase)
+                                .font(.lummiFont(size: 16))
+                                .foregroundColor(themeManager.currentTheme.backgroundColor)
+                                .padding(.vertical, 12)
+                                .padding(.horizontal, 24)
+                                .background(Capsule().stroke(themeManager.currentTheme.backgroundColor, lineWidth: 1))
+                        }
+                        .accessibilityIdentifier("ClearDataCancelButton")
+                        
+                        Button(action: {
+                            clearAllData()
+                            withAnimation { showClearDataAlert = false }
+                        }) {
+                            Text("Delete")
+                                .textCase(.uppercase)
+                                .font(.lummiFont(size: 16))
+                                .foregroundColor(Color(red: 0.95, green: 0.2, blue: 0.3))
+                                .padding(.vertical, 12)
+                                .padding(.horizontal, 24)
+                                .background(Capsule().fill(themeManager.currentTheme.backgroundColor))
+                        }
+                        .accessibilityIdentifier("ClearDataConfirmButton")
+                    }
+                }
+                .padding(24)
+                .background(
+                    RoundedRectangle(cornerRadius: 24)
+                        .fill(themeManager.currentTheme.textColor)
+                )
+                .padding(40)
+                .transition(.scale.combined(with: .opacity))
+                .zIndex(2)
+            }
+        }
+    }
+    
+    // MARK: - Actions
+    
+    private func clearAllData() {
+        do {
+            let descriptor = FetchDescriptor<JoyEntry>()
+            let entries = try modelContext.fetch(descriptor)
+            for entry in entries {
+                modelContext.delete(entry)
+            }
+            try modelContext.save()
+        } catch {
+            print("Failed to clear data: \(error)")
         }
     }
 }

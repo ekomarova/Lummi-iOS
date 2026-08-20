@@ -7,6 +7,7 @@ All notable changes to the project will be documented in this file.
 ## [0.4.0] - 2026-MM-DD
 ### Added
 - **Settings:** Added a custom themed restart alert for iCloud sync toggle
+- **Settings:** Clear All Data option in the Settings screen to permanently delete all entries locally and from iCloud
 - **iCloud Sync:** You can now seamlessly sync your joy entries across all your Apple devices! This feature is strictly opt-in and can be enabled in Settings
 
 ### Changed
