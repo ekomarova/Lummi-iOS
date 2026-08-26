@@ -52,6 +52,8 @@ struct SettingsView: View {
     @AppStorage("appLanguage") private var selectedLanguage: AppLanguage = .english
     @AppStorage("isICloudSyncEnabled") private var isICloudSyncEnabled: Bool = false
     
+    @State private var syncMonitor = CloudKitSyncMonitor()
+
     @State private var showRestartAlert: Bool = false
     @State private var showClearDataAlert: Bool = false
 
@@ -64,6 +66,29 @@ struct SettingsView: View {
                     .foregroundColor(themeManager.currentTheme.textColor)
                     .padding(.top, 10)
                     .frame(maxWidth: .infinity, alignment: .center)
+
+                // MARK: - iCloud Sync Banner
+                if isICloudSyncEnabled, let syncMessage = syncMonitor.syncState.message {
+                    HStack(alignment: .top, spacing: 12) {
+                        Image(systemName: "exclamationmark.icloud.fill")
+                            .font(.system(size: 20))
+                            .foregroundColor(.white)
+
+                        Text(syncMessage)
+                            .font(.lummiFont(size: 14))
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.leading)
+                    }
+                    .padding(AdaptiveLayout.getSize(for: 15))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(
+                        RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 16))
+                            .fill(Color.red.opacity(0.8))
+                    )
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+                    .animation(.spring(), value: syncMonitor.syncState)
+                    .animation(.spring(), value: isICloudSyncEnabled)
+                }
 
                 // MARK: - Appearance
                 HStack {

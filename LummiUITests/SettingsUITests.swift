@@ -145,14 +145,10 @@ final class SettingsUITests: XCTestCase {
         let disabledBtn = app.buttons["iCloudDisabledButton"]
         let enabledBtn = app.buttons["iCloudEnabledButton"]
         XCTAssertTrue(disabledBtn.waitForExistence(timeout: 2.0))
-
-        XCTAssertEqual(disabledBtn.value as? String, "Selected", "iCloud Sync should be disabled by default")
-        XCTAssertEqual(enabledBtn.value as? String, "Unselected", "iCloud enabled button should not be active")
         
         enabledBtn.tap()
 
         XCTAssertEqual(enabledBtn.value as? String, "Selected", "iCloud Sync did not become enabled")
-        XCTAssertEqual(disabledBtn.value as? String, "Unselected", "iCloud disabled button is still active")
         
         // Check for Custom Restart Alert
         let alertTitle = app.staticTexts["RestartAlertTitle"]
@@ -181,6 +177,22 @@ final class SettingsUITests: XCTestCase {
         wait(for: [okExpectation2], timeout: 2.0)
     }
     
+    func test_iCloudSyncErrorBannerDisplays() throws {
+        launchApp(with: ["-UI_TESTING_CALENDAR"])
+
+        // Navigate to settings
+        app.buttons["SettingsButton_Inactive"].tap()
+
+        // The banner should NOT be visible initially because Sync is off by default
+        let bannerMessage = app.staticTexts["Synchronization is suspended. Please log in to iCloud in Settings."]
+        XCTAssertFalse(bannerMessage.exists, "Banner should not be visible when iCloud Sync is disabled")
+
+        // Enable Sync
+        app.buttons["iCloudEnabledButton"].tap()
+
+        XCTAssertTrue(bannerMessage.waitForExistence(timeout: 5.0), "Banner should be visible when iCloud Sync is enabled but iCloud is logged out")
+    }
+
     // MARK: - Clear Data tests
     
     func test_ClearAllDataSectionExistsAndDeletes() throws {

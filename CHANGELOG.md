@@ -9,6 +9,7 @@ All notable changes to the project will be documented in this file.
 - **Settings:** Added a custom themed restart alert for iCloud sync toggle
 - **Settings:** Clear All Data option in the Settings screen to permanently delete all entries locally and from iCloud
 - **iCloud Sync:** You can now seamlessly sync your joy entries across all your Apple devices! This feature is strictly opt-in and can be enabled in Settings
+- **iCloud Sync Warning**: If iCloud synchronization is enabled but cannot complete (e.g., your device is not logged into an Apple ID, your iCloud storage is full, or sync is restricted by corporate/parental policies), a helpful warning banner will now appear in the Settings screen
 
 ### Changed
 - **Architecture:** Improved ModelContainer initialization

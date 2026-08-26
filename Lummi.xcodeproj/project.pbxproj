@@ -26,6 +26,7 @@
 		473B04562F9BB2F800C482FA /* AppThemes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04532F9BB22F00C482FA /* AppThemes.swift */; };
 		473B04572F9BB2FD00C482FA /* ThemeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04522F9BB22000C482FA /* ThemeProtocol.swift */; };
 		473B045B2F9BB79C00C482FA /* RecordInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B045A2F9BB79B00C482FA /* RecordInput.swift */; };
+		4766220D303F8AB000041521 /* CloudKitSyncMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4766220C303F8AAC00041521 /* CloudKitSyncMonitor.swift */; };
 		47981E9B2FA4440C005ADAB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 47981E9A2FA4440C005ADAB1 /* Assets.xcassets */; };
 		47981EAD2FA54745005ADAB1 /* InsightsCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47981EAC2FA5473E005ADAB1 /* InsightsCalculator.swift */; };
 		47981EB82FA5928F005ADAB1 /* MockDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47981EB32FA59262005ADAB1 /* MockDataManager.swift */; };
@@ -74,6 +75,7 @@
 		473B04532F9BB22F00C482FA /* AppThemes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppThemes.swift; sourceTree = "<group>"; };
 		473B04542F9BB24E00C482FA /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		473B045A2F9BB79B00C482FA /* RecordInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordInput.swift; sourceTree = "<group>"; };
+		4766220C303F8AAC00041521 /* CloudKitSyncMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitSyncMonitor.swift; sourceTree = "<group>"; };
 		47981E9A2FA4440C005ADAB1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		47981EAC2FA5473E005ADAB1 /* InsightsCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsCalculator.swift; sourceTree = "<group>"; };
 		47981EB32FA59262005ADAB1 /* MockDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataManager.swift; sourceTree = "<group>"; };
@@ -247,6 +249,7 @@
 		47981EBB2FA596C6005ADAB1 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				4766220C303F8AAC00041521 /* CloudKitSyncMonitor.swift */,
 				47981EAC2FA5473E005ADAB1 /* InsightsCalculator.swift */,
 			);
 			path = Helpers;
@@ -419,6 +422,7 @@
 				473B04572F9BB2FD00C482FA /* ThemeProtocol.swift in Sources */,
 				473B044E2F9ACF9D00C482FA /* RecordButton.swift in Sources */,
 				47289DCE2FAED17700E46B84 /* InsightsView.swift in Sources */,
+				4766220D303F8AB000041521 /* CloudKitSyncMonitor.swift in Sources */,
 				4726FFC82FA3D98E008B5D3C /* SettingsButton.swift in Sources */,
 				4714236F2F9CFAA000C1D681 /* SelectedDayDetailView.swift in Sources */,
 				473B04552F9BB2F400C482FA /* ThemeManager.swift in Sources */,
