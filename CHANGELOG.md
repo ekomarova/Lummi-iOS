@@ -6,10 +6,10 @@ All notable changes to the project will be documented in this file.
 
 ## [0.4.0] - 2026-MM-DD
 ### Added
-- **Settings:** Added a custom themed restart alert for iCloud sync toggle
 - **Settings:** Clear All Data option in the Settings screen to permanently delete all entries locally and from iCloud
 - **iCloud Sync:** You can now seamlessly sync your joy entries across all your Apple devices! This feature is strictly opt-in and can be enabled in Settings
 - **iCloud Sync Warning**: If iCloud synchronization is enabled but cannot complete (e.g., your device is not logged into an Apple ID, your iCloud storage is full, or sync is restricted by corporate/parental policies), a helpful warning banner will now appear in the Settings screen
+- **iCloud Sync:** Toggling iCloud synchronization in Settings now applies instantly and no requires you to restart the application
 
 ### Changed
 - **Architecture:** Improved ModelContainer initialization
@@ -19,6 +19,7 @@ All notable changes to the project will be documented in this file.
 ### Fixed
 - **Testing:** Fixed UI tests related to ModelContainer initialization
 - **Settings:** Fixed an issue on iPad where the language selection text was too small compared to other menu items. The picker now correctly uses an adaptive font size while maintaining native system behavior
+- **Settings UI:** Resolved a visual glitch where the layout would bounce awkwardly when an iCloud sync error banner appeared
 
 ## [0.3.0] - 2026-05-11
 ### Added

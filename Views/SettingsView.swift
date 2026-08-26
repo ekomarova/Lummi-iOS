@@ -54,7 +54,6 @@ struct SettingsView: View {
     
     @State private var syncMonitor = CloudKitSyncMonitor()
 
-    @State private var showRestartAlert: Bool = false
     @State private var showClearDataAlert: Bool = false
 
     var body: some View {
@@ -66,29 +65,6 @@ struct SettingsView: View {
                     .foregroundColor(themeManager.currentTheme.textColor)
                     .padding(.top, 10)
                     .frame(maxWidth: .infinity, alignment: .center)
-
-                // MARK: - iCloud Sync Banner
-                if isICloudSyncEnabled, let syncMessage = syncMonitor.syncState.message {
-                    HStack(alignment: .top, spacing: 12) {
-                        Image(systemName: "exclamationmark.icloud.fill")
-                            .font(.system(size: 20))
-                            .foregroundColor(.white)
-
-                        Text(syncMessage)
-                            .font(.lummiFont(size: 14))
-                            .foregroundColor(.white)
-                            .multilineTextAlignment(.leading)
-                    }
-                    .padding(AdaptiveLayout.getSize(for: 15))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(
-                        RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 16))
-                            .fill(Color.red.opacity(0.8))
-                    )
-                    .transition(.opacity.combined(with: .move(edge: .top)))
-                    .animation(.spring(), value: syncMonitor.syncState)
-                    .animation(.spring(), value: isICloudSyncEnabled)
-                }
 
                 // MARK: - Appearance
                 HStack {
@@ -127,35 +103,59 @@ struct SettingsView: View {
                 }
                 
                 // MARK: - iCloud sync
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("iCloud Sync")
-                            .textCase(.uppercase)
-                            .font(.lummiFont(size: 17))
-                            .foregroundColor(themeManager.currentTheme.textColor)
-                    }
-                    
-                    Spacer()
-                    
-                    HStack(spacing: 0) {
-                        LummiSegmentButton(
-                            icon: "xmark.circle.fill",
-                            isSelected: !isICloudSyncEnabled,
-                            color: isICloudSyncEnabled ? nil : Color(red: 0.95, green: 0.2, blue: 0.3),
-                            accessibilityID: "iCloudDisabledButton",
-                            action: { withAnimation(.spring()) { isICloudSyncEnabled = false } }
-                        )
+                VStack(spacing: 15) {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("iCloud Sync")
+                                .textCase(.uppercase)
+                                .font(.lummiFont(size: 17))
+                                .foregroundColor(themeManager.currentTheme.textColor)
+                        }
+                        
+                        Spacer()
+                        
+                        HStack(spacing: 0) {
+                            LummiSegmentButton(
+                                icon: "xmark.circle.fill",
+                                isSelected: !isICloudSyncEnabled,
+                                color: isICloudSyncEnabled ? nil : Color(red: 0.95, green: 0.2, blue: 0.3),
+                                accessibilityID: "iCloudDisabledButton",
+                                action: { withAnimation(.spring()) { isICloudSyncEnabled = false } }
+                            )
 
-                        LummiSegmentButton(
-                            icon: "checkmark.circle.fill",
-                            isSelected: isICloudSyncEnabled,
-                            color: !isICloudSyncEnabled ? nil : Color(red: 0.2, green: 0.9, blue: 0.4),
-                            accessibilityID: "iCloudEnabledButton",
-                            action: { withAnimation(.spring()) { isICloudSyncEnabled = true } }
-                        )
+                            LummiSegmentButton(
+                                icon: "checkmark.circle.fill",
+                                isSelected: isICloudSyncEnabled,
+                                color: !isICloudSyncEnabled ? nil : Color(red: 0.2, green: 0.9, blue: 0.4),
+                                accessibilityID: "iCloudEnabledButton",
+                                action: { withAnimation(.spring()) { isICloudSyncEnabled = true } }
+                            )
+                        }
+                        .background(Capsule().fill(themeManager.currentTheme.textColor.opacity(0.05)))
+                        .overlay(Capsule().stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1))
                     }
-                    .background(Capsule().fill(themeManager.currentTheme.textColor.opacity(0.05)))
-                    .overlay(Capsule().stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1))
+                    
+                    // MARK: - iCloud Sync Banner
+                    if isICloudSyncEnabled, let syncMessage = syncMonitor.syncState.message {
+                        HStack(alignment: .top, spacing: 12) {
+                            Image(systemName: "exclamationmark.icloud.fill")
+                                .font(.system(size: 20))
+                                .foregroundColor(.white)
+
+                            Text(syncMessage)
+                                .font(.lummiFont(size: 14))
+                                .foregroundColor(.white)
+                                .multilineTextAlignment(.leading)
+                        }
+                        .padding(AdaptiveLayout.getSize(for: 15))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(
+                            RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 16))
+                                .fill(Color.red.opacity(0.8))
+                        )
+                        .transition(.opacity.combined(with: .scale(scale: 0.95, anchor: .top)))
+                        .animation(.spring(), value: syncMonitor.syncState)
+                    }
                 }
                 
                 // MARK: - Language
@@ -214,53 +214,6 @@ struct SettingsView: View {
             }
             .padding(.horizontal, 20)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .onChange(of: isICloudSyncEnabled) { _, _ in
-                withAnimation {
-                    showRestartAlert = true
-                }
-            }
-            
-            if showRestartAlert {
-                Color.black.opacity(0.4)
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        withAnimation { showRestartAlert = false }
-                    }
-                    .zIndex(1)
-
-                VStack(spacing: 20) {
-                    Text("Restart Required")
-                        .font(.lummiFont(size: 20))
-                        .foregroundColor(themeManager.currentTheme.backgroundColor)
-                        .accessibilityIdentifier("RestartAlertTitle")
-                    
-                    Text("To apply the synchronization settings, you need to restart the application")
-                        .font(.lummiFont(size: 16))
-                        .foregroundColor(themeManager.currentTheme.backgroundColor)
-                        .multilineTextAlignment(.center)
-                    
-                    Button(action: {
-                        withAnimation { showRestartAlert = false }
-                    }) {
-                        Text("OK")
-                            .textCase(.uppercase)
-                            .font(.lummiFont(size: 18))
-                            .foregroundColor(themeManager.currentTheme.textColor)
-                            .padding(.vertical, 12)
-                            .padding(.horizontal, 40)
-                            .background(Capsule().fill(themeManager.currentTheme.backgroundColor))
-                    }
-                    .accessibilityIdentifier("RestartAlertOKButton")
-                }
-                .padding(24)
-                .background(
-                    RoundedRectangle(cornerRadius: 24)
-                        .fill(themeManager.currentTheme.textColor)
-                )
-                .padding(40)
-                .transition(.scale.combined(with: .opacity))
-                .zIndex(2)
-            }
 
             if showClearDataAlert {
                 Color.black.opacity(0.4)
