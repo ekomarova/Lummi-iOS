@@ -1,29 +1,51 @@
 name: Xcode
-
 on:
   pull_request:
     branches: [ "master" ]
   workflow_dispatch:
-
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   build:
     name: Build
     runs-on: macos-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set Default Scheme
+
+      - name: Determine Build Settings
+        id: settings
         run: |
           scheme_list=$(xcodebuild -list -json | tr -d "\n")
           default=$(echo $scheme_list | ruby -e "require 'json'; puts JSON.parse(STDIN.gets)['project']['targets'][0]")
-          echo $default | cat >default
-          echo Using default scheme: $default
-      - name: Build
-        env:
-          scheme: ${{ 'default' }}
-        run: |
-          if [ $scheme = default ]; then scheme=$(cat default); fi
-          if [ "`ls -A | grep -i \\.xcworkspace\$`" ]; then filetype_parameter="workspace" && file_to_build="`ls -A | grep -i \\.xcworkspace\$`"; else filetype_parameter="project" && file_to_build="`ls -A | grep -i \\.xcodeproj\$`"; fi
+          echo "Using default scheme: $default"
+
+          if [ "`ls -A | grep -i \\.xcworkspace\$`" ]; then
+            filetype_parameter="workspace"
+            file_to_build="`ls -A | grep -i \\.xcworkspace\$`"
+          else
+            filetype_parameter="project"
+            file_to_build="`ls -A | grep -i \\.xcodeproj\$`"
+          fi
           file_to_build=`echo $file_to_build | awk '{$1=$1;print}'`
-          xcodebuild clean build analyze -scheme "$scheme" -"$filetype_parameter" "$file_to_build" | xcpretty && exit ${PIPESTATUS[0]}
+
+          echo "scheme=$default" >> "$GITHUB_OUTPUT"
+          echo "filetype_parameter=$filetype_parameter" >> "$GITHUB_OUTPUT"
+          echo "file_to_build=$file_to_build" >> "$GITHUB_OUTPUT"
+
+      - name: Build Main Target
+        run: |
+          xcodebuild clean build analyze \
+            -scheme "${{ steps.settings.outputs.scheme }}" \
+            -"${{ steps.settings.outputs.filetype_parameter }}" "${{ steps.settings.outputs.file_to_build }}" \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO | xcpretty && exit ${PIPESTATUS[0]}
+
+      - name: Build Test Target
+        run: |
+          xcodebuild build-for-testing \
+            -scheme "${{ steps.settings.outputs.scheme }}" \
+            -"${{ steps.settings.outputs.filetype_parameter }}" "${{ steps.settings.outputs.file_to_build }}" \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO | xcpretty && exit ${PIPESTATUS[0]}
