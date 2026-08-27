@@ -4,7 +4,6 @@ on:
     branches: [ "master" ]
     paths:
       - '**/*.swift'
-      - '.swiftlint.yml'
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
