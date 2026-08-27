@@ -37,7 +37,7 @@ protocol AppTheme {
     var textColor: Color { get }
     var inactiveOpacity: Double { get }
     
-    //Calendar
+    // Calendar
     var calendarBackground: Color { get }
     var calendarContentColor: Color { get }
     var todayColor: Color { get }

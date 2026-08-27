@@ -36,7 +36,6 @@ struct DayCell: View {
     let isSelected: Bool
     
     let dateKey: String
-
     
     var body: some View {
         ZStack {
@@ -55,7 +54,9 @@ struct DayCell: View {
                     .font(.system(size: AdaptiveLayout.getSize(for: 15), weight: isToday ? .bold : .light, design: .monospaced))
                     .foregroundColor(
                         isToday ? themeManager.currentTheme.todayColor :
-                        (isFilled ? themeManager.currentTheme.dayFilledColor : themeManager.currentTheme.calendarContentColor.opacity(themeManager.currentTheme.inactiveOpacity))
+                            (isFilled ? themeManager.currentTheme.dayFilledColor :
+                                themeManager.currentTheme.calendarContentColor
+                                .opacity(themeManager.currentTheme.inactiveOpacity))
                     )
             }
         }

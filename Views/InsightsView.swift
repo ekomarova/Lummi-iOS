@@ -70,11 +70,14 @@ struct InsightsView: View {
 
                 // MARK: - Month Selector
                 HStack(spacing: 20) {
-                    Button(action: { changeMonth(by: -1) }) {
-                        Image(systemName: "chevron.left")
-                            .font(.lummiFont(size: 18))
-                            .foregroundColor(themeManager.currentTheme.textColor.opacity(isOldestMonth ? 0.2 : 0.8))
-                    }
+                    Button(
+                        action: { changeMonth(by: -1) },
+                        label: {
+                            Image(systemName: "chevron.left")
+                                .font(.lummiFont(size: 18))
+                                .foregroundColor(themeManager.currentTheme.textColor.opacity(isOldestMonth ? 0.2 : 0.8))
+                        }
+                    )
                     .disabled(isOldestMonth)
                     .accessibilityIdentifier("PreviousMonthButton")
                     
@@ -84,11 +87,14 @@ struct InsightsView: View {
                         .frame(minWidth: 160, alignment: .center)
                         .accessibilityIdentifier("CurrentMonthLabel")
                     
-                    Button(action: { changeMonth(by: 1) }) {
-                        Image(systemName: "chevron.right")
-                            .font(.lummiFont(size: 18))
-                            .foregroundColor(themeManager.currentTheme.textColor.opacity(isCurrentMonth ? 0.2 : 0.8))
-                    }
+                    Button(
+                        action: { changeMonth(by: 1) },
+                        label: {
+                            Image(systemName: "chevron.right")
+                                .font(.lummiFont(size: 18))
+                                .foregroundColor(themeManager.currentTheme.textColor.opacity(isCurrentMonth ? 0.2 : 0.8))
+                        }
+                    )
                     .disabled(isCurrentMonth)
                     .accessibilityIdentifier("NextMonthButton")
                 }
@@ -127,55 +133,58 @@ struct InsightsView: View {
                         // MARK: - All Moments
                         if !monthlyEntries.isEmpty {
                             VStack(spacing: 0) {
-                                Button(action: {
-                                    withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                                        isListExpanded.toggle()
-                                    }
-                                }) {
-                                    ZStack {
-                                        HStack(spacing: 8) {
-                                            Text("Want to see all moments?")
-                                                .textCase(.uppercase)
-                                                .font(.lummiFont(size: 18))
-                                                .foregroundColor(themeManager.currentTheme.textColor)
-                                            
-                                            Image(systemName: "chevron.down")
-                                                .font(.system(size: 14, weight: .bold))
-                                                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
-                                                .rotationEffect(.degrees(isListExpanded ? 180 : 0))
+                                Button(
+                                    action: {
+                                        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                            isListExpanded.toggle()
                                         }
-                                        VStack {
-                                            Spacer()
-                                            Text("Tap here")
-                                                .font(.lummiFont(size: 12))
-                                                .opacity(0.7)
-                                                .textCase(.uppercase)
-                                                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.85))
-                                                .padding(.bottom, AdaptiveLayout.getSize(for: 16))
-                                        }
-                                    }
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: AdaptiveLayout.getSize(for: 130))
-                                    .background {
+                                    },
+                                    label: {
                                         ZStack {
-                                            RoundedRectangle(cornerRadius: 30)
-                                                .fill(
-                                                    LinearGradient(
-                                                        colors: [
-                                                            Color(red: 1.0, green: 0.8, blue: 0.3),
-                                                            Color(red: 0.2, green: 0.6, blue: 0.3)
-                                                        ],
-                                                        startPoint: .topLeading,
-                                                        endPoint: .bottomTrailing
-                                                    )
-                                                )
-                                                .blur(radius: 15)
-                                                .opacity(0.8)
+                                            HStack(spacing: 8) {
+                                                Text("Want to see all moments?")
+                                                    .textCase(.uppercase)
+                                                    .font(.lummiFont(size: 18))
+                                                    .foregroundColor(themeManager.currentTheme.textColor)
+                                                
+                                                Image(systemName: "chevron.down")
+                                                    .font(.system(size: 14, weight: .bold))
+                                                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
+                                                    .rotationEffect(.degrees(isListExpanded ? 180 : 0))
+                                            }
+                                            VStack {
+                                                Spacer()
+                                                Text("Tap here")
+                                                    .font(.lummiFont(size: 12))
+                                                    .opacity(0.7)
+                                                    .textCase(.uppercase)
+                                                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.85))
+                                                    .padding(.bottom, AdaptiveLayout.getSize(for: 16))
+                                            }
                                         }
                                         .frame(maxWidth: .infinity)
-                                        .padding(.horizontal, AdaptiveLayout.getSize(for: 15))
+                                        .frame(height: AdaptiveLayout.getSize(for: 130))
+                                        .background {
+                                            ZStack {
+                                                RoundedRectangle(cornerRadius: 30)
+                                                    .fill(
+                                                        LinearGradient(
+                                                            colors: [
+                                                                Color(red: 1.0, green: 0.8, blue: 0.3),
+                                                                Color(red: 0.2, green: 0.6, blue: 0.3)
+                                                            ],
+                                                            startPoint: .topLeading,
+                                                            endPoint: .bottomTrailing
+                                                        )
+                                                    )
+                                                    .blur(radius: 15)
+                                                    .opacity(0.8)
+                                            }
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.horizontal, AdaptiveLayout.getSize(for: 15))
+                                        }
                                     }
-                                }
+                                )
                                 .buttonStyle(.plain)
                                 .zIndex(1)
                                 
@@ -340,4 +349,3 @@ struct MonthlyMomentCell: View {
         .padding(.trailing, AdaptiveLayout.getSize(for: 15))
     }
 }
-

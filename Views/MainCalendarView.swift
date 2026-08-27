@@ -93,7 +93,7 @@ struct MainCalendarView: View {
             }
             .scrollTargetBehavior(.paging)
             .scrollPosition(id: $scrollID)
-            .onChange(of: scrollID) { oldValue, newValue in
+            .onChange(of: scrollID) { _, newValue in
                 if let newMonth = newValue {
                     visibleMonth = newMonth
                 }
@@ -136,7 +136,7 @@ struct SingleMonthView: View {
         VStack(spacing: 0) {
             Spacer()
             LazyVGrid(columns: columns, spacing: AdaptiveLayout.getSize(for: 4)) {
-                ForEach((-firstDayOffset)..<0, id: \.self) { index in
+                ForEach((-firstDayOffset)..<0, id: \.self) { _ in
                     Color.clear.frame(height: AdaptiveLayout.getSize(for: 38))
                 }
                 

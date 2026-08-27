@@ -43,7 +43,7 @@ struct ContentView: View {
     @State private var isShowingInsights = false
 
     var body: some View {
-        GeometryReader { geometry in
+        GeometryReader { _ in
             ZStack(alignment: .top) {
                 themeManager.currentTheme.bgGradient.ignoresSafeArea()
                 
@@ -145,7 +145,8 @@ struct ContentView: View {
                 HStack(spacing: 0) {
                     // MARK: - Home button
                     HomeButton(
-                        isActive: !isCalendarExpanded && !isShowingSettings && !isShowingInsights && Calendar.current.isDateInToday(selectedDate ?? Date()),
+                        isActive: !isCalendarExpanded && !isShowingSettings && !isShowingInsights &&
+                            Calendar.current.isDateInToday(selectedDate ?? Date()),
                         onTap: {
                             withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
                                 isShowingSettings = false
@@ -214,6 +215,6 @@ struct ContentView: View {
         // MARK: For tests only
         .onAppear {
             MockDataManager.injectIfNeeded(modelContext: modelContext, allEntries: allEntries)
-            }
         }
     }
+}

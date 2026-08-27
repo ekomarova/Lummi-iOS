@@ -1,0 +1,26 @@
+name: Semgrep
+
+on:
+  pull_request:
+    branches: [ "master" ]
+    paths:
+      - '**/*.swift'
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  semgrep:
+    name: Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Install latest Semgrep
+        run: python3 -m pip install semgrep
+
+      - name: Run Semgrep
+        run: semgrep scan --config="p/default" --config="p/swift" --error

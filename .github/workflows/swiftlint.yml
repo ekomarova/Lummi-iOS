@@ -1,0 +1,25 @@
+name: SwiftLint
+
+on:
+  pull_request:
+    branches: [ "master" ]
+    paths:
+      - '**/*.swift'
+      - '.swiftlint.yml'
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  swiftlint:
+    name: Syntax Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      
+      - name: Run SwiftLint
+        uses: norio-nomura/action-swiftlint@9f4dcd7fd46b4e75d7935cf2f4df406d5cae3684
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

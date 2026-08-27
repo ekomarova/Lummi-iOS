@@ -90,7 +90,8 @@ final class CloudKitSyncMonitor {
     }
 
     @objc private func cloudKitEventChanged(_ notification: Notification) {
-        guard let event = notification.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event else { return }
+        guard let userInfo = notification.userInfo,
+              let event = userInfo[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event else { return }
 
         if let error = event.error {
             let nsError = error as NSError
