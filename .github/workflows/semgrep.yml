@@ -18,9 +18,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install latest Semgrep
+        run: python3 -m pip install semgrep
+
       - name: Run Semgrep
-        uses: semgrep/action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          config: "p/default p/swift"
+        run: semgrep scan --config="p/default" --config="p/swift" --error
