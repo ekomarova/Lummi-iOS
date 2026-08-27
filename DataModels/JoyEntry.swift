@@ -35,6 +35,7 @@ final class JoyEntry {
     var id: UUID = UUID()
     
     // Record text
+    @Attribute(.allowsCloudEncryption)
     var text: String = ""
     
     // Date of record creation

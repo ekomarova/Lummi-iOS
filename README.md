@@ -17,6 +17,9 @@
     *   Russian
     *   German
 
+## 🔒 Privacy
+Your data is yours. Using SwiftData and CloudKit, the text of your moments is encrypted during iCloud sync (`.allowsCloudEncryption`). Apple handles the secure key management, meaning your entries stay private and safe.
+
 ## 🏗 Architecture
 
 * **Localization**: Uses modern **String Catalogs (.xcstrings)** for manageable translations and **LocalizedStringResource** for type-safe code strings

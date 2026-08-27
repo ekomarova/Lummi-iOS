@@ -6,10 +6,13 @@ All notable changes to the project will be documented in this file.
 
 ## [0.4.0] - 2026-MM-DD
 ### Added
+- **Enhanced Privacy:** Journal entry text is now encrypted when synced via iCloud, ensuring your personal moments remain private and secure
 - **Settings:** Clear All Data option in the Settings screen to permanently delete all entries locally and from iCloud
 - **iCloud Sync:** You can now seamlessly sync your joy entries across all your Apple devices! This feature is strictly opt-in and can be enabled in Settings
 - **iCloud Sync Warning**: If iCloud synchronization is enabled but cannot complete (e.g., your device is not logged into an Apple ID, your iCloud storage is full, or sync is restricted by corporate/parental policies), a helpful warning banner will now appear in the Settings screen
 - **iCloud Sync:** Toggling iCloud synchronization in Settings now applies instantly and no requires you to restart the application
+- **CI:** Automated GitHub Actions CI workflow that builds, analyzes, and compiles app/tests for the Xcode project on pull requests to master
+
 
 ### Changed
 - **Architecture:** Improved ModelContainer initialization
