@@ -1,0 +1,20 @@
+disabled_rules:
+  - trailing_whitespace
+
+opt_in_rules:
+  - force_unwrapping
+  - fatal_error_message
+  - empty_count
+  - first_where
+  - contains_over_filter_is_empty
+  - redundant_nil_coalescing
+  - explicit_init
+  - closure_end_indentation
+
+excluded:
+  - TestHelpers
+  - LummiUITests
+
+line_length:
+  warning: 150
+  error: 200
