@@ -2,6 +2,7 @@ name: Semgrep
 
 on:
   pull_request:
+    branches: [ "master" ]
     paths:
       - '**/*.swift'
   workflow_dispatch:
@@ -16,7 +17,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Install latest Semgrep
         run: python3 -m pip install semgrep
