@@ -196,18 +196,21 @@ struct SettingsView: View {
                 Spacer()
 
                 // MARK: - Delete all data!
-                Button(action: {
-                    withAnimation { showClearDataAlert = true }
-                }) {
-                    Text("Clear All Data")
-                        .textCase(.uppercase)
-                        .font(.lummiFont(size: 16))
-                        .foregroundColor(Color(red: 0.95, green: 0.2, blue: 0.3))
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 40)
-                        .background(Capsule().fill(Color(red: 0.95, green: 0.2, blue: 0.3).opacity(0.1)))
-                        .overlay(Capsule().stroke(Color(red: 0.95, green: 0.2, blue: 0.3), lineWidth: 1))
-                }
+                Button(
+                    action: {
+                        withAnimation { showClearDataAlert = true }
+                    },
+                    label: {
+                        Text("Clear All Data")
+                            .textCase(.uppercase)
+                            .font(.lummiFont(size: 16))
+                            .foregroundColor(Color(red: 0.95, green: 0.2, blue: 0.3))
+                            .padding(.vertical, 12)
+                            .padding(.horizontal, 40)
+                            .background(Capsule().fill(Color(red: 0.95, green: 0.2, blue: 0.3).opacity(0.1)))
+                            .overlay(Capsule().stroke(Color(red: 0.95, green: 0.2, blue: 0.3), lineWidth: 1))
+                    }
+                )
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.bottom, 20)
                 .accessibilityIdentifier("ClearAllDataButton")
@@ -235,31 +238,37 @@ struct SettingsView: View {
                         .multilineTextAlignment(.center)
                     
                     HStack(spacing: 16) {
-                        Button(action: {
-                            withAnimation { showClearDataAlert = false }
-                        }) {
-                            Text("Cancel")
-                                .textCase(.uppercase)
-                                .font(.lummiFont(size: 16))
-                                .foregroundColor(themeManager.currentTheme.backgroundColor)
-                                .padding(.vertical, 12)
-                                .padding(.horizontal, 24)
-                                .background(Capsule().stroke(themeManager.currentTheme.backgroundColor, lineWidth: 1))
-                        }
+                        Button(
+                            action: {
+                                withAnimation { showClearDataAlert = false }
+                            },
+                            label: {
+                                Text("Cancel")
+                                    .textCase(.uppercase)
+                                    .font(.lummiFont(size: 16))
+                                    .foregroundColor(themeManager.currentTheme.backgroundColor)
+                                    .padding(.vertical, 12)
+                                    .padding(.horizontal, 24)
+                                    .background(Capsule().stroke(themeManager.currentTheme.backgroundColor, lineWidth: 1))
+                            }
+                        )
                         .accessibilityIdentifier("ClearDataCancelButton")
                         
-                        Button(action: {
-                            clearAllData()
-                            withAnimation { showClearDataAlert = false }
-                        }) {
-                            Text("Delete")
-                                .textCase(.uppercase)
-                                .font(.lummiFont(size: 16))
-                                .foregroundColor(Color(red: 0.95, green: 0.2, blue: 0.3))
-                                .padding(.vertical, 12)
-                                .padding(.horizontal, 24)
-                                .background(Capsule().fill(themeManager.currentTheme.backgroundColor))
-                        }
+                        Button(
+                            action: {
+                                clearAllData()
+                                withAnimation { showClearDataAlert = false }
+                            },
+                            label: {
+                                Text("Delete")
+                                    .textCase(.uppercase)
+                                    .font(.lummiFont(size: 16))
+                                    .foregroundColor(Color(red: 0.95, green: 0.2, blue: 0.3))
+                                    .padding(.vertical, 12)
+                                    .padding(.horizontal, 24)
+                                    .background(Capsule().fill(themeManager.currentTheme.backgroundColor))
+                            }
+                        )
                         .accessibilityIdentifier("ClearDataConfirmButton")
                     }
                 }
@@ -291,13 +300,12 @@ struct SettingsView: View {
     }
 }
 
-
 struct LummiSegmentButton: View {
     @EnvironmentObject var themeManager: ThemeManager
     
     let icon: String
     let isSelected: Bool
-    var color: Color? = nil
+    var color: Color?
     let accessibilityID: String
     let action: () -> Void
 

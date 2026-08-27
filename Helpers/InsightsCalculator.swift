@@ -56,8 +56,8 @@ struct InsightsCalculator {
         var currentStreak = 1
         var maxStreak = 1
         
-        for i in 1..<uniqueDays.count {
-            let difference = calendar.dateComponents([.day], from: uniqueDays[i-1], to: uniqueDays[i]).day ?? 0
+        for index in 1..<uniqueDays.count {
+            let difference = calendar.dateComponents([.day], from: uniqueDays[index-1], to: uniqueDays[index]).day ?? 0
             
             if difference == 1 {
                 currentStreak += 1

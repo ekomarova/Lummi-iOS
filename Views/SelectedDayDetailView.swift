@@ -37,7 +37,7 @@ struct SelectedDayDetailView: View {
 
     @Query(sort: \JoyEntry.date) private var allEntries: [JoyEntry]
     
-    @State private var activeMenuIndex: Int? = nil
+    @State private var activeMenuIndex: Int?
     @State private var editingText: String = ""
     @State private var isEditing: Bool = false
     @FocusState private var isTextFieldFocused: Bool
@@ -136,93 +136,111 @@ struct SelectedDayDetailView: View {
     // MARK: - Interactive Cell
     
     @ViewBuilder
-        private func noteCell(for index: Int, entry: JoyEntry, proxy: ScrollViewProxy) -> some View {
-            let isActive = (activeMenuIndex == index)
+    private func noteCell(for index: Int, entry: JoyEntry, proxy: ScrollViewProxy) -> some View {
+        let isActive = (activeMenuIndex == index)
         
         VStack(alignment: .trailing, spacing: AdaptiveLayout.getSize(for: 8)) {
             if isActive && !isEditing {
-                HStack(spacing: AdaptiveLayout.getSize(for: 12)) {
-                    Button(action: {
-                        editingText = entry.text
-                        isEditing = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            isTextFieldFocused = true
-                            withAnimation(.spring()) {
-                                proxy.scrollTo(index, anchor: .center)
-                            }
-                        }
-                    }) {
-                        Image(systemName: "pencil")
-                            .font(.lummiFont(size: 16))
-                            .foregroundColor(themeManager.currentTheme.backgroundColor)
-                            .frame(width: AdaptiveLayout.getSize(for: 44), height: AdaptiveLayout.getSize(for: 44))
-                            .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.85)))
-                    }
-                    .accessibilityIdentifier("EditRecordButton")
-                    
-                    Button(action: { deleteNote(at: index) }) {
-                        Image(systemName: "trash")
-                            .font(.lummiFont(size: 16))
-                            .foregroundColor(themeManager.currentTheme.backgroundColor)
-                            .frame(width: AdaptiveLayout.getSize(for: 44), height: AdaptiveLayout.getSize(for: 44))
-                            .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.85)))
-                    }
-                    .accessibilityIdentifier("DeleteRecordButton")
-                }
-                .transition(.scale(scale: 0.8).combined(with: .opacity).combined(with: .move(edge: .bottom)))
+                noteCellActionButtons(index: index, entry: entry, proxy: proxy)
             }
             
             Group {
                 if isActive && isEditing {
-                    TextField("What made you happy?", text: $editingText, axis: .vertical)
-                        .accessibilityIdentifier("EditRecordTextField")
-                        .focused($isTextFieldFocused)
-                        .font(.lummiFont(size: 16))
-                        .foregroundColor(themeManager.currentTheme.textColor)
-                        .padding(AdaptiveLayout.getSize(for: 20))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(
-                            RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 20))
-                                .fill(themeManager.currentTheme.textColor.opacity(0.12))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 20))
-                                        .stroke(themeManager.currentTheme.textColor.opacity(0.3), lineWidth: 1)
-                                )
-                        )
+                    noteCellEditField
                 } else {
-                    Text(entry.text)
-                        .font(.lummiFont(size: 16))
-                        .foregroundColor(themeManager.currentTheme.textColor)
-                        .padding(AdaptiveLayout.getSize(for: 20))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(
-                            RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 20))
-                                .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 20))
-                                        .stroke(themeManager.currentTheme.textColor.opacity(isActive ? 0.3 : 0.1), lineWidth: isActive ? 2 : 1)
-                                )
-                        )
-                        .onTapGesture {
-                            if activeMenuIndex != nil { saveAndDismiss() }
-                        }
-                        .onLongPressGesture {
-                            if isSelectedToday && !isActive {
-                                saveAndDismiss()
-                                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                                    activeMenuIndex = index
-                                    isEditing = false
-                                }
-                                withAnimation { proxy.scrollTo(index, anchor: .center) }
-                            }
-                        }
-                        .accessibilityIdentifier("RecordText_\(index)")
+                    noteCellTextDisplay(index: index, entry: entry, isActive: isActive, proxy: proxy)
                 }
             }
         }
         .id(index)
         .blur(radius: (activeMenuIndex != nil && !isActive) ? 6 : 0)
         .opacity((activeMenuIndex != nil && !isActive) ? 0.4 : 1.0)
+    }
+
+    private func noteCellActionButtons(index: Int, entry: JoyEntry, proxy: ScrollViewProxy) -> some View {
+        HStack(spacing: AdaptiveLayout.getSize(for: 12)) {
+            Button(
+                action: {
+                    editingText = entry.text
+                    isEditing = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        isTextFieldFocused = true
+                        withAnimation(.spring()) {
+                            proxy.scrollTo(index, anchor: .center)
+                        }
+                    }
+                },
+                label: {
+                    Image(systemName: "pencil")
+                        .font(.lummiFont(size: 16))
+                        .foregroundColor(themeManager.currentTheme.backgroundColor)
+                        .frame(width: AdaptiveLayout.getSize(for: 44), height: AdaptiveLayout.getSize(for: 44))
+                        .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.85)))
+                }
+            )
+            .accessibilityIdentifier("EditRecordButton")
+            
+            Button(
+                action: { deleteNote(at: index) },
+                label: {
+                    Image(systemName: "trash")
+                        .font(.lummiFont(size: 16))
+                        .foregroundColor(themeManager.currentTheme.backgroundColor)
+                        .frame(width: AdaptiveLayout.getSize(for: 44), height: AdaptiveLayout.getSize(for: 44))
+                        .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.85)))
+                }
+            )
+            .accessibilityIdentifier("DeleteRecordButton")
+        }
+        .transition(.scale(scale: 0.8).combined(with: .opacity).combined(with: .move(edge: .bottom)))
+    }
+
+    private var noteCellEditField: some View {
+        TextField("What made you happy?", text: $editingText, axis: .vertical)
+            .accessibilityIdentifier("EditRecordTextField")
+            .focused($isTextFieldFocused)
+            .font(.lummiFont(size: 16))
+            .foregroundColor(themeManager.currentTheme.textColor)
+            .padding(AdaptiveLayout.getSize(for: 20))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 20))
+                    .fill(themeManager.currentTheme.textColor.opacity(0.12))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 20))
+                            .stroke(themeManager.currentTheme.textColor.opacity(0.3), lineWidth: 1)
+                    )
+            )
+    }
+
+    private func noteCellTextDisplay(index: Int, entry: JoyEntry, isActive: Bool, proxy: ScrollViewProxy) -> some View {
+        Text(entry.text)
+            .font(.lummiFont(size: 16))
+            .foregroundColor(themeManager.currentTheme.textColor)
+            .padding(AdaptiveLayout.getSize(for: 20))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 20))
+                    .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 20))
+                            .stroke(themeManager.currentTheme.textColor.opacity(isActive ? 0.3 : 0.1), lineWidth: isActive ? 2 : 1)
+                    )
+            )
+            .onTapGesture {
+                if activeMenuIndex != nil { saveAndDismiss() }
+            }
+            .onLongPressGesture {
+                if isSelectedToday && !isActive {
+                    saveAndDismiss()
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        activeMenuIndex = index
+                        isEditing = false
+                    }
+                    withAnimation { proxy.scrollTo(index, anchor: .center) }
+                }
+            }
+            .accessibilityIdentifier("RecordText_\(index)")
     }
     
     // MARK: - Actions
