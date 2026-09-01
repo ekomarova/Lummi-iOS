@@ -3,6 +3,9 @@
 All notable changes to the project will be documented in this file.
 
 ## [1.0.0] - 2026-MM-DD
+### Fixed
+- **Release:** Fixed an issue where the app would fail to compile in the `Release` configuration due to test-only mock data code (`MockDataManager`) leaking into the main target
+
 
 ## [1.0.0rc1] - 2026-09-01
 ### Added

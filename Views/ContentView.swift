@@ -214,7 +214,9 @@ struct ContentView: View {
         }
         // MARK: For tests only
         .onAppear {
+#if DEBUG
             MockDataManager.injectIfNeeded(modelContext: modelContext, allEntries: allEntries)
+#endif
         }
     }
 }
