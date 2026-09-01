@@ -18,6 +18,7 @@ All notable changes to the project will be documented in this file.
 - **Architecture:** Improved ModelContainer initialization
 - **Settings:** Redesigned the settings switches with a new segment control for both Appearance and iCloud Sync
 - **System Requirements:** Lummi now requires iOS 17.0 or newer to provide the best performance and take full advantage of native SwiftData architecture
+- **Insights:** Improved the "Joyful Hours" insights calculation to predictably highlight your most recent active hour when multiple hours have the same number of entries
 
 ### Fixed
 - **Testing:** Fixed UI tests related to ModelContainer initialization

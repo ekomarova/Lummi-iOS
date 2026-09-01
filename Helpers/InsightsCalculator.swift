@@ -75,13 +75,33 @@ struct InsightsCalculator {
         guard !entries.isEmpty else { return "-- : --" }
         
         var hourCounts = [Int: Int]()
+        var lastEntryDateForHour = [Int: Date]()
+        
         let calendar = Calendar.current
         for entry in entries {
             let hour = calendar.component(.hour, from: entry.date)
             hourCounts[hour, default: 0] += 1
+            
+            // Track the most recent chronological entry for each hour to break ties predictably
+            if let existingDate = lastEntryDateForHour[hour] {
+                if entry.date > existingDate {
+                    lastEntryDateForHour[hour] = entry.date
+                }
+            } else {
+                lastEntryDateForHour[hour] = entry.date
+            }
         }
         
-        guard let peakHour = hourCounts.max(by: { $0.value < $1.value })?.key else { return "-- : --" }
+        guard let peakHour = hourCounts.max(by: { a, b in
+            if a.value == b.value {
+                // If counts are equal, deterministically pick the one with the latest overall entry
+                let dateA = lastEntryDateForHour[a.key] ?? .distantPast
+                let dateB = lastEntryDateForHour[b.key] ?? .distantPast
+                return dateA < dateB
+            }
+            return a.value < b.value
+        })?.key else { return "-- : --" }
+        
         let endHour = (peakHour + 2) % 24
         
         guard let startDate = calendar.date(from: DateComponents(hour: peakHour)),
