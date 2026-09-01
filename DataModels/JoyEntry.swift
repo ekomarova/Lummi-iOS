@@ -31,7 +31,8 @@ import SwiftData
 
 @Model
 final class JoyEntry {
-    // Unic ID for each record
+    // Unique ID for each record
+    @Attribute(.unique)
     var id: UUID = UUID()
     
     // Record text
