@@ -4,7 +4,7 @@ All notable changes to the project will be documented in this file.
 
 ## [1.0.0] - 2026-MM-DD
 
-## [0.4.0] - 2026-MM-DD
+## [1.0.0rc1] - 2026-09-01
 ### Added
 - **Enhanced Privacy:** Journal entry text is now encrypted when synced via iCloud, ensuring your personal moments remain private and secure
 - **Settings:** Clear All Data option in the Settings screen to permanently delete all entries locally and from iCloud
