@@ -92,14 +92,14 @@ struct InsightsCalculator {
             }
         }
         
-        guard let peakHour = hourCounts.max(by: { a, b in
-            if a.value == b.value {
+        guard let peakHour = hourCounts.max(by: { lhs, rhs in
+            if lhs.value == rhs.value {
                 // If counts are equal, deterministically pick the one with the latest overall entry
-                let dateA = lastEntryDateForHour[a.key] ?? .distantPast
-                let dateB = lastEntryDateForHour[b.key] ?? .distantPast
+                let dateA = lastEntryDateForHour[lhs.key] ?? .distantPast
+                let dateB = lastEntryDateForHour[rhs.key] ?? .distantPast
                 return dateA < dateB
             }
-            return a.value < b.value
+            return lhs.value < rhs.value
         })?.key else { return "-- : --" }
         
         let endHour = (peakHour + 2) % 24
