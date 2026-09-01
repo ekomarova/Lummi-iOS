@@ -1,15 +1,16 @@
 version: 2
 updates:
   - package-ecosystem: "github-actions"
-
     directory: "/"
-
     schedule:
       interval: "weekly"
       day: "saturday"
-
     rebase-strategy: "disabled"
-    labels: ["autoupdate"]
+    labels:
+      - "autoupdate"
     groups:
       github-actions:
-        patterns: ["*"]
+        patterns:
+          - "*"
+    cooldown:
+      default-days: 7
