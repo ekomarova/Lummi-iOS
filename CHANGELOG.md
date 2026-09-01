@@ -24,6 +24,8 @@ All notable changes to the project will be documented in this file.
 - **Testing:** Fixed UI tests related to ModelContainer initialization
 - **Settings:** Fixed an issue on iPad where the language selection text was too small compared to other menu items. The picker now correctly uses an adaptive font size while maintaining native system behavior
 - **Settings UI:** Resolved a visual glitch where the layout would bounce awkwardly when an iCloud sync error banner appeared
+- **iCloud Sync:** Fixed an iCloud synchronization issue where the app would get temporarily blocked (rate-limited) by Apple's servers. Changes to entries are now grouped and saved efficiently when you finish typing or close the screen, rather than on every keystroke
+
 
 ## [0.3.0] - 2026-05-11
 ### Added

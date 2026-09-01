@@ -102,6 +102,10 @@ struct SelectedDayDetailView: View {
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: activeMenuIndex)
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: isEditing)
         .onChange(of: selectedDate) { _, _ in saveAndDismiss() }
+        .onDisappear {
+            // Save data when the user closes the screen
+            saveAndDismiss()
+        }
     }
     
     // MARK: - Subviews
@@ -246,9 +250,11 @@ struct SelectedDayDetailView: View {
     // MARK: - Actions
     
     private func deleteNote(at index: Int) {
+        guard index < todaysEntries.count else { return } // Safety check in case deletion fires rapidly
         let entry = todaysEntries[index]
         withAnimation {
             modelContext.delete(entry)
+            try? modelContext.save() // Explicitly save to ensure CloudKit updates immediately
             activeMenuIndex = nil
         }
     }
@@ -260,12 +266,18 @@ struct SelectedDayDetailView: View {
         
         if isEditing {
             let trimmed = editingText.trimmingCharacters(in: .whitespacesAndNewlines)
-            let entry = todaysEntries[index]
             
-            if trimmed.isEmpty {
-                modelContext.delete(entry)
-            } else {
-                entry.text = trimmed
+            // Adding a safety check in case this is called during view destruction/disappearance
+            if index < todaysEntries.count {
+                let entry = todaysEntries[index]
+                if trimmed.isEmpty {
+                    modelContext.delete(entry)
+                } else {
+                    entry.text = trimmed
+                }
+                
+                // Explicitly save data when the user has finished typing
+                try? modelContext.save()
             }
         }
         
