@@ -82,42 +82,9 @@
 		47981EBF2FA7E5EC005ADAB1 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		47981EE32FA8F9D1005ADAB1 /* Exceptions for "LummiUITests" folder in "LummiTests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				CalendarUITests.swift,
-				DefaultScreenUITests.swift,
-				InsightsUITests.swift,
-				RecordButtonUITests.swift,
-				RecordInputUITests.swift,
-				SettingsUITests.swift,
-				TodayRecordsUITests.swift,
-			);
-			target = 473B04282F9AB1AC00C482FA /* LummiTests */;
-		};
-		47981EE42FA8F9D1005ADAB1 /* Exceptions for "LummiUITests" folder in "LummiUITests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				CalendarUITests.swift,
-				DefaultScreenUITests.swift,
-				InsightsUITests.swift,
-				RecordButtonUITests.swift,
-				RecordInputUITests.swift,
-				SettingsUITests.swift,
-				TodayRecordsUITests.swift,
-			);
-			target = 473B04322F9AB1AC00C482FA /* LummiUITests */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		47981EDB2FA8F9D0005ADAB1 /* LummiUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				47981EE32FA8F9D1005ADAB1 /* Exceptions for "LummiUITests" folder in "LummiTests" target */,
-				47981EE42FA8F9D1005ADAB1 /* Exceptions for "LummiUITests" folder in "LummiUITests" target */,
-			);
 			path = LummiUITests;
 			sourceTree = "<group>";
 		};
@@ -299,9 +266,6 @@
 			dependencies = (
 				473B042B2F9AB1AC00C482FA /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				47981EDB2FA8F9D0005ADAB1 /* LummiUITests */,
-			);
 			name = LummiTests;
 			packageProductDependencies = (
 			);
@@ -321,6 +285,9 @@
 			);
 			dependencies = (
 				473B04352F9AB1AC00C482FA /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				47981EDB2FA8F9D0005ADAB1 /* LummiUITests */,
 			);
 			name = LummiUITests;
 			packageProductDependencies = (
