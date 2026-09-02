@@ -30,7 +30,7 @@ import SwiftUI
 import SwiftData
 
 struct SelectedDayDetailView: View {
-    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(ThemeManager.self) private var themeManager
     @Environment(\.modelContext) private var modelContext
     
     let selectedDate: Date?

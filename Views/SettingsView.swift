@@ -46,7 +46,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
 }
 
 struct SettingsView: View {
-    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(ThemeManager.self) private var themeManager
     @Environment(\.modelContext) private var modelContext
     
     @AppStorage("appLanguage") private var selectedLanguage: AppLanguage = .english
@@ -301,7 +301,7 @@ struct SettingsView: View {
 }
 
 struct LummiSegmentButton: View {
-    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(ThemeManager.self) private var themeManager
     
     let icon: String
     let isSelected: Bool

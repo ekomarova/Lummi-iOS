@@ -30,7 +30,7 @@ import SwiftUI
 import SwiftData
 
 struct RecordInput: View {
-    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(ThemeManager.self) private var themeManager
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) private var modelContext
     

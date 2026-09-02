@@ -30,7 +30,7 @@ import SwiftUI
 import SwiftData
 
 struct InsightsView: View {
-    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale
     @Query private var allEntries: [JoyEntry]
     @State private var selectedMonth: Date = Date().startOfMonth
@@ -235,7 +235,7 @@ struct InsightsView: View {
 // MARK: - UI Components
 
 struct InsightGlowCard: View {
-    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(ThemeManager.self) private var themeManager
     var value: String
     var subtitle: LocalizedStringResource
     var gradientColors: [Color]
@@ -275,7 +275,7 @@ struct InsightGlowCard: View {
 }
 
 struct RhythmGlowCard: View {
-    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(ThemeManager.self) private var themeManager
     var value: String
     var subtitle: LocalizedStringResource
     var gradientColors: [Color]
@@ -313,7 +313,7 @@ struct RhythmGlowCard: View {
 }
 
 struct MonthlyMomentCell: View {
-    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale
     let entry: JoyEntry
     

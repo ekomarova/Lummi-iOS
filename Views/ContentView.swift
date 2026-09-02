@@ -30,7 +30,7 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @StateObject private var themeManager = ThemeManager()
+    @State private var themeManager = ThemeManager()
     @Environment(\.modelContext) private var modelContext
     @Query private var allEntries: [JoyEntry]
 
@@ -74,19 +74,16 @@ struct ContentView: View {
                                 }
                             }
                         )
-                        .environmentObject(themeManager)
                         .transition(.move(edge: .top).combined(with: .opacity))
                     }
                         
                     if isShowingSettings {
                         // MARK: - Settings View
                         SettingsView()
-                            .environmentObject(themeManager)
                             .transition(.move(edge: .trailing).combined(with: .opacity))
                     } else if isShowingInsights {
                         // MARK: - Insights View
                         InsightsView()
-                            .environmentObject(themeManager)
                             .transition(.move(edge: .leading).combined(with: .opacity))
                     } else if isCalendarExpanded {
                         ZStack(alignment: .top) {
@@ -99,7 +96,6 @@ struct ContentView: View {
                             
                             // MARK: - Calenadar View
                             MainCalendarView(
-                                themeManager: themeManager,
                                 selectedDate: $selectedDate,
                                 isCalendarExpanded: $isCalendarExpanded,
                                 visibleMonth: $visibleMonth
@@ -118,7 +114,6 @@ struct ContentView: View {
                         SelectedDayDetailView(
                             selectedDate: selectedDate
                         )
-                        .environmentObject(themeManager)
                         .transition(.move(edge: .top).combined(with: .opacity))
                     }
                     
@@ -139,7 +134,6 @@ struct ContentView: View {
                 }
             }
         }
-        .environmentObject(themeManager)
         .safeAreaInset(edge: .bottom, spacing: 0) {
             if !isKeyboardVisible {
                 HStack(spacing: 0) {
@@ -157,7 +151,6 @@ struct ContentView: View {
                             }
                         }
                     )
-                    .environmentObject(themeManager)
                     
                     Spacer()
                     
@@ -172,7 +165,6 @@ struct ContentView: View {
                             }
                         }
                     )
-                    .environmentObject(themeManager)
                     
                     Spacer()
                     
@@ -187,7 +179,6 @@ struct ContentView: View {
                             }
                         }
                     )
-                    .environmentObject(themeManager)
                     
                     Spacer()
                     
@@ -199,7 +190,6 @@ struct ContentView: View {
                             isShowingSheet = true
                         }
                     )
-                    .environmentObject(themeManager)
                     .frame(width: AdaptiveLayout.getSize(for: 70))
                 }
                 .padding(.horizontal, AdaptiveLayout.getSize(for: 40))
@@ -210,8 +200,9 @@ struct ContentView: View {
         .sheet(isPresented: $isShowingSheet) {
             // MARK: - Record Input
             RecordInput(selectedDate: Date())
-                .environmentObject(themeManager)
+                .environment(themeManager)
         }
+        .environment(themeManager)
         // MARK: For tests only
         .onAppear {
 #if DEBUG

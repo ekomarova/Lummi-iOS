@@ -29,7 +29,7 @@
 import SwiftUI
 
 struct DayCell: View {
-    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(ThemeManager.self) private var themeManager
     let day: Int
     let isFilled: Bool
     let isToday: Bool

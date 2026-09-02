@@ -29,7 +29,7 @@
 import SwiftUI
 
 struct HomeButton: View {
-    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(ThemeManager.self) private var themeManager
     let isActive: Bool
     var onTap: () -> Void
 

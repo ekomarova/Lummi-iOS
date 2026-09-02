@@ -6,6 +6,9 @@ All notable changes to the project will be documented in this file.
 ### Fixed
 - **Release:** Fixed an issue where the app would fail to compile in the `Release` configuration due to test-only mock data code (`MockDataManager`) leaking into the main target
 
+### Changed
+-  **Internal:** Migrated `ThemeManager` from `Combine` (`ObservableObject/@Published`) to the `Observation` framework (`@Observable`), matching the pattern used throughout the rest of the codebase. No user-facing changes
+
 
 ## [1.0.0rc1] - 2026-09-01
 ### Added

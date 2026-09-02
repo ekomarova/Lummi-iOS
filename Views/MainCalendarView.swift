@@ -30,7 +30,7 @@ import SwiftUI
 import SwiftData
 
 struct MainCalendarView: View {
-    @ObservedObject var themeManager: ThemeManager
+    @Environment(ThemeManager.self) private var themeManager
     @Binding var selectedDate: Date?
     @Binding var isCalendarExpanded: Bool
     @Binding var visibleMonth: Date
@@ -70,7 +70,7 @@ struct MainCalendarView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            WeekdayHeaderView(themeManager: themeManager)
+            WeekdayHeaderView()
                 .padding(.top, AdaptiveLayout.getSize(for: 10))
                 .padding(.bottom, AdaptiveLayout.getSize(for: 10))
             
@@ -79,7 +79,6 @@ struct MainCalendarView: View {
                 LazyVStack(spacing: 0) {
                     ForEach(months, id: \.self) { monthDate in
                         SingleMonthView(
-                            themeManager: themeManager,
                             monthDate: monthDate,
                             selectedDate: $selectedDate,
                             isCalendarExpanded: $isCalendarExpanded,
@@ -108,7 +107,7 @@ struct MainCalendarView: View {
 // MARK: - Single Month View
 
 struct SingleMonthView: View {
-    @ObservedObject var themeManager: ThemeManager
+    @Environment(ThemeManager.self) private var themeManager
     let monthDate: Date
     @Binding var selectedDate: Date?
     @Binding var isCalendarExpanded: Bool
@@ -171,7 +170,7 @@ struct SingleMonthView: View {
 // MARK: - Weekday Header View
 
 struct WeekdayHeaderView: View {
-    @ObservedObject var themeManager: ThemeManager
+    @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale
     private var weekdayLabels: [String] {
         let formatter = DateFormatter()

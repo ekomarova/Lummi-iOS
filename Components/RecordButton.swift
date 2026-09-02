@@ -29,7 +29,7 @@
 import SwiftUI
 
 struct RecordButton: View {
-    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(ThemeManager.self) private var themeManager
     
     let selectedDate: Date?
     var onTap: () -> Void

@@ -29,7 +29,7 @@
 import SwiftUI
 
 struct SettingsButton: View {
-    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(ThemeManager.self) private var themeManager
     var isActive: Bool
     var onTap: () -> Void
 

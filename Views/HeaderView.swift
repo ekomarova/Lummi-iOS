@@ -29,7 +29,7 @@
 import SwiftUI
 
 struct HeaderView: View {
-    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale
 
     let date: Date
