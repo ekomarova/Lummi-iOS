@@ -36,6 +36,8 @@ struct RecordInput: View {
     
     let selectedDate: Date?
     
+    private let maxLength = 280
+
     @State private var text: String = ""
 
     var isSaveEnabled: Bool {
@@ -69,6 +71,21 @@ struct RecordInput: View {
                         .foregroundColor(themeManager.currentTheme.textColor)
                         .font(.lummiFont(size: 18))
                         .accessibilityIdentifier("RecordInputTextEditor")
+                        .onChange(of: text) { _, newValue in
+                            if newValue.count > maxLength {
+                                text = String(newValue.prefix(maxLength))
+                            }
+                        }
+
+                    HStack {
+                        Spacer()
+                        Text("\(text.count)/\(maxLength)")
+                            .font(.lummiFont(size: 12))
+                            .foregroundColor(themeManager.currentTheme.textColor.opacity(
+                                text.count > maxLength - 20 ? 0.7 : 0.35
+                            ))
+                    }
+                    .padding(.horizontal, 5)
 
                     Spacer()
                 }
