@@ -32,9 +32,9 @@ The project includes a dedicated `MockDataManager` (under `#if DEBUG`) that popu
 
 ## 💻 Setup & Requirements
 
-* **iOS 17.0+**
+* **iOS 17.6+**
 * **Xcode 16.0+**
-* **Swift 6.0+**
+* **Swift 5.0+**
 
 ## How to run:
 **To enable iCloud sync in your own fork**:

@@ -3,17 +3,19 @@
 All notable changes to the project will be documented in this file.
 
 ## [1.0.0] - 2026-MM-DD
+### Changed
+-  **Internal:** Migrated `ThemeManager` from `Combine` (`ObservableObject/@Published`) to the `Observation` framework (`@Observable`), matching the pattern used throughout the rest of the codebase. No user-facing changes
+- **Internal:** `JoyEntry.dateKey` is now a computed property derived from `date`, eliminating a redundant stored field and removing the risk of calendar grouping silently breaking if a call site forgot to recalculate the key. No user-facing changes
+- **Internal:** Aligned `IPHONEOS_DEPLOYMENT_TARGET` across all targets — `LummiTests` and `LummiUITests` were inheriting the project-level iOS 26.4 default instead of the app's iOS 17 minimum, preventing tests from running on iOS 17–25 simulators
+- **Internal:** Pinned `SWIFT_VERSION = 5.0` at the project level; updated README requirements to reflect iOS 17.6+ and Swift 5.0+
+- **Settings:** The `Clear All Data` confirmation dialog now blurs the background content while it is visible, consistent with other modal overlays in the app
+
 ### Fixed
 - **Release:** Fixed an issue where the app would fail to compile in the `Release` configuration due to test-only mock data code (`MockDataManager`) leaking into the main target
 - **Day Detail:** Fixed a bug where editing or deleting a joy entry could silently target the wrong record if two entries shared the same date (e.g. after a CloudKit merge). The active selection is now tracked by stable `PersistentIdentifier` instead of a positional array index
 - **iCloud Sync:** Fixed a crash (`fatalError`) that could occur when toggling iCloud sync if `ModelContainer` failed to reinitialize at runtime (e.g. due to a corrupted store or filesystem issue). The app now reverts the toggle and shows an error dialog instead of terminating
 - **iCloud Sync:** Fixed a visual glitch where the iCloud error banner would briefly flash when a container initialization failure caused the sync toggle to revert
 - **iCloud Sync:** Fixed a bug where the "iCloud storage is full" warning banner could remain visible in `Settings` for the entire session after the user freed up iCloud storage. The banner now disappears automatically once CloudKit successfully resumes syncing
-
-### Changed
--  **Internal:** Migrated `ThemeManager` from `Combine` (`ObservableObject/@Published`) to the `Observation` framework (`@Observable`), matching the pattern used throughout the rest of the codebase. No user-facing changes
-- **Internal:** `JoyEntry.dateKey` is now a computed property derived from `date`, eliminating a redundant stored field and removing the risk of calendar grouping silently breaking if a call site forgot to recalculate the key. No user-facing changes
-- **Settings:** The `Clear All Data` confirmation dialog now blurs the background content while it is visible, consistent with other modal overlays in the app
 
 
 ## [1.0.0rc1] - 2026-09-01
