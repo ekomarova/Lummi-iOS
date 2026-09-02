@@ -3,6 +3,9 @@
 All notable changes to the project will be documented in this file.
 
 ## [1.0.0] - 2026-MM-DD
+
+
+## [1.0.0rc2] - 2026-09-02
 ### Added
 - **Record Input:** Joy entry text is now capped at 280 characters. A live character counter below the text field shows how many characters you've used and highlights as you approach the limit
 
