@@ -14,8 +14,8 @@ struct MockDataManager {
             let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today)!
             let manyDaysAgo = Calendar.current.date(byAdding: .day, value: -32, to: today)!
             
-            modelContext.insert(JoyEntry(text: "I ate a lot of chips and it was amazing!", date: yesterday, dateKey: yesterday.stringKey))
-            modelContext.insert(JoyEntry(text: "Watched a beautiful sunset", date: manyDaysAgo, dateKey: manyDaysAgo.stringKey))
+            modelContext.insert(JoyEntry(text: "I ate a lot of chips and it was amazing!", date: yesterday))
+            modelContext.insert(JoyEntry(text: "Watched a beautiful sunset", date: manyDaysAgo))
         }
         
         if arguments.contains("-UI_TESTING_10_RECORDS") {
@@ -26,7 +26,7 @@ struct MockDataManager {
             if todaysEntriesCount == 0 {
                 for i in 0..<10 {
                     let recordDate = Calendar.current.date(byAdding: .second, value: i, to: baseDate)!
-                    modelContext.insert(JoyEntry(text: "Record #\(i)", date: recordDate, dateKey: dateString))
+                    modelContext.insert(JoyEntry(text: "Record #\(i)", date: recordDate))
                 }
                 try? modelContext.save()
             }
@@ -36,14 +36,14 @@ struct MockDataManager {
             let today = Date()
             let manyDaysAgo = Calendar.current.date(byAdding: .day, value: -62, to: today)!
 
-            modelContext.insert(JoyEntry(text: "Watched a beautiful sunset", date: manyDaysAgo, dateKey: manyDaysAgo.stringKey))
+            modelContext.insert(JoyEntry(text: "Watched a beautiful sunset", date: manyDaysAgo))
         }
         
         if arguments.contains("-UI_TESTING_PAST_MONTH_ONE_JOY") {
             if allEntries.isEmpty {
                 let pastDate = Calendar.current.date(byAdding: .month, value: -1, to: Date())!
                 let recordDate = Calendar.current.date(byAdding: .day, value: 0, to: pastDate)!
-                modelContext.insert(JoyEntry(text: "Past test record", date: recordDate, dateKey: recordDate.stringKey))
+                modelContext.insert(JoyEntry(text: "Past test record", date: recordDate))
             }
         }
         
@@ -54,7 +54,7 @@ struct MockDataManager {
                     let date = Calendar.current.date(byAdding: .day, value: -dayOffset, to: pastDateBase)!
                     for i in 0..<3 {
                         let recordDate = Calendar.current.date(byAdding: .hour, value: -i, to: date)!
-                        modelContext.insert(JoyEntry(text: "Past Many Mock \(dayOffset)-\(i)", date: recordDate, dateKey: recordDate.stringKey))
+                        modelContext.insert(JoyEntry(text: "Past Many Mock \(dayOffset)-\(i)", date: recordDate))
                     }
                 }
                 try? modelContext.save()
@@ -80,8 +80,7 @@ struct MockDataManager {
                     if let recordDate = calendar.date(from: components) {
                         modelContext.insert(JoyEntry(
                             text: "Evening mock moment \(dayOffset + 1)",
-                            date: recordDate,
-                            dateKey: recordDate.stringKey
+                            date: recordDate
                         ))
                     }
                 }

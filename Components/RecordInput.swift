@@ -101,7 +101,7 @@ struct RecordInput: View {
                     Button(
                         action: {
                             if let date = selectedDate, isSaveEnabled {
-                                let newEntry = JoyEntry(text: text, date: date, dateKey: date.stringKey)
+                                let newEntry = JoyEntry(text: text, date: date)
                                 modelContext.insert(newEntry)
                                 try? modelContext.save()
                                 dismiss()

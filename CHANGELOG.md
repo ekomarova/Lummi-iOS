@@ -8,6 +8,7 @@ All notable changes to the project will be documented in this file.
 
 ### Changed
 -  **Internal:** Migrated `ThemeManager` from `Combine` (`ObservableObject/@Published`) to the `Observation` framework (`@Observable`), matching the pattern used throughout the rest of the codebase. No user-facing changes
+- **Internal:** `JoyEntry.dateKey` is now a computed property derived from `date`, eliminating a redundant stored field and removing the risk of calendar grouping silently breaking if a call site forgot to recalculate the key. No user-facing changes
 
 
 ## [1.0.0rc1] - 2026-09-01

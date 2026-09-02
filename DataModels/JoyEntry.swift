@@ -41,12 +41,10 @@ final class JoyEntry {
     // Date of record creation
     var date: Date = Date()
     
-    // String key
-    var dateKey: String = ""
+    var dateKey: String { date.stringKey }
     
-    init(text: String, date: Date, dateKey: String) {
+    init(text: String, date: Date) {
         self.text = text
         self.date = date
-        self.dateKey = dateKey
     }
 }
