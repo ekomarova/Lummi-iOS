@@ -32,27 +32,27 @@ import SwiftData
 struct SelectedDayDetailView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.modelContext) private var modelContext
-    
+
     let selectedDate: Date?
 
     @Query(sort: \JoyEntry.date) private var allEntries: [JoyEntry]
-    
-    @State private var activeMenuIndex: Int?
+
+    @State private var activeEntryID: PersistentIdentifier?
     @State private var editingText: String = ""
     @State private var isEditing: Bool = false
     @FocusState private var isTextFieldFocused: Bool
-    
+
     private var today: Date { Date() }
     private var isSelectedToday: Bool {
         guard let selected = selectedDate else { return false }
         return Calendar.current.isDate(selected, inSameDayAs: today)
     }
-    
+
     private var todaysEntries: [JoyEntry] {
         guard let key = selectedDate?.stringKey else { return [] }
         return allEntries.filter { $0.dateKey == key }
     }
-    
+
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -70,16 +70,16 @@ struct SelectedDayDetailView: View {
                             if let selected = selectedDate {
                                 if Calendar.current.startOfDay(for: selected) > Calendar.current.startOfDay(for: today) {
                                     futureDayView
-                                        .blur(radius: activeMenuIndex != nil ? 6 : 0)
-                                        .opacity(activeMenuIndex != nil ? 0.5 : 1.0)
+                                        .blur(radius: activeEntryID != nil ? 6 : 0)
+                                        .opacity(activeEntryID != nil ? 0.5 : 1.0)
                                         .padding(.top, AdaptiveLayout.getSize(for: 40))
                                 } else if !todaysEntries.isEmpty {
                                     notesListView(entries: todaysEntries, proxy: proxy)
                                         .padding(.top, AdaptiveLayout.getSize(for: 10))
                                 } else {
                                     noRecordsView
-                                        .blur(radius: activeMenuIndex != nil ? 6 : 0)
-                                        .opacity(activeMenuIndex != nil ? 0.5 : 1.0)
+                                        .blur(radius: activeEntryID != nil ? 6 : 0)
+                                        .opacity(activeEntryID != nil ? 0.5 : 1.0)
                                         .padding(.top, AdaptiveLayout.getSize(for: 40))
                                 }
                             }
@@ -99,7 +99,7 @@ struct SelectedDayDetailView: View {
             }
         }
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: selectedDate)
-        .animation(.spring(response: 0.35, dampingFraction: 0.8), value: activeMenuIndex)
+        .animation(.spring(response: 0.35, dampingFraction: 0.8), value: activeEntryID)
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: isEditing)
         .onChange(of: selectedDate) { _, _ in saveAndDismiss() }
         .onDisappear {
@@ -107,9 +107,9 @@ struct SelectedDayDetailView: View {
             saveAndDismiss()
         }
     }
-    
+
     // MARK: - Subviews
-    
+
     private var futureDayView: some View {
         VStack(spacing: AdaptiveLayout.getSize(for: 12)) {
             Image(systemName: "moon.stars.fill")
@@ -121,47 +121,47 @@ struct SelectedDayDetailView: View {
                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
         }
     }
-    
+
     private var noRecordsView: some View {
         Text("No records for this day")
             .textCase(.uppercase)
             .font(.lummiFont(size: 16))
             .foregroundColor(themeManager.currentTheme.textColor.opacity(0.3))
     }
-    
+
     private func notesListView(entries: [JoyEntry], proxy: ScrollViewProxy) -> some View {
         VStack(alignment: .leading, spacing: AdaptiveLayout.getSize(for: 15)) {
-            ForEach(entries.indices, id: \.self) { index in
-                noteCell(for: index, entry: entries[index], proxy: proxy)
+            ForEach(Array(entries.enumerated()), id: \.element.persistentModelID) { index, entry in
+                noteCell(for: entry, index: index, proxy: proxy)
             }
         }
     }
-    
+
     // MARK: - Interactive Cell
-    
+
     @ViewBuilder
-    private func noteCell(for index: Int, entry: JoyEntry, proxy: ScrollViewProxy) -> some View {
-        let isActive = (activeMenuIndex == index)
-        
+    private func noteCell(for entry: JoyEntry, index: Int, proxy: ScrollViewProxy) -> some View {
+        let isActive = (activeEntryID == entry.persistentModelID)
+
         VStack(alignment: .trailing, spacing: AdaptiveLayout.getSize(for: 8)) {
             if isActive && !isEditing {
-                noteCellActionButtons(index: index, entry: entry, proxy: proxy)
+                noteCellActionButtons(entry: entry, proxy: proxy)
             }
-            
+
             Group {
                 if isActive && isEditing {
                     noteCellEditField
                 } else {
-                    noteCellTextDisplay(index: index, entry: entry, isActive: isActive, proxy: proxy)
+                    noteCellTextDisplay(entry: entry, index: index, isActive: isActive, proxy: proxy)
                 }
             }
         }
-        .id(index)
-        .blur(radius: (activeMenuIndex != nil && !isActive) ? 6 : 0)
-        .opacity((activeMenuIndex != nil && !isActive) ? 0.4 : 1.0)
+        .id(entry.persistentModelID)
+        .blur(radius: (activeEntryID != nil && !isActive) ? 6 : 0)
+        .opacity((activeEntryID != nil && !isActive) ? 0.4 : 1.0)
     }
 
-    private func noteCellActionButtons(index: Int, entry: JoyEntry, proxy: ScrollViewProxy) -> some View {
+    private func noteCellActionButtons(entry: JoyEntry, proxy: ScrollViewProxy) -> some View {
         HStack(spacing: AdaptiveLayout.getSize(for: 12)) {
             Button(
                 action: {
@@ -170,7 +170,7 @@ struct SelectedDayDetailView: View {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         isTextFieldFocused = true
                         withAnimation(.spring()) {
-                            proxy.scrollTo(index, anchor: .center)
+                            proxy.scrollTo(entry.persistentModelID, anchor: .center)
                         }
                     }
                 },
@@ -183,9 +183,9 @@ struct SelectedDayDetailView: View {
                 }
             )
             .accessibilityIdentifier("EditRecordButton")
-            
+
             Button(
-                action: { deleteNote(at: index) },
+                action: { deleteNote(entry) },
                 label: {
                     Image(systemName: "trash")
                         .font(.lummiFont(size: 16))
@@ -217,7 +217,7 @@ struct SelectedDayDetailView: View {
             )
     }
 
-    private func noteCellTextDisplay(index: Int, entry: JoyEntry, isActive: Bool, proxy: ScrollViewProxy) -> some View {
+    private func noteCellTextDisplay(entry: JoyEntry, index: Int, isActive: Bool, proxy: ScrollViewProxy) -> some View {
         Text(entry.text)
             .font(.lummiFont(size: 16))
             .foregroundColor(themeManager.currentTheme.textColor)
@@ -232,57 +232,51 @@ struct SelectedDayDetailView: View {
                     )
             )
             .onTapGesture {
-                if activeMenuIndex != nil { saveAndDismiss() }
+                if activeEntryID != nil { saveAndDismiss() }
             }
             .onLongPressGesture {
                 if isSelectedToday && !isActive {
                     saveAndDismiss()
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                        activeMenuIndex = index
+                        activeEntryID = entry.persistentModelID
                         isEditing = false
                     }
-                    withAnimation { proxy.scrollTo(index, anchor: .center) }
+                    withAnimation { proxy.scrollTo(entry.persistentModelID, anchor: .center) }
                 }
             }
             .accessibilityIdentifier("RecordText_\(index)")
     }
-    
+
     // MARK: - Actions
-    
-    private func deleteNote(at index: Int) {
-        guard index < todaysEntries.count else { return } // Safety check in case deletion fires rapidly
-        let entry = todaysEntries[index]
+
+    private func deleteNote(_ entry: JoyEntry) {
         withAnimation {
             modelContext.delete(entry)
             try? modelContext.save() // Explicitly save to ensure CloudKit updates immediately
-            activeMenuIndex = nil
+            activeEntryID = nil
         }
     }
-    
+
     private func saveAndDismiss() {
         isTextFieldFocused = false
-                
-        guard let index = activeMenuIndex else { return }
-        
+
+        guard let id = activeEntryID else { return }
+
         if isEditing {
             let trimmed = editingText.trimmingCharacters(in: .whitespacesAndNewlines)
-            
-            // Adding a safety check in case this is called during view destruction/disappearance
-            if index < todaysEntries.count {
-                let entry = todaysEntries[index]
+            if let entry = todaysEntries.first(where: { $0.persistentModelID == id }) {
                 if trimmed.isEmpty {
                     modelContext.delete(entry)
                 } else {
                     entry.text = trimmed
                 }
-                
                 // Explicitly save data when the user has finished typing
                 try? modelContext.save()
             }
         }
-        
+
         withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
-            activeMenuIndex = nil
+            activeEntryID = nil
             isEditing = false
         }
     }

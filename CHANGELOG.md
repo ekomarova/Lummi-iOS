@@ -5,6 +5,7 @@ All notable changes to the project will be documented in this file.
 ## [1.0.0] - 2026-MM-DD
 ### Fixed
 - **Release:** Fixed an issue where the app would fail to compile in the `Release` configuration due to test-only mock data code (`MockDataManager`) leaking into the main target
+- **Day Detail:** Fixed a bug where editing or deleting a joy entry could silently target the wrong record if two entries shared the same date (e.g. after a CloudKit merge). The active selection is now tracked by stable `PersistentIdentifier` instead of a positional array index
 
 ### Changed
 -  **Internal:** Migrated `ThemeManager` from `Combine` (`ObservableObject/@Published`) to the `Observation` framework (`@Observable`), matching the pattern used throughout the rest of the codebase. No user-facing changes
