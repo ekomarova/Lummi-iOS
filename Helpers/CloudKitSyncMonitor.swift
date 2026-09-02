@@ -106,6 +106,10 @@ final class CloudKitSyncMonitor {
                     }
                 }
             }
+        } else if event.succeeded {
+            Task { @MainActor in
+                await checkAccountStatus()
+            }
         }
     }
 

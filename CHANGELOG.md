@@ -8,6 +8,7 @@ All notable changes to the project will be documented in this file.
 - **Day Detail:** Fixed a bug where editing or deleting a joy entry could silently target the wrong record if two entries shared the same date (e.g. after a CloudKit merge). The active selection is now tracked by stable `PersistentIdentifier` instead of a positional array index
 - **iCloud Sync:** Fixed a crash (`fatalError`) that could occur when toggling iCloud sync if `ModelContainer` failed to reinitialize at runtime (e.g. due to a corrupted store or filesystem issue). The app now reverts the toggle and shows an error dialog instead of terminating
 - **iCloud Sync:** Fixed a visual glitch where the iCloud error banner would briefly flash when a container initialization failure caused the sync toggle to revert
+- **iCloud Sync:** Fixed a bug where the "iCloud storage is full" warning banner could remain visible in `Settings` for the entire session after the user freed up iCloud storage. The banner now disappears automatically once CloudKit successfully resumes syncing
 
 ### Changed
 -  **Internal:** Migrated `ThemeManager` from `Combine` (`ObservableObject/@Published`) to the `Observation` framework (`@Observable`), matching the pattern used throughout the rest of the codebase. No user-facing changes
