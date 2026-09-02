@@ -36,16 +36,42 @@ struct LummiApp: App {
     @AppStorage("isICloudSyncEnabled") private var isICloudSyncEnabled: Bool = false
 
     @State private var container: ModelContainer
+    @State private var containerError: (any Error)?
 
     init() {
-        // Read the initial state from UserDefaults before AppStorage is fully available
+        // Read the initial state from UserDefaults before AppStorage is fully available.
+        // When force-error testing, reset sync to off so the synthetic throw only happens
+        // on the onChange path (user tapping the toggle), not at startup.
+        #if DEBUG
+        let isForceSyncError = ProcessInfo.processInfo.arguments.contains("-UI_TESTING_FORCE_SYNC_ERROR")
+        if isForceSyncError {
+            UserDefaults.standard.set(false, forKey: "isICloudSyncEnabled")
+        }
+        let isSyncEnabled = isForceSyncError ? false : UserDefaults.standard.bool(forKey: "isICloudSyncEnabled")
+        #else
         let isSyncEnabled = UserDefaults.standard.bool(forKey: "isICloudSyncEnabled")
-        _container = State(initialValue: Self.createModelContainer(isICloudSyncEnabled: isSyncEnabled))
+        #endif
+        do {
+            _container = State(initialValue: try Self.makeModelContainer(isICloudSyncEnabled: isSyncEnabled))
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
     }
 
-    static func createModelContainer(isICloudSyncEnabled: Bool) -> ModelContainer {
+    static func makeModelContainer(isICloudSyncEnabled: Bool) throws -> ModelContainer {
         let schema = Schema([JoyEntry.self])
-        let isUITesting = ProcessInfo.processInfo.arguments.contains(where: { $0.hasPrefix("-UI_TESTING") })
+        let args = ProcessInfo.processInfo.arguments
+        let isUITesting = args.contains(where: { $0.hasPrefix("-UI_TESTING") })
+
+        #if DEBUG
+        if args.contains("-UI_TESTING_FORCE_SYNC_ERROR") && isICloudSyncEnabled {
+            throw NSError(
+                domain: "com.lummi.testing",
+                code: -1,
+                userInfo: [NSLocalizedDescriptionKey: "Simulated iCloud sync failure"]
+            )
+        }
+        #endif
         
         let modelConfiguration: ModelConfiguration
         
@@ -62,20 +88,21 @@ struct LummiApp: App {
             )
         }
 
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
+        return try ModelContainer(for: schema, configurations: [modelConfiguration])
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(syncError: $containerError)
                 .environment(\.locale, Locale(identifier: selectedLanguage.rawValue))
                 .onChange(of: isICloudSyncEnabled) { _, newValue in
-                    // Swap out the container on the fly when the setting changes
-                    container = Self.createModelContainer(isICloudSyncEnabled: newValue)
+                    do {
+                        container = try Self.makeModelContainer(isICloudSyncEnabled: newValue)
+                    } catch {
+                        // Revert the toggle so AppStorage stays consistent with the actual container state
+                        isICloudSyncEnabled = !newValue
+                        containerError = error
+                    }
                 }
         }
         .modelContainer(container)

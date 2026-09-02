@@ -157,6 +157,37 @@ final class SettingsUITests: XCTestCase {
         XCTAssertEqual(enabledBtn.value as? String, "Unselected", "iCloud enabled button is still active")
     }
     
+    func test_iCloudSyncErrorOverlayAppearsAndReverts() throws {
+        launchApp(with: ["-UI_TESTING_FORCE_SYNC_ERROR"])
+
+        app.buttons["SettingsButton_Inactive"].tap()
+
+        let disabledBtn = app.buttons["iCloudDisabledButton"]
+        let enabledBtn = app.buttons["iCloudEnabledButton"]
+        XCTAssertTrue(disabledBtn.waitForExistence(timeout: 2.0))
+
+        // Verify initial state: sync is off
+        XCTAssertEqual(disabledBtn.value as? String, "Selected", "iCloud sync should be off by default")
+        XCTAssertEqual(enabledBtn.value as? String, "Unselected")
+
+        // Try to enable sync — should fail and trigger the error overlay
+        enabledBtn.tap()
+
+        let alertTitle = app.staticTexts["SyncErrorAlertTitle"]
+        XCTAssertTrue(alertTitle.waitForExistence(timeout: 3.0), "Sync error overlay should appear after container failure")
+
+        // Toggle must have reverted back to disabled
+        XCTAssertEqual(disabledBtn.value as? String, "Selected", "iCloud toggle should revert to disabled after error")
+        XCTAssertEqual(enabledBtn.value as? String, "Unselected", "iCloud enabled button should be unselected after error")
+
+        // Dismiss the overlay
+        app.buttons["SyncErrorAlertOKButton"].tap()
+
+        let doesNotExistPredicate = NSPredicate(format: "exists == false")
+        let dismissExpectation = expectation(for: doesNotExistPredicate, evaluatedWith: alertTitle, handler: nil)
+        wait(for: [dismissExpectation], timeout: 2.0)
+    }
+
     func test_iCloudSyncErrorBannerDisplays() throws {
         launchApp(with: ["-UI_TESTING_CALENDAR"])
 

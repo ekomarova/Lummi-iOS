@@ -81,6 +81,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-UI_TESTING_FORCE_SYNC_ERROR"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-UI_TESTING_4_DAYS_FILLED"
             isEnabled = "NO">
          </CommandLineArgument>

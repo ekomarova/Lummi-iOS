@@ -53,6 +53,7 @@ struct SettingsView: View {
     @AppStorage("isICloudSyncEnabled") private var isICloudSyncEnabled: Bool = false
     
     @State private var syncMonitor = CloudKitSyncMonitor()
+    @State private var syncBannerVisible = false
 
     @State private var showClearDataAlert: Bool = false
 
@@ -128,7 +129,10 @@ struct SettingsView: View {
                                 isSelected: isICloudSyncEnabled,
                                 color: !isICloudSyncEnabled ? nil : Color(red: 0.2, green: 0.9, blue: 0.4),
                                 accessibilityID: "iCloudEnabledButton",
-                                action: { withAnimation(.spring()) { isICloudSyncEnabled = true } }
+                                action: {
+                                    syncBannerVisible = false
+                                    withAnimation(.spring()) { isICloudSyncEnabled = true }
+                                }
                             )
                         }
                         .background(Capsule().fill(themeManager.currentTheme.textColor.opacity(0.05)))
@@ -136,7 +140,7 @@ struct SettingsView: View {
                     }
                     
                     // MARK: - iCloud Sync Banner
-                    if isICloudSyncEnabled, let syncMessage = syncMonitor.syncState.message {
+                    if isICloudSyncEnabled && syncBannerVisible, let syncMessage = syncMonitor.syncState.message {
                         HStack(alignment: .top, spacing: 12) {
                             Image(systemName: "exclamationmark.icloud.fill")
                                 .font(.system(size: 20))
@@ -217,6 +221,18 @@ struct SettingsView: View {
             }
             .padding(.horizontal, 20)
             .frame(maxWidth: .infinity, alignment: .leading)
+            .blur(radius: showClearDataAlert ? 10 : 0)
+            .animation(.easeInOut(duration: 0.25), value: showClearDataAlert)
+            .task(id: isICloudSyncEnabled) {
+                guard isICloudSyncEnabled else {
+                    syncBannerVisible = false
+                    return
+                }
+                // Wait long enough for a container-error revert to complete before
+                // allowing the banner to appear, so a failed toggle never flashes the banner.
+                try? await Task.sleep(for: .milliseconds(300))
+                syncBannerVisible = isICloudSyncEnabled
+            }
 
             if showClearDataAlert {
                 Color.black.opacity(0.4)

@@ -30,6 +30,8 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+    var syncError: Binding<(any Error)?> = .constant(nil)
+
     @State private var themeManager = ThemeManager()
     @Environment(\.modelContext) private var modelContext
     @Query private var allEntries: [JoyEntry]
@@ -120,6 +122,60 @@ struct ContentView: View {
                     Spacer()
                 }
                 .padding(.top, AdaptiveLayout.getSize(for: 8))
+                .blur(radius: syncError.wrappedValue != nil ? 10 : 0)
+                .animation(.easeInOut(duration: 0.25), value: syncError.wrappedValue == nil)
+
+                // MARK: - iCloud Sync Error Overlay
+                if let error = syncError.wrappedValue {
+                    Color.black.opacity(0.4)
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            withAnimation { syncError.wrappedValue = nil }
+                        }
+                        .zIndex(1)
+
+                    VStack {
+                        Spacer()
+                        VStack(spacing: 20) {
+                            Image(systemName: "icloud.slash.fill")
+                                .font(.system(size: 32))
+                                .foregroundColor(themeManager.currentTheme.backgroundColor)
+
+                            Text("iCloud Sync Error")
+                                .font(.lummiFont(size: 20))
+                                .foregroundColor(themeManager.currentTheme.backgroundColor)
+                                .accessibilityIdentifier("SyncErrorAlertTitle")
+
+                            Text(error.localizedDescription)
+                                .font(.lummiFont(size: 16))
+                                .foregroundColor(themeManager.currentTheme.backgroundColor)
+                                .multilineTextAlignment(.center)
+
+                            Button {
+                                withAnimation { syncError.wrappedValue = nil }
+                            } label: {
+                                Text("OK")
+                                    .textCase(.uppercase)
+                                    .font(.lummiFont(size: 16))
+                                    .foregroundColor(themeManager.currentTheme.backgroundColor)
+                                    .padding(.vertical, 12)
+                                    .padding(.horizontal, 40)
+                                    .background(Capsule().stroke(themeManager.currentTheme.backgroundColor, lineWidth: 1))
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityIdentifier("SyncErrorAlertOKButton")
+                        }
+                        .padding(24)
+                        .background(
+                            RoundedRectangle(cornerRadius: 24)
+                                .fill(themeManager.currentTheme.textColor)
+                        )
+                        .padding(40)
+                        Spacer()
+                    }
+                    .transition(.scale.combined(with: .opacity))
+                    .zIndex(2)
+                }
             }
 
             // Listenen to system keyboard notifications
