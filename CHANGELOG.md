@@ -3,6 +3,8 @@
 All notable changes to the project will be documented in this file.
 
 ## [1.0.0] - 2026-MM-DD
+### Changed
+- **Internal:** Replaced a fragile `DispatchQueue.main.asyncAfter(+0.1s)` timer used to sequence keyboard focus and scroll-to-cell when entering edit mode in `SelectedDayDetailView` with a `.onChange(of: isEditing)` modifier, which fires after SwiftUI has committed the state change. No user-facing changes
 
 
 ## [1.0.0rc2] - 2026-09-02

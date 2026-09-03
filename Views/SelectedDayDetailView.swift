@@ -159,6 +159,14 @@ struct SelectedDayDetailView: View {
         .id(entry.persistentModelID)
         .blur(radius: (activeEntryID != nil && !isActive) ? 6 : 0)
         .opacity((activeEntryID != nil && !isActive) ? 0.4 : 1.0)
+        .onChange(of: isEditing) { _, editing in
+            if editing && isActive {
+                isTextFieldFocused = true
+                withAnimation(.spring()) {
+                    proxy.scrollTo(entry.persistentModelID, anchor: .center)
+                }
+            }
+        }
     }
 
     private func noteCellActionButtons(entry: JoyEntry, proxy: ScrollViewProxy) -> some View {
@@ -167,12 +175,6 @@ struct SelectedDayDetailView: View {
                 action: {
                     editingText = entry.text
                     isEditing = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        isTextFieldFocused = true
-                        withAnimation(.spring()) {
-                            proxy.scrollTo(entry.persistentModelID, anchor: .center)
-                        }
-                    }
                 },
                 label: {
                     Image(systemName: "pencil")
