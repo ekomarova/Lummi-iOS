@@ -29,7 +29,10 @@
 import Foundation
 
 struct InsightsCalculator {
-    
+
+    private static let minimumDaysForReport = 4
+    private static let goldenHourWindowSize = 2
+
     // MARK: - General Stats
     
     static func filterEntries(_ entries: [JoyEntry], for month: Date) -> [JoyEntry] {
@@ -44,7 +47,7 @@ struct InsightsCalculator {
     
     static func daysNeededForReport(in entries: [JoyEntry]) -> Int {
         let uniqueCount = uniqueDaysCount(in: entries)
-        return max(0, 4 - uniqueCount)
+        return max(0, minimumDaysForReport - uniqueCount)
     }
     
     static func longestStreak(in entries: [JoyEntry]) -> Int {
@@ -102,7 +105,7 @@ struct InsightsCalculator {
             return lhs.value < rhs.value
         })?.key else { return "-- : --" }
         
-        let endHour = (peakHour + 2) % 24
+        let endHour = (peakHour + goldenHourWindowSize) % 24
         
         guard let startDate = calendar.date(from: DateComponents(hour: peakHour)),
               let endDate = calendar.date(from: DateComponents(hour: endHour)) else { return "-- : --" }
