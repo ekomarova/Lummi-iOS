@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		470FC4E7304A309F00F50A7A /* ModelContextSave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470FC4E6304A309F00F50A7A /* ModelContextSave.swift */; };
 		4714236F2F9CFAA000C1D681 /* SelectedDayDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4714236E2F9CFAA000C1D681 /* SelectedDayDetailView.swift */; };
 		4726FFA82F9DA410008B5D3C /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFA72F9DA1FF008B5D3C /* DateExtension.swift */; };
 		4726FFAA2F9EC5EA008B5D3C /* HomeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFA92F9EC5E8008B5D3C /* HomeButton.swift */; };
@@ -51,6 +52,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		470FC4E6304A309F00F50A7A /* ModelContextSave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContextSave.swift; sourceTree = "<group>"; };
 		4714236E2F9CFAA000C1D681 /* SelectedDayDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedDayDetailView.swift; sourceTree = "<group>"; };
 		4726FFA72F9DA1FF008B5D3C /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		4726FFA92F9EC5E8008B5D3C /* HomeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeButton.swift; sourceTree = "<group>"; };
@@ -218,6 +220,7 @@
 			children = (
 				4766220C303F8AAC00041521 /* CloudKitSyncMonitor.swift */,
 				47981EAC2FA5473E005ADAB1 /* InsightsCalculator.swift */,
+				470FC4E6304A309F00F50A7A /* ModelContextSave.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -392,6 +395,7 @@
 				4766220D303F8AB000041521 /* CloudKitSyncMonitor.swift in Sources */,
 				4726FFC82FA3D98E008B5D3C /* SettingsButton.swift in Sources */,
 				4714236F2F9CFAA000C1D681 /* SelectedDayDetailView.swift in Sources */,
+				470FC4E7304A309F00F50A7A /* ModelContextSave.swift in Sources */,
 				473B04552F9BB2F400C482FA /* ThemeManager.swift in Sources */,
 				4726FFD12FA40B00008B5D3C /* InsightsButton.swift in Sources */,
 				4726FFAA2F9EC5EA008B5D3C /* HomeButton.swift in Sources */,

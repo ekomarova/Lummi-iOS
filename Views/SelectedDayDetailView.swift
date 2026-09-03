@@ -40,9 +40,44 @@ struct SelectedDayDetailView: View {
     @State private var activeEntryID: PersistentIdentifier?
     @State private var editingText: String = ""
     @State private var isEditing: Bool = false
+    @State private var saveAlert: SaveAlertKind?
     @FocusState private var isTextFieldFocused: Bool
 
+    enum SaveAlertKind: Equatable {
+        case editFailed
+        case deleteFailed
+
+        var title: LocalizedStringKey {
+            switch self {
+            case .editFailed: return "Failed to Save"
+            case .deleteFailed: return "Failed to Delete"
+            }
+        }
+
+        var message: LocalizedStringKey {
+            switch self {
+            case .editFailed: return "Your changes could not be saved. Please try again."
+            case .deleteFailed: return "Your record could not be deleted. Please try again."
+            }
+        }
+
+        var titleAccessibilityID: String {
+            switch self {
+            case .editFailed: return "SaveAlertTitle"
+            case .deleteFailed: return "DeleteAlertTitle"
+            }
+        }
+
+        var okButtonAccessibilityID: String {
+            switch self {
+            case .editFailed: return "SaveAlertOKButton"
+            case .deleteFailed: return "DeleteAlertOKButton"
+            }
+        }
+    }
+
     private var today: Date { Date() }
+
     private var isSelectedToday: Bool {
         guard let selected = selectedDate else { return false }
         return Calendar.current.isDate(selected, inSameDayAs: today)
@@ -56,13 +91,10 @@ struct SelectedDayDetailView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Global full-screen tap interceptor
                 Color.black.opacity(0.001)
                     .ignoresSafeArea()
                     .accessibilityIdentifier("GlobalDismissArea")
-                    .onTapGesture {
-                        saveAndDismiss()
-                    }
+                    .onTapGesture { saveAndDismiss() }
 
                 ScrollView(.vertical, showsIndicators: false) {
                     ScrollViewReader { proxy in
@@ -90,27 +122,82 @@ struct SelectedDayDetailView: View {
                         .frame(minHeight: geometry.size.height, alignment: .top)
                         .background(
                             Color.black.opacity(0.001)
-                                .onTapGesture {
-                                    saveAndDismiss()
-                                }
+                                .onTapGesture { saveAndDismiss() }
                         )
                     }
                 }
             }
         }
+        .blur(radius: saveAlert != nil ? 10 : 0)
+        .animation(.easeInOut(duration: 0.25), value: saveAlert != nil)
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: selectedDate)
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: activeEntryID)
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: isEditing)
         .onChange(of: selectedDate) { _, _ in saveAndDismiss() }
-        .onDisappear {
-            // Save data when the user closes the screen
-            saveAndDismiss()
+        .onDisappear { saveAndDismiss() }
+        .overlay {
+            if let alert = saveAlert {
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
+                    .onTapGesture { dismissSaveAlert() }
+                    .zIndex(1)
+
+                saveAlertCard(alert)
+                    .transition(.scale.combined(with: .opacity))
+                    .zIndex(2)
+            }
         }
     }
+}
 
-    // MARK: - Subviews
+// MARK: - Alert Card
 
-    private var futureDayView: some View {
+private extension SelectedDayDetailView {
+
+    @ViewBuilder
+    func saveAlertCard(_ alert: SaveAlertKind) -> some View {
+        VStack(spacing: 20) {
+            Text(alert.title)
+                .textCase(.uppercase)
+                .font(.lummiFont(size: 20))
+                .foregroundColor(themeManager.currentTheme.backgroundColor)
+                .multilineTextAlignment(.center)
+                .accessibilityIdentifier(alert.titleAccessibilityID)
+
+            Text(alert.message)
+                .font(.lummiFont(size: 16))
+                .foregroundColor(themeManager.currentTheme.backgroundColor)
+                .multilineTextAlignment(.center)
+
+            Button(
+                action: { dismissSaveAlert() },
+                label: {
+                    Text("OK")
+                        .textCase(.uppercase)
+                        .font(.lummiFont(size: 16))
+                        .foregroundColor(themeManager.currentTheme.textColor)
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 40)
+                        .background(Capsule().fill(themeManager.currentTheme.backgroundColor))
+                }
+            )
+            .accessibilityIdentifier(alert.okButtonAccessibilityID)
+        }
+        .padding(24)
+        .background(
+            RoundedRectangle(cornerRadius: 24)
+                .fill(themeManager.currentTheme.textColor)
+        )
+        .padding(40)
+        .zIndex(2)
+    }
+}
+
+// MARK: - Subviews
+
+private extension SelectedDayDetailView {
+
+    var futureDayView: some View {
         VStack(spacing: AdaptiveLayout.getSize(for: 12)) {
             Image(systemName: "moon.stars.fill")
                 .font(.system(size: AdaptiveLayout.getSize(for: 40)))
@@ -122,14 +209,14 @@ struct SelectedDayDetailView: View {
         }
     }
 
-    private var noRecordsView: some View {
+    var noRecordsView: some View {
         Text("No records for this day")
             .textCase(.uppercase)
             .font(.lummiFont(size: 16))
             .foregroundColor(themeManager.currentTheme.textColor.opacity(0.3))
     }
 
-    private func notesListView(entries: [JoyEntry], proxy: ScrollViewProxy) -> some View {
+    func notesListView(entries: [JoyEntry], proxy: ScrollViewProxy) -> some View {
         VStack(alignment: .leading, spacing: AdaptiveLayout.getSize(for: 15)) {
             ForEach(Array(entries.enumerated()), id: \.element.persistentModelID) { index, entry in
                 noteCell(for: entry, index: index, proxy: proxy)
@@ -137,10 +224,8 @@ struct SelectedDayDetailView: View {
         }
     }
 
-    // MARK: - Interactive Cell
-
     @ViewBuilder
-    private func noteCell(for entry: JoyEntry, index: Int, proxy: ScrollViewProxy) -> some View {
+    func noteCell(for entry: JoyEntry, index: Int, proxy: ScrollViewProxy) -> some View {
         let isActive = (activeEntryID == entry.persistentModelID)
 
         VStack(alignment: .trailing, spacing: AdaptiveLayout.getSize(for: 8)) {
@@ -169,7 +254,7 @@ struct SelectedDayDetailView: View {
         }
     }
 
-    private func noteCellActionButtons(entry: JoyEntry, proxy: ScrollViewProxy) -> some View {
+    func noteCellActionButtons(entry: JoyEntry, proxy: ScrollViewProxy) -> some View {
         HStack(spacing: AdaptiveLayout.getSize(for: 12)) {
             Button(
                 action: {
@@ -201,7 +286,7 @@ struct SelectedDayDetailView: View {
         .transition(.scale(scale: 0.8).combined(with: .opacity).combined(with: .move(edge: .bottom)))
     }
 
-    private var noteCellEditField: some View {
+    var noteCellEditField: some View {
         TextField("What made you happy?", text: $editingText, axis: .vertical)
             .accessibilityIdentifier("EditRecordTextField")
             .focused($isTextFieldFocused)
@@ -219,7 +304,7 @@ struct SelectedDayDetailView: View {
             )
     }
 
-    private func noteCellTextDisplay(entry: JoyEntry, index: Int, isActive: Bool, proxy: ScrollViewProxy) -> some View {
+    func noteCellTextDisplay(entry: JoyEntry, index: Int, isActive: Bool, proxy: ScrollViewProxy) -> some View {
         Text(entry.text)
             .font(.lummiFont(size: 16))
             .foregroundColor(themeManager.currentTheme.textColor)
@@ -230,7 +315,10 @@ struct SelectedDayDetailView: View {
                     .fill(themeManager.currentTheme.textColor.opacity(0.05))
                     .overlay(
                         RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 20))
-                            .stroke(themeManager.currentTheme.textColor.opacity(isActive ? 0.3 : 0.1), lineWidth: isActive ? 2 : 1)
+                            .stroke(
+                                themeManager.currentTheme.textColor.opacity(isActive ? 0.3 : 0.1),
+                                lineWidth: isActive ? 2 : 1
+                            )
                     )
             )
             .onTapGesture {
@@ -248,18 +336,24 @@ struct SelectedDayDetailView: View {
             }
             .accessibilityIdentifier("RecordText_\(index)")
     }
+}
 
-    // MARK: - Actions
+// MARK: - Actions
 
-    private func deleteNote(_ entry: JoyEntry) {
-        withAnimation {
-            modelContext.delete(entry)
-            try? modelContext.save() // Explicitly save to ensure CloudKit updates immediately
-            activeEntryID = nil
+private extension SelectedDayDetailView {
+
+    func deleteNote(_ entry: JoyEntry) {
+        modelContext.delete(entry)
+        do {
+            try modelContext.saveOrSimulate()
+            withAnimation { activeEntryID = nil }
+        } catch {
+            modelContext.rollback()
+            withAnimation { saveAlert = .deleteFailed }
         }
     }
 
-    private func saveAndDismiss() {
+    func saveAndDismiss() {
         isTextFieldFocused = false
 
         guard let id = activeEntryID else { return }
@@ -267,19 +361,37 @@ struct SelectedDayDetailView: View {
         if isEditing {
             let trimmed = editingText.trimmingCharacters(in: .whitespacesAndNewlines)
             if let entry = todaysEntries.first(where: { $0.persistentModelID == id }) {
+                let originalText = entry.text
                 if trimmed.isEmpty {
                     modelContext.delete(entry)
                 } else {
                     entry.text = trimmed
                 }
-                // Explicitly save data when the user has finished typing
-                try? modelContext.save()
+                do {
+                    try modelContext.saveOrSimulate()
+                } catch {
+                    modelContext.rollback()
+                    editingText = originalText
+                    withAnimation { saveAlert = .editFailed }
+                    return
+                }
             }
         }
 
         withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
             activeEntryID = nil
             isEditing = false
+        }
+    }
+
+    func dismissSaveAlert() {
+        let kind = saveAlert
+        withAnimation(.easeInOut(duration: 0.25)) { saveAlert = nil }
+        if kind == .editFailed {
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                activeEntryID = nil
+                isEditing = false
+            }
         }
     }
 }

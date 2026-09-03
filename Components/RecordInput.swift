@@ -39,6 +39,7 @@ struct RecordInput: View {
     private let maxLength = 280
 
     @State private var text: String = ""
+    @State private var showSaveAlert = false
 
     var isSaveEnabled: Bool {
         !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -92,19 +93,14 @@ struct RecordInput: View {
                 .padding(.horizontal, 20)
             }
             .toolbar {
-                // Cancel button
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(
-                        action: {
-                            dismiss()
-                        },
+                        action: { dismiss() },
                         label: {
                             Image(systemName: "chevron.left")
                                 .font(.lummiFont(size: 15))
                                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
-                                .background(
-                                    Circle().stroke(Color.clear)
-                                )
+                                .background(Circle().stroke(Color.clear))
                                 .frame(width: 34, height: 34)
                                 .contentShape(Circle())
                         }
@@ -113,24 +109,26 @@ struct RecordInput: View {
                     .accessibilityIdentifier("CancelRecordButton")
                 }
                 
-                // Save button
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(
                         action: {
                             if let date = selectedDate, isSaveEnabled {
                                 let newEntry = JoyEntry(text: text, date: date)
                                 modelContext.insert(newEntry)
-                                try? modelContext.save()
-                                dismiss()
+                                do {
+                                    try modelContext.saveOrSimulate()
+                                    dismiss()
+                                } catch {
+                                    modelContext.rollback()
+                                    withAnimation { showSaveAlert = true }
+                                }
                             }
                         },
                         label: {
                             Image(systemName: "checkmark")
                                 .font(.lummiFont(size: 15))
                                 .foregroundColor(themeManager.currentTheme.textColor.opacity(isSaveEnabled ? 0.6 : 0.2))
-                                .background(
-                                    Circle().stroke(Color.clear)
-                                )
+                                .background(Circle().stroke(Color.clear))
                                 .frame(width: 34, height: 34)
                                 .contentShape(Circle())
                         }
@@ -139,6 +137,52 @@ struct RecordInput: View {
                     .accessibilityLabel("Save")
                     .accessibilityIdentifier("SaveRecordButton")
                 }
+            }
+        }
+        .blur(radius: showSaveAlert ? 10 : 0)
+        .animation(.easeInOut(duration: 0.25), value: showSaveAlert)
+        .overlay {
+            if showSaveAlert {
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
+                    .onTapGesture { withAnimation { showSaveAlert = false } }
+                    .zIndex(1)
+
+                VStack(spacing: 20) {
+                    Text("Failed to Save")
+                        .textCase(.uppercase)
+                        .font(.lummiFont(size: 20))
+                        .foregroundColor(themeManager.currentTheme.backgroundColor)
+                        .multilineTextAlignment(.center)
+                        .accessibilityIdentifier("SaveAlertTitle")
+
+                    Text("Your moment could not be saved. Please try again.")
+                        .font(.lummiFont(size: 16))
+                        .foregroundColor(themeManager.currentTheme.backgroundColor)
+                        .multilineTextAlignment(.center)
+
+                    Button(
+                        action: { withAnimation { showSaveAlert = false } },
+                        label: {
+                            Text("OK")
+                                .textCase(.uppercase)
+                                .font(.lummiFont(size: 16))
+                                .foregroundColor(themeManager.currentTheme.textColor)
+                                .padding(.vertical, 12)
+                                .padding(.horizontal, 40)
+                                .background(Capsule().fill(themeManager.currentTheme.backgroundColor))
+                        }
+                    )
+                    .accessibilityIdentifier("SaveAlertOKButton")
+                }
+                .padding(24)
+                .background(
+                    RoundedRectangle(cornerRadius: 24)
+                        .fill(themeManager.currentTheme.textColor)
+                )
+                .padding(40)
+                .transition(.scale.combined(with: .opacity))
+                .zIndex(2)
             }
         }
     }

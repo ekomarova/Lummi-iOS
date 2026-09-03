@@ -3,10 +3,18 @@
 All notable changes to the project will be documented in this file.
 
 ## [1.0.0] - 2026-MM-DD
+### Added
+- **Testing:** Added `SaveFailureUITests` — a new UI test suite covering save, edit, and delete failure paths. A new `-UI_TESTING_SIMULATE_SAVE_FAILURE` launch argument triggers a simulated save error so the failure UI can be exercised without reproducing real-world conditions (full disk, corrupted store, etc.)
+
 ### Changed
 - **Internal:** Replaced a fragile `DispatchQueue.main.asyncAfter(+0.1s)` timer used to sequence keyboard focus and scroll-to-cell when entering edit mode in `SelectedDayDetailView` with a `.onChange(of: isEditing)` modifier, which fires after SwiftUI has committed the state change. No user-facing changes
 - **Internal:** Eliminated per-call `DateFormatter` allocations across the codebase. `Date.stringKey` now uses a single static formatter (fixed `en_US_POSIX` locale). A new `Date.format(_:locale:)` helper caches one `DateFormatter` per format-string/locale pair, so `HeaderView`, `InsightsView` month label, and `MonthlyMomentCell` all reuse already-created instances on every render. No user-facing changes
 - **Internal:** Merged `InsightGlowCard` and `RhythmGlowCard` into a single `GlowCard` component parameterised by `height`, `valueFontSize`, and `valuePadding`. No user-facing changes
+
+### Fixed
+- **Data Safety:** Fixed a silent data-loss risk where `try? modelContext.save()` in three places (`RecordInput` on new-entry save, and `deleteNote` / `saveAndDismiss` in `SelectedDayDetailView`) would silently discard save failures. The app now rolls back the context, keeps the UI open, and shows a themed error alert consistent with the existing modal style. Users are never left believing an entry was saved when it wasn't
+- **Localisation:** Added missing Russian and German translations for three new error-alert strings
+- **Localisation:** Fixed a bug where the `"Sync issue: %@"` banner message in `Settings` was missing the `%@` placeholder in all three language translations, causing the actual error description to be silently dropped from the UI
 
 
 ## [1.0.0rc2] - 2026-09-02
