@@ -109,13 +109,13 @@ struct InsightsView: View {
                         
                         // MARK: - Joys & Streak
                         HStack(spacing: AdaptiveLayout.getSize(for: 15)) {
-                            InsightGlowCard(
+                            GlowCard(
                                 value: "\(monthlyEntries.count)",
                                 subtitle: "Joys",
                                 gradientColors: [Color(red: 1.0, green: 0.7, blue: 0.75), Color(red: 0.95, green: 0.4, blue: 0.55)]
                             )
                             
-                            InsightGlowCard(
+                            GlowCard(
                                 value: "\(monthStreak)",
                                 subtitle: "Day streak",
                                 gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)]
@@ -124,10 +124,13 @@ struct InsightsView: View {
                         .frame(maxWidth: .infinity, minHeight: itemSize * 0.8)
                         
                         // MARK: - Joyful Hours
-                        RhythmGlowCard(
+                        GlowCard(
                             value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
                             subtitle: "Joyful Hours",
-                            gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)]
+                            gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)],
+                            height: 130,
+                            valueFontSize: 38,
+                            valuePadding: 50
                         )
                         
                         // MARK: - All Moments
@@ -231,22 +234,25 @@ struct InsightsView: View {
 
 // MARK: - UI Components
 
-struct InsightGlowCard: View {
+struct GlowCard: View {
     @Environment(ThemeManager.self) private var themeManager
     var value: String
     var subtitle: LocalizedStringResource
     var gradientColors: [Color]
-    var isWide: Bool = false
-    
+    var height: CGFloat = 170
+    var valueFontSize: CGFloat = 45
+    var valuePadding: CGFloat = 0
+
     var body: some View {
         ZStack {
-            VStack(spacing: 0) {
-                Spacer()
-                Text(value)
-                    .font(.lummiFont(size: 45))
-                    .foregroundColor(themeManager.currentTheme.textColor)
-                    .minimumScaleFactor(0.5)
-                    .lineLimit(1)
+            Text(value)
+                .font(.lummiFont(size: valueFontSize))
+                .foregroundColor(themeManager.currentTheme.textColor)
+                .minimumScaleFactor(0.4)
+                .lineLimit(1)
+                .padding(.horizontal, AdaptiveLayout.getSize(for: valuePadding))
+
+            VStack {
                 Spacer()
                 Text(subtitle)
                     .textCase(.uppercase)
@@ -257,55 +263,14 @@ struct InsightGlowCard: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .frame(height: AdaptiveLayout.getSize(for: 170))
+        .frame(height: AdaptiveLayout.getSize(for: height))
         .background {
-            ZStack {
-                RoundedRectangle(cornerRadius: 30)
-                    .fill(LinearGradient(colors: gradientColors, startPoint: .topLeading, endPoint: .bottomTrailing))
-                    .blur(radius: 15)
-                    .opacity(0.8)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.horizontal, AdaptiveLayout.getSize(for: 15))
-        }
-    }
-}
-
-struct RhythmGlowCard: View {
-    @Environment(ThemeManager.self) private var themeManager
-    var value: String
-    var subtitle: LocalizedStringResource
-    var gradientColors: [Color]
-    
-    var body: some View {
-        ZStack {
             RoundedRectangle(cornerRadius: 30)
                 .fill(LinearGradient(colors: gradientColors, startPoint: .topLeading, endPoint: .bottomTrailing))
                 .blur(radius: 15)
                 .opacity(0.8)
-
-            ZStack {
-                Text(value)
-                    .font(.lummiFont(size: 38))
-                    .foregroundColor(themeManager.currentTheme.textColor)
-                    .minimumScaleFactor(0.4)
-                    .lineLimit(1)
-                    .padding(.horizontal, AdaptiveLayout.getSize(for: 35))
-
-                VStack {
-                    Spacer()
-                    Text(subtitle)
-                        .textCase(.uppercase)
-                        .opacity(0.7)
-                        .font(.lummiFont(size: 12))
-                        .foregroundColor(themeManager.currentTheme.textColor.opacity(0.85))
-                        .padding(.bottom, AdaptiveLayout.getSize(for: 16))
-                }
-            }
+                .padding(.horizontal, AdaptiveLayout.getSize(for: 15))
         }
-        .frame(maxWidth: .infinity)
-        .frame(height: AdaptiveLayout.getSize(for: 130))
-        .padding(.horizontal, AdaptiveLayout.getSize(for: 15))
     }
 }
 
