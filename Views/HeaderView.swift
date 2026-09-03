@@ -37,15 +37,11 @@ struct HeaderView: View {
     let onTap: () -> Void
 
     private var headerDateText: String {
-        let formatter = DateFormatter()
-        formatter.locale = locale
-        
         if isExpanded {
-            formatter.dateFormat = "LLLL yyyy"
+            date.format("LLLL yyyy", locale: locale).uppercased()
         } else {
-            formatter.dateFormat = "d MMMM yyyy"
+            date.format("d MMMM yyyy", locale: locale).uppercased()
         }
-        return formatter.string(from: date).uppercased()
     }
 
     var body: some View {

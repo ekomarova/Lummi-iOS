@@ -29,10 +29,28 @@
 import Foundation
 
 extension Date {
-    // Converts the date to a unique key string "yyyy-MM-dd"
+    private static let keyFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US_POSIX")
+        f.dateFormat = "yyyy-MM-dd"
+        return f
+    }()
+
+    private static var formatterCache: [String: DateFormatter] = [:]
+
     var stringKey: String {
+        Date.keyFormatter.string(from: self)
+    }
+
+    func format(_ format: String, locale: Locale = .current) -> String {
+        let cacheKey = "\(format)|\(locale.identifier)"
+        if let cached = Date.formatterCache[cacheKey] {
+            return cached.string(from: self)
+        }
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.dateFormat = format
+        formatter.locale = locale
+        Date.formatterCache[cacheKey] = formatter
         return formatter.string(from: self)
     }
     
@@ -58,11 +76,4 @@ extension Date {
         return selectedMonth <= oldestMonth
     }
     
-    func format(_ format: String, locale: Locale = .current) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = format
-        formatter.locale = locale
-        return formatter.string(from: self)
-    }
-
 }

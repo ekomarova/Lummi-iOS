@@ -225,10 +225,7 @@ struct InsightsView: View {
     }
     
     private func formatMonth(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.locale = locale
-        formatter.dateFormat = "LLLL yyyy"
-        return formatter.string(from: date).uppercased()
+        date.format("LLLL yyyy", locale: locale).uppercased()
     }
 }
 

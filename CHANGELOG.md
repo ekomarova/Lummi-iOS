@@ -5,6 +5,7 @@ All notable changes to the project will be documented in this file.
 ## [1.0.0] - 2026-MM-DD
 ### Changed
 - **Internal:** Replaced a fragile `DispatchQueue.main.asyncAfter(+0.1s)` timer used to sequence keyboard focus and scroll-to-cell when entering edit mode in `SelectedDayDetailView` with a `.onChange(of: isEditing)` modifier, which fires after SwiftUI has committed the state change. No user-facing changes
+- **Internal:** Eliminated per-call `DateFormatter` allocations across the codebase. `Date.stringKey` now uses a single static formatter (fixed `en_US_POSIX` locale). A new `Date.format(_:locale:)` helper caches one `DateFormatter` per format-string/locale pair, so `HeaderView`, `InsightsView` month label, and `MonthlyMomentCell` all reuse already-created instances on every render. No user-facing changes
 
 
 ## [1.0.0rc2] - 2026-09-02
