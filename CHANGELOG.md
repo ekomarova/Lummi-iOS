@@ -3,6 +3,8 @@
 All notable changes to the project will be documented in this file.
 
 ## [1.0.0] - 2026-MM-DD
+
+## [1.0.0rc3] - 2026-09-04
 ### Added
 - **Testing:** Added `SaveFailureUITests` — a new UI test suite covering save, edit, and delete failure paths. A new `-UI_TESTING_SIMULATE_SAVE_FAILURE` launch argument triggers a simulated save error so the failure UI can be exercised without reproducing real-world conditions (full disk, corrupted store, etc.)
 
