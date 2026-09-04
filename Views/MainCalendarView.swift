@@ -173,21 +173,18 @@ struct WeekdayHeaderView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale
     private var weekdayLabels: [String] {
-        let formatter = DateFormatter()
-        formatter.locale = locale
-
-        let symbols = formatter.veryShortWeekdaySymbols ?? []
-        let firstDayIndex = Calendar.current.firstWeekday - 1
-
-        guard !symbols.isEmpty else { return [] }
-
+        var calendar = Calendar.current
+        calendar.locale = locale
+        let symbols = calendar.veryShortWeekdaySymbols
+        let firstDayIndex = calendar.firstWeekday - 1
         return Array(symbols[firstDayIndex...] + symbols[..<firstDayIndex])
     }
-    
+
     var body: some View {
+        let labels = weekdayLabels
         HStack(spacing: 0) {
-            ForEach(weekdayLabels.indices, id: \.self) { index in
-                Text(weekdayLabels[index])
+            ForEach(labels.indices, id: \.self) { index in
+                Text(labels[index])
                     .textCase(.uppercase)
                     .font(.lummiFont(size: 13))
                     .foregroundColor(themeManager.currentTheme.calendarContentColor.opacity(0.4))

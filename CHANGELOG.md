@@ -3,6 +3,10 @@
 All notable changes to the project will be documented in this file.
 
 ## [1.0.0] - 2026-MM-DD
+### Fixed
+- **iPad:** Background content is now blurred when the "new record" sheet is open, consistent with other modal overlays in the app
+- **iOS 17 / iPhone SE:** Fixed a UI freeze that occurred on iOS 17.0 when navigating to Calendar or Insights after switching language in Settings. `WeekdayHeaderView` was evaluating `weekdayLabels` twice per `body` call — once for `ForEach` indices and once per `Text` — creating 8 `DateFormatter` instances per render frame; replaced with a single `Calendar.locale` lookup stored in a local variable
+- **iOS 17 / iPhone SE:** Fixed the same freeze root cause in `InsightsCalculator.calculateGoldenHours`: `setLocalizedDateFormatFromTemplate("jmm")` was called on every render, acquiring an ICU lock each time; replaced with `Date.FormatStyle`
 
 ## [1.0.0rc3] - 2026-09-04
 ### Added

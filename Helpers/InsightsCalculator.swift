@@ -110,9 +110,7 @@ struct InsightsCalculator {
         guard let startDate = calendar.date(from: DateComponents(hour: peakHour)),
               let endDate = calendar.date(from: DateComponents(hour: endHour)) else { return "-- : --" }
         
-        let formatter = DateFormatter()
-        formatter.locale = locale
-        formatter.setLocalizedDateFormatFromTemplate("jmm")
-        return "\(formatter.string(from: startDate)) - \(formatter.string(from: endDate))"
+        let style = Date.FormatStyle(locale: locale).hour().minute()
+        return "\(startDate.formatted(style)) - \(endDate.formatted(style))"
     }
 }

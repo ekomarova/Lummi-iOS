@@ -253,6 +253,8 @@ struct ContentView: View {
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
+        .blur(radius: isShowingSheet ? 10 : 0)
+        .animation(.easeInOut(duration: 0.25), value: isShowingSheet)
         .sheet(isPresented: $isShowingSheet) {
             // MARK: - Record Input
             RecordInput(selectedDate: Date())
