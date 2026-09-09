@@ -3,6 +3,9 @@
 All notable changes to the project will be documented in this file.
 
 ## [1.0.0] - 2026-MM-DD
+### Added
+- **Testing:** Added unit tests using the Swift Testing framework, covering all testable business logic: `InsightsCalculator` (filter, streak, golden hours), `DateExtension` (formatting, month navigation, boundary checks), `ThemeManager` (persistence, theme switching), and `JoyEntry.dateKey`
+
 ### Fixed
 - **iPad:** Background content is now blurred when the "new record" sheet is open, consistent with other modal overlays in the app
 - **iOS 17 / iPhone SE:** Fixed a UI freeze that occurred on iOS 17.0 when navigating to Calendar or Insights after switching language in Settings. `WeekdayHeaderView` was evaluating `weekdayLabels` twice per `body` call — once for `ForEach` indices and once per `Text` — creating 8 `DateFormatter` instances per render frame; replaced with a single `Calendar.locale` lookup stored in a local variable

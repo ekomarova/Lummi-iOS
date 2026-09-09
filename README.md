@@ -26,9 +26,23 @@ Your data is yours. Using SwiftData and CloudKit, the text of your moments is en
 * **Data Layer & Sync**: Powered by **SwiftData** for reliable persistence + **CloudKit**
 * **Testing Support**: Features a specialized `isStoredInMemoryOnly` mode for UI testing to ensure user data remains untouched during automation
 
-## 🧪 Mocking & UI Testing
+## 🧪 Testing
 
-The project includes a dedicated `MockDataManager` (under `#if DEBUG`) that populates the database with specific states based on launch arguments. This allows for robust UI testing of various scenarios
+### Unit Tests
+Unit tests written with the **Swift Testing** framework (`import Testing`) cover all testable business logic:
+
+| Suite | Coverage |
+|---|---|
+| `InsightsCalculatorTests` | `filterEntries`, `uniqueDaysCount`, `daysNeededForReport`, `longestStreak`, `calculateGoldenHours` — including edge cases: month boundaries, midnight wrap-around, tie-breaking, duplicate days |
+| `DateExtensionTests` | `stringKey`, `format` (with cache), `startOfMonth`, `previousMonth`, `isCurrentMonth`, `isOldestMonth` |
+| `ThemeManagerTests` | Default theme, toggle persistence to `UserDefaults`, reading saved preference on init |
+| `JoyEntryTests` | `dateKey` computed property consistency |
+
+### UI Tests
+UI tests written with **XCUITest** cover end-to-end user flows: calendar navigation, record creation/edit/delete, insights display, settings, iCloud sync toggle, and save failure paths.
+
+### Mocking
+A dedicated `MockDataManager` (under `#if DEBUG`) populates the database with specific states based on launch arguments, allowing robust UI testing of various scenarios without touching real user data.
 
 ## 💻 Setup & Requirements
 

@@ -90,6 +90,11 @@
 			path = LummiUITests;
 			sourceTree = "<group>";
 		};
+		47CD66E13051C5680012EFE2 /* LummiTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = LummiTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +154,7 @@
 				473B04512F9BB21200C482FA /* Theme */,
 				473B04462F9ABC0300C482FA /* Views */,
 				47981EDB2FA8F9D0005ADAB1 /* LummiUITests */,
+				47CD66E13051C5680012EFE2 /* LummiTests */,
 				473B041D2F9AB1AA00C482FA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -268,6 +274,9 @@
 			);
 			dependencies = (
 				473B042B2F9AB1AC00C482FA /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				47CD66E13051C5680012EFE2 /* LummiTests */,
 			);
 			name = LummiTests;
 			packageProductDependencies = (
