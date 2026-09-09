@@ -68,9 +68,14 @@ jobs:
     name: Unit Tests
     needs: build
     runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        device:
+          - "iPhone 17"
+          - "iPad Pro 13-inch (M5)"
     env:
       UI_TEST_TARGET: "LummiUITests"
-      TEST_DEVICE: "iPhone 17"
       TEST_OS: "latest"
     steps:
       - name: Download Test Build Products
@@ -103,7 +108,7 @@ jobs:
         run: |
           xcodebuild test-without-building \
             -xctestrun "${{ steps.xctestrun.outputs.path }}" \
-            -destination 'platform=iOS Simulator,name=${{ env.TEST_DEVICE }},OS=${{ env.TEST_OS }}' \
+            -destination 'platform=iOS Simulator,name=${{ matrix.device }},OS=${{ env.TEST_OS }}' \
             -skip-testing:"${{ env.UI_TEST_TARGET }}" \
             -resultBundlePath TestResults.xcresult \
             | xcpretty && exit ${PIPESTATUS[0]}
@@ -112,8 +117,8 @@ jobs:
         if: always()
         run: |
           if [ ! -d "TestResults.xcresult" ]; then
-            echo "TestResults.xcresult not found - tests likely did not run."
-            exit 0
+            echo "TestResults.xcresult not found - tests likely did not run." >&2
+            exit 1
           fi
  
           summary=$(xcrun xcresulttool get test-results summary --path TestResults.xcresult)
@@ -122,11 +127,5 @@ jobs:
           failed=$(echo "$summary" | jq '.failedTests')
           skipped=$(echo "$summary" | jq '.skippedTests')
  
-          echo "Total $total, passed $passed, failed $failed, skipped $skipped"
- 
-          {
-            echo "### Unit Tests"
-            echo "| Total | Passed | Failed | Skipped |"
-            echo "|---|---|---|---|"
-            echo "| $total | $passed | $failed | $skipped |"
-          } >> "$GITHUB_STEP_SUMMARY"
+          echo "${{ matrix.device }}: total $total, passed $passed, failed $failed, skipped $skipped"
+
