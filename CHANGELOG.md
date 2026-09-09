@@ -5,6 +5,7 @@ All notable changes to the project will be documented in this file.
 ## [1.0.0] - 2026-MM-DD
 ### Added
 - **Testing:** Added unit tests using the Swift Testing framework, covering all testable business logic: `InsightsCalculator` (filter, streak, golden hours), `DateExtension` (formatting, month navigation, boundary checks), `ThemeManager` (persistence, theme switching), and `JoyEntry.dateKey`
+- **CI:** Added `unit-tests` CI job that runs unit tests on both `iPhone 17` and `iPad Pro 13-inch (M5)` simulators
 
 ### Fixed
 - **iPad:** Background content is now blurred when the "new record" sheet is open, consistent with other modal overlays in the app

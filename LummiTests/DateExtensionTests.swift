@@ -10,7 +10,7 @@ struct DateExtensionTests {
         components.month = month
         components.day = day
         components.hour = hour
-        return Calendar.current.date(from: components)!
+        return Calendar.current.date(from: components) ?? Date()
     }
 
     // MARK: - stringKey
@@ -104,7 +104,7 @@ struct DateExtensionTests {
         let entries = [
             JoyEntry(text: "", date: makeDate(year: 2026, month: 5, day: 1)),
             JoyEntry(text: "", date: makeDate(year: 2026, month: 2, day: 1)), // oldest
-            JoyEntry(text: "", date: makeDate(year: 2026, month: 8, day: 1)),
+            JoyEntry(text: "", date: makeDate(year: 2026, month: 8, day: 1))
         ]
         // Feb 2026 is the oldest month → selected Feb = true
         #expect(Date.isOldestMonth(selectedMonth: makeDate(year: 2026, month: 2, day: 1), allEntries: entries))
