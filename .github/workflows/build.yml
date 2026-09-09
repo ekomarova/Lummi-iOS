@@ -99,11 +99,6 @@ jobs:
           echo "Found: $file"
           echo "path=$file" >> "$GITHUB_OUTPUT"
 
-      - name: List available simulators
-        run: |
-          echo "Available simulators:"
-          xcrun simctl list devicetypes | grep -i ipad
-
       - name: Run Unit Tests
         run: |
           xcodebuild test-without-building \
