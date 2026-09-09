@@ -64,9 +64,19 @@ jobs:
           retention-days: 1
 
   unit-tests:
-    name: Unit Tests
+    name: Unit Tests (iOS ${{ matrix.ios }})
     needs: build
     runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - ios: "latest"
+            device: "iPhone 17"
+            xcode_path: ""
+          - ios: "17.5"
+            device: "iPhone 15"
+            xcode_path: "/Applications/Xcode_16.4.app"
     env:
       UI_TEST_TARGET: "LummiUITests"
     steps:
@@ -91,10 +101,22 @@ jobs:
           echo "Found: $file"
           echo "path=$file" >> "$GITHUB_OUTPUT"
 
+      - name: List available Xcodes and runtimes
+        run: |
+          echo "Installed Xcode versions:"
+          ls /Applications | grep -i Xcode
+          echo ""
+          echo "Available simulator runtimes:"
+          xcrun simctl list runtimes
+
+      - name: Select Xcode version for this matrix leg
+        if: matrix.xcode_path != ''
+        run: sudo xcode-select -s "${{ matrix.xcode_path }}"
+
       - name: Run Unit Tests
         run: |
           xcodebuild test-without-building \
             -xctestrun "${{ steps.xctestrun.outputs.path }}" \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -destination 'platform=iOS Simulator,name=${{ matrix.device }},OS=${{ matrix.ios }}' \
             -skip-testing:"${{ env.UI_TEST_TARGET }}" \
             | xcpretty && exit ${PIPESTATUS[0]}
