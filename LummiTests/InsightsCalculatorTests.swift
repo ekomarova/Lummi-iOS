@@ -10,7 +10,7 @@ struct InsightsCalculatorTests {
         components.month = month
         components.day = day
         components.hour = hour
-        return Calendar.current.date(from: components)!
+        return Calendar.current.date(from: components) ?? Date()
     }
 
     private func entry(_ text: String = "test", year: Int, month: Int, day: Int, hour: Int = 12) -> JoyEntry {
@@ -29,7 +29,7 @@ struct InsightsCalculatorTests {
         let entries = [
             entry(year: 2026, month: 3, day: 1),
             entry(year: 2026, month: 3, day: 15),
-            entry(year: 2026, month: 3, day: 31),
+            entry(year: 2026, month: 3, day: 31)
         ]
         #expect(InsightsCalculator.filterEntries(entries, for: month).count == 3)
     }
@@ -39,7 +39,7 @@ struct InsightsCalculatorTests {
         let entries = [
             entry(year: 2026, month: 2, day: 28),
             entry(year: 2026, month: 3, day: 5),
-            entry(year: 2026, month: 4, day: 1),
+            entry(year: 2026, month: 4, day: 1)
         ]
         #expect(InsightsCalculator.filterEntries(entries, for: month).count == 1)
     }
@@ -60,7 +60,7 @@ struct InsightsCalculatorTests {
         let entries = [
             entry(year: 2026, month: 1, day: 5, hour: 9),
             entry(year: 2026, month: 1, day: 5, hour: 14),
-            entry(year: 2026, month: 1, day: 5, hour: 20),
+            entry(year: 2026, month: 1, day: 5, hour: 20)
         ]
         #expect(InsightsCalculator.uniqueDaysCount(in: entries) == 1)
     }
@@ -69,7 +69,7 @@ struct InsightsCalculatorTests {
         let entries = [
             entry(year: 2026, month: 1, day: 1),
             entry(year: 2026, month: 1, day: 2),
-            entry(year: 2026, month: 1, day: 3),
+            entry(year: 2026, month: 1, day: 3)
         ]
         #expect(InsightsCalculator.uniqueDaysCount(in: entries) == 3)
     }
@@ -77,7 +77,7 @@ struct InsightsCalculatorTests {
     @Test func uniqueDaysCount_entriesInDifferentYears_countsBoth() {
         let entries = [
             entry(year: 2025, month: 1, day: 1),
-            entry(year: 2026, month: 1, day: 1),
+            entry(year: 2026, month: 1, day: 1)
         ]
         #expect(InsightsCalculator.uniqueDaysCount(in: entries) == 2)
     }
@@ -95,7 +95,7 @@ struct InsightsCalculatorTests {
     @Test func daysNeededForReport_twoDays_returnsTwo() {
         let entries = [
             entry(year: 2026, month: 1, day: 1),
-            entry(year: 2026, month: 1, day: 2),
+            entry(year: 2026, month: 1, day: 2)
         ]
         #expect(InsightsCalculator.daysNeededForReport(in: entries) == 2)
     }
@@ -104,7 +104,7 @@ struct InsightsCalculatorTests {
         let entries = [
             entry(year: 2026, month: 1, day: 1),
             entry(year: 2026, month: 1, day: 2),
-            entry(year: 2026, month: 1, day: 3),
+            entry(year: 2026, month: 1, day: 3)
         ]
         #expect(InsightsCalculator.daysNeededForReport(in: entries) == 1)
     }
@@ -134,7 +134,7 @@ struct InsightsCalculatorTests {
         let entries = [
             entry(year: 2026, month: 1, day: 1),
             entry(year: 2026, month: 1, day: 2),
-            entry(year: 2026, month: 1, day: 3),
+            entry(year: 2026, month: 1, day: 3)
         ]
         #expect(InsightsCalculator.longestStreak(in: entries) == 3)
     }
@@ -146,7 +146,7 @@ struct InsightsCalculatorTests {
             entry(year: 2026, month: 1, day: 3),
             // gap on day 4
             entry(year: 2026, month: 1, day: 5),
-            entry(year: 2026, month: 1, day: 6),
+            entry(year: 2026, month: 1, day: 6)
         ]
         #expect(InsightsCalculator.longestStreak(in: entries) == 3)
     }
@@ -156,7 +156,7 @@ struct InsightsCalculatorTests {
             entry(year: 2026, month: 1, day: 1, hour: 9),
             entry(year: 2026, month: 1, day: 1, hour: 20),
             entry(year: 2026, month: 1, day: 2, hour: 12),
-            entry(year: 2026, month: 1, day: 3, hour: 15),
+            entry(year: 2026, month: 1, day: 3, hour: 15)
         ]
         #expect(InsightsCalculator.longestStreak(in: entries) == 3)
     }
@@ -165,7 +165,7 @@ struct InsightsCalculatorTests {
         // Jan 31 → Feb 1 is 1 day apart — should continue the streak
         let entries = [
             entry(year: 2026, month: 1, day: 31),
-            entry(year: 2026, month: 2, day: 1),
+            entry(year: 2026, month: 2, day: 1)
         ]
         #expect(InsightsCalculator.longestStreak(in: entries) == 2)
     }
@@ -175,7 +175,7 @@ struct InsightsCalculatorTests {
         let entries = [
             entry(year: 2026, month: 1, day: 5, hour: 9),
             entry(year: 2026, month: 1, day: 5, hour: 13),
-            entry(year: 2026, month: 1, day: 5, hour: 21),
+            entry(year: 2026, month: 1, day: 5, hour: 21)
         ]
         #expect(InsightsCalculator.longestStreak(in: entries) == 1)
     }
@@ -189,7 +189,7 @@ struct InsightsCalculatorTests {
     @Test func calculateGoldenHours_withEntries_returnsFormattedRange() {
         let entries = [
             entry(year: 2026, month: 1, day: 1, hour: 14),
-            entry(year: 2026, month: 1, day: 2, hour: 14),
+            entry(year: 2026, month: 1, day: 2, hour: 14)
         ]
         let result = InsightsCalculator.calculateGoldenHours(entries: entries, locale: .current)
         #expect(result != "-- : --")
@@ -209,7 +209,7 @@ struct InsightsCalculatorTests {
             entry(year: 2026, month: 1, day: 1, hour: 10),
             entry(year: 2026, month: 1, day: 1, hour: 14),
             entry(year: 2026, month: 1, day: 2, hour: 14),
-            entry(year: 2026, month: 1, day: 3, hour: 14),
+            entry(year: 2026, month: 1, day: 3, hour: 14)
         ]
         let result = InsightsCalculator.calculateGoldenHours(entries: entries, locale: Locale(identifier: "en_GB"))
         #expect(result.hasPrefix("14:"))
@@ -221,7 +221,7 @@ struct InsightsCalculatorTests {
             entry(year: 2026, month: 1, day: 1, hour: 10),
             entry(year: 2026, month: 1, day: 2, hour: 10),
             entry(year: 2026, month: 1, day: 3, hour: 14),
-            entry(year: 2026, month: 2, day: 4, hour: 14),
+            entry(year: 2026, month: 2, day: 4, hour: 14)
         ]
         let result = InsightsCalculator.calculateGoldenHours(entries: entries, locale: Locale(identifier: "en_GB"))
         #expect(result.hasPrefix("14:"))
@@ -232,7 +232,7 @@ struct InsightsCalculatorTests {
         let entries = [
             entry(year: 2026, month: 1, day: 1, hour: 23),
             entry(year: 2026, month: 1, day: 2, hour: 23),
-            entry(year: 2026, month: 1, day: 3, hour: 23),
+            entry(year: 2026, month: 1, day: 3, hour: 23)
         ]
         let result = InsightsCalculator.calculateGoldenHours(entries: entries, locale: Locale(identifier: "en_GB"))
         #expect(result.hasPrefix("23:"))

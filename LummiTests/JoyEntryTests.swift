@@ -9,7 +9,7 @@ struct JoyEntryTests {
         components.year = year
         components.month = month
         components.day = day
-        return Calendar.current.date(from: components)!
+        return Calendar.current.date(from: components) ?? Date()
     }
 
     // MARK: - dateKey
@@ -23,7 +23,7 @@ struct JoyEntryTests {
 
     @Test func dateKey_twoEntriesOnSameDay_haveEqualKeys() {
         let morning = makeDate(year: 2026, month: 6, day: 10)
-        let evening = Calendar.current.date(byAdding: .hour, value: 14, to: morning)!
+        let evening = Calendar.current.date(byAdding: .hour, value: 14, to: morning) ?? morning
         let entryA = JoyEntry(text: "morning", date: morning)
         let entryB = JoyEntry(text: "evening", date: evening)
         #expect(entryA.dateKey == entryB.dateKey)
