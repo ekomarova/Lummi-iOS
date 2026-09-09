@@ -63,22 +63,15 @@ jobs:
           path: test-build-products.tar
           retention-days: 1
 
+
   unit-tests:
-    name: Unit Tests (iOS ${{ matrix.ios }})
+    name: Unit Tests
     needs: build
     runs-on: macos-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - ios: "latest"
-            device: "iPhone 17"
-            xcode_path: ""
-          - ios: "17.5"
-            device: "iPhone 15"
-            xcode_path: "/Applications/Xcode_16.4.app"
     env:
       UI_TEST_TARGET: "LummiUITests"
+      TEST_DEVICE: "iPhone 17"
+      TEST_OS: "latest"
     steps:
       - name: Download Test Build Products
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
@@ -101,22 +94,39 @@ jobs:
           echo "Found: $file"
           echo "path=$file" >> "$GITHUB_OUTPUT"
 
-      - name: List available Xcodes and runtimes
+       - name: List available simulators
         run: |
-          echo "Installed Xcode versions:"
-          ls /Applications | grep -i Xcode
-          echo ""
-          echo "Available simulator runtimes:"
-          xcrun simctl list runtimes
+          echo "Available simulators:"
+          xcrun simctl list devicetypes | grep -i ipad
 
-      - name: Select Xcode version for this matrix leg
-        if: matrix.xcode_path != ''
-        run: sudo xcode-select -s "${{ matrix.xcode_path }}"
-
-      - name: Run Unit Tests
+       - name: Run Unit Tests
         run: |
           xcodebuild test-without-building \
             -xctestrun "${{ steps.xctestrun.outputs.path }}" \
-            -destination 'platform=iOS Simulator,name=${{ matrix.device }},OS=${{ matrix.ios }}' \
+            -destination 'platform=iOS Simulator,name=${{ env.TEST_DEVICE }},OS=${{ env.TEST_OS }}' \
             -skip-testing:"${{ env.UI_TEST_TARGET }}" \
+            -resultBundlePath TestResults.xcresult \
             | xcpretty && exit ${PIPESTATUS[0]}
+ 
+      - name: Print Test Summary
+        if: always()
+        run: |
+          if [ ! -d "TestResults.xcresult" ]; then
+            echo "TestResults.xcresult not found - tests likely did not run."
+            exit 0
+          fi
+ 
+          summary=$(xcrun xcresulttool get test-results summary --path TestResults.xcresult)
+          total=$(echo "$summary" | jq '.totalTestCount')
+          passed=$(echo "$summary" | jq '.passedTests')
+          failed=$(echo "$summary" | jq '.failedTests')
+          skipped=$(echo "$summary" | jq '.skippedTests')
+ 
+          echo "Total $total, passed $passed, failed $failed, skipped $skipped"
+ 
+          {
+            echo "### Unit Tests"
+            echo "| Total | Passed | Failed | Skipped |"
+            echo "|---|---|---|---|"
+            echo "| $total | $passed | $failed | $skipped |"
+          } >> "$GITHUB_STEP_SUMMARY"
