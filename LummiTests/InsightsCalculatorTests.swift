@@ -115,7 +115,6 @@ struct InsightsCalculatorTests {
     }
 
     @Test func daysNeededForReport_manyEntriesSameDay_stillNeedsThreeMore() {
-        // 10 записей в один день = 1 уникальный день → нужно ещё 3
         let entries = (0..<10).map { entry(year: 2026, month: 1, day: 1, hour: $0) }
         #expect(InsightsCalculator.daysNeededForReport(in: entries) == 3)
     }
@@ -144,7 +143,6 @@ struct InsightsCalculatorTests {
             entry(year: 2026, month: 1, day: 1),
             entry(year: 2026, month: 1, day: 2),
             entry(year: 2026, month: 1, day: 3),
-            // gap on day 4
             entry(year: 2026, month: 1, day: 5),
             entry(year: 2026, month: 1, day: 6)
         ]
@@ -162,7 +160,6 @@ struct InsightsCalculatorTests {
     }
 
     @Test func longestStreak_acrossMonthBoundary_countsAsConsecutive() {
-        // Jan 31 → Feb 1 is 1 day apart — should continue the streak
         let entries = [
             entry(year: 2026, month: 1, day: 31),
             entry(year: 2026, month: 2, day: 1)
@@ -171,7 +168,6 @@ struct InsightsCalculatorTests {
     }
 
     @Test func longestStreak_allEntriesOnSameDay_returnsOne() {
-        // Много записей, но все в один день → уникальных дней 1 → streak = 1
         let entries = [
             entry(year: 2026, month: 1, day: 5, hour: 9),
             entry(year: 2026, month: 1, day: 5, hour: 13),
@@ -204,7 +200,6 @@ struct InsightsCalculatorTests {
     }
 
     @Test func calculateGoldenHours_mostFrequentHourWins() {
-        // Hour 14 has 3 entries, hour 10 has only 1 — 14 should be the peak
         let entries = [
             entry(year: 2026, month: 1, day: 1, hour: 10),
             entry(year: 2026, month: 1, day: 1, hour: 14),
@@ -216,7 +211,6 @@ struct InsightsCalculatorTests {
     }
 
     @Test func calculateGoldenHours_tieBreaking_picksHourWithLatestEntry() {
-        // Hours 10 and 14 have equal count; hour 14 has entries from a later date → should win
         let entries = [
             entry(year: 2026, month: 1, day: 1, hour: 10),
             entry(year: 2026, month: 1, day: 2, hour: 10),
@@ -228,7 +222,6 @@ struct InsightsCalculatorTests {
     }
 
     @Test func calculateGoldenHours_midnightWrapAround_producesValidRange() {
-        // peakHour = 23, windowSize = 2 → endHour = (23+2)%24 = 1; must not crash or return placeholder
         let entries = [
             entry(year: 2026, month: 1, day: 1, hour: 23),
             entry(year: 2026, month: 1, day: 2, hour: 23),

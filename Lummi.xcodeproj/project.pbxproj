@@ -28,6 +28,7 @@
 		473B04572F9BB2FD00C482FA /* ThemeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04522F9BB22000C482FA /* ThemeProtocol.swift */; };
 		473B045B2F9BB79C00C482FA /* RecordInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B045A2F9BB79B00C482FA /* RecordInput.swift */; };
 		4766220D303F8AB000041521 /* CloudKitSyncMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4766220C303F8AAC00041521 /* CloudKitSyncMonitor.swift */; };
+		47882A58305742F9007E5DB5 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 47882A56305742F9007E5DB5 /* PrivacyInfo.xcprivacy */; };
 		47981E9B2FA4440C005ADAB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 47981E9A2FA4440C005ADAB1 /* Assets.xcassets */; };
 		47981EAD2FA54745005ADAB1 /* InsightsCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47981EAC2FA5473E005ADAB1 /* InsightsCalculator.swift */; };
 		47981EB82FA5928F005ADAB1 /* MockDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47981EB32FA59262005ADAB1 /* MockDataManager.swift */; };
@@ -78,6 +79,7 @@
 		473B04542F9BB24E00C482FA /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		473B045A2F9BB79B00C482FA /* RecordInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordInput.swift; sourceTree = "<group>"; };
 		4766220C303F8AAC00041521 /* CloudKitSyncMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitSyncMonitor.swift; sourceTree = "<group>"; };
+		47882A56305742F9007E5DB5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		47981E9A2FA4440C005ADAB1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		47981EAC2FA5473E005ADAB1 /* InsightsCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsCalculator.swift; sourceTree = "<group>"; };
 		47981EB32FA59262005ADAB1 /* MockDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataManager.swift; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 		473B04132F9AB1AA00C482FA = {
 			isa = PBXGroup;
 			children = (
+				47882A56305742F9007E5DB5 /* PrivacyInfo.xcprivacy */,
 				47289DD02FB275BA00E46B84 /* Lummi.entitlements */,
 				47289DCF2FB2754200E46B84 /* Lummi-Info.plist */,
 				473B044B2F9ACF4C00C482FA /* App */,
@@ -359,6 +362,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				47882A58305742F9007E5DB5 /* PrivacyInfo.xcprivacy in Resources */,
 				47981EC02FA7E5EC005ADAB1 /* Localizable.xcstrings in Resources */,
 				47981E9B2FA4440C005ADAB1 /* Assets.xcassets in Resources */,
 			);
