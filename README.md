@@ -2,6 +2,14 @@
 
 **Lummi** is a minimalist joy journal designed to capture happy moments and track emotional progress. The application is built using the **SwiftUI + SwiftData** stack, with a strong emphasis on high testability and modularity
 
+## License
+
+This project is licensed under the [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0).
+
+Free to use, modify, and share for personal, educational, and other non-commercial purposes. Commercial use is not permitted without prior written permission from the author.
+
+See [LICENSE](./LICENSE.md) for the full terms.
+
 ## 🚀 Features
 
 * **Joy Journal**: Create, edit, and delete daily "moments of joy"
