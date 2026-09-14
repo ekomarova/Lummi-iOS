@@ -108,15 +108,21 @@ struct MainCalendarView: View {
 
 struct SingleMonthView: View {
     @Environment(ThemeManager.self) private var themeManager
+    @Environment(\.locale) var locale
     let monthDate: Date
     @Binding var selectedDate: Date?
     @Binding var isCalendarExpanded: Bool
     
     let filledDates: Set<String>
     
-    private let calendar = Calendar.current
     let columns = Array(repeating: GridItem(.flexible(), spacing: AdaptiveLayout.getSize(for: 7)), count: 7)
-    
+
+    private var calendar: Calendar {
+        var cal = Calendar.current
+        cal.locale = locale
+        return cal
+    }
+
     var daysInMonth: Int { calendar.range(of: .day, in: .month, for: monthDate)?.count ?? 31 }
     
     var firstDayOffset: Int {
