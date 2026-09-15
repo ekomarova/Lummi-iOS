@@ -1,0 +1,62 @@
+name: CodeQL
+
+on:
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - '**/*.swift'
+      - '.github/workflows/codeql.yml'
+      - '.github/actions/determine-build-settings/**'
+      - '.github/actions/xcodebuild/**'
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  codeql:
+    name: Analyze
+    runs-on: macos-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Create Local.xcconfig for CI
+        run: cp Local.xcconfig.example Local.xcconfig
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4.38.0
+        with:
+          languages: swift
+          build-mode: manual
+          queries: security-extended
+
+      - name: Determine Build Settings
+        id: settings
+        uses: ./.github/actions/determine-build-settings
+
+      - name: Build for CodeQL
+        uses: ./.github/actions/xcodebuild
+        with:
+          actions: clean build
+          scheme: ${{ steps.settings.outputs.scheme }}
+          filetype-parameter: ${{ steps.settings.outputs.filetype_parameter }}
+          file-to-build: ${{ steps.settings.outputs.file_to_build }}
+          raw-log-path: xcodebuild-codeql-raw.log
+
+      - name: Upload Raw Build Log
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: xcodebuild-codeql-raw-log
+          path: xcodebuild-codeql-raw.log
+          retention-days: 1
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4.38.0
+        with:
+          category: "/language:swift"

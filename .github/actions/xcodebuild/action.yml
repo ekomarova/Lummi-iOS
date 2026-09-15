@@ -1,0 +1,34 @@
+name: 'Run xcodebuild'
+description: 'Runs xcodebuild for the detected scheme/workspace or project'
+inputs:
+  actions:
+    description: 'xcodebuild action(s) to run, e.g. "clean build analyze" or "build-for-testing"'
+    required: true
+  scheme:
+    description: 'Scheme to build (from determine-build-settings)'
+    required: true
+  filetype-parameter:
+    description: '"workspace" or "project" (from determine-build-settings)'
+    required: true
+  file-to-build:
+    description: 'Path to the .xcworkspace or .xcodeproj (from determine-build-settings)'
+    required: true
+  extra-args:
+    description: 'Additional xcodebuild arguments, e.g. "-derivedDataPath DerivedData"'
+    required: false
+    default: ''
+  raw-log-path:
+    description: 'Where to save the unfiltered xcodebuild output, for debugging failures xcpretty may obscure'
+    required: false
+    default: 'xcodebuild-raw.log'
+runs:
+  using: 'composite'
+  steps:
+    - shell: bash
+      run: |
+        xcodebuild ${{ inputs.actions }} \
+          -scheme "${{ inputs.scheme }}" \
+          -${{ inputs.filetype-parameter }} "${{ inputs.file-to-build }}" \
+          -destination 'generic/platform=iOS Simulator' \
+          ${{ inputs.extra-args }} \
+          CODE_SIGNING_ALLOWED=NO 2>&1 | tee "${{ inputs.raw-log-path }}" | xcpretty && exit ${PIPESTATUS[0]}
