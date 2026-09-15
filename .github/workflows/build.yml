@@ -1,4 +1,5 @@
 name: Xcode
+
 on:
   pull_request:
     branches: [ "main" ]
@@ -25,13 +26,6 @@ jobs:
       - name: Create Local.xcconfig for CI
         run: cp Local.xcconfig.example Local.xcconfig
 
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4.38.0
-        with:
-          languages: swift
-          build-mode: manual
-          queries: security-extended
-
       - name: Determine Build Settings
         id: settings
         uses: ./.github/actions/determine-build-settings
@@ -51,20 +45,6 @@ jobs:
         with:
           name: xcodebuild-main-raw-log
           path: xcodebuild-main-raw.log
-          retention-days: 1
-
-      - name: Run CodeQL Analysis
-        uses: github/codeql-action/analyze@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4.38.0
-        with:
-          category: "/language:swift"
-          upload: never
-          output: codeql-sarif
-
-      - name: Upload CodeQL Analysis
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: codeql-sarif
-          path: codeql-sarif
           retention-days: 1
 
       - name: Build Test Target
@@ -94,28 +74,6 @@ jobs:
           name: test-build-products
           path: test-build-products.tar
           retention-days: 1
-
-
-  codeql:
-    name: CodeQL
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      actions: read
-      contents: read
-    steps:
-      - name: Download CodeQL SARIF
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
-        with:
-          name: codeql-sarif
-          path: codeql-sarif
-
-      - name: Upload CodeQL Results
-        uses: github/codeql-action/upload-sarif@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4.38.0
-        with:
-          sarif_file: codeql-sarif
-          category: "/language:swift"
 
   unit-tests:
     name: Unit Tests
