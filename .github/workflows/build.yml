@@ -8,6 +8,10 @@ on:
       - '.github/workflows/build.yml'
       - '.github/actions/determine-build-settings/**'
       - '.github/actions/xcodebuild/**'
+  push:
+    branches: [ "main" ]
+    paths:
+      - '**/*.swift'
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -54,7 +58,7 @@ jobs:
           scheme: ${{ steps.settings.outputs.scheme }}
           filetype-parameter: ${{ steps.settings.outputs.filetype_parameter }}
           file-to-build: ${{ steps.settings.outputs.file_to_build }}
-          extra-args: -derivedDataPath DerivedData
+          extra-args: -derivedDataPath DerivedData -enableCodeCoverage YES
           raw-log-path: xcodebuild-test-raw.log
 
       - name: Upload Raw Test Build Log
@@ -134,4 +138,12 @@ jobs:
           skipped=$(echo "$summary" | jq '.skippedTests')
  
           echo "${{ matrix.device }}: total $total, passed $passed, failed $failed, skipped $skipped"
+
+      - name: Upload Coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@0b35c9ecc4f0529d0eb674914510c22f85b196b4 # v7.1.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: TestResults.xcresult
+          fail_ci_if_error: false
 
