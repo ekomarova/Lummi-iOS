@@ -6,6 +6,7 @@ on:
     paths:
       - '**/*.swift'
       - '.swiftlint.yml'
+      - '.github/workflows/swiftlint.yml'
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
