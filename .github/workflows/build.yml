@@ -4,6 +4,9 @@ on:
     branches: [ "main" ]
     paths:
       - '**/*.swift'
+      - '.github/workflows/build.yml'
+      - '.github/actions/determine-build-settings/**'
+      - '.github/actions/xcodebuild/**'
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
