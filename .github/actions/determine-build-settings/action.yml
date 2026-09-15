@@ -1,0 +1,34 @@
+name: 'Determine Build Settings'
+description: 'Detects the default scheme and whether to build a .xcworkspace or .xcodeproj'
+outputs:
+  scheme:
+    description: 'Default scheme'
+    value: ${{ steps.settings.outputs.scheme }}
+  filetype_parameter:
+    description: '"workspace" or "project"'
+    value: ${{ steps.settings.outputs.filetype_parameter }}
+  file_to_build:
+    description: 'Path to the .xcworkspace or .xcodeproj'
+    value: ${{ steps.settings.outputs.file_to_build }}
+runs:
+  using: 'composite'
+  steps:
+    - id: settings
+      shell: bash
+      run: |
+        scheme_list=$(xcodebuild -list -json | tr -d "\n")
+        default=$(echo $scheme_list | ruby -e "require 'json'; puts JSON.parse(STDIN.gets)['project']['targets'][0]")
+        echo "Using default scheme: $default"
+
+        if [ "`ls -A | grep -i \\.xcworkspace\$`" ]; then
+          filetype_parameter="workspace"
+          file_to_build="`ls -A | grep -i \\.xcworkspace\$`"
+        else
+          filetype_parameter="project"
+          file_to_build="`ls -A | grep -i \\.xcodeproj\$`"
+        fi
+        file_to_build=`echo $file_to_build | awk '{$1=$1;print}'`
+
+        echo "scheme=$default" >> "$GITHUB_OUTPUT"
+        echo "filetype_parameter=$filetype_parameter" >> "$GITHUB_OUTPUT"
+        echo "file_to_build=$file_to_build" >> "$GITHUB_OUTPUT"
