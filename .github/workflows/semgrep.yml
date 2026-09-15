@@ -2,7 +2,7 @@ name: Semgrep
 
 on:
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
     paths:
       - '**/*.swift'
   workflow_dispatch:
