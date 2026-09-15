@@ -139,11 +139,19 @@ jobs:
  
           echo "${{ matrix.device }}: total $total, passed $passed, failed $failed, skipped $skipped"
 
+      - name: Install xcresultparser
+        if: always() && matrix.device == 'iPhone 17'
+        run: brew install xcresultparser
+
+      - name: Convert Coverage to Cobertura
+        if: always() && matrix.device == 'iPhone 17'
+        run: xcresultparser --output-format cobertura TestResults.xcresult > coverage.xml
+
       - name: Upload Coverage to Codecov
         if: always() && matrix.device == 'iPhone 17'
         uses: codecov/codecov-action@0b35c9ecc4f0529d0eb674914510c22f85b196b4 # v7.1.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: TestResults.xcresult
+          files: coverage.xml
           fail_ci_if_error: false
 
