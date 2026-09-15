@@ -2,9 +2,10 @@ name: Semgrep
 
 on:
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
     paths:
       - '**/*.swift'
+      - '.github/workflows/semgrep.yml'
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
