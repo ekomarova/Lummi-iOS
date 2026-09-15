@@ -1,6 +1,13 @@
 name: CodeQL
 
 on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - '**/*.swift'
+      - '.github/workflows/codeql.yml'
+      - '.github/actions/determine-build-settings/**'
+      - '.github/actions/xcodebuild/**'
   pull_request:
     branches: [ "main" ]
     paths:
