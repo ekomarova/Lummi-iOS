@@ -1,7 +1,7 @@
 name: Xcode
 on:
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
     paths:
       - '**/*.swift'
   workflow_dispatch:
@@ -12,46 +12,72 @@ jobs:
   build:
     name: Build
     runs-on: macos-latest
+    permissions:
+      actions: read
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4.38.0
+        with:
+          languages: swift
+          build-mode: manual
+          queries: security-extended
+
       - name: Determine Build Settings
         id: settings
-        run: |
-          scheme_list=$(xcodebuild -list -json | tr -d "\n")
-          default=$(echo $scheme_list | ruby -e "require 'json'; puts JSON.parse(STDIN.gets)['project']['targets'][0]")
-          echo "Using default scheme: $default"
-
-          if [ "`ls -A | grep -i \\.xcworkspace\$`" ]; then
-            filetype_parameter="workspace"
-            file_to_build="`ls -A | grep -i \\.xcworkspace\$`"
-          else
-            filetype_parameter="project"
-            file_to_build="`ls -A | grep -i \\.xcodeproj\$`"
-          fi
-          file_to_build=`echo $file_to_build | awk '{$1=$1;print}'`
-
-          echo "scheme=$default" >> "$GITHUB_OUTPUT"
-          echo "filetype_parameter=$filetype_parameter" >> "$GITHUB_OUTPUT"
-          echo "file_to_build=$file_to_build" >> "$GITHUB_OUTPUT"
+        uses: ./.github/actions/determine-build-settings
 
       - name: Build Main Target
-        run: |
-          xcodebuild clean build analyze \
-            -scheme "${{ steps.settings.outputs.scheme }}" \
-            -"${{ steps.settings.outputs.filetype_parameter }}" "${{ steps.settings.outputs.file_to_build }}" \
-            -destination 'generic/platform=iOS Simulator' \
-            CODE_SIGNING_ALLOWED=NO | xcpretty && exit ${PIPESTATUS[0]}
+        uses: ./.github/actions/xcodebuild
+        with:
+          actions: clean build analyze
+          scheme: ${{ steps.settings.outputs.scheme }}
+          filetype-parameter: ${{ steps.settings.outputs.filetype_parameter }}
+          file-to-build: ${{ steps.settings.outputs.file_to_build }}
+          raw-log-path: xcodebuild-main-raw.log
+
+      - name: Upload Raw Build Log
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: xcodebuild-main-raw-log
+          path: xcodebuild-main-raw.log
+          retention-days: 1
+
+      - name: Run CodeQL Analysis
+        uses: github/codeql-action/analyze@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4.38.0
+        with:
+          category: "/language:swift"
+          upload: never
+          output: codeql-sarif
+
+      - name: Upload CodeQL Analysis
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: codeql-sarif
+          path: codeql-sarif
+          retention-days: 1
 
       - name: Build Test Target
-        run: |
-          xcodebuild build-for-testing \
-            -scheme "${{ steps.settings.outputs.scheme }}" \
-            -"${{ steps.settings.outputs.filetype_parameter }}" "${{ steps.settings.outputs.file_to_build }}" \
-            -destination 'generic/platform=iOS Simulator' \
-            -derivedDataPath DerivedData \
-            CODE_SIGNING_ALLOWED=NO | xcpretty && exit ${PIPESTATUS[0]}
+        uses: ./.github/actions/xcodebuild
+        with:
+          actions: build-for-testing
+          scheme: ${{ steps.settings.outputs.scheme }}
+          filetype-parameter: ${{ steps.settings.outputs.filetype_parameter }}
+          file-to-build: ${{ steps.settings.outputs.file_to_build }}
+          extra-args: -derivedDataPath DerivedData
+          raw-log-path: xcodebuild-test-raw.log
+
+      - name: Upload Raw Test Build Log
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: xcodebuild-test-raw-log
+          path: xcodebuild-test-raw.log
+          retention-days: 1
 
       - name: Archive Test Build Products
         run: tar -cf test-build-products.tar -C DerivedData/Build Products
@@ -63,6 +89,27 @@ jobs:
           path: test-build-products.tar
           retention-days: 1
 
+
+  codeql:
+    name: CodeQL
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    steps:
+      - name: Download CodeQL SARIF
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: codeql-sarif
+          path: codeql-sarif
+
+      - name: Upload CodeQL Results
+        uses: github/codeql-action/upload-sarif@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4.38.0
+        with:
+          sarif_file: codeql-sarif
+          category: "/language:swift"
 
   unit-tests:
     name: Unit Tests
