@@ -28,6 +28,7 @@ jobs:
   build:
     name: Build
     runs-on: macos-latest
+    timeout-minutes: 10
     permissions:
       actions: read
       contents: read
@@ -92,6 +93,7 @@ jobs:
     name: Unit Tests
     needs: build
     runs-on: macos-latest
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -137,6 +139,7 @@ jobs:
     name: UI Tests
     needs: build
     runs-on: macos-latest
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:

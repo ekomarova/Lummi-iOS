@@ -28,6 +28,12 @@ runs:
         echo "Found: $file"
         echo "path=$file" >> "$GITHUB_OUTPUT"
 
+    - name: Boot Simulator
+      shell: bash
+      # Pre-boot and wait for readiness; letting xcodebuild boot it implicitly races
+      # testmanagerd and can stall test launch for 20+ minutes on fresh CI runners
+      run: xcrun simctl bootstatus "${{ inputs.device }}" -b
+
     - name: Run Tests
       shell: bash
       run: |
