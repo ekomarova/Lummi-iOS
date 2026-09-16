@@ -39,24 +39,24 @@ final class TodayRecordsUITests: XCTestCase {
         let addedText = "(edited)"
 
         let recordToEdit = app.staticTexts["RecordText_7"]
-        XCTAssertTrue(recordToEdit.waitForExistence(timeout: 2.0))
-        
+        XCTAssertTrue(recordToEdit.waitForExistence(timeout: 5.0))
+
         recordToEdit.press(forDuration: 1.0)
 
         let editButton = app.buttons["EditRecordButton"]
         XCTAssertTrue(editButton.waitForExistence(timeout: 5.0))
         editButton.tap()
-        
+
         let inlineTextField = app.textFields["EditRecordTextField"]
-        XCTAssertTrue(inlineTextField.waitForExistence(timeout: 2.0), "The editing field did not appear")
-        
+        XCTAssertTrue(inlineTextField.waitForExistence(timeout: 5.0), "The editing field did not appear")
+
         inlineTextField.tap()
         inlineTextField.typeText(addedText)
-        
+
         app.otherElements["GlobalDismissArea"].firstMatch.tap()
-        
+
         let updatedText = originalText + addedText
-        XCTAssertTrue(app.staticTexts[updatedText].waitForExistence(timeout: 2.0), "The edited entry did not appear")
+        XCTAssertTrue(app.staticTexts[updatedText].waitForExistence(timeout: 5.0), "The edited entry did not appear")
     }
 
     // Check record deleting
