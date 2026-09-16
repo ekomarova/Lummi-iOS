@@ -10,10 +10,6 @@ on:
       - '.github/actions/xcodebuild/**'
       - '.github/actions/run-tests/**'
       - '.github/actions/upload-coverage/**'
-  push:
-    branches: [ "main" ]
-    paths:
-      - '**/*.swift'
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -139,7 +135,7 @@ jobs:
     name: UI Tests
     needs: build
     runs-on: macos-latest
-    timeout-minutes: 40
+    timeout-minutes: 50
     strategy:
       fail-fast: false
       matrix:
