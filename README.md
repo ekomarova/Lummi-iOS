@@ -1,5 +1,7 @@
 # Lummi 🌟
 
+[![coverage](https://codecov.io/gh/ekomarova/Lummi-iOS/branch/main/graph/badge.svg)](https://codecov.io/gh/ekomarova/Lummi-iOS/branch/main)
+
 **Lummi** is a minimalist joy journal designed to capture happy moments and track emotional progress. The application is built using the **SwiftUI + SwiftData** stack, with a strong emphasis on high testability and modularity
 
 ## License

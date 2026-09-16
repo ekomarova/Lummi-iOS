@@ -8,6 +8,10 @@ on:
       - '.github/workflows/build.yml'
       - '.github/actions/determine-build-settings/**'
       - '.github/actions/xcodebuild/**'
+  push:
+    branches: [ "main" ]
+    paths:
+      - '**/*.swift'
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -54,7 +58,7 @@ jobs:
           scheme: ${{ steps.settings.outputs.scheme }}
           filetype-parameter: ${{ steps.settings.outputs.filetype_parameter }}
           file-to-build: ${{ steps.settings.outputs.file_to_build }}
-          extra-args: -derivedDataPath DerivedData
+          extra-args: -derivedDataPath DerivedData -enableCodeCoverage YES
           raw-log-path: xcodebuild-test-raw.log
 
       - name: Upload Raw Test Build Log
@@ -89,6 +93,9 @@ jobs:
       UI_TEST_TARGET: "LummiUITests"
       TEST_OS: "latest"
     steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
       - name: Download Test Build Products
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
@@ -134,4 +141,20 @@ jobs:
           skipped=$(echo "$summary" | jq '.skippedTests')
  
           echo "${{ matrix.device }}: total $total, passed $passed, failed $failed, skipped $skipped"
+
+      - name: Install xcresultparser
+        if: always() && matrix.device == 'iPhone 17'
+        run: brew install xcresultparser
+
+      - name: Convert Coverage to Cobertura
+        if: always() && matrix.device == 'iPhone 17'
+        run: xcresultparser --output-format cobertura TestResults.xcresult > coverage.xml
+
+      - name: Upload Coverage to Codecov
+        if: always() && matrix.device == 'iPhone 17'
+        uses: codecov/codecov-action@0b35c9ecc4f0529d0eb674914510c22f85b196b4 # v7.1.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.xml
+          fail_ci_if_error: false
 
