@@ -1,0 +1,33 @@
+name: 'Upload Coverage'
+description: 'Converts an .xcresult bundle to Cobertura format and uploads it to Codecov'
+inputs:
+  xcresult-path:
+    description: 'Path to the .xcresult bundle produced by the test run'
+    required: true
+  coverage-file:
+    description: 'Path to write the converted Cobertura coverage.xml to'
+    required: true
+  flags:
+    description: 'Codecov flags for this upload, e.g. "unittests" or "uitests"'
+    required: true
+  codecov-token:
+    description: 'Codecov upload token'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Install xcresultparser
+      shell: bash
+      run: brew install xcresultparser
+
+    - name: Convert Coverage to Cobertura
+      shell: bash
+      run: xcresultparser --output-format cobertura "${{ inputs.xcresult-path }}" > "${{ inputs.coverage-file }}"
+
+    - name: Upload Coverage to Codecov
+      uses: codecov/codecov-action@0b35c9ecc4f0529d0eb674914510c22f85b196b4 # v7.1.0
+      with:
+        token: ${{ inputs.codecov-token }}
+        files: ${{ inputs.coverage-file }}
+        flags: ${{ inputs.flags }}
+        fail_ci_if_error: false

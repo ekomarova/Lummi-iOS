@@ -1,0 +1,56 @@
+name: 'Run Tests'
+description: 'Locates the xctestrun file and runs xcodebuild test-without-building against it'
+inputs:
+  device:
+    description: 'Simulator device name, e.g. "iPhone 17"'
+    required: true
+  os:
+    description: 'Simulator OS version, e.g. "latest"'
+    required: true
+  test-filter:
+    description: 'Test filter argument, e.g. -skip-testing:"LummiUITests" or -only-testing:"LummiUITests"'
+    required: true
+  result-bundle-path:
+    description: 'Path to write the .xcresult bundle to'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Locate xctestrun file
+      id: xctestrun
+      shell: bash
+      run: |
+        file=$(find DerivedData/Build/Products -maxdepth 1 -name "*.xctestrun" | head -n 1)
+        if [ -z "$file" ]; then
+          echo "xctestrun file not found in DerivedData/Build/Products" >&2
+          exit 1
+        fi
+        echo "Found: $file"
+        echo "path=$file" >> "$GITHUB_OUTPUT"
+
+    - name: Run Tests
+      shell: bash
+      run: |
+        xcodebuild test-without-building \
+          -xctestrun "${{ steps.xctestrun.outputs.path }}" \
+          -destination 'platform=iOS Simulator,name=${{ inputs.device }},OS=${{ inputs.os }}' \
+          ${{ inputs.test-filter }} \
+          -resultBundlePath "${{ inputs.result-bundle-path }}" \
+          | xcpretty && exit ${PIPESTATUS[0]}
+
+    - name: Print Test Summary
+      if: always()
+      shell: bash
+      run: |
+        if [ ! -d "${{ inputs.result-bundle-path }}" ]; then
+          echo "${{ inputs.result-bundle-path }} not found - tests likely did not run." >&2
+          exit 1
+        fi
+
+        summary=$(xcrun xcresulttool get test-results summary --path "${{ inputs.result-bundle-path }}")
+        total=$(echo "$summary" | jq '.totalTestCount')
+        passed=$(echo "$summary" | jq '.passedTests')
+        failed=$(echo "$summary" | jq '.failedTests')
+        skipped=$(echo "$summary" | jq '.skippedTests')
+
+        echo "${{ inputs.device }}: total $total, passed $passed, failed $failed, skipped $skipped"
