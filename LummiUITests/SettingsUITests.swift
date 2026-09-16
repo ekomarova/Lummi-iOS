@@ -188,6 +188,8 @@ final class SettingsUITests: XCTestCase {
         wait(for: [dismissExpectation], timeout: 2.0)
     }
 
+    // CI/UI-testing builds have no iCloud entitlement (see CloudKitSyncMonitor), so this
+    // covers the generic "sync unavailable" banner without depending on real account state.
     func test_iCloudSyncErrorBannerDisplays() throws {
         launchApp(with: ["-UI_TESTING_CALENDAR"])
 
@@ -195,13 +197,30 @@ final class SettingsUITests: XCTestCase {
         app.buttons["SettingsButton_Inactive"].tap()
 
         // The banner should NOT be visible initially because Sync is off by default
-        let bannerMessage = app.staticTexts["Synchronization is suspended. Please log in to iCloud in Settings."]
+        let bannerMessage = app.staticTexts["SyncBannerMessage"]
         XCTAssertFalse(bannerMessage.exists, "Banner should not be visible when iCloud Sync is disabled")
 
         // Enable Sync
-        app.buttons["iCloudEnabledButton"].tap()
+        let enableSyncBtn = app.buttons["iCloudEnabledButton"]
+        XCTAssertTrue(enableSyncBtn.waitForExistence(timeout: 2.0))
+        enableSyncBtn.tap()
 
-        XCTAssertTrue(bannerMessage.waitForExistence(timeout: 5.0), "Banner should be visible when iCloud Sync is enabled but iCloud is logged out")
+        XCTAssertTrue(bannerMessage.waitForExistence(timeout: 5.0), "Banner should be visible when iCloud Sync is enabled but unavailable")
+    }
+
+    // Exercises the real production copy for the "logged out of iCloud" state, which
+    // -UI_TESTING_ICLOUD_LOGGED_OUT reports deterministically since live account status
+    // isn't available in signed-less test builds.
+    func test_iCloudSyncErrorBannerDisplays_WhenLoggedOut() throws {
+        launchApp(with: ["-UI_TESTING_CALENDAR", "-UI_TESTING_ICLOUD_LOGGED_OUT"])
+
+        app.buttons["SettingsButton_Inactive"].tap()
+        let enableSyncBtn = app.buttons["iCloudEnabledButton"]
+        XCTAssertTrue(enableSyncBtn.waitForExistence(timeout: 2.0))
+        enableSyncBtn.tap()
+
+        let bannerMessage = app.staticTexts["Synchronization is suspended. Please log in to iCloud in Settings."]
+        XCTAssertTrue(bannerMessage.waitForExistence(timeout: 5.0), "Banner should show the logged-out message when iCloud account is signed out")
     }
 
     // MARK: - Clear Data tests
