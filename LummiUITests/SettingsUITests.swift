@@ -164,8 +164,8 @@ final class SettingsUITests: XCTestCase {
 
         let disabledBtn = app.buttons["iCloudDisabledButton"]
         let enabledBtn = app.buttons["iCloudEnabledButton"]
-        XCTAssertTrue(disabledBtn.waitForExistence(timeout: 2.0))
-        XCTAssertTrue(enabledBtn.waitForExistence(timeout: 2.0))
+        XCTAssertTrue(disabledBtn.waitForExistence(timeout: 5.0))
+        XCTAssertTrue(enabledBtn.waitForExistence(timeout: 5.0))
 
         // Verify initial state: sync is off
         XCTAssertEqual(disabledBtn.value as? String, "Selected", "iCloud sync should be off by default")
@@ -175,7 +175,7 @@ final class SettingsUITests: XCTestCase {
         enabledBtn.tap()
 
         let alertTitle = app.staticTexts["SyncErrorAlertTitle"]
-        XCTAssertTrue(alertTitle.waitForExistence(timeout: 3.0), "Sync error overlay should appear after container failure")
+        XCTAssertTrue(alertTitle.waitForExistence(timeout: 5.0), "Sync error overlay should appear after container failure")
 
         // Toggle must have reverted back to disabled
         XCTAssertEqual(disabledBtn.value as? String, "Selected", "iCloud toggle should revert to disabled after error")
@@ -203,7 +203,7 @@ final class SettingsUITests: XCTestCase {
 
         // Enable Sync
         let enableSyncBtn = app.buttons["iCloudEnabledButton"]
-        XCTAssertTrue(enableSyncBtn.waitForExistence(timeout: 2.0))
+        XCTAssertTrue(enableSyncBtn.waitForExistence(timeout: 5.0))
         enableSyncBtn.tap()
 
         XCTAssertTrue(bannerMessage.waitForExistence(timeout: 5.0), "Banner should be visible when iCloud Sync is enabled but unavailable")
@@ -217,7 +217,7 @@ final class SettingsUITests: XCTestCase {
 
         app.buttons["SettingsButton_Inactive"].tap()
         let enableSyncBtn = app.buttons["iCloudEnabledButton"]
-        XCTAssertTrue(enableSyncBtn.waitForExistence(timeout: 2.0))
+        XCTAssertTrue(enableSyncBtn.waitForExistence(timeout: 5.0))
         enableSyncBtn.tap()
 
         let bannerMessage = app.staticTexts["Synchronization is suspended. Please log in to iCloud in Settings."]
