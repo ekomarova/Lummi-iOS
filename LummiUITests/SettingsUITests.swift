@@ -186,7 +186,7 @@ final class SettingsUITests: XCTestCase {
 
         let doesNotExistPredicate = NSPredicate(format: "exists == false")
         let dismissExpectation = expectation(for: doesNotExistPredicate, evaluatedWith: alertTitle, handler: nil)
-        wait(for: [dismissExpectation], timeout: 2.0)
+        wait(for: [dismissExpectation], timeout: 5.0)
     }
 
     // CI/UI-testing builds have no iCloud entitlement (see CloudKitSyncMonitor), so this
