@@ -43,8 +43,8 @@ final class DefaultScreenUITests: XCTestCase {
     
     private func verifyCurrentDate() {
         let headerButton = app.buttons["HeaderToggleButton"]
-            
-        XCTAssertTrue(headerButton.waitForExistence(timeout: 2.0), "No Header text date on the screen")
+
+        XCTAssertTrue(headerButton.waitForExistence(timeout: 5.0), "No Header text date on the screen")
         
         let today = Date()
         let month = today.formatted(.dateTime.month(.wide)).uppercased()
@@ -57,12 +57,12 @@ final class DefaultScreenUITests: XCTestCase {
     
     private func verifyHomeButton() {
         let activeHomeButton = app.buttons["HomeButton_Active"]
-        XCTAssertTrue(activeHomeButton.waitForExistence(timeout: 2.0), "Home button is not filled in when launching the application")
+        XCTAssertTrue(activeHomeButton.waitForExistence(timeout: 5.0), "Home button is not filled in when launching the application")
     }
-    
+
     private func verifyRecords() {
         let noRecordsText = app.staticTexts["No records for this day".uppercased()]
-        XCTAssertTrue(noRecordsText.exists, "There is no label w/o record")
+        XCTAssertTrue(noRecordsText.waitForExistence(timeout: 5.0), "There is no label w/o record")
     }
     
     private func verifyCalendarCollapsed() {

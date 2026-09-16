@@ -121,6 +121,14 @@ jobs:
           test-filter: -only-testing:${{ env.UNIT_TEST_TARGET }}
           result-bundle-path: TestResults.xcresult
 
+      - name: Upload Test Results
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: unit-test-results-${{ matrix.device }}
+          path: TestResults.xcresult
+          retention-days: 1
+
       - name: Upload Coverage
         if: always() && matrix.device == env.COVERAGE_DEVICE
         uses: ./.github/actions/upload-coverage
@@ -165,6 +173,14 @@ jobs:
           os: ${{ env.TEST_OS }}
           test-filter: -only-testing:${{ env.UI_TEST_TARGET }}
           result-bundle-path: UITestResults.xcresult
+
+      - name: Upload Test Results
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ui-test-results-${{ matrix.device }}
+          path: UITestResults.xcresult
+          retention-days: 1
 
       - name: Upload Coverage
         if: always()
