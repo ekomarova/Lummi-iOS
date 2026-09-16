@@ -22,7 +22,10 @@ runs:
 
     - name: Convert Coverage to Cobertura
       shell: bash
-      run: xcresultparser --output-format cobertura "${{ inputs.xcresult-path }}" > "${{ inputs.coverage-file }}"
+      env:
+        XCRESULT_PATH: ${{ inputs.xcresult-path }}
+        COVERAGE_FILE: ${{ inputs.coverage-file }}
+      run: xcresultparser --output-format cobertura "$XCRESULT_PATH" > "$COVERAGE_FILE"
 
     - name: Upload Coverage to Codecov
       uses: codecov/codecov-action@0b35c9ecc4f0529d0eb674914510c22f85b196b4 # v7.1.0

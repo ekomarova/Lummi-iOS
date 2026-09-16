@@ -118,7 +118,7 @@ jobs:
         with:
           device: ${{ matrix.device }}
           os: ${{ env.TEST_OS }}
-          test-filter: -only-testing:"${{ env.UNIT_TEST_TARGET }}"
+          test-filter: -only-testing:${{ env.UNIT_TEST_TARGET }}
           result-bundle-path: TestResults.xcresult
 
       - name: Upload Coverage
@@ -163,7 +163,7 @@ jobs:
         with:
           device: ${{ matrix.device }}
           os: ${{ env.TEST_OS }}
-          test-filter: -only-testing:"${{ env.UI_TEST_TARGET }}"
+          test-filter: -only-testing:${{ env.UI_TEST_TARGET }}
           result-bundle-path: UITestResults.xcresult
 
       - name: Upload Coverage

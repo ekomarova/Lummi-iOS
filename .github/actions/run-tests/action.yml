@@ -8,7 +8,7 @@ inputs:
     description: 'Simulator OS version, e.g. "latest"'
     required: true
   test-filter:
-    description: 'Test filter argument, e.g. -skip-testing:"LummiUITests" or -only-testing:"LummiUITests"'
+    description: 'Test filter argument, e.g. -skip-testing:LummiUITests or -only-testing:LummiUITests'
     required: true
   result-bundle-path:
     description: 'Path to write the .xcresult bundle to'
@@ -30,33 +30,44 @@ runs:
 
     - name: Boot Simulator
       shell: bash
+      env:
+        DEVICE: ${{ inputs.device }}
       # Pre-boot and wait for readiness; letting xcodebuild boot it implicitly races
       # testmanagerd and can stall test launch for 20+ minutes on fresh CI runners
-      run: xcrun simctl bootstatus "${{ inputs.device }}" -b
+      run: xcrun simctl bootstatus "$DEVICE" -b
 
     - name: Run Tests
       shell: bash
+      env:
+        XCTESTRUN_PATH: ${{ steps.xctestrun.outputs.path }}
+        DEVICE: ${{ inputs.device }}
+        OS: ${{ inputs.os }}
+        TEST_FILTER: ${{ inputs.test-filter }}
+        RESULT_BUNDLE_PATH: ${{ inputs.result-bundle-path }}
       run: |
         xcodebuild test-without-building \
-          -xctestrun "${{ steps.xctestrun.outputs.path }}" \
-          -destination 'platform=iOS Simulator,name=${{ inputs.device }},OS=${{ inputs.os }}' \
-          ${{ inputs.test-filter }} \
-          -resultBundlePath "${{ inputs.result-bundle-path }}" \
+          -xctestrun "$XCTESTRUN_PATH" \
+          -destination "platform=iOS Simulator,name=$DEVICE,OS=$OS" \
+          "$TEST_FILTER" \
+          -resultBundlePath "$RESULT_BUNDLE_PATH" \
           | xcpretty && exit ${PIPESTATUS[0]}
 
     - name: Print Test Summary
       if: always()
       shell: bash
+      env:
+        DEVICE: ${{ inputs.device }}
+        RESULT_BUNDLE_PATH: ${{ inputs.result-bundle-path }}
       run: |
-        if [ ! -d "${{ inputs.result-bundle-path }}" ]; then
-          echo "${{ inputs.result-bundle-path }} not found - tests likely did not run." >&2
+        if [ ! -d "$RESULT_BUNDLE_PATH" ]; then
+          echo "$RESULT_BUNDLE_PATH not found - tests likely did not run." >&2
           exit 1
         fi
 
-        summary=$(xcrun xcresulttool get test-results summary --path "${{ inputs.result-bundle-path }}")
+        summary=$(xcrun xcresulttool get test-results summary --path "$RESULT_BUNDLE_PATH")
         total=$(echo "$summary" | jq '.totalTestCount')
         passed=$(echo "$summary" | jq '.passedTests')
         failed=$(echo "$summary" | jq '.failedTests')
         skipped=$(echo "$summary" | jq '.skippedTests')
 
-        echo "${{ inputs.device }}: total $total, passed $passed, failed $failed, skipped $skipped"
+        echo "$DEVICE: total $total, passed $passed, failed $failed, skipped $skipped"
