@@ -2,7 +2,9 @@
 
 All notable changes to the project will be documented in this file.
 
-## [1.0.0] - 2026-MM-DD
+## [1.1.0] - 2026-MM-DD
+
+## [1.0.0] - 2026-09-17
 ### Added
 - **Testing:** Added unit tests using the Swift Testing framework, covering all testable business logic: `InsightsCalculator` (filter, streak, golden hours), `DateExtension` (formatting, month navigation, boundary checks), `ThemeManager` (persistence, theme switching), and `JoyEntry.dateKey`
 - **CI:** Added `unit-tests` CI job that runs unit tests on both `iPhone 17` and `iPad Pro 13-inch (M5)` simulators
