@@ -248,10 +248,12 @@ final class SettingsUITests: XCTestCase {
         
         // Go to Settings
         app.buttons["SettingsButton_Inactive"].tap()
-        
+
         // Trigger data deletion
-        app.buttons["ClearAllDataButton"].tap()
-        
+        let clearDataBtn = app.buttons["ClearAllDataButton"]
+        XCTAssertTrue(clearDataBtn.waitForExistence(timeout: 2.0))
+        clearDataBtn.tap()
+
         let alertTitle = app.staticTexts["ClearDataAlertTitle"]
         XCTAssertTrue(alertTitle.waitForExistence(timeout: 2.0))
         app.buttons["ClearDataConfirmButton"].tap()

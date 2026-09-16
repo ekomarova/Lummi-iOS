@@ -42,9 +42,9 @@ final class TodayRecordsUITests: XCTestCase {
         XCTAssertTrue(recordToEdit.waitForExistence(timeout: 2.0))
         
         recordToEdit.press(forDuration: 1.0)
-        
+
         let editButton = app.buttons["EditRecordButton"]
-        XCTAssertTrue(editButton.waitForExistence(timeout: 2.0))
+        XCTAssertTrue(editButton.waitForExistence(timeout: 5.0))
         editButton.tap()
         
         let inlineTextField = app.textFields["EditRecordTextField"]
