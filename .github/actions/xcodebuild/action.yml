@@ -25,10 +25,17 @@ runs:
   using: 'composite'
   steps:
     - shell: bash
+      env:
+        ACTIONS: ${{ inputs.actions }}
+        SCHEME: ${{ inputs.scheme }}
+        FILETYPE_PARAMETER: ${{ inputs.filetype-parameter }}
+        FILE_TO_BUILD: ${{ inputs.file-to-build }}
+        EXTRA_ARGS: ${{ inputs.extra-args }}
+        RAW_LOG_PATH: ${{ inputs.raw-log-path }}
       run: |
-        xcodebuild ${{ inputs.actions }} \
-          -scheme "${{ inputs.scheme }}" \
-          -${{ inputs.filetype-parameter }} "${{ inputs.file-to-build }}" \
+        xcodebuild $ACTIONS \
+          -scheme "$SCHEME" \
+          -"$FILETYPE_PARAMETER" "$FILE_TO_BUILD" \
           -destination 'generic/platform=iOS Simulator' \
-          ${{ inputs.extra-args }} \
-          CODE_SIGNING_ALLOWED=NO 2>&1 | tee "${{ inputs.raw-log-path }}" | xcpretty && exit ${PIPESTATUS[0]}
+          $EXTRA_ARGS \
+          CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$RAW_LOG_PATH" | xcpretty && exit ${PIPESTATUS[0]}

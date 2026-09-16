@@ -89,6 +89,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-UI_TESTING_ICLOUD_LOGGED_OUT"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-UI_TESTING_4_DAYS_FILLED"
             isEnabled = "NO">
          </CommandLineArgument>

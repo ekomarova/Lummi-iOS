@@ -8,18 +8,23 @@ on:
       - '.github/workflows/build.yml'
       - '.github/actions/determine-build-settings/**'
       - '.github/actions/xcodebuild/**'
-  push:
-    branches: [ "main" ]
-    paths:
-      - '**/*.swift'
+      - '.github/actions/run-tests/**'
+      - '.github/actions/upload-coverage/**'
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
+env:
+  IPHONE_DEVICE: &iphone-device "iPhone 17"
+  IPAD_DEVICE: &ipad-device "iPad Pro 13-inch (M5)"
+  COVERAGE_DEVICE: *iphone-device
+
 jobs:
   build:
     name: Build
     runs-on: macos-latest
+    timeout-minutes: 10
     permissions:
       actions: read
       contents: read
@@ -79,16 +84,71 @@ jobs:
           path: test-build-products.tar
           retention-days: 1
 
+
   unit-tests:
     name: Unit Tests
     needs: build
     runs-on: macos-latest
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
         device:
-          - "iPhone 17"
-          - "iPad Pro 13-inch (M5)"
+          - *iphone-device
+          - *ipad-device
+    env:
+      UNIT_TEST_TARGET: "LummiTests"
+      TEST_OS: "latest"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Download Test Build Products
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: test-build-products
+
+      - name: Extract Test Build Products
+        run: |
+          mkdir -p DerivedData/Build
+          tar -xf test-build-products.tar -C DerivedData/Build
+
+      - name: Run Unit Tests
+        uses: ./.github/actions/run-tests
+        with:
+          device: ${{ matrix.device }}
+          os: ${{ env.TEST_OS }}
+          test-filter: -only-testing:${{ env.UNIT_TEST_TARGET }}
+          result-bundle-path: TestResults.xcresult
+
+      - name: Upload Test Results
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: unit-test-results-${{ matrix.device }}
+          path: TestResults.xcresult
+          retention-days: 1
+
+      - name: Upload Coverage
+        if: always() && matrix.device == env.COVERAGE_DEVICE
+        uses: ./.github/actions/upload-coverage
+        with:
+          xcresult-path: TestResults.xcresult
+          coverage-file: coverage.xml
+          flags: unittests
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}
+
+
+  ui-tests:
+    name: UI Tests
+    needs: build
+    runs-on: macos-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        device:
+          - *iphone-device
     env:
       UI_TEST_TARGET: "LummiUITests"
       TEST_OS: "latest"
@@ -106,55 +166,28 @@ jobs:
           mkdir -p DerivedData/Build
           tar -xf test-build-products.tar -C DerivedData/Build
 
-      - name: Locate xctestrun file
-        id: xctestrun
-        run: |
-          file=$(find DerivedData/Build/Products -maxdepth 1 -name "*.xctestrun" | head -n 1)
-          if [ -z "$file" ]; then
-            echo "xctestrun file not found in DerivedData/Build/Products" >&2
-            exit 1
-          fi
-          echo "Found: $file"
-          echo "path=$file" >> "$GITHUB_OUTPUT"
-
-      - name: Run Unit Tests
-        run: |
-          xcodebuild test-without-building \
-            -xctestrun "${{ steps.xctestrun.outputs.path }}" \
-            -destination 'platform=iOS Simulator,name=${{ matrix.device }},OS=${{ env.TEST_OS }}' \
-            -skip-testing:"${{ env.UI_TEST_TARGET }}" \
-            -resultBundlePath TestResults.xcresult \
-            | xcpretty && exit ${PIPESTATUS[0]}
- 
-      - name: Print Test Summary
-        if: always()
-        run: |
-          if [ ! -d "TestResults.xcresult" ]; then
-            echo "TestResults.xcresult not found - tests likely did not run." >&2
-            exit 1
-          fi
- 
-          summary=$(xcrun xcresulttool get test-results summary --path TestResults.xcresult)
-          total=$(echo "$summary" | jq '.totalTestCount')
-          passed=$(echo "$summary" | jq '.passedTests')
-          failed=$(echo "$summary" | jq '.failedTests')
-          skipped=$(echo "$summary" | jq '.skippedTests')
- 
-          echo "${{ matrix.device }}: total $total, passed $passed, failed $failed, skipped $skipped"
-
-      - name: Install xcresultparser
-        if: always() && matrix.device == 'iPhone 17'
-        run: brew install xcresultparser
-
-      - name: Convert Coverage to Cobertura
-        if: always() && matrix.device == 'iPhone 17'
-        run: xcresultparser --output-format cobertura TestResults.xcresult > coverage.xml
-
-      - name: Upload Coverage to Codecov
-        if: always() && matrix.device == 'iPhone 17'
-        uses: codecov/codecov-action@0b35c9ecc4f0529d0eb674914510c22f85b196b4 # v7.1.0
+      - name: Run UI Tests
+        uses: ./.github/actions/run-tests
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: coverage.xml
-          fail_ci_if_error: false
+          device: ${{ matrix.device }}
+          os: ${{ env.TEST_OS }}
+          test-filter: -only-testing:${{ env.UI_TEST_TARGET }}
+          result-bundle-path: UITestResults.xcresult
+          parallel-testing-enabled: 'NO'
 
+      - name: Upload Test Results
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ui-test-results-${{ matrix.device }}
+          path: UITestResults.xcresult
+          retention-days: 1
+
+      - name: Upload Coverage
+        if: always()
+        uses: ./.github/actions/upload-coverage
+        with:
+          xcresult-path: UITestResults.xcresult
+          coverage-file: ui-coverage.xml
+          flags: uitests
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}

@@ -40,9 +40,31 @@ enum CloudKitSyncState: Equatable {
 @MainActor
 final class CloudKitSyncMonitor {
     var syncState: CloudKitSyncState = .available
-    private let container = CKContainer.default()
+    private let container: CKContainer?
 
     init() {
+        // CKContainer.default() raises an uncaught NSException (crashing the process)
+        // on builds without a signed iCloud entitlement, e.g. CI builds made with
+        // CODE_SIGNING_ALLOWED=NO. UI test runs always fall into that category, so skip
+        // it there the same way LummiApp already switches SwiftData to in-memory storage
+        // for UI tests, instead of touching CloudKit at all. -UI_TESTING_ICLOUD_LOGGED_OUT
+        // reports the real .loggedOut state deterministically, since a genuine account
+        // status can't be exercised without live entitlements.
+        #if DEBUG
+        let arguments = ProcessInfo.processInfo.arguments
+        if arguments.contains("-UI_TESTING_ICLOUD_LOGGED_OUT") {
+            container = nil
+            syncState = .loggedOut
+            return
+        }
+        guard !arguments.contains(where: { $0.hasPrefix("-UI_TESTING") }) else {
+            container = nil
+            syncState = .unknownError("iCloud is not available in this build.")
+            return
+        }
+        #endif
+        container = CKContainer.default()
+
         // Listen for Apple ID Account changes
         NotificationCenter.default.addObserver(
             self,
@@ -95,6 +117,7 @@ final class CloudKitSyncMonitor {
     }
 
     func checkAccountStatus() async {
+        guard let container else { return }
         do {
             let status = try await container.accountStatus()
             switch status {

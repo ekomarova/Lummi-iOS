@@ -131,6 +131,7 @@ struct SettingsView: View {
                                 .font(.lummiFont(size: 14))
                                 .foregroundColor(.white)
                                 .multilineTextAlignment(.leading)
+                                .accessibilityIdentifier("SyncBannerMessage")
                         }
                         .padding(AdaptiveLayout.getSize(for: 15))
                         .frame(maxWidth: .infinity, alignment: .leading)

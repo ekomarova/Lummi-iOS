@@ -25,10 +25,10 @@ final class RecordButtonUITests: XCTestCase {
     func test_RecordOnDefaultScreen() throws {
         let recordText = "Hello from default screen!"
         createRecord(withText: recordText)
-        
-        XCTAssertTrue(app.buttons["HomeButton_Active"].exists)
-        XCTAssertTrue(app.staticTexts[recordText].exists, "There is no record on the default screen")
-        
+
+        XCTAssertTrue(app.buttons["HomeButton_Active"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.staticTexts[recordText].waitForExistence(timeout: 5.0), "There is no record on the default screen")
+
         verifyStarOnTodayInCalendar()
     }
 
@@ -84,20 +84,20 @@ final class RecordButtonUITests: XCTestCase {
     
     private func createRecord(withText text: String) {
         let mainRecordBtn = app.buttons["MainRecordButton"]
-        XCTAssertTrue(mainRecordBtn.waitForExistence(timeout: 2.0))
+        XCTAssertTrue(mainRecordBtn.waitForExistence(timeout: 5.0))
         mainRecordBtn.tap()
-        
+
         let textEditor = app.textViews["RecordInputTextEditor"]
-        XCTAssertTrue(textEditor.waitForExistence(timeout: 2.0), "The text input field did not open")
-        
+        XCTAssertTrue(textEditor.waitForExistence(timeout: 5.0), "The text input field did not open")
+
         textEditor.tap()
         textEditor.typeText(text)
-        
+
         let saveBtn = app.buttons["SaveRecordButton"]
         saveBtn.tap()
-        
 
-        XCTAssertTrue(textEditor.waitForNonExistence(timeout: 2.0), "The text input field did not close after saving")
+
+        XCTAssertTrue(textEditor.waitForNonExistence(timeout: 5.0), "The text input field did not close after saving")
     }
     
     private func verifyStarOnTodayInCalendar() {

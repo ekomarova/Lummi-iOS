@@ -21,14 +21,16 @@ struct LummiApp: App {
 
     init() {
         // Read the initial state from UserDefaults before AppStorage is fully available.
-        // When force-error testing, reset sync to off so the synthetic throw only happens
-        // on the onChange path (user tapping the toggle), not at startup.
+        // AppStorage persists in the simulator across app relaunches, so without this
+        // reset a UI test that enables sync would leak that state into whichever test
+        // runs next on the same simulator. Every UI test run should start from a clean,
+        // deterministic "sync off" state regardless of what a previous test left behind.
         #if DEBUG
-        let isForceSyncError = ProcessInfo.processInfo.arguments.contains("-UI_TESTING_FORCE_SYNC_ERROR")
-        if isForceSyncError {
+        let isUITesting = ProcessInfo.processInfo.arguments.contains(where: { $0.hasPrefix("-UI_TESTING") })
+        if isUITesting {
             UserDefaults.standard.set(false, forKey: "isICloudSyncEnabled")
         }
-        let isSyncEnabled = isForceSyncError ? false : UserDefaults.standard.bool(forKey: "isICloudSyncEnabled")
+        let isSyncEnabled = isUITesting ? false : UserDefaults.standard.bool(forKey: "isICloudSyncEnabled")
         #else
         let isSyncEnabled = UserDefaults.standard.bool(forKey: "isICloudSyncEnabled")
         #endif

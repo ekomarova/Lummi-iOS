@@ -8,12 +8,15 @@ All notable changes to the project will be documented in this file.
 - **CI:** Added `unit-tests` CI job that runs unit tests on both `iPhone 17` and `iPad Pro 13-inch (M5)` simulators
 - **CI:** Added CodeQL static analysis (`security-extended` query suite) for Swift, running on every pull request and reporting findings to the repository's Security tab [#7](https://github.com/ekomarova/Lummi-iOS/pull/7)
 - **CI:** Added code coverage via Codecov [#10](https://github.com/ekomarova/Lummi-iOS/pull/10)
+- **CI:** Added a `ui-tests` job that runs the `LummiUITests` suite on `iPhone 17` on every pull request, separate from `unit-tests`. `.xcresult` test bundles are uploaded as a CI artifact whenever a test step fails, so failures can be inspected directly instead of reconstructing them from raw logs [#11](https://github.com/ekomarova/Lummi-iOS/pull/11)
 
 ### Fixed
 - **Calendar:** Fixed a bug where the calendar grid was misaligned with the weekday header when the app language was set to English on a device with a Monday-first system region (e.g. Russia or Germany). `SingleMonthView` used `Calendar.current` — which reflects the device's region, not the in-app locale — to compute day offsets, while `WeekdayHeaderView` applied the SwiftUI environment locale. This caused a one-column shift: Monday dates appeared in the Sunday column and every subsequent day was off by one
 - **iPad:** Background content is now blurred when the "new record" sheet is open, consistent with other modal overlays in the app
 - **iOS 17 / iPhone SE:** Fixed a UI freeze that occurred on iOS 17.0 when navigating to Calendar or Insights after switching language in Settings. `WeekdayHeaderView` was evaluating `weekdayLabels` twice per `body` call — once for `ForEach` indices and once per `Text` — creating 8 `DateFormatter` instances per render frame; replaced with a single `Calendar.locale` lookup stored in a local variable
 - **iOS 17 / iPhone SE:** Fixed the same freeze root cause in `InsightsCalculator.calculateGoldenHours`: `setLocalizedDateFormatFromTemplate("jmm")` was called on every render, acquiring an ICU lock each time; replaced with `Date.FormatStyle`
+- **iCloud Sync:** Fixed a crash (`CKContainer.default()` throwing an uncaught exception in `CloudKitSyncMonitor.init()`) in builds without a signed iCloud entitlement, such as CI or local `CODE_SIGNING_ALLOWED=NO` builds. App Store builds are unaffected, since Apple validates entitlements at archive/upload time [#11](https://github.com/ekomarova/Lummi-iOS/pull/11)
+- **Testing:** Fixed several flaky `LummiUITests` cases across `SettingsUITests`, `DefaultScreenUITests`, `RecordButtonUITests`, `TodayRecordsUITests`, and `CalendarUITests` that intermittently failed in CI — either from timeouts too tight for CI load, assertions reading UI state before SwiftUI animations had settled, or `xcodebuild`'s default simulator-clone parallelization causing app launch/terminate hangs on GitHub's shared macOS runners [#11](https://github.com/ekomarova/Lummi-iOS/pull/11)
 
 ## [1.0.0rc3] - 2026-09-04
 ### Added

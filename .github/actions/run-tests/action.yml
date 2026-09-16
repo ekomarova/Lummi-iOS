@@ -1,0 +1,79 @@
+name: 'Run Tests'
+description: 'Locates the xctestrun file and runs xcodebuild test-without-building against it'
+inputs:
+  device:
+    description: 'Simulator device name, e.g. "iPhone 17"'
+    required: true
+  os:
+    description: 'Simulator OS version, e.g. "latest"'
+    required: true
+  test-filter:
+    description: 'Test filter argument, e.g. -skip-testing:LummiUITests or -only-testing:LummiUITests'
+    required: true
+  result-bundle-path:
+    description: 'Path to write the .xcresult bundle to'
+    required: true
+  parallel-testing-enabled:
+    description: 'Whether xcodebuild may distribute tests across multiple simulator clones (YES/NO)'
+    required: false
+    default: 'YES'
+runs:
+  using: 'composite'
+  steps:
+    - name: Locate xctestrun file
+      id: xctestrun
+      shell: bash
+      run: |
+        file=$(find DerivedData/Build/Products -maxdepth 1 -name "*.xctestrun" | head -n 1)
+        if [ -z "$file" ]; then
+          echo "xctestrun file not found in DerivedData/Build/Products" >&2
+          exit 1
+        fi
+        echo "Found: $file"
+        echo "path=$file" >> "$GITHUB_OUTPUT"
+
+    - name: Boot Simulator
+      shell: bash
+      env:
+        DEVICE: ${{ inputs.device }}
+      # Pre-boot and wait for readiness; letting xcodebuild boot it implicitly races
+      # testmanagerd and can stall test launch for 20+ minutes on fresh CI runners
+      run: xcrun simctl bootstatus "$DEVICE" -b
+
+    - name: Run Tests
+      shell: bash
+      env:
+        XCTESTRUN_PATH: ${{ steps.xctestrun.outputs.path }}
+        DEVICE: ${{ inputs.device }}
+        OS: ${{ inputs.os }}
+        TEST_FILTER: ${{ inputs.test-filter }}
+        RESULT_BUNDLE_PATH: ${{ inputs.result-bundle-path }}
+        PARALLEL_TESTING_ENABLED: ${{ inputs.parallel-testing-enabled }}
+      run: |
+        xcodebuild test-without-building \
+          -xctestrun "$XCTESTRUN_PATH" \
+          -destination "platform=iOS Simulator,name=$DEVICE,OS=$OS" \
+          "$TEST_FILTER" \
+          -parallel-testing-enabled "$PARALLEL_TESTING_ENABLED" \
+          -resultBundlePath "$RESULT_BUNDLE_PATH" \
+          | xcpretty && exit ${PIPESTATUS[0]}
+
+    - name: Print Test Summary
+      if: always()
+      shell: bash
+      env:
+        DEVICE: ${{ inputs.device }}
+        RESULT_BUNDLE_PATH: ${{ inputs.result-bundle-path }}
+      run: |
+        if [ ! -d "$RESULT_BUNDLE_PATH" ]; then
+          echo "$RESULT_BUNDLE_PATH not found - tests likely did not run." >&2
+          exit 1
+        fi
+
+        summary=$(xcrun xcresulttool get test-results summary --path "$RESULT_BUNDLE_PATH")
+        total=$(echo "$summary" | jq '.totalTestCount')
+        passed=$(echo "$summary" | jq '.passedTests')
+        failed=$(echo "$summary" | jq '.failedTests')
+        skipped=$(echo "$summary" | jq '.skippedTests')
+
+        echo "$DEVICE: total $total, passed $passed, failed $failed, skipped $skipped"
