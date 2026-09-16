@@ -27,10 +27,14 @@ final class CalendarUITests: XCTestCase {
         XCTAssertTrue(headerBtn.waitForExistence(timeout: 2.0))
         
         headerBtn.tap()
-        
+
         let month = today.formatted(.dateTime.month(.wide)).uppercased()
         let year = today.formatted(.dateTime.year())
-        XCTAssertEqual(headerBtn.label, "\(month) \(year)", "Incorrect header format for the expanded calendar")
+        let expectedLabel = "\(month) \(year)"
+        let labelPredicate = NSPredicate(format: "label == %@", expectedLabel)
+        let labelExpectation = expectation(for: labelPredicate, evaluatedWith: headerBtn, handler: nil)
+        wait(for: [labelExpectation], timeout: 5.0)
+        XCTAssertEqual(headerBtn.label, expectedLabel, "Incorrect header format for the expanded calendar")
         
         let todayKey = dateKey(for: today)
         let todayCell = app.buttons["DayCell_\(todayKey)"]
