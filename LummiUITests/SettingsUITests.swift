@@ -165,6 +165,7 @@ final class SettingsUITests: XCTestCase {
         let disabledBtn = app.buttons["iCloudDisabledButton"]
         let enabledBtn = app.buttons["iCloudEnabledButton"]
         XCTAssertTrue(disabledBtn.waitForExistence(timeout: 2.0))
+        XCTAssertTrue(enabledBtn.waitForExistence(timeout: 2.0))
 
         // Verify initial state: sync is off
         XCTAssertEqual(disabledBtn.value as? String, "Selected", "iCloud sync should be off by default")
