@@ -6,7 +6,8 @@ All notable changes to the project will be documented in this file.
 ### Added
 - **Testing:** Added unit tests using the Swift Testing framework, covering all testable business logic: `InsightsCalculator` (filter, streak, golden hours), `DateExtension` (formatting, month navigation, boundary checks), `ThemeManager` (persistence, theme switching), and `JoyEntry.dateKey`
 - **CI:** Added `unit-tests` CI job that runs unit tests on both `iPhone 17` and `iPad Pro 13-inch (M5)` simulators
-- **CI:** Added CodeQL static analysis (`security-extended` query suite) for Swift, running on every pull request and reporting findings to the repository's Security tab ([#7](https://github.com/ekomarova/Lummi-iOS/pull/7))
+- **CI:** Added CodeQL static analysis (`security-extended` query suite) for Swift, running on every pull request and reporting findings to the repository's Security tab [#7](https://github.com/ekomarova/Lummi-iOS/pull/7)
+- **CI:** Added code coverage via Codecov [#10](https://github.com/ekomarova/Lummi-iOS/pull/10)
 
 ### Fixed
 - **Calendar:** Fixed a bug where the calendar grid was misaligned with the weekday header when the app language was set to English on a device with a Monday-first system region (e.g. Russia or Germany). `SingleMonthView` used `Calendar.current` — which reflects the device's region, not the in-app locale — to compute day offsets, while `WeekdayHeaderView` applied the SwiftUI environment locale. This caused a one-column shift: Monday dates appeared in the Sunday column and every subsequent day was off by one
