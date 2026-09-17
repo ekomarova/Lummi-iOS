@@ -64,7 +64,7 @@ final class InsightsUITests: XCTestCase {
         let fours = app.staticTexts.matching(NSPredicate(format: "label == '4'"))
         XCTAssertTrue(fours.count >= 2, "Expected to find the number '4' for Joys and Day Streak")
 
-        let timePredicate = NSPredicate(format: "label CONTAINS '8:00' AND label CONTAINS '10:00'")
+        let timePredicate = NSPredicate(format: "label CONTAINS '8:00' AND label CONTAINS '9:00'")
         let joyfulHoursTime = app.staticTexts.matching(timePredicate).firstMatch
         XCTAssertTrue(joyfulHoursTime.waitForExistence(timeout: 2.0), "The time of 'Joyful Hours' does not match the expected range")
 

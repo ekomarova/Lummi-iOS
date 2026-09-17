@@ -12,7 +12,7 @@ import Foundation
 struct InsightsCalculator {
 
     private static let minimumDaysForReport = 4
-    private static let goldenHourWindowSize = 2
+    private static let goldenHourWindowSize = 1
 
     // MARK: - General Stats
     
