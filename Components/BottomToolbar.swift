@@ -22,9 +22,18 @@ struct BottomToolbar: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            tab(systemImage: "house.fill", label: "Home", isActive: isHomeActive, accessibilityBase: "HomeButton", onTap: onHomeTap)
-            tab(systemImage: "chart.pie.fill", label: "Insights", isActive: isInsightsActive, accessibilityBase: "InsightsButton", onTap: onInsightsTap)
-            tab(systemImage: "gearshape.fill", label: "Settings", isActive: isSettingsActive, accessibilityBase: "SettingsButton", onTap: onSettingsTap)
+            tab(
+                systemImage: "house.fill", label: "Home",
+                isActive: isHomeActive, accessibilityBase: "HomeButton", onTap: onHomeTap
+            )
+            tab(
+                systemImage: "chart.pie.fill", label: "Insights",
+                isActive: isInsightsActive, accessibilityBase: "InsightsButton", onTap: onInsightsTap
+            )
+            tab(
+                systemImage: "gearshape.fill", label: "Settings",
+                isActive: isSettingsActive, accessibilityBase: "SettingsButton", onTap: onSettingsTap
+            )
         }
         .frame(height: 64)
         .glassEffect(.clear.interactive(), in: Capsule())
