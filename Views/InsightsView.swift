@@ -101,39 +101,78 @@ struct InsightsView: View {
                             // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
                             .padding(.leading, 10)
 
-                        // MARK: - Joys & Streak
-                        HStack(spacing: 15) {
-                            GlowCard(
-                                value: "\(monthlyEntries.count)",
-                                subtitle: "Joys",
-                                gradientColors: [Color(red: 1.0, green: 0.7, blue: 0.75), Color(red: 0.95, green: 0.4, blue: 0.55)],
-                                valueFontSize: 28,
-                                valuePadding: 12
-                            )
+                        if AdaptiveLayout.isPad {
+                            // MARK: - Joys, Streak & Joyful Hours (iPad: one row of squares)
+                            let padCardSize = (geometry.size.width - 50) / 3
 
+                            HStack(spacing: 15) {
+                                GlowCard(
+                                    value: "\(monthlyEntries.count)",
+                                    subtitle: "Joys",
+                                    gradientColors: [Color(red: 1.0, green: 0.7, blue: 0.75), Color(red: 0.95, green: 0.4, blue: 0.55)],
+                                    height: padCardSize,
+                                    valueFontSize: 28,
+                                    valuePadding: 12
+                                )
+                                .frame(width: padCardSize)
+
+                                GlowCard(
+                                    value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
+                                    subtitle: "Joyful Hours",
+                                    gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)],
+                                    height: padCardSize,
+                                    valueFontSize: 28,
+                                    valuePadding: 12
+                                )
+                                .frame(width: padCardSize)
+
+                                GlowCard(
+                                    value: "\(monthStreak)",
+                                    subtitle: "Day streak",
+                                    gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)],
+                                    height: padCardSize,
+                                    valueFontSize: 28,
+                                    valuePadding: 12
+                                )
+                                .frame(width: padCardSize)
+                            }
+                            // VStack spacing is 35; pull up so the gap to Highlights matches the 15pt gap below
+                            .padding(.top, -26)
+                        } else {
+                            // MARK: - Joys & Streak
+                            HStack(spacing: 15) {
+                                GlowCard(
+                                    value: "\(monthlyEntries.count)",
+                                    subtitle: "Joys",
+                                    gradientColors: [Color(red: 1.0, green: 0.7, blue: 0.75), Color(red: 0.95, green: 0.4, blue: 0.55)],
+                                    valueFontSize: 28,
+                                    valuePadding: 12
+                                )
+
+                                GlowCard(
+                                    value: "\(monthStreak)",
+                                    subtitle: "Day streak",
+                                    gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)],
+                                    valueFontSize: 28,
+                                    valuePadding: 12
+                                )
+                            }
+                            .frame(maxWidth: .infinity, minHeight: itemSize * 0.65)
+                            // VStack spacing is 35; pull up so the gap to Highlights matches the 15pt gap below
+                            .padding(.top, -26)
+
+                            // MARK: - Joyful Hours
                             GlowCard(
-                                value: "\(monthStreak)",
-                                subtitle: "Day streak",
-                                gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)],
+                                value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
+                                subtitle: "Joyful Hours",
+                                gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)],
+                                height: 100,
                                 valueFontSize: 28,
-                                valuePadding: 12
+                                valuePadding: 30
                             )
+                            // VStack spacing is 35; pull up so the gap to Joys/Day streak matches their 15pt gap
+                            .padding(.top, -20)
                         }
-                        .frame(maxWidth: .infinity, minHeight: itemSize * 0.65)
-                        // VStack spacing is 35; pull up so the gap to Highlights matches the 15pt gap below
-                        .padding(.top, -26)
-                        
-                        // MARK: - Joyful Hours
-                        GlowCard(
-                            value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
-                            subtitle: "Joyful Hours",
-                            gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)],
-                            height: 100,
-                            valueFontSize: 28,
-                            valuePadding: 30
-                        )
-                        // VStack spacing is 35; pull up so the gap to Joys/Day streak matches their 15pt gap
-                        .padding(.top, -20)
                         
                         // MARK: - Recall
                         if !monthlyEntries.isEmpty {
