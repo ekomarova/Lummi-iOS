@@ -61,26 +61,38 @@ struct InsightsView: View {
                     Button(
                         action: { changeMonth(by: -1) },
                         label: {
-                            Image(systemName: "chevron.left")
-                                .font(.lummiFont(size: 18))
-                                .foregroundColor(themeManager.currentTheme.textColor.opacity(isOldestMonth ? 0.2 : 0.8))
+                            Circle()
+                                .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                                .adaptiveGlass(in: Circle())
+                                .frame(width: 36, height: 36)
+                                .overlay(
+                                    Image(systemName: "chevron.left")
+                                        .font(.lummiFont(size: 16, weight: .bold))
+                                        .foregroundColor(themeManager.currentTheme.textColor.opacity(isOldestMonth ? 0.2 : 0.8))
+                                )
                         }
                     )
                     .disabled(isOldestMonth)
                     .accessibilityIdentifier("PreviousMonthButton")
-                    
+
                     Text(formatMonth(selectedMonth))
                         .font(.lummiFont(size: 20))
                         .foregroundColor(themeManager.currentTheme.textColor.opacity(0.7))
                         .frame(minWidth: 160, alignment: .center)
                         .accessibilityIdentifier("CurrentMonthLabel")
-                    
+
                     Button(
                         action: { changeMonth(by: 1) },
                         label: {
-                            Image(systemName: "chevron.right")
-                                .font(.lummiFont(size: 18))
-                                .foregroundColor(themeManager.currentTheme.textColor.opacity(isCurrentMonth ? 0.2 : 0.8))
+                            Circle()
+                                .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                                .adaptiveGlass(in: Circle())
+                                .frame(width: 36, height: 36)
+                                .overlay(
+                                    Image(systemName: "chevron.right")
+                                        .font(.lummiFont(size: 16, weight: .bold))
+                                        .foregroundColor(themeManager.currentTheme.textColor.opacity(isCurrentMonth ? 0.2 : 0.8))
+                                )
                         }
                     )
                     .disabled(isCurrentMonth)
