@@ -271,13 +271,9 @@ private extension SelectedDayDetailView {
             .foregroundColor(themeManager.currentTheme.textColor)
             .padding(20)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
+            .overlay(
                 RoundedRectangle(cornerRadius: 20)
-                    .fill(themeManager.currentTheme.textColor.opacity(0.12))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(themeManager.currentTheme.textColor.opacity(0.3), lineWidth: 1)
-                    )
+                    .stroke(Color.white.opacity(0.3), lineWidth: 1)
             )
     }
 
@@ -287,17 +283,14 @@ private extension SelectedDayDetailView {
             .foregroundColor(themeManager.currentTheme.textColor)
             .padding(20)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
+            .overlay(
                 RoundedRectangle(cornerRadius: 20)
-                    .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(
-                                themeManager.currentTheme.textColor.opacity(isActive ? 0.3 : 0.1),
-                                lineWidth: isActive ? 2 : 1
-                            )
+                    .stroke(
+                        Color.white.opacity(isActive ? 0.5 : 0.25),
+                        lineWidth: isActive ? 2 : 1
                     )
             )
+            .contentShape(RoundedRectangle(cornerRadius: 20))
             .onTapGesture {
                 if activeEntryID != nil { saveAndDismiss() }
             }
