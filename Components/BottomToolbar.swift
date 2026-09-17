@@ -26,7 +26,7 @@ struct BottomToolbar: View {
             tab(systemImage: "chart.pie.fill", label: "Insights", isActive: isInsightsActive, accessibilityBase: "InsightsButton", onTap: onInsightsTap)
             tab(systemImage: "gearshape.fill", label: "Settings", isActive: isSettingsActive, accessibilityBase: "SettingsButton", onTap: onSettingsTap)
         }
-        .frame(height: AdaptiveLayout.getSize(for: 64))
+        .frame(height: 64)
         .glassEffect(.clear.interactive(), in: Capsule())
         .animation(.spring(response: 0.35, dampingFraction: 0.82), value: isHomeActive)
         .animation(.spring(response: 0.35, dampingFraction: 0.82), value: isInsightsActive)
@@ -50,19 +50,19 @@ struct BottomToolbar: View {
                             .glassEffect(.clear, in: Capsule())
                             .glassEffectID("bottomToolbarSelection", in: glassNamespace)
                     }
-                    .padding(AdaptiveLayout.getSize(for: 4))
+                    .padding(4)
                 }
 
                 VStack(spacing: 2) {
                     Image(systemName: systemImage)
-                        .font(.lummiFont(size: 20))
+                        .font(.lummiFont(size: 20, scaled: false))
                     Text(label)
-                        .font(.lummiFont(size: 11))
+                        .font(.lummiFont(size: 11, scaled: false))
                 }
                 .foregroundColor(themeManager.currentTheme.textColor)
             }
             .frame(maxWidth: .infinity)
-            .frame(height: AdaptiveLayout.getSize(for: 64))
+            .frame(height: 64)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)

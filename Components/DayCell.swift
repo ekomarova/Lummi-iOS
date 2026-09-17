@@ -20,19 +20,19 @@ struct DayCell: View {
     
     var body: some View {
         ZStack {
-            VStack(spacing: AdaptiveLayout.getSize(for: 4)) {
+            VStack(spacing: 4) {
                 if isFilled {
                     Image(systemName: "star.fill")
-                        .font(.system(size: AdaptiveLayout.getSize(for: 8), weight: .bold))
+                        .font(.system(size: 8, weight: .bold))
                         .foregroundColor(themeManager.currentTheme.dayFilledColor)
-                        .frame(width: AdaptiveLayout.getSize(for: 12), height: AdaptiveLayout.getSize(for: 12))
+                        .frame(width: 12, height: 12)
                 } else {
                     Color.clear
-                        .frame(width: AdaptiveLayout.getSize(for: 12), height: AdaptiveLayout.getSize(for: 12))
+                        .frame(width: 12, height: 12)
                 }
 
                 Text("\(day)")
-                    .font(.system(size: AdaptiveLayout.getSize(for: 15), weight: .light, design: .default))
+                    .font(.system(size: 15, weight: .light, design: .default))
                     .foregroundColor(
                         isToday ? themeManager.currentTheme.textColor :
                             (isFilled ? themeManager.currentTheme.dayFilledColor :
@@ -41,7 +41,7 @@ struct DayCell: View {
                     )
             }
         }
-        .frame(height: AdaptiveLayout.getSize(for: 38))
+        .frame(height: 38)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(day)")
         .accessibilityIdentifier("DayCell_\(dateKey)")

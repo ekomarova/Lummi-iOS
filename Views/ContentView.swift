@@ -75,13 +75,13 @@ struct ContentView: View {
                             isCalendarExpanded: $isCalendarExpanded,
                             visibleMonth: $visibleMonth
                         )
-                        .padding(.horizontal, AdaptiveLayout.getSize(for: 8))
-                        .padding(.vertical, AdaptiveLayout.getSize(for: 18))
-                        .frame(maxWidth: AdaptiveLayout.isPad ? 600 : .infinity)
-                        .frame(height: AdaptiveLayout.getSize(for: 340))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 18)
+                        .frame(maxWidth: AdaptiveLayout.isPad ? 420 : .infinity)
+                        .frame(height: 340)
                         .glassEffect(
                             .clear.interactive(),
-                            in: RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 24))
+                            in: RoundedRectangle(cornerRadius: 24)
                         )
                         .transition(.move(edge: .top).combined(with: .opacity))
                         .padding(.top, AdaptiveLayout.getSize(for: 28))
@@ -209,6 +209,7 @@ struct ContentView: View {
                         }
                     )
                 }
+                .frame(maxWidth: AdaptiveLayout.isPad ? 420 : .infinity)
                 .padding(.horizontal, AdaptiveLayout.getSize(for: 16))
                 .padding(.bottom, AdaptiveLayout.getSize(for: 10))
                 .transition(.move(edge: .bottom).combined(with: .opacity))

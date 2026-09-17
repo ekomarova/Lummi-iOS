@@ -28,11 +28,11 @@ struct HeaderView: View {
     var body: some View {
         Button(action: onTap) {
             Text(headerDateText)
-                .font(.lummiFont(size: 24))
+                .font(.lummiFont(size: 24, scaled: false))
                 .foregroundColor(themeManager.currentTheme.textColor)
                 .accessibilityIdentifier("HeaderDateText")
-                .padding(.horizontal, AdaptiveLayout.getSize(for: 26))
-                .padding(.vertical, AdaptiveLayout.getSize(for: 10))
+                .padding(.horizontal, 26)
+                .padding(.vertical, 10)
                 .glassEffect(.clear.interactive(), in: .capsule)
         }
         .buttonStyle(.plain)

@@ -19,7 +19,7 @@ struct RecordButton: View {
         Group {
             if selectedDate != nil {
                 Button(action: onTap) {
-                    let size = AdaptiveLayout.getSize(for: 64)
+                    let size: CGFloat = 64
 
                     Circle()
                         .fill(themeManager.currentTheme.recordButtonColor.opacity(0.35))
@@ -27,7 +27,7 @@ struct RecordButton: View {
                         .frame(width: size, height: size)
                         .overlay(
                             Image(systemName: "plus")
-                                .font(.lummiFont(size: 20))
+                                .font(.lummiFont(size: 20, scaled: false))
                                 .foregroundColor(themeManager.currentTheme.textColor)
                         )
                 }
