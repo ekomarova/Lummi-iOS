@@ -174,7 +174,7 @@ struct WeekdayHeaderView: View {
                 Text(labels[index])
                     .textCase(.uppercase)
                     .font(.lummiFont(size: 13))
-                    .foregroundColor(themeManager.currentTheme.calendarContentColor.opacity(0.4))
+                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.4))
                     .frame(maxWidth: .infinity)
             }
         }

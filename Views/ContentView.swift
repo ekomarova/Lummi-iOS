@@ -69,26 +69,20 @@ struct ContentView: View {
                         InsightsView()
                             .transition(.move(edge: .leading).combined(with: .opacity))
                     } else if isCalendarExpanded {
-                        ZStack(alignment: .top) {
-                            RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 24))
-                                .fill(themeManager.currentTheme.calendarBackground.opacity(0.83))
-                                .background(
-                                    RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 24))
-                                        .fill(.ultraThinMaterial)
-                                )
-                            
-                            // MARK: - Calenadar View
-                            MainCalendarView(
-                                selectedDate: $selectedDate,
-                                isCalendarExpanded: $isCalendarExpanded,
-                                visibleMonth: $visibleMonth
-                            )
-                            .padding(.horizontal, AdaptiveLayout.getSize(for: 8))
-                            .padding(.vertical, AdaptiveLayout.getSize(for: 18))
-                        }
+                        // MARK: - Calenadar View
+                        MainCalendarView(
+                            selectedDate: $selectedDate,
+                            isCalendarExpanded: $isCalendarExpanded,
+                            visibleMonth: $visibleMonth
+                        )
+                        .padding(.horizontal, AdaptiveLayout.getSize(for: 8))
+                        .padding(.vertical, AdaptiveLayout.getSize(for: 18))
                         .frame(height: AdaptiveLayout.getSize(for: 340))
+                        .glassEffect(
+                            .clear.interactive(),
+                            in: RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 24))
+                        )
                         .transition(.move(edge: .top).combined(with: .opacity))
-                        .clipShape(RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 24)))
                         .padding(.top, AdaptiveLayout.getSize(for: 28))
                         .padding(.horizontal, AdaptiveLayout.getSize(for: 20))
                         .onTapGesture { }

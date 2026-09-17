@@ -34,9 +34,9 @@ struct DayCell: View {
                 Text("\(day)")
                     .font(.system(size: AdaptiveLayout.getSize(for: 15), weight: isToday ? .bold : .light, design: .monospaced))
                     .foregroundColor(
-                        isToday ? themeManager.currentTheme.todayColor :
+                        isToday ? themeManager.currentTheme.textColor :
                             (isFilled ? themeManager.currentTheme.dayFilledColor :
-                                themeManager.currentTheme.calendarContentColor
+                                themeManager.currentTheme.textColor
                                 .opacity(themeManager.currentTheme.inactiveOpacity))
                     )
             }

@@ -22,11 +22,8 @@ struct DarkTheme: AppTheme {
     var textColor: Color = .white
     var inactiveOpacity: Double = 0.35
     
-    var todayColor: Color = .black
-    var dayFilledColor: Color = .orange
-    var calendarBackground: Color = .white
-    var calendarContentColor: Color = .black
-    
+    var dayFilledColor: Color = Color(red: 0.6, green: 0.85, blue: 1.0)
+
     var bottomPanelStarIconColor: Color = .orange
 }
 
@@ -43,10 +40,7 @@ struct LightTheme: AppTheme {
     var textColor: Color = .black
     var inactiveOpacity: Double = 0.35
     
-    var todayColor: Color = .white
-    var dayFilledColor: Color = .orange
-    var calendarBackground: Color = .black
-    var calendarContentColor: Color = .white
-    
+    var dayFilledColor: Color = Color(red: 0.75, green: 0.15, blue: 0.4)
+
     var bottomPanelStarIconColor: Color = .orange
 }
