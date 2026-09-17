@@ -43,10 +43,10 @@ struct InsightsView: View {
             VStack(alignment: .leading, spacing: 20) {
 
                 Text("Insights")
-                    .font(.lummiFont(size: 24))
+                    .font(.lummiFont(size: 24, weight: .bold))
                     .foregroundColor(themeManager.currentTheme.textColor)
                     .padding(.top, 10)
-                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.horizontal, 20)
 
                 // MARK: - Month Selector
                 HStack(spacing: 20) {

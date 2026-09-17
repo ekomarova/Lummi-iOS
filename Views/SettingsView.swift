@@ -42,10 +42,9 @@ struct SettingsView: View {
         ZStack {
             VStack(alignment: .leading, spacing: 30) {
                 Text("Settings")
-                    .font(.lummiFont(size: 24))
+                    .font(.lummiFont(size: 24, weight: .bold))
                     .foregroundColor(themeManager.currentTheme.textColor)
                     .padding(.top, 10)
-                    .frame(maxWidth: .infinity, alignment: .center)
 
                 // MARK: - Appearance
                 HStack {
