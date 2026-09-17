@@ -92,7 +92,7 @@ struct InsightsView: View {
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 35) {
 
-                        let itemSize = geometry.size.width * 0.42
+                        let itemSize = geometry.size.width * 0.09
 
                         Text("Highlights")
                             .font(.lummiFont(size: 20, weight: .bold))
@@ -106,16 +106,20 @@ struct InsightsView: View {
                             GlowCard(
                                 value: "\(monthlyEntries.count)",
                                 subtitle: "Joys",
-                                gradientColors: [Color(red: 1.0, green: 0.7, blue: 0.75), Color(red: 0.95, green: 0.4, blue: 0.55)]
+                                gradientColors: [Color(red: 1.0, green: 0.7, blue: 0.75), Color(red: 0.95, green: 0.4, blue: 0.55)],
+                                valueFontSize: 28,
+                                valuePadding: 12
                             )
 
                             GlowCard(
                                 value: "\(monthStreak)",
                                 subtitle: "Day streak",
-                                gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)]
+                                gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)],
+                                valueFontSize: 28,
+                                valuePadding: 12
                             )
                         }
-                        .frame(maxWidth: .infinity, minHeight: itemSize * 0.8)
+                        .frame(maxWidth: .infinity, minHeight: itemSize * 0.65)
                         // VStack spacing is 35; pull up so the gap to Highlights matches the 15pt gap below
                         .padding(.top, -26)
                         
@@ -124,9 +128,9 @@ struct InsightsView: View {
                             value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
                             subtitle: "Joyful Hours",
                             gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)],
-                            height: 130,
-                            valueFontSize: 38,
-                            valuePadding: 50
+                            height: 100,
+                            valueFontSize: 28,
+                            valuePadding: 30
                         )
                         // VStack spacing is 35; pull up so the gap to Joys/Day streak matches their 15pt gap
                         .padding(.top, -20)
@@ -237,7 +241,7 @@ struct GlowCard: View {
             Text(value)
                 .font(.lummiFont(size: valueFontSize))
                 .foregroundColor(themeManager.currentTheme.textColor)
-                .minimumScaleFactor(0.4)
+                .minimumScaleFactor(0.3)
                 .lineLimit(1)
                 .padding(.horizontal, valuePadding)
 
