@@ -239,11 +239,16 @@ private extension SelectedDayDetailView {
                     isEditing = true
                 },
                 label: {
-                    Image(systemName: "pencil")
-                        .font(.lummiFont(size: 16))
-                        .foregroundColor(themeManager.currentTheme.backgroundColor)
-                        .frame(width: 44, height: 44)
-                        .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.85)))
+                    HStack(spacing: 6) {
+                        Image(systemName: "pencil")
+                            .font(.lummiFont(size: 14))
+                        Text("Edit")
+                            .font(.lummiFont(size: 14))
+                    }
+                    .foregroundColor(themeManager.currentTheme.textColor)
+                    .padding(.horizontal, 16)
+                    .frame(height: 44)
+                    .adaptiveGlass(in: Capsule())
                 }
             )
             .accessibilityIdentifier("EditRecordButton")
@@ -251,11 +256,16 @@ private extension SelectedDayDetailView {
             Button(
                 action: { deleteNote(entry) },
                 label: {
-                    Image(systemName: "trash")
-                        .font(.lummiFont(size: 16))
-                        .foregroundColor(themeManager.currentTheme.backgroundColor)
-                        .frame(width: 44, height: 44)
-                        .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.85)))
+                    HStack(spacing: 6) {
+                        Image(systemName: "trash")
+                            .font(.lummiFont(size: 14))
+                        Text("Delete")
+                            .font(.lummiFont(size: 14))
+                    }
+                    .foregroundColor(themeManager.currentTheme.textColor)
+                    .padding(.horizontal, 16)
+                    .frame(height: 44)
+                    .adaptiveGlass(in: Capsule())
                 }
             )
             .accessibilityIdentifier("DeleteRecordButton")
