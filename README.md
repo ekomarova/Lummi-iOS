@@ -56,8 +56,8 @@ A dedicated `MockDataManager` (under `#if DEBUG`) populates the database with sp
 
 ## 💻 Setup & Requirements
 
-* **iOS 17.6+**
-* **Xcode 16.0+**
+* **iOS 26.0+**
+* **Xcode 26.0+**
 * **Swift 5.x**
 
 ## How to run:
