@@ -10,8 +10,8 @@
 import SwiftUI
 
 extension View {
-    /// Applies the native Liquid Glass material on iOS 26+, falling back to
-    /// `.ultraThinMaterial` on earlier versions.
+    // Applies the native Liquid Glass material on iOS 26+, falling back to
+    // `.ultraThinMaterial` on earlier versions.
     @ViewBuilder
     func adaptiveGlass<S: Shape>(in shape: S, interactive: Bool = true) -> some View {
         if #available(iOS 26, *) {
