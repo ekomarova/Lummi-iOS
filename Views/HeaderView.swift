@@ -33,7 +33,7 @@ struct HeaderView: View {
                 .accessibilityIdentifier("HeaderDateText")
                 .padding(.horizontal, 26)
                 .padding(.vertical, 10)
-                .glassEffect(.clear.interactive(), in: .capsule)
+                .adaptiveGlass(in: Capsule())
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier("HeaderToggleButton")

@@ -3,8 +3,8 @@
 All notable changes to the project will be documented in this file.
 
 ## [1.1.0] - 2026-MM-DD
-### Changed
-- **System Requirements:** Lummi now requires iOS 26.0 or newer, raised from iOS 17.6, to adopt Apple's native Liquid Glass material (`glassEffect`) across the header, calendar, bottom toolbar, and record button
+### Added
+- **Design:** Adopted Apple's native Liquid Glass material (`glassEffect`) for the header date, expanded calendar, bottom toolbar, and record button on iOS 26+. On iOS 17.6-18, these fall back to `.ultraThinMaterial` via a new `adaptiveGlass(in:interactive:)` view modifier, so the app keeps its iOS 17.6 minimum deployment target instead of requiring iOS 26
 
 ## [1.0.0] - 2026-09-17
 ### Added

@@ -36,7 +36,7 @@ struct BottomToolbar: View {
             )
         }
         .frame(height: 64)
-        .glassEffect(.clear.interactive(), in: Capsule())
+        .adaptiveGlass(in: Capsule())
         .animation(.spring(response: 0.35, dampingFraction: 0.82), value: isHomeActive)
         .animation(.spring(response: 0.35, dampingFraction: 0.82), value: isInsightsActive)
         .animation(.spring(response: 0.35, dampingFraction: 0.82), value: isSettingsActive)
@@ -53,11 +53,20 @@ struct BottomToolbar: View {
         Button(action: onTap) {
             ZStack {
                 if isActive {
-                    GlassEffectContainer {
-                        Capsule()
-                            .fill(themeManager.currentTheme.recordButtonColor.opacity(0.35))
-                            .glassEffect(.clear, in: Capsule())
-                            .glassEffectID("bottomToolbarSelection", in: glassNamespace)
+                    Group {
+                        if #available(iOS 26, *) {
+                            GlassEffectContainer {
+                                Capsule()
+                                    .fill(themeManager.currentTheme.recordButtonColor.opacity(0.35))
+                                    .glassEffect(.clear, in: Capsule())
+                                    .glassEffectID("bottomToolbarSelection", in: glassNamespace)
+                            }
+                        } else {
+                            Capsule()
+                                .fill(themeManager.currentTheme.recordButtonColor.opacity(0.35))
+                                .background(.ultraThinMaterial)
+                                .clipShape(Capsule())
+                        }
                     }
                     .padding(4)
                 }

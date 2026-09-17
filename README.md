@@ -56,7 +56,7 @@ A dedicated `MockDataManager` (under `#if DEBUG`) populates the database with sp
 
 ## 💻 Setup & Requirements
 
-* **iOS 26.0+**
+* **iOS 17.6+** (native Liquid Glass on iOS 26+, with a graceful fallback below that)
 * **Xcode 26.0+**
 * **Swift 5.x**
 

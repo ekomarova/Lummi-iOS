@@ -79,10 +79,7 @@ struct ContentView: View {
                         .padding(.vertical, 18)
                         .frame(maxWidth: AdaptiveLayout.isPad ? 420 : .infinity)
                         .frame(height: 340)
-                        .glassEffect(
-                            .clear.interactive(),
-                            in: RoundedRectangle(cornerRadius: 24)
-                        )
+                        .adaptiveGlass(in: RoundedRectangle(cornerRadius: 24))
                         .transition(.move(edge: .top).combined(with: .opacity))
                         .padding(.top, 28)
                         .padding(.horizontal, 20)

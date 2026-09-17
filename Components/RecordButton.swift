@@ -23,7 +23,7 @@ struct RecordButton: View {
 
                     Circle()
                         .fill(themeManager.currentTheme.recordButtonColor.opacity(0.35))
-                        .glassEffect(.clear.interactive(), in: Circle())
+                        .adaptiveGlass(in: Circle())
                         .frame(width: size, height: size)
                         .overlay(
                             Image(systemName: "plus")
