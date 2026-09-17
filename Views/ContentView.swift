@@ -42,7 +42,7 @@ struct ContentView: View {
                         }
                 }
 
-                VStack(spacing: AdaptiveLayout.getSize(for: 15)) {
+                VStack(spacing: 15) {
                     // MARK: - Header View
                     if !isShowingSettings && !isShowingInsights {
                         HeaderView(
@@ -84,8 +84,8 @@ struct ContentView: View {
                             in: RoundedRectangle(cornerRadius: 24)
                         )
                         .transition(.move(edge: .top).combined(with: .opacity))
-                        .padding(.top, AdaptiveLayout.getSize(for: 28))
-                        .padding(.horizontal, AdaptiveLayout.getSize(for: 20))
+                        .padding(.top, 28)
+                        .padding(.horizontal, 20)
                         .onTapGesture { }
                     } else {
                         // MARK: - Selected Day View
@@ -97,7 +97,7 @@ struct ContentView: View {
                     
                     Spacer()
                 }
-                .padding(.top, AdaptiveLayout.getSize(for: 8))
+                .padding(.top, 8)
                 .blur(radius: syncError.wrappedValue != nil ? 10 : 0)
                 .animation(.easeInOut(duration: 0.25), value: syncError.wrappedValue == nil)
 
@@ -210,8 +210,8 @@ struct ContentView: View {
                     )
                 }
                 .frame(maxWidth: AdaptiveLayout.isPad ? 420 : .infinity)
-                .padding(.horizontal, AdaptiveLayout.getSize(for: 16))
-                .padding(.bottom, AdaptiveLayout.getSize(for: 10))
+                .padding(.horizontal, 16)
+                .padding(.bottom, 10)
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }

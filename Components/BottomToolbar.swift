@@ -55,9 +55,9 @@ struct BottomToolbar: View {
 
                 VStack(spacing: 2) {
                     Image(systemName: systemImage)
-                        .font(.lummiFont(size: 20, scaled: false))
+                        .font(.lummiFont(size: 20))
                     Text(label)
-                        .font(.lummiFont(size: 11, scaled: false))
+                        .font(.lummiFont(size: 11))
                 }
                 .foregroundColor(themeManager.currentTheme.textColor)
             }

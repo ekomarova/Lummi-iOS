@@ -28,7 +28,7 @@ struct HeaderView: View {
     var body: some View {
         Button(action: onTap) {
             Text(headerDateText)
-                .font(.lummiFont(size: 24, scaled: false))
+                .font(.lummiFont(size: 24))
                 .foregroundColor(themeManager.currentTheme.textColor)
                 .accessibilityIdentifier("HeaderDateText")
                 .padding(.horizontal, 26)

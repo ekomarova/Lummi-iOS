@@ -139,13 +139,13 @@ private extension SelectedDayDetailView {
     func saveAlertCard(_ alert: SaveAlertKind) -> some View {
         VStack(spacing: 20) {
             Text(alert.title)
-                .font(.lummiFont(size: 20, scaled: false))
+                .font(.lummiFont(size: 20))
                 .foregroundColor(themeManager.currentTheme.backgroundColor)
                 .multilineTextAlignment(.center)
                 .accessibilityIdentifier(alert.titleAccessibilityID)
 
             Text(alert.message)
-                .font(.lummiFont(size: 16, scaled: false))
+                .font(.lummiFont(size: 16))
                 .foregroundColor(themeManager.currentTheme.backgroundColor)
                 .multilineTextAlignment(.center)
 
@@ -153,7 +153,7 @@ private extension SelectedDayDetailView {
                 action: { dismissSaveAlert() },
                 label: {
                     Text("OK")
-                        .font(.lummiFont(size: 16, scaled: false))
+                        .font(.lummiFont(size: 16))
                         .foregroundColor(themeManager.currentTheme.textColor)
                         .padding(.vertical, 12)
                         .padding(.horizontal, 40)
@@ -182,14 +182,14 @@ private extension SelectedDayDetailView {
                 .font(.system(size: 40))
                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.2))
             Text("Oops! This day has not started yet")
-                .font(.lummiFont(size: 16, scaled: false))
+                .font(.lummiFont(size: 16))
                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
         }
     }
 
     var noRecordsView: some View {
         Text("No records for this day")
-            .font(.lummiFont(size: 16, scaled: false))
+            .font(.lummiFont(size: 16))
             .foregroundColor(themeManager.currentTheme.textColor.opacity(0.3))
     }
 
@@ -240,7 +240,7 @@ private extension SelectedDayDetailView {
                 },
                 label: {
                     Image(systemName: "pencil")
-                        .font(.lummiFont(size: 16, scaled: false))
+                        .font(.lummiFont(size: 16))
                         .foregroundColor(themeManager.currentTheme.backgroundColor)
                         .frame(width: 44, height: 44)
                         .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.85)))
@@ -252,7 +252,7 @@ private extension SelectedDayDetailView {
                 action: { deleteNote(entry) },
                 label: {
                     Image(systemName: "trash")
-                        .font(.lummiFont(size: 16, scaled: false))
+                        .font(.lummiFont(size: 16))
                         .foregroundColor(themeManager.currentTheme.backgroundColor)
                         .frame(width: 44, height: 44)
                         .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.85)))
@@ -267,7 +267,7 @@ private extension SelectedDayDetailView {
         TextField("What made you happy?", text: $editingText, axis: .vertical)
             .accessibilityIdentifier("EditRecordTextField")
             .focused($isTextFieldFocused)
-            .font(.lummiFont(size: 16, scaled: false))
+            .font(.lummiFont(size: 16))
             .foregroundColor(themeManager.currentTheme.textColor)
             .padding(20)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -283,7 +283,7 @@ private extension SelectedDayDetailView {
 
     func noteCellTextDisplay(entry: JoyEntry, index: Int, isActive: Bool, proxy: ScrollViewProxy) -> some View {
         Text(entry.text)
-            .font(.lummiFont(size: 16, scaled: false))
+            .font(.lummiFont(size: 16))
             .foregroundColor(themeManager.currentTheme.textColor)
             .padding(20)
             .frame(maxWidth: .infinity, alignment: .leading)

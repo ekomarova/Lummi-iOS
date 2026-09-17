@@ -130,10 +130,10 @@ struct SettingsView: View {
                                 .multilineTextAlignment(.leading)
                                 .accessibilityIdentifier("SyncBannerMessage")
                         }
-                        .padding(AdaptiveLayout.getSize(for: 15))
+                        .padding(15)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(
-                            RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 16))
+                            RoundedRectangle(cornerRadius: 16)
                                 .fill(Color.red.opacity(0.8))
                         )
                         .transition(.opacity.combined(with: .scale(scale: 0.95, anchor: .top)))
@@ -303,7 +303,7 @@ struct LummiSegmentButton: View {
             Image(systemName: icon)
                 .font(.lummiFont(size: 16))
                 .foregroundColor(isSelected ? themeManager.currentTheme.backgroundColor : themeManager.currentTheme.textColor.opacity(0.4))
-                .frame(width: AdaptiveLayout.getSize(for: 60), height: AdaptiveLayout.getSize(for: 36))
+                .frame(width: 60, height: 36)
                 .background(Capsule().fill(isSelected ? (color ?? themeManager.currentTheme.textColor.opacity(0.85)) : Color.clear))
         }
         .buttonStyle(.plain)

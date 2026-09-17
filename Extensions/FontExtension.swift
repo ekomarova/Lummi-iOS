@@ -13,15 +13,10 @@ enum AdaptiveLayout {
     static var isPad: Bool {
         UIDevice.current.userInterfaceIdiom == .pad
     }
-    
-    static func getSize(for base: CGFloat) -> CGFloat {
-        return isPad ? base * 1.5 : base
-    }
 }
 
 extension Font {
-    static func lummiFont(size: CGFloat, weight: Font.Weight = .light, scaled: Bool = true) -> Font {
-        let resolvedSize = scaled ? AdaptiveLayout.getSize(for: size) : size
-        return .system(size: resolvedSize, weight: weight, design: .default)
+    static func lummiFont(size: CGFloat, weight: Font.Weight = .light) -> Font {
+        return .system(size: size, weight: weight, design: .default)
     }
 }

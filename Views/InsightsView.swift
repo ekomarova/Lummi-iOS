@@ -40,7 +40,7 @@ struct InsightsView: View {
     // MARK: - Body
     var body: some View {
         GeometryReader { geometry in
-            VStack(alignment: .leading, spacing: AdaptiveLayout.getSize(for: 20)) {
+            VStack(alignment: .leading, spacing: 20) {
 
                 Text("Insights")
                     .font(.lummiFont(size: 24))
@@ -83,12 +83,12 @@ struct InsightsView: View {
 
                 // MARK: - Main Content Area
                 ScrollView(showsIndicators: false) {
-                    VStack(spacing: AdaptiveLayout.getSize(for: 35)) {
+                    VStack(spacing: 35) {
                         
                         let itemSize = geometry.size.width * 0.42
                         
                         // MARK: - Joys & Streak
-                        HStack(spacing: AdaptiveLayout.getSize(for: 15)) {
+                        HStack(spacing: 15) {
                             GlowCard(
                                 value: "\(monthlyEntries.count)",
                                 subtitle: "Joys",
@@ -140,11 +140,11 @@ struct InsightsView: View {
                                                     .font(.lummiFont(size: 12))
                                                     .opacity(0.7)
                                                     .foregroundColor(themeManager.currentTheme.textColor.opacity(0.85))
-                                                    .padding(.bottom, AdaptiveLayout.getSize(for: 16))
+                                                    .padding(.bottom, 16)
                                             }
                                         }
                                         .frame(maxWidth: .infinity)
-                                        .frame(height: AdaptiveLayout.getSize(for: 130))
+                                        .frame(height: 130)
                                         .background {
                                             ZStack {
                                                 RoundedRectangle(cornerRadius: 30)
@@ -162,7 +162,7 @@ struct InsightsView: View {
                                                     .opacity(0.8)
                                             }
                                             .frame(maxWidth: .infinity)
-                                            .padding(.horizontal, AdaptiveLayout.getSize(for: 15))
+                                            .padding(.horizontal, 15)
                                         }
                                     }
                                 )
@@ -170,22 +170,22 @@ struct InsightsView: View {
                                 .zIndex(1)
                                 
                                 if isListExpanded {
-                                    VStack(spacing: AdaptiveLayout.getSize(for: 12)) {
+                                    VStack(spacing: 12) {
                                         ForEach(monthlyEntries.sorted(by: { $0.date > $1.date })) { entry in
                                             MonthlyMomentCell(entry: entry)
                                         }
                                     }
-                                    .padding(.top, AdaptiveLayout.getSize(for: 35))
+                                    .padding(.top, 35)
                                     .zIndex(0)
                                     .transition(.opacity.combined(with: .offset(y: -40)))
                                 }
                             }
-                            .padding(.bottom, AdaptiveLayout.getSize(for: 40))
+                            .padding(.bottom, 40)
                         }
                     }
-                    .padding(.top, AdaptiveLayout.getSize(for: 30))
-                    .padding(.horizontal, AdaptiveLayout.getSize(for: 10))
-                    .padding(.bottom, AdaptiveLayout.getSize(for: 100))
+                    .padding(.top, 30)
+                    .padding(.horizontal, 10)
+                    .padding(.bottom, 100)
                 }
             }
         }
@@ -228,7 +228,7 @@ struct GlowCard: View {
                 .foregroundColor(themeManager.currentTheme.textColor)
                 .minimumScaleFactor(0.4)
                 .lineLimit(1)
-                .padding(.horizontal, AdaptiveLayout.getSize(for: valuePadding))
+                .padding(.horizontal, valuePadding)
 
             VStack {
                 Spacer()
@@ -236,17 +236,17 @@ struct GlowCard: View {
                     .font(.lummiFont(size: 12))
                     .opacity(0.7)
                     .foregroundColor(themeManager.currentTheme.textColor.opacity(0.85))
-                    .padding(.bottom, AdaptiveLayout.getSize(for: 16))
+                    .padding(.bottom, 16)
             }
         }
         .frame(maxWidth: .infinity)
-        .frame(height: AdaptiveLayout.getSize(for: height))
+        .frame(height: height)
         .background {
             RoundedRectangle(cornerRadius: 30)
                 .fill(LinearGradient(colors: gradientColors, startPoint: .topLeading, endPoint: .bottomTrailing))
                 .blur(radius: 15)
                 .opacity(0.8)
-                .padding(.horizontal, AdaptiveLayout.getSize(for: 15))
+                .padding(.horizontal, 15)
         }
     }
 }
@@ -257,7 +257,7 @@ struct MonthlyMomentCell: View {
     let entry: JoyEntry
     
     var body: some View {
-        HStack(alignment: .top, spacing: AdaptiveLayout.getSize(for: 12)) {
+        HStack(alignment: .top, spacing: 12) {
             VStack(alignment: .center, spacing: 2) {
                 Text(entry.date.format("dd", locale: locale))
                     .font(.lummiFont(size: 18))
@@ -267,24 +267,24 @@ struct MonthlyMomentCell: View {
                     .font(.lummiFont(size: 11))
                     .foregroundColor(themeManager.currentTheme.textColor.opacity(0.5))
             }
-            .frame(width: AdaptiveLayout.getSize(for: 35))
-            .padding(.top, AdaptiveLayout.getSize(for: 4))
+            .frame(width: 35)
+            .padding(.top, 4)
 
             Text(entry.text)
                 .font(.lummiFont(size: 16))
                 .foregroundColor(themeManager.currentTheme.textColor)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(AdaptiveLayout.getSize(for: 16))
+                .padding(16)
                 .background(
-                    RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 16))
+                    RoundedRectangle(cornerRadius: 16)
                         .fill(themeManager.currentTheme.textColor.opacity(0.05))
                         .overlay(
-                            RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 16))
+                            RoundedRectangle(cornerRadius: 16)
                                 .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
                         )
                 )
         }
-        .padding(.leading, AdaptiveLayout.getSize(for: 4))
-        .padding(.trailing, AdaptiveLayout.getSize(for: 15))
+        .padding(.leading, 4)
+        .padding(.trailing, 15)
     }
 }

@@ -172,7 +172,7 @@ struct WeekdayHeaderView: View {
         HStack(spacing: 0) {
             ForEach(labels.indices, id: \.self) { index in
                 Text(labels[index])
-                    .font(.lummiFont(size: 13, scaled: false))
+                    .font(.lummiFont(size: 13))
                     .foregroundColor(themeManager.currentTheme.textColor.opacity(0.4))
                     .frame(maxWidth: .infinity)
             }
