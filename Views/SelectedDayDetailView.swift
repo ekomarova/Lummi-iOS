@@ -79,26 +79,26 @@ struct SelectedDayDetailView: View {
 
                 ScrollView(.vertical, showsIndicators: false) {
                     ScrollViewReader { proxy in
-                        VStack(spacing: AdaptiveLayout.getSize(for: 15)) {
+                        VStack(spacing: 15) {
                             if let selected = selectedDate {
                                 if Calendar.current.startOfDay(for: selected) > Calendar.current.startOfDay(for: today) {
                                     futureDayView
                                         .blur(radius: activeEntryID != nil ? 6 : 0)
                                         .opacity(activeEntryID != nil ? 0.5 : 1.0)
-                                        .padding(.top, AdaptiveLayout.getSize(for: 40))
+                                        .padding(.top, 40)
                                 } else if !todaysEntries.isEmpty {
                                     notesListView(entries: todaysEntries, proxy: proxy)
-                                        .padding(.top, AdaptiveLayout.getSize(for: 10))
+                                        .padding(.top, 10)
                                 } else {
                                     noRecordsView
                                         .blur(radius: activeEntryID != nil ? 6 : 0)
                                         .opacity(activeEntryID != nil ? 0.5 : 1.0)
-                                        .padding(.top, AdaptiveLayout.getSize(for: 40))
+                                        .padding(.top, 40)
                                 }
                             }
                         }
                         .padding(.horizontal)
-                        .padding(.bottom, AdaptiveLayout.getSize(for: 160))
+                        .padding(.bottom, 160)
                         .frame(maxWidth: .infinity)
                         .frame(minHeight: geometry.size.height, alignment: .top)
                         .background(
@@ -139,13 +139,13 @@ private extension SelectedDayDetailView {
     func saveAlertCard(_ alert: SaveAlertKind) -> some View {
         VStack(spacing: 20) {
             Text(alert.title)
-                .font(.lummiFont(size: 20))
+                .font(.lummiFont(size: 20, scaled: false))
                 .foregroundColor(themeManager.currentTheme.backgroundColor)
                 .multilineTextAlignment(.center)
                 .accessibilityIdentifier(alert.titleAccessibilityID)
 
             Text(alert.message)
-                .font(.lummiFont(size: 16))
+                .font(.lummiFont(size: 16, scaled: false))
                 .foregroundColor(themeManager.currentTheme.backgroundColor)
                 .multilineTextAlignment(.center)
 
@@ -153,7 +153,7 @@ private extension SelectedDayDetailView {
                 action: { dismissSaveAlert() },
                 label: {
                     Text("OK")
-                        .font(.lummiFont(size: 16))
+                        .font(.lummiFont(size: 16, scaled: false))
                         .foregroundColor(themeManager.currentTheme.textColor)
                         .padding(.vertical, 12)
                         .padding(.horizontal, 40)
@@ -177,24 +177,24 @@ private extension SelectedDayDetailView {
 private extension SelectedDayDetailView {
 
     var futureDayView: some View {
-        VStack(spacing: AdaptiveLayout.getSize(for: 12)) {
+        VStack(spacing: 12) {
             Image(systemName: "moon.stars.fill")
-                .font(.system(size: AdaptiveLayout.getSize(for: 40)))
+                .font(.system(size: 40))
                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.2))
             Text("Oops! This day has not started yet")
-                .font(.lummiFont(size: 16))
+                .font(.lummiFont(size: 16, scaled: false))
                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
         }
     }
 
     var noRecordsView: some View {
         Text("No records for this day")
-            .font(.lummiFont(size: 16))
+            .font(.lummiFont(size: 16, scaled: false))
             .foregroundColor(themeManager.currentTheme.textColor.opacity(0.3))
     }
 
     func notesListView(entries: [JoyEntry], proxy: ScrollViewProxy) -> some View {
-        VStack(alignment: .leading, spacing: AdaptiveLayout.getSize(for: 15)) {
+        VStack(alignment: .leading, spacing: 15) {
             ForEach(Array(entries.enumerated()), id: \.element.persistentModelID) { index, entry in
                 noteCell(for: entry, index: index, proxy: proxy)
             }
@@ -205,7 +205,7 @@ private extension SelectedDayDetailView {
     func noteCell(for entry: JoyEntry, index: Int, proxy: ScrollViewProxy) -> some View {
         let isActive = (activeEntryID == entry.persistentModelID)
 
-        VStack(alignment: .trailing, spacing: AdaptiveLayout.getSize(for: 8)) {
+        VStack(alignment: .trailing, spacing: 8) {
             if isActive && !isEditing {
                 noteCellActionButtons(entry: entry, proxy: proxy)
             }
@@ -232,7 +232,7 @@ private extension SelectedDayDetailView {
     }
 
     func noteCellActionButtons(entry: JoyEntry, proxy: ScrollViewProxy) -> some View {
-        HStack(spacing: AdaptiveLayout.getSize(for: 12)) {
+        HStack(spacing: 12) {
             Button(
                 action: {
                     editingText = entry.text
@@ -240,9 +240,9 @@ private extension SelectedDayDetailView {
                 },
                 label: {
                     Image(systemName: "pencil")
-                        .font(.lummiFont(size: 16))
+                        .font(.lummiFont(size: 16, scaled: false))
                         .foregroundColor(themeManager.currentTheme.backgroundColor)
-                        .frame(width: AdaptiveLayout.getSize(for: 44), height: AdaptiveLayout.getSize(for: 44))
+                        .frame(width: 44, height: 44)
                         .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.85)))
                 }
             )
@@ -252,9 +252,9 @@ private extension SelectedDayDetailView {
                 action: { deleteNote(entry) },
                 label: {
                     Image(systemName: "trash")
-                        .font(.lummiFont(size: 16))
+                        .font(.lummiFont(size: 16, scaled: false))
                         .foregroundColor(themeManager.currentTheme.backgroundColor)
-                        .frame(width: AdaptiveLayout.getSize(for: 44), height: AdaptiveLayout.getSize(for: 44))
+                        .frame(width: 44, height: 44)
                         .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.85)))
                 }
             )
@@ -267,15 +267,15 @@ private extension SelectedDayDetailView {
         TextField("What made you happy?", text: $editingText, axis: .vertical)
             .accessibilityIdentifier("EditRecordTextField")
             .focused($isTextFieldFocused)
-            .font(.lummiFont(size: 16))
+            .font(.lummiFont(size: 16, scaled: false))
             .foregroundColor(themeManager.currentTheme.textColor)
-            .padding(AdaptiveLayout.getSize(for: 20))
+            .padding(20)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
-                RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 20))
+                RoundedRectangle(cornerRadius: 20)
                     .fill(themeManager.currentTheme.textColor.opacity(0.12))
                     .overlay(
-                        RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 20))
+                        RoundedRectangle(cornerRadius: 20)
                             .stroke(themeManager.currentTheme.textColor.opacity(0.3), lineWidth: 1)
                     )
             )
@@ -283,15 +283,15 @@ private extension SelectedDayDetailView {
 
     func noteCellTextDisplay(entry: JoyEntry, index: Int, isActive: Bool, proxy: ScrollViewProxy) -> some View {
         Text(entry.text)
-            .font(.lummiFont(size: 16))
+            .font(.lummiFont(size: 16, scaled: false))
             .foregroundColor(themeManager.currentTheme.textColor)
-            .padding(AdaptiveLayout.getSize(for: 20))
+            .padding(20)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
-                RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 20))
+                RoundedRectangle(cornerRadius: 20)
                     .fill(themeManager.currentTheme.textColor.opacity(0.05))
                     .overlay(
-                        RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 20))
+                        RoundedRectangle(cornerRadius: 20)
                             .stroke(
                                 themeManager.currentTheme.textColor.opacity(isActive ? 0.3 : 0.1),
                                 lineWidth: isActive ? 2 : 1
