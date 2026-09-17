@@ -48,9 +48,8 @@ final class DefaultScreenUITests: XCTestCase {
         
         let today = Date()
         let month = today.formatted(.dateTime.month(.wide)).uppercased()
-        let year = today.formatted(.dateTime.year())
         let day = Calendar.current.component(.day, from: today)
-        let expectedDateString = "\(day) \(month) \(year)"
+        let expectedDateString = "\(day) \(month)"
         
         XCTAssertEqual(headerButton.label, expectedDateString, "Header does not display today's date")
     }
