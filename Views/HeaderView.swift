@@ -28,7 +28,9 @@ struct HeaderView: View {
     var body: some View {
         Button(action: onTap) {
             Text(headerDateText)
-                .font(.lummiFont(size: 24))
+                // Smaller than the 24pt used by Insights/Settings headers to offset the capsule background, 
+                // which makes text look larger
+                .font(.lummiFont(size: 22))
                 .foregroundColor(themeManager.currentTheme.textColor)
                 .accessibilityIdentifier("HeaderDateText")
                 .padding(.horizontal, 26)
