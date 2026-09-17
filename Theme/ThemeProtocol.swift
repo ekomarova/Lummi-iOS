@@ -22,5 +22,5 @@ protocol AppTheme {
     var dayFilledColor: Color { get }
     
     // Bottom panel
-    var bottomPanelStarIconColor: Color { get }
+    var recordButtonColor: Color { get }
 }

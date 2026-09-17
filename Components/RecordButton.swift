@@ -11,7 +11,7 @@ import SwiftUI
 
 struct RecordButton: View {
     @Environment(ThemeManager.self) private var themeManager
-    
+
     let selectedDate: Date?
     var onTap: () -> Void
 
@@ -19,10 +19,17 @@ struct RecordButton: View {
         Group {
             if selectedDate != nil {
                 Button(action: onTap) {
-                    Image(systemName: "star.fill")
-                        .font(.lummiFont(size: 43))
-                        .foregroundColor(themeManager.currentTheme.bottomPanelStarIconColor)
-                        .frame(maxWidth: .infinity, minHeight: 48)
+                    let size = AdaptiveLayout.getSize(for: 64)
+
+                    Circle()
+                        .fill(themeManager.currentTheme.recordButtonColor.opacity(0.35))
+                        .glassEffect(.clear.interactive(), in: Circle())
+                        .frame(width: size, height: size)
+                        .overlay(
+                            Image(systemName: "plus")
+                                .font(.lummiFont(size: 24, weight: .semibold))
+                                .foregroundColor(themeManager.currentTheme.textColor)
+                        )
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("Record the joy")

@@ -168,12 +168,14 @@ struct ContentView: View {
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
             if !isKeyboardVisible {
-                HStack(spacing: 0) {
-                    // MARK: - Home button
-                    HomeButton(
-                        isActive: !isCalendarExpanded && !isShowingSettings && !isShowingInsights &&
+                HStack(spacing: 16) {
+                    // MARK: - Bottom toolbar
+                    BottomToolbar(
+                        isHomeActive: !isCalendarExpanded && !isShowingSettings && !isShowingInsights &&
                             Calendar.current.isDateInToday(selectedDate ?? Date()),
-                        onTap: {
+                        isInsightsActive: isShowingInsights,
+                        isSettingsActive: isShowingSettings,
+                        onHomeTap: {
                             withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
                                 isShowingSettings = false
                                 isShowingInsights = false
@@ -181,29 +183,15 @@ struct ContentView: View {
                                 selectedDate = Date()
                                 visibleMonth = Date().startOfMonth
                             }
-                        }
-                    )
-                    
-                    Spacer()
-                    
-                    // MARK: - Insights button
-                    InsightsButton(
-                        isActive: isShowingInsights,
-                        onTap: {
+                        },
+                        onInsightsTap: {
                             withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
                                 isShowingSettings = false
                                 isCalendarExpanded = false
                                 isShowingInsights = true
                             }
-                        }
-                    )
-                    
-                    Spacer()
-                    
-                    // MARK: - Settings button
-                    SettingsButton(
-                        isActive: isShowingSettings,
-                        onTap: {
+                        },
+                        onSettingsTap: {
                             withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
                                 isShowingInsights = false
                                 isCalendarExpanded = false
@@ -211,9 +199,8 @@ struct ContentView: View {
                             }
                         }
                     )
-                    
-                    Spacer()
-                    
+                    .frame(maxWidth: .infinity)
+
                     // MARK: - Record button
                     RecordButton(
                         selectedDate: selectedDate,
@@ -222,9 +209,8 @@ struct ContentView: View {
                             isShowingSheet = true
                         }
                     )
-                    .frame(width: AdaptiveLayout.getSize(for: 70))
                 }
-                .padding(.horizontal, AdaptiveLayout.getSize(for: 40))
+                .padding(.horizontal, AdaptiveLayout.getSize(for: 16))
                 .padding(.bottom, AdaptiveLayout.getSize(for: 10))
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }

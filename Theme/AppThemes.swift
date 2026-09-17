@@ -10,37 +10,36 @@
 import SwiftUI
 
 struct DarkTheme: AppTheme {
-    var bgGradient = LinearGradient(
-        colors: [
-            Color(red: 0.05, green: 0.11, blue: 0.22),
-            Color.black
-        ],
-        startPoint: .top, endPoint: .bottom
-    )
+    private let topGradientColor = Color(red: 0.05, green: 0.11, blue: 0.22)
+
+    var bgGradient: LinearGradient {
+        LinearGradient(colors: [topGradientColor, .black], startPoint: .top, endPoint: .bottom)
+    }
     var backgroundColor: Color = .black
-    
+
     var textColor: Color = .white
     var inactiveOpacity: Double = 0.35
-    
+
     var dayFilledColor: Color = Color(red: 0.6, green: 0.85, blue: 1.0)
 
-    var bottomPanelStarIconColor: Color = .orange
+    var recordButtonColor: Color { topGradientColor }
 }
 
 struct LightTheme: AppTheme {
-    var bgGradient = LinearGradient(
-        colors: [
-            Color(red: 0.93, green: 0.55, blue: 0.68),
-            Color(red: 1.0, green: 0.99, blue: 0.995)
-        ],
-        startPoint: .top, endPoint: .bottom
-    )
+    private let topGradientColor = Color(red: 0.93, green: 0.55, blue: 0.68)
+
+    var bgGradient: LinearGradient {
+        LinearGradient(
+            colors: [topGradientColor, Color(red: 1.0, green: 0.99, blue: 0.995)],
+            startPoint: .top, endPoint: .bottom
+        )
+    }
     var backgroundColor: Color = .white
-    
+
     var textColor: Color = .black
     var inactiveOpacity: Double = 0.35
-    
+
     var dayFilledColor: Color = Color(red: 0.75, green: 0.15, blue: 0.4)
 
-    var bottomPanelStarIconColor: Color = .orange
+    var recordButtonColor: Color = Color(red: 0.92, green: 0.65, blue: 0.75)
 }
