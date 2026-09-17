@@ -48,7 +48,7 @@ final class InsightsUITests: XCTestCase {
 
         XCTAssertTrue(app.staticTexts["Joys"].waitForExistence(timeout: 2.0))
         XCTAssertTrue(app.staticTexts["Day streak"].waitForExistence(timeout: 2.0))
-        XCTAssertTrue(app.staticTexts["Joyful hours"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Joyful Hours"].waitForExistence(timeout: 2.0))
     }
     
     // MARK: - Other tests

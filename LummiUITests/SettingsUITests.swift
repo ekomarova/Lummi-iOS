@@ -127,7 +127,7 @@ final class SettingsUITests: XCTestCase {
         launchApp(with: ["-UI_TESTING_CALENDAR"])
         app.buttons["SettingsButton_Inactive"].tap()
         
-        let iCloudLabel = app.staticTexts["ICLOUD SYNC"]
+        let iCloudLabel = app.staticTexts["iCloud Sync"]
         XCTAssertTrue(iCloudLabel.waitForExistence(timeout: 2.0), "iCloud Sync label is missing")
         
         let disabledBtn = app.buttons["iCloudDisabledButton"]
@@ -290,7 +290,7 @@ final class SettingsUITests: XCTestCase {
         }
         
         // Verify the empty state is shown
-        let noRecordsLabel = app.staticTexts["NO RECORDS FOR THIS DAY"]
-        XCTAssertTrue(noRecordsLabel.waitForExistence(timeout: 3.0), "Expected 'NO RECORDS FOR THIS DAY' to appear, meaning data was successfully deleted.")
+        let noRecordsLabel = app.staticTexts["No records for this day"]
+        XCTAssertTrue(noRecordsLabel.waitForExistence(timeout: 3.0), "Expected 'No records for this day' to appear, meaning data was successfully deleted.")
     }
 }
