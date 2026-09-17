@@ -77,6 +77,7 @@ struct ContentView: View {
                         )
                         .padding(.horizontal, AdaptiveLayout.getSize(for: 8))
                         .padding(.vertical, AdaptiveLayout.getSize(for: 18))
+                        .frame(maxWidth: AdaptiveLayout.isPad ? 600 : .infinity)
                         .frame(height: AdaptiveLayout.getSize(for: 340))
                         .glassEffect(
                             .clear.interactive(),

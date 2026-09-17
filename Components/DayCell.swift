@@ -32,7 +32,7 @@ struct DayCell: View {
                 }
 
                 Text("\(day)")
-                    .font(.system(size: AdaptiveLayout.getSize(for: 15), weight: isToday ? .bold : .light, design: .monospaced))
+                    .font(.system(size: AdaptiveLayout.getSize(for: 15), weight: .light, design: .monospaced))
                     .foregroundColor(
                         isToday ? themeManager.currentTheme.textColor :
                             (isFilled ? themeManager.currentTheme.dayFilledColor :
