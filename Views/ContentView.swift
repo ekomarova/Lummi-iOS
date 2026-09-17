@@ -242,6 +242,7 @@ struct ContentView: View {
                 .environment(themeManager)
         }
         .environment(themeManager)
+        .preferredColorScheme(themeManager.isDark ? .dark : .light)
         // MARK: For tests only
         .onAppear {
 #if DEBUG
