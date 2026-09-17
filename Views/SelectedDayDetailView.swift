@@ -107,6 +107,7 @@ struct SelectedDayDetailView: View {
                         )
                     }
                 }
+                .ignoresSafeArea(.container, edges: .bottom)
             }
         }
         .blur(radius: saveAlert != nil ? 10 : 0)

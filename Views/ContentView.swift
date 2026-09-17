@@ -95,6 +95,7 @@ struct ContentView: View {
                     Spacer()
                 }
                 .padding(.top, 8)
+                .ignoresSafeArea(.container, edges: .bottom)
                 .blur(radius: syncError.wrappedValue != nil ? 10 : 0)
                 .animation(.easeInOut(duration: 0.25), value: syncError.wrappedValue == nil)
 
@@ -162,7 +163,7 @@ struct ContentView: View {
                 }
             }
         }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
+        .overlay(alignment: .bottom) {
             if !isKeyboardVisible {
                 HStack(spacing: 16) {
                     // MARK: - Bottom toolbar

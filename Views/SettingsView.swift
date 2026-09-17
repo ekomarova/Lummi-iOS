@@ -191,7 +191,7 @@ struct SettingsView: View {
                     }
                 )
                 .frame(maxWidth: .infinity, alignment: .center)
-                .padding(.bottom, 20)
+                .padding(.bottom, 100)
                 .accessibilityIdentifier("ClearAllDataButton")
             }
             .padding(.horizontal, 20)

@@ -187,6 +187,7 @@ struct InsightsView: View {
                     .padding(.horizontal, 10)
                     .padding(.bottom, 100)
                 }
+                .ignoresSafeArea(.container, edges: .bottom)
             }
         }
         .onAppear {
