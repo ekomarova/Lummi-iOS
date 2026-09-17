@@ -24,6 +24,7 @@ struct ContentView: View {
     @State private var isKeyboardVisible = false
     @State private var isShowingSettings = false
     @State private var isShowingInsights = false
+    @State private var isShowingAllJoys = false
 
     var body: some View {
         GeometryReader { _ in
@@ -66,7 +67,7 @@ struct ContentView: View {
                             .transition(.move(edge: .trailing).combined(with: .opacity))
                     } else if isShowingInsights {
                         // MARK: - Insights View
-                        InsightsView()
+                        InsightsView(isShowingAllJoys: $isShowingAllJoys)
                             .transition(.move(edge: .leading).combined(with: .opacity))
                     } else if isCalendarExpanded {
                         // MARK: - Calenadar View
@@ -170,12 +171,13 @@ struct ContentView: View {
                     BottomToolbar(
                         isHomeActive: !isCalendarExpanded && !isShowingSettings && !isShowingInsights &&
                             Calendar.current.isDateInToday(selectedDate ?? Date()),
-                        isInsightsActive: isShowingInsights,
+                        isInsightsActive: isShowingInsights && !isShowingAllJoys,
                         isSettingsActive: isShowingSettings,
                         onHomeTap: {
                             withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
                                 isShowingSettings = false
                                 isShowingInsights = false
+                                isShowingAllJoys = false
                                 isCalendarExpanded = false
                                 selectedDate = Date()
                                 visibleMonth = Date().startOfMonth
@@ -186,11 +188,13 @@ struct ContentView: View {
                                 isShowingSettings = false
                                 isCalendarExpanded = false
                                 isShowingInsights = true
+                                isShowingAllJoys = false
                             }
                         },
                         onSettingsTap: {
                             withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
                                 isShowingInsights = false
+                                isShowingAllJoys = false
                                 isCalendarExpanded = false
                                 isShowingSettings = true
                             }

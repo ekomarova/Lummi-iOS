@@ -14,8 +14,8 @@ struct InsightsView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale
     @Query private var allEntries: [JoyEntry]
+    @Binding var isShowingAllJoys: Bool
     @State private var selectedMonth: Date = Date().startOfMonth
-    @State private var isListExpanded: Bool = false
 
     private var monthlyEntries: [JoyEntry] {
         InsightsCalculator.filterEntries(allEntries, for: selectedMonth)
@@ -39,6 +39,14 @@ struct InsightsView: View {
 
     // MARK: - Body
     var body: some View {
+        if isShowingAllJoys {
+            AllJoysView(entries: monthlyEntries, isShowingAllJoys: $isShowingAllJoys)
+        } else {
+            insightsContent
+        }
+    }
+
+    private var insightsContent: some View {
         GeometryReader { geometry in
             VStack(alignment: .leading, spacing: 20) {
 
@@ -79,14 +87,20 @@ struct InsightsView: View {
                     .accessibilityIdentifier("NextMonthButton")
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
-                .padding(.bottom, 10)
 
                 // MARK: - Main Content Area
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 35) {
-                        
+
                         let itemSize = geometry.size.width * 0.42
-                        
+
+                        Text("Highlights")
+                            .font(.lummiFont(size: 20, weight: .bold))
+                            .foregroundColor(themeManager.currentTheme.textColor)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
+                            .padding(.leading, 10)
+
                         // MARK: - Joys & Streak
                         HStack(spacing: 15) {
                             GlowCard(
@@ -94,7 +108,7 @@ struct InsightsView: View {
                                 subtitle: "Joys",
                                 gradientColors: [Color(red: 1.0, green: 0.7, blue: 0.75), Color(red: 0.95, green: 0.4, blue: 0.55)]
                             )
-                            
+
                             GlowCard(
                                 value: "\(monthStreak)",
                                 subtitle: "Day streak",
@@ -102,6 +116,8 @@ struct InsightsView: View {
                             )
                         }
                         .frame(maxWidth: .infinity, minHeight: itemSize * 0.8)
+                        // VStack spacing is 35; pull up so the gap to Highlights matches the 15pt gap below
+                        .padding(.top, -26)
                         
                         // MARK: - Joyful Hours
                         GlowCard(
@@ -112,78 +128,68 @@ struct InsightsView: View {
                             valueFontSize: 38,
                             valuePadding: 50
                         )
+                        // VStack spacing is 35; pull up so the gap to Joys/Day streak matches their 15pt gap
+                        .padding(.top, -20)
                         
-                        // MARK: - All Moments
+                        // MARK: - Recall
                         if !monthlyEntries.isEmpty {
-                            VStack(spacing: 0) {
-                                Button(
-                                    action: {
-                                        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                                            isListExpanded.toggle()
-                                        }
-                                    },
-                                    label: {
-                                        ZStack {
-                                            HStack(spacing: 8) {
-                                                Text("Want to see all moments?")
-                                                    .font(.lummiFont(size: 18))
-                                                    .foregroundColor(themeManager.currentTheme.textColor)
-                                                
-                                                Image(systemName: "chevron.down")
-                                                    .font(.system(size: 14, weight: .bold))
-                                                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
-                                                    .rotationEffect(.degrees(isListExpanded ? 180 : 0))
-                                            }
-                                            VStack {
-                                                Spacer()
-                                                Text("Tap here")
-                                                    .font(.lummiFont(size: 12))
-                                                    .opacity(0.7)
-                                                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.85))
-                                                    .padding(.bottom, 16)
-                                            }
-                                        }
-                                        .frame(maxWidth: .infinity)
-                                        .frame(height: 130)
-                                        .background {
-                                            ZStack {
-                                                RoundedRectangle(cornerRadius: 30)
-                                                    .fill(
-                                                        LinearGradient(
-                                                            colors: [
-                                                                Color(red: 1.0, green: 0.8, blue: 0.3),
-                                                                Color(red: 0.2, green: 0.6, blue: 0.3)
-                                                            ],
-                                                            startPoint: .topLeading,
-                                                            endPoint: .bottomTrailing
-                                                        )
-                                                    )
-                                                    .blur(radius: 15)
-                                                    .opacity(0.8)
-                                            }
-                                            .frame(maxWidth: .infinity)
-                                            .padding(.horizontal, 15)
-                                        }
+                            Text("Recall")
+                                .font(.lummiFont(size: 20, weight: .bold))
+                                .foregroundColor(themeManager.currentTheme.textColor)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
+                                .padding(.leading, 10)
+
+                            Button(
+                                action: {
+                                    withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                        isShowingAllJoys = true
                                     }
-                                )
-                                .buttonStyle(.plain)
-                                .zIndex(1)
-                                
-                                if isListExpanded {
-                                    VStack(spacing: 12) {
-                                        ForEach(monthlyEntries.sorted(by: { $0.date > $1.date })) { entry in
-                                            MonthlyMomentCell(entry: entry)
+                                },
+                                label: {
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 30)
+                                            .fill(
+                                                LinearGradient(
+                                                    colors: [
+                                                        Color(red: 1.0, green: 0.8, blue: 0.3),
+                                                        Color(red: 0.2, green: 0.6, blue: 0.3)
+                                                    ],
+                                                    startPoint: .topLeading,
+                                                    endPoint: .bottomTrailing
+                                                )
+                                            )
+                                            .opacity(0.35)
+                                            .adaptiveGlass(in: RoundedRectangle(cornerRadius: 30))
+
+                                        HStack {
+                                            Text("See all joys")
+                                                .font(.lummiFont(size: 18))
+                                                .foregroundColor(themeManager.currentTheme.textColor)
+
+                                            Spacer()
+
+                                            Image(systemName: "chevron.right")
+                                                .font(.system(size: 14, weight: .bold))
+                                                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
                                         }
+                                        .padding(.horizontal, 26)
                                     }
-                                    .padding(.top, 35)
-                                    .zIndex(0)
-                                    .transition(.opacity.combined(with: .offset(y: -40)))
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 52)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 30)
+                                            .stroke(themeManager.currentTheme.textColor.opacity(0.15), lineWidth: 1)
+                                    )
                                 }
-                            }
-                            .padding(.bottom, 40)
+                            )
+                            .buttonStyle(.plain)
+                            .accessibilityIdentifier("SeeAllJoysButton")
+                            // VStack spacing is 35; pull up so the gap to Recall matches the 15pt gap above
+                            // (extra offset vs. the -20 used elsewhere compensates for the Text's own line-height padding)
+                            .padding(.top, -26)
                         }
                     }
-                    .padding(.top, 30)
                     .padding(.horizontal, 10)
                     .padding(.bottom, 100)
                 }
@@ -201,7 +207,6 @@ struct InsightsView: View {
         if let newMonth = Calendar.current.date(byAdding: .month, value: value, to: selectedMonth) {
             withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
                 selectedMonth = newMonth
-                isListExpanded = false
             }
         }
     }
@@ -224,6 +229,11 @@ struct GlowCard: View {
 
     var body: some View {
         ZStack {
+            RoundedRectangle(cornerRadius: 30)
+                .fill(LinearGradient(colors: gradientColors, startPoint: .topLeading, endPoint: .bottomTrailing))
+                .opacity(0.35)
+                .adaptiveGlass(in: RoundedRectangle(cornerRadius: 30))
+
             Text(value)
                 .font(.lummiFont(size: valueFontSize))
                 .foregroundColor(themeManager.currentTheme.textColor)
@@ -242,13 +252,10 @@ struct GlowCard: View {
         }
         .frame(maxWidth: .infinity)
         .frame(height: height)
-        .background {
+        .overlay(
             RoundedRectangle(cornerRadius: 30)
-                .fill(LinearGradient(colors: gradientColors, startPoint: .topLeading, endPoint: .bottomTrailing))
-                .blur(radius: 15)
-                .opacity(0.8)
-                .padding(.horizontal, 15)
-        }
+                .stroke(themeManager.currentTheme.textColor.opacity(0.15), lineWidth: 1)
+        )
     }
 }
 
@@ -274,18 +281,71 @@ struct MonthlyMomentCell: View {
             Text(entry.text)
                 .font(.lummiFont(size: 16))
                 .foregroundColor(themeManager.currentTheme.textColor)
+                .padding(20)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(16)
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
-                        )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(Color.white.opacity(0.25), lineWidth: 1)
                 )
         }
         .padding(.leading, 4)
         .padding(.trailing, 15)
+    }
+}
+
+struct AllJoysView: View {
+    @Environment(ThemeManager.self) private var themeManager
+    let entries: [JoyEntry]
+    @Binding var isShowingAllJoys: Bool
+
+    var body: some View {
+        VStack(spacing: 0) {
+            ZStack {
+                Text("All joys")
+                    .font(.lummiFont(size: 24, weight: .bold))
+                    .foregroundColor(themeManager.currentTheme.textColor)
+                    .frame(maxWidth: .infinity, alignment: .center)
+
+                HStack {
+                    Button(
+                        action: {
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                isShowingAllJoys = false
+                            }
+                        },
+                        label: {
+                            Circle()
+                                .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                                .adaptiveGlass(in: Circle())
+                                .frame(width: 44, height: 44)
+                                .overlay(
+                                    Image(systemName: "arrow.left")
+                                        .font(.lummiFont(size: 16, weight: .bold))
+                                        .foregroundColor(themeManager.currentTheme.textColor)
+                                )
+                        }
+                    )
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("AllJoysBackButton")
+
+                    Spacer()
+                }
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 10)
+
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 12) {
+                    ForEach(entries.sorted(by: { $0.date > $1.date })) { entry in
+                        MonthlyMomentCell(entry: entry)
+                    }
+                }
+                .padding(.top, 30)
+                .padding(.horizontal, 10)
+                .padding(.bottom, 100)
+            }
+            .ignoresSafeArea(.container, edges: .bottom)
+        }
+        .transition(.move(edge: .trailing).combined(with: .opacity))
     }
 }

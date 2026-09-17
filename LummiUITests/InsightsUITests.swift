@@ -68,7 +68,7 @@ final class InsightsUITests: XCTestCase {
         let joyfulHoursTime = app.staticTexts.matching(timePredicate).firstMatch
         XCTAssertTrue(joyfulHoursTime.waitForExistence(timeout: 2.0), "The time of 'Joyful Hours' does not match the expected range")
 
-        let expandButtonText = app.staticTexts["Want to see all moments?"]
+        let expandButtonText = app.staticTexts["See all joys"]
         XCTAssertTrue(expandButtonText.waitForExistence(timeout: 2.0))
         expandButtonText.tap()
 
