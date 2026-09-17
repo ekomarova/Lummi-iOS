@@ -11,6 +11,7 @@ import SwiftUI
 
 struct RecordButton: View {
     @Environment(ThemeManager.self) private var themeManager
+    @State private var didTap = false
 
     let selectedDate: Date?
     var onTap: () -> Void
@@ -18,7 +19,10 @@ struct RecordButton: View {
     var body: some View {
         Group {
             if selectedDate != nil {
-                Button(action: onTap) {
+                Button(action: {
+                    didTap.toggle()
+                    onTap()
+                }) {
                     let size: CGFloat = 64
 
                     Circle()
@@ -34,6 +38,7 @@ struct RecordButton: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel("Record the joy")
                 .accessibilityIdentifier("MainRecordButton")
+                .sensoryFeedback(.selection, trigger: didTap)
             } else {
                 EmptyView()
             }
