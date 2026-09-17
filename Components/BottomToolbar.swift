@@ -22,9 +22,9 @@ struct BottomToolbar: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            tab(systemImage: "house.fill", isActive: isHomeActive, accessibilityBase: "HomeButton", onTap: onHomeTap)
-            tab(systemImage: "chart.pie.fill", isActive: isInsightsActive, accessibilityBase: "InsightsButton", onTap: onInsightsTap)
-            tab(systemImage: "gearshape.fill", isActive: isSettingsActive, accessibilityBase: "SettingsButton", onTap: onSettingsTap)
+            tab(systemImage: "house.fill", label: "Home", isActive: isHomeActive, accessibilityBase: "HomeButton", onTap: onHomeTap)
+            tab(systemImage: "chart.pie.fill", label: "Insights", isActive: isInsightsActive, accessibilityBase: "InsightsButton", onTap: onInsightsTap)
+            tab(systemImage: "gearshape.fill", label: "Settings", isActive: isSettingsActive, accessibilityBase: "SettingsButton", onTap: onSettingsTap)
         }
         .frame(height: AdaptiveLayout.getSize(for: 64))
         .glassEffect(.clear.interactive(), in: Capsule())
@@ -36,6 +36,7 @@ struct BottomToolbar: View {
     @ViewBuilder
     private func tab(
         systemImage: String,
+        label: LocalizedStringKey,
         isActive: Bool,
         accessibilityBase: String,
         onTap: @escaping () -> Void
@@ -52,9 +53,13 @@ struct BottomToolbar: View {
                     .padding(AdaptiveLayout.getSize(for: 4))
                 }
 
-                Image(systemName: systemImage)
-                    .font(.lummiFont(size: 26))
-                    .foregroundColor(themeManager.currentTheme.textColor)
+                VStack(spacing: 2) {
+                    Image(systemName: systemImage)
+                        .font(.lummiFont(size: 20))
+                    Text(label)
+                        .font(.lummiFont(size: 11))
+                }
+                .foregroundColor(themeManager.currentTheme.textColor)
             }
             .frame(maxWidth: .infinity)
             .frame(height: AdaptiveLayout.getSize(for: 64))

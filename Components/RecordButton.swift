@@ -27,7 +27,7 @@ struct RecordButton: View {
                         .frame(width: size, height: size)
                         .overlay(
                             Image(systemName: "plus")
-                                .font(.lummiFont(size: 24, weight: .semibold))
+                                .font(.lummiFont(size: 20))
                                 .foregroundColor(themeManager.currentTheme.textColor)
                         )
                 }
