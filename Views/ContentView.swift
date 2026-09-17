@@ -131,7 +131,6 @@ struct ContentView: View {
                                 withAnimation { syncError.wrappedValue = nil }
                             } label: {
                                 Text("OK")
-                                    .textCase(.uppercase)
                                     .font(.lummiFont(size: 16))
                                     .foregroundColor(themeManager.currentTheme.backgroundColor)
                                     .padding(.vertical, 12)

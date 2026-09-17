@@ -33,7 +33,6 @@ struct RecordInput: View {
                 
                 VStack(spacing: 25) {
                     Text("What made you happy?")
-                        .textCase(.uppercase)
                         .font(.lummiFont(size: 24))
                         .foregroundColor(themeManager.currentTheme.textColor)
                         .padding(.top, 5)
@@ -131,7 +130,6 @@ struct RecordInput: View {
 
                 VStack(spacing: 20) {
                     Text("Failed to Save")
-                        .textCase(.uppercase)
                         .font(.lummiFont(size: 20))
                         .foregroundColor(themeManager.currentTheme.backgroundColor)
                         .multilineTextAlignment(.center)
@@ -146,7 +144,6 @@ struct RecordInput: View {
                         action: { withAnimation { showSaveAlert = false } },
                         label: {
                             Text("OK")
-                                .textCase(.uppercase)
                                 .font(.lummiFont(size: 16))
                                 .foregroundColor(themeManager.currentTheme.textColor)
                                 .padding(.vertical, 12)

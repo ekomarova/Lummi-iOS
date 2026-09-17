@@ -10,6 +10,7 @@
 		470FC4E7304A309F00F50A7A /* ModelContextSave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470FC4E6304A309F00F50A7A /* ModelContextSave.swift */; };
 		4714236F2F9CFAA000C1D681 /* SelectedDayDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4714236E2F9CFAA000C1D681 /* SelectedDayDetailView.swift */; };
 		4726FFA82F9DA410008B5D3C /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFA72F9DA1FF008B5D3C /* DateExtension.swift */; };
+		47BB00032FC0A5EA008B5D03 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB00042FC0A5EA008B5D04 /* StringExtension.swift */; };
 		4726FFBD2FA033FB008B5D3C /* FontExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFBC2FA033F1008B5D3C /* FontExtension.swift */; };
 		4726FFC62FA2B41F008B5D3C /* JoyEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFC52FA2B414008B5D3C /* JoyEntry.swift */; };
 		4726FFCA2FA3DA0F008B5D3C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFC92FA3DA0D008B5D3C /* SettingsView.swift */; };
@@ -54,6 +55,7 @@
 		470FC4E6304A309F00F50A7A /* ModelContextSave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContextSave.swift; sourceTree = "<group>"; };
 		4714236E2F9CFAA000C1D681 /* SelectedDayDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedDayDetailView.swift; sourceTree = "<group>"; };
 		4726FFA72F9DA1FF008B5D3C /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
+		47BB00042FC0A5EA008B5D04 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		4726FFBC2FA033F1008B5D3C /* FontExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontExtension.swift; sourceTree = "<group>"; };
 		4726FFC52FA2B414008B5D3C /* JoyEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoyEntry.swift; sourceTree = "<group>"; };
 		4726FFC92FA3DA0D008B5D3C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 			children = (
 				4726FFBC2FA033F1008B5D3C /* FontExtension.swift */,
 				4726FFA72F9DA1FF008B5D3C /* DateExtension.swift */,
+				47BB00042FC0A5EA008B5D04 /* StringExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -389,6 +392,7 @@
 			files = (
 				473B04222F9AB1AA00C482FA /* ContentView.swift in Sources */,
 				4726FFA82F9DA410008B5D3C /* DateExtension.swift in Sources */,
+				47BB00032FC0A5EA008B5D03 /* StringExtension.swift in Sources */,
 				4726FFBD2FA033FB008B5D3C /* FontExtension.swift in Sources */,
 				473B04562F9BB2F800C482FA /* AppThemes.swift in Sources */,
 				473B045B2F9BB79C00C482FA /* RecordInput.swift in Sources */,

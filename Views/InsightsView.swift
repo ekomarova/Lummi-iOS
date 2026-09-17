@@ -43,7 +43,6 @@ struct InsightsView: View {
             VStack(alignment: .leading, spacing: AdaptiveLayout.getSize(for: 20)) {
 
                 Text("Insights")
-                    .textCase(.uppercase)
                     .font(.lummiFont(size: 24))
                     .foregroundColor(themeManager.currentTheme.textColor)
                     .padding(.top, 10)
@@ -127,7 +126,6 @@ struct InsightsView: View {
                                         ZStack {
                                             HStack(spacing: 8) {
                                                 Text("Want to see all moments?")
-                                                    .textCase(.uppercase)
                                                     .font(.lummiFont(size: 18))
                                                     .foregroundColor(themeManager.currentTheme.textColor)
                                                 
@@ -141,7 +139,6 @@ struct InsightsView: View {
                                                 Text("Tap here")
                                                     .font(.lummiFont(size: 12))
                                                     .opacity(0.7)
-                                                    .textCase(.uppercase)
                                                     .foregroundColor(themeManager.currentTheme.textColor.opacity(0.85))
                                                     .padding(.bottom, AdaptiveLayout.getSize(for: 16))
                                             }
@@ -209,7 +206,7 @@ struct InsightsView: View {
     }
     
     private func formatMonth(_ date: Date) -> String {
-        date.format("LLLL yyyy", locale: locale).uppercased()
+        date.format("LLLL yyyy", locale: locale).capitalizedFirstLetter
     }
 }
 
@@ -236,7 +233,6 @@ struct GlowCard: View {
             VStack {
                 Spacer()
                 Text(subtitle)
-                    .textCase(.uppercase)
                     .font(.lummiFont(size: 12))
                     .opacity(0.7)
                     .foregroundColor(themeManager.currentTheme.textColor.opacity(0.85))
@@ -267,7 +263,7 @@ struct MonthlyMomentCell: View {
                     .font(.lummiFont(size: 18))
                     .foregroundColor(themeManager.currentTheme.textColor)
                 
-                Text(entry.date.format("MMM", locale: locale).uppercased())
+                Text(entry.date.format("MMM", locale: locale).capitalizedFirstLetter)
                     .font(.lummiFont(size: 11))
                     .foregroundColor(themeManager.currentTheme.textColor.opacity(0.5))
             }

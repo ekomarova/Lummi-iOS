@@ -38,7 +38,7 @@ final class SettingsUITests: XCTestCase {
         launchApp(with: ["-UI_TESTING_CALENDAR"])
         app.buttons["SettingsButton_Inactive"].tap()
         
-        let title = app.staticTexts["Settings".uppercased()]
+        let title = app.staticTexts["Settings"]
         XCTAssertTrue(title.waitForExistence(timeout: 2.0), "Settings header did not appear on the screen.")
     }
 
@@ -49,7 +49,7 @@ final class SettingsUITests: XCTestCase {
         launchApp(with: ["-UI_TESTING_CALENDAR"])
         app.buttons["SettingsButton_Inactive"].tap()
         
-        let appearanceLabel = app.staticTexts["Appearance".uppercased()]
+        let appearanceLabel = app.staticTexts["Appearance"]
         XCTAssertTrue(appearanceLabel.waitForExistence(timeout: 2.0), "Appearance label is missing")
         
         let lightBtn = app.buttons["LightThemeButton"]

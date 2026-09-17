@@ -37,7 +37,7 @@ final class InsightsUITests: XCTestCase {
         launchApp(with: [""])
         app.buttons["InsightsButton_Inactive"].tap()
         
-        let title = app.staticTexts["Insights".uppercased()]
+        let title = app.staticTexts["Insights"]
         XCTAssertTrue(title.waitForExistence(timeout: 2.0), "Insights header did not appear on the screen.")
     }
     
@@ -46,9 +46,9 @@ final class InsightsUITests: XCTestCase {
         launchApp(with: [""])
         app.buttons["InsightsButton_Inactive"].tap()
 
-        XCTAssertTrue(app.staticTexts["Joys".uppercased()].waitForExistence(timeout: 2.0))
-        XCTAssertTrue(app.staticTexts["Day streak".uppercased()].waitForExistence(timeout: 2.0))
-        XCTAssertTrue(app.staticTexts["Joyful hours".uppercased()].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Joys"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Day streak"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Joyful hours"].waitForExistence(timeout: 2.0))
     }
     
     // MARK: - Other tests
@@ -68,7 +68,7 @@ final class InsightsUITests: XCTestCase {
         let joyfulHoursTime = app.staticTexts.matching(timePredicate).firstMatch
         XCTAssertTrue(joyfulHoursTime.waitForExistence(timeout: 2.0), "The time of 'Joyful Hours' does not match the expected range")
 
-        let expandButtonText = app.staticTexts["Want to see all moments?".uppercased()]
+        let expandButtonText = app.staticTexts["Want to see all moments?"]
         XCTAssertTrue(expandButtonText.waitForExistence(timeout: 2.0))
         expandButtonText.tap()
 

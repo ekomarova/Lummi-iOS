@@ -42,7 +42,6 @@ struct SettingsView: View {
         ZStack {
             VStack(alignment: .leading, spacing: 30) {
                 Text("Settings")
-                    .textCase(.uppercase)
                     .font(.lummiFont(size: 24))
                     .foregroundColor(themeManager.currentTheme.textColor)
                     .padding(.top, 10)
@@ -51,7 +50,6 @@ struct SettingsView: View {
                 // MARK: - Appearance
                 HStack {
                     Text("Appearance")
-                        .textCase(.uppercase)
                         .font(.lummiFont(size: 18))
                         .foregroundColor(themeManager.currentTheme.textColor)
                     
@@ -89,7 +87,6 @@ struct SettingsView: View {
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("iCloud Sync")
-                                .textCase(.uppercase)
                                 .font(.lummiFont(size: 17))
                                 .foregroundColor(themeManager.currentTheme.textColor)
                         }
@@ -147,7 +144,6 @@ struct SettingsView: View {
                 // MARK: - Language
                 HStack {
                     Text("Language")
-                        .textCase(.uppercase)
                         .font(.lummiFont(size: 18))
                         .foregroundColor(themeManager.currentTheme.textColor)
                         .accessibilityIdentifier("LanguageLabel")
@@ -157,7 +153,6 @@ struct SettingsView: View {
                     ZStack {
                         HStack(spacing: 4) {
                             Text(selectedLanguage.displayName)
-                                .textCase(.uppercase)
                                 .font(.lummiFont(size: 17))
                             
                             Image(systemName: "chevron.up.chevron.down")
@@ -169,7 +164,6 @@ struct SettingsView: View {
                             ForEach(AppLanguage.allCases) { language in
                                 Text(language.displayName)
                                     .tag(language)
-                                    .textCase(.uppercase)
                                     .font(.lummiFont(size: 17))
                             }
                         }
@@ -188,7 +182,6 @@ struct SettingsView: View {
                     },
                     label: {
                         Text("Clear All Data")
-                            .textCase(.uppercase)
                             .font(.lummiFont(size: 16))
                             .foregroundColor(Color(red: 0.95, green: 0.2, blue: 0.3))
                             .padding(.vertical, 12)
@@ -242,7 +235,6 @@ struct SettingsView: View {
                             },
                             label: {
                                 Text("Cancel")
-                                    .textCase(.uppercase)
                                     .font(.lummiFont(size: 16))
                                     .foregroundColor(themeManager.currentTheme.backgroundColor)
                                     .padding(.vertical, 12)
@@ -259,7 +251,6 @@ struct SettingsView: View {
                             },
                             label: {
                                 Text("Delete")
-                                    .textCase(.uppercase)
                                     .font(.lummiFont(size: 16))
                                     .foregroundColor(Color(red: 0.95, green: 0.2, blue: 0.3))
                                     .padding(.vertical, 12)

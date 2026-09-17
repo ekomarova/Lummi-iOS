@@ -139,7 +139,6 @@ private extension SelectedDayDetailView {
     func saveAlertCard(_ alert: SaveAlertKind) -> some View {
         VStack(spacing: 20) {
             Text(alert.title)
-                .textCase(.uppercase)
                 .font(.lummiFont(size: 20))
                 .foregroundColor(themeManager.currentTheme.backgroundColor)
                 .multilineTextAlignment(.center)
@@ -154,7 +153,6 @@ private extension SelectedDayDetailView {
                 action: { dismissSaveAlert() },
                 label: {
                     Text("OK")
-                        .textCase(.uppercase)
                         .font(.lummiFont(size: 16))
                         .foregroundColor(themeManager.currentTheme.textColor)
                         .padding(.vertical, 12)
@@ -184,7 +182,6 @@ private extension SelectedDayDetailView {
                 .font(.system(size: AdaptiveLayout.getSize(for: 40)))
                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.2))
             Text("Oops! This day has not started yet")
-                .textCase(.uppercase)
                 .font(.lummiFont(size: 16))
                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
         }
@@ -192,7 +189,6 @@ private extension SelectedDayDetailView {
 
     var noRecordsView: some View {
         Text("No records for this day")
-            .textCase(.uppercase)
             .font(.lummiFont(size: 16))
             .foregroundColor(themeManager.currentTheme.textColor.opacity(0.3))
     }

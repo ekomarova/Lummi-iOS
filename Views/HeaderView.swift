@@ -19,9 +19,9 @@ struct HeaderView: View {
 
     private var headerDateText: String {
         if isExpanded {
-            date.format("LLLL yyyy", locale: locale).uppercased()
+            date.format("LLLL yyyy", locale: locale).capitalizedFirstLetter
         } else {
-            date.format("d MMMM", locale: locale).uppercased()
+            "\(date.format("d", locale: locale)) \(date.format("MMMM", locale: locale).capitalizedFirstLetter)"
         }
     }
 
