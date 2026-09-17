@@ -22,6 +22,6 @@ enum AdaptiveLayout {
 extension Font {
     static func lummiFont(size: CGFloat, weight: Font.Weight = .light) -> Font {
         let scaledSize = AdaptiveLayout.getSize(for: size)
-        return .system(size: scaledSize, weight: weight, design: .monospaced)
+        return .system(size: scaledSize, weight: weight, design: .default)
     }
 }
