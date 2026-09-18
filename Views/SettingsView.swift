@@ -115,6 +115,7 @@ struct SettingsView: View {
                                     .font(.system(size: 14, weight: .bold))
                                     .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
                             }
+                            .frame(minHeight: 31)
                             .padding(.horizontal, 20)
                             .padding(.vertical, 14)
                             .background(
@@ -156,8 +157,6 @@ struct SettingsView: View {
                         )
                         .labelsHidden()
                         .toggleStyle(.switch)
-                        .scaleEffect(0.75)
-                        .frame(width: 38, height: 23)
                         .accessibilityIdentifier("iCloudSyncToggle")
                     }
                     .padding(.horizontal, 20)
@@ -209,7 +208,7 @@ struct SettingsView: View {
                             Text("Delete")
                                 .font(.lummiFont(size: 17))
                                 .foregroundColor(Color(red: 0.95, green: 0.2, blue: 0.3))
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .frame(maxWidth: .infinity, minHeight: 31, alignment: .leading)
                                 .padding(.horizontal, 20)
                                 .padding(.vertical, 14)
                                 .background(
@@ -437,11 +436,11 @@ struct ThemeOptionButton: View {
                         )
 
                     Image(systemName: "checkmark")
-                        .font(.system(size: 9, weight: .bold))
+                        .font(.system(size: 13, weight: .bold))
                         .foregroundColor(.white)
                         .opacity(isSelected ? 1 : 0)
                 }
-                .frame(width: 18, height: 18)
+                .frame(width: 26, height: 26)
             }
             .frame(maxWidth: .infinity)
         }

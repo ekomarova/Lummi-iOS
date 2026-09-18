@@ -106,143 +106,138 @@ struct InsightsView: View {
 
                         let itemSize = geometry.size.width * 0.09
 
-                        Text("Highlights")
-                            .font(.lummiFont(size: 20, weight: .bold))
-                            .foregroundColor(themeManager.currentTheme.textColor)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
-                            .padding(.leading, 10)
+                        // MARK: - Highlights
+                        VStack(alignment: .leading, spacing: 15) {
+                            Text("Highlights")
+                                .font(.lummiFont(size: 20, weight: .bold))
+                                .foregroundColor(themeManager.currentTheme.textColor)
+                                // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
+                                .padding(.leading, 10)
 
-                        if AdaptiveLayout.isPad {
-                            // MARK: - Joys, Streak & Joyful Hours (iPad: one row of squares)
-                            let padCardSize = (geometry.size.width - 50) / 3
+                            if AdaptiveLayout.isPad {
+                                // MARK: - Joys, Streak & Joyful Hours (iPad: one row of squares)
+                                let padCardSize = (geometry.size.width - 50) / 3
 
-                            HStack(spacing: 15) {
-                                GlowCard(
-                                    value: "\(monthlyEntries.count)",
-                                    subtitle: "Joys",
-                                    gradientColors: [Color(red: 1.0, green: 0.7, blue: 0.75), Color(red: 0.95, green: 0.4, blue: 0.55)],
-                                    height: padCardSize,
-                                    valueFontSize: 28,
-                                    valuePadding: 12
-                                )
-                                .frame(width: padCardSize)
+                                HStack(spacing: 15) {
+                                    GlowCard(
+                                        value: "\(monthlyEntries.count)",
+                                        subtitle: "Joys",
+                                        gradientColors: [Color(red: 1.0, green: 0.7, blue: 0.75), Color(red: 0.95, green: 0.4, blue: 0.55)],
+                                        height: padCardSize,
+                                        valueFontSize: 28,
+                                        valuePadding: 12
+                                    )
+                                    .frame(width: padCardSize)
 
+                                    GlowCard(
+                                        value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
+                                        subtitle: "Joyful Hours",
+                                        gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)],
+                                        height: padCardSize,
+                                        valueFontSize: 28,
+                                        valuePadding: 12
+                                    )
+                                    .frame(width: padCardSize)
+
+                                    GlowCard(
+                                        value: "\(monthStreak)",
+                                        subtitle: "Day streak",
+                                        gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)],
+                                        height: padCardSize,
+                                        valueFontSize: 28,
+                                        valuePadding: 12
+                                    )
+                                    .frame(width: padCardSize)
+                                }
+                            } else {
+                                // MARK: - Joys & Streak
+                                HStack(spacing: 15) {
+                                    GlowCard(
+                                        value: "\(monthlyEntries.count)",
+                                        subtitle: "Joys",
+                                        gradientColors: [Color(red: 1.0, green: 0.7, blue: 0.75), Color(red: 0.95, green: 0.4, blue: 0.55)],
+                                        valueFontSize: 28,
+                                        valuePadding: 12
+                                    )
+
+                                    GlowCard(
+                                        value: "\(monthStreak)",
+                                        subtitle: "Day streak",
+                                        gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)],
+                                        valueFontSize: 28,
+                                        valuePadding: 12
+                                    )
+                                }
+                                .frame(maxWidth: .infinity, minHeight: itemSize * 0.65)
+
+                                // MARK: - Joyful Hours
                                 GlowCard(
                                     value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
                                     subtitle: "Joyful Hours",
                                     gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)],
-                                    height: padCardSize,
+                                    height: 100,
                                     valueFontSize: 28,
-                                    valuePadding: 12
-                                )
-                                .frame(width: padCardSize)
-
-                                GlowCard(
-                                    value: "\(monthStreak)",
-                                    subtitle: "Day streak",
-                                    gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)],
-                                    height: padCardSize,
-                                    valueFontSize: 28,
-                                    valuePadding: 12
-                                )
-                                .frame(width: padCardSize)
-                            }
-                            // VStack spacing is 35; pull up so the gap to Highlights matches the 15pt gap below
-                            .padding(.top, -26)
-                        } else {
-                            // MARK: - Joys & Streak
-                            HStack(spacing: 15) {
-                                GlowCard(
-                                    value: "\(monthlyEntries.count)",
-                                    subtitle: "Joys",
-                                    gradientColors: [Color(red: 1.0, green: 0.7, blue: 0.75), Color(red: 0.95, green: 0.4, blue: 0.55)],
-                                    valueFontSize: 28,
-                                    valuePadding: 12
-                                )
-
-                                GlowCard(
-                                    value: "\(monthStreak)",
-                                    subtitle: "Day streak",
-                                    gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)],
-                                    valueFontSize: 28,
-                                    valuePadding: 12
+                                    valuePadding: 30
                                 )
                             }
-                            .frame(maxWidth: .infinity, minHeight: itemSize * 0.65)
-                            // VStack spacing is 35; pull up so the gap to Highlights matches the 15pt gap below
-                            .padding(.top, -26)
-
-                            // MARK: - Joyful Hours
-                            GlowCard(
-                                value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
-                                subtitle: "Joyful Hours",
-                                gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)],
-                                height: 100,
-                                valueFontSize: 28,
-                                valuePadding: 30
-                            )
-                            // VStack spacing is 35; pull up so the gap to Joys/Day streak matches their 15pt gap
-                            .padding(.top, -20)
                         }
-                        
+
                         // MARK: - Recall
                         if !monthlyEntries.isEmpty {
-                            Text("Recall")
-                                .font(.lummiFont(size: 20, weight: .bold))
-                                .foregroundColor(themeManager.currentTheme.textColor)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
-                                .padding(.leading, 10)
+                            VStack(alignment: .leading, spacing: 15) {
+                                Text("Recall")
+                                    .font(.lummiFont(size: 20, weight: .bold))
+                                    .foregroundColor(themeManager.currentTheme.textColor)
+                                    // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
+                                    .padding(.leading, 10)
 
-                            Button(
-                                action: {
-                                    withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                                        isShowingAllJoys = true
-                                    }
-                                },
-                                label: {
-                                    ZStack {
-                                        RoundedRectangle(cornerRadius: 30)
-                                            .fill(
-                                                LinearGradient(
-                                                    colors: [
-                                                        Color(red: 1.0, green: 0.8, blue: 0.3),
-                                                        Color(red: 0.2, green: 0.6, blue: 0.3)
-                                                    ],
-                                                    startPoint: .topLeading,
-                                                    endPoint: .bottomTrailing
-                                                )
-                                            )
-                                            .opacity(0.35)
-                                            .adaptiveGlass(in: RoundedRectangle(cornerRadius: 30))
-
-                                        HStack {
-                                            Text("See all joys")
-                                                .font(.lummiFont(size: 18))
-                                                .foregroundColor(themeManager.currentTheme.textColor)
-
-                                            Spacer()
-
-                                            Image(systemName: "chevron.right")
-                                                .font(.system(size: 14, weight: .bold))
-                                                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
+                                Button(
+                                    action: {
+                                        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                            isShowingAllJoys = true
                                         }
-                                        .padding(.horizontal, 26)
+                                    },
+                                    label: {
+                                        ZStack {
+                                            RoundedRectangle(cornerRadius: 30)
+                                                .fill(
+                                                    LinearGradient(
+                                                        colors: [
+                                                            Color(red: 1.0, green: 0.8, blue: 0.3),
+                                                            Color(red: 0.2, green: 0.6, blue: 0.3)
+                                                        ],
+                                                        startPoint: .topLeading,
+                                                        endPoint: .bottomTrailing
+                                                    )
+                                                )
+                                                .opacity(0.35)
+                                                .adaptiveGlass(in: RoundedRectangle(cornerRadius: 30))
+
+                                            HStack {
+                                                Text("See all joys")
+                                                    .font(.lummiFont(size: 18))
+                                                    .foregroundColor(themeManager.currentTheme.textColor)
+
+                                                Spacer()
+
+                                                Image(systemName: "chevron.right")
+                                                    .font(.system(size: 14, weight: .bold))
+                                                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
+                                            }
+                                            .padding(.horizontal, 26)
+                                        }
+                                        .frame(maxWidth: .infinity)
+                                        // Matches the Settings screen's row ovals (31pt content + 14pt vertical padding)
+                                        .frame(height: 59)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 30)
+                                                .stroke(themeManager.currentTheme.textColor.opacity(0.15), lineWidth: 1)
+                                        )
                                     }
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 52)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 30)
-                                            .stroke(themeManager.currentTheme.textColor.opacity(0.15), lineWidth: 1)
-                                    )
-                                }
-                            )
-                            .buttonStyle(.plain)
-                            .accessibilityIdentifier("SeeAllJoysButton")
-                            // VStack spacing is 35; pull up so the gap to Recall matches the 15pt gap above
-                            // (extra offset vs. the -20 used elsewhere compensates for the Text's own line-height padding)
-                            .padding(.top, -26)
+                                )
+                                .buttonStyle(.plain)
+                                .accessibilityIdentifier("SeeAllJoysButton")
+                            }
                         }
                     }
                     .padding(.horizontal, 10)
