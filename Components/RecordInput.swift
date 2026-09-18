@@ -21,6 +21,7 @@ struct RecordInput: View {
 
     @State private var text: String = ""
     @State private var showSaveAlert = false
+    @FocusState private var isTextEditorFocused: Bool
 
     var isSaveEnabled: Bool {
         !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -36,7 +37,10 @@ struct RecordInput: View {
 
                 HStack {
                     Button(
-                        action: onDismiss,
+                        action: {
+                            isTextEditorFocused = false
+                            onDismiss()
+                        },
                         label: {
                             Circle()
                                 .fill(themeManager.currentTheme.textColor.opacity(0.05))
@@ -62,6 +66,7 @@ struct RecordInput: View {
                                 modelContext.insert(newEntry)
                                 do {
                                     try modelContext.saveOrSimulate()
+                                    isTextEditorFocused = false
                                     onDismiss()
                                 } catch {
                                     modelContext.rollback()
@@ -92,6 +97,7 @@ struct RecordInput: View {
 
             VStack(spacing: 25) {
                 TextEditor(text: $text)
+                    .focused($isTextEditorFocused)
                     .frame(height: 150)
                     .padding()
                     .scrollContentBackground(.hidden)
