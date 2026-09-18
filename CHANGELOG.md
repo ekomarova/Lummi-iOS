@@ -4,7 +4,21 @@ All notable changes to the project will be documented in this file.
 
 ## [1.1.0] - 2026-MM-DD
 ### Added
-- **Design:** Adopted Apple's native Liquid Glass material (`glassEffect`) for the header date, expanded calendar, bottom toolbar, and record button on iOS 26+. On iOS 17.6-18, these fall back to `.ultraThinMaterial` via a new `adaptiveGlass(in:interactive:)` view modifier, so the app keeps its iOS 17.6 minimum deployment target instead of requiring iOS 26
+- **Design:** Introduced a complete visual redesign of the app around Apple's native Liquid Glass material (`glassEffect`), covering the header date, calendar, record button, Insights, and Settings. On iOS 17.6-18, these fall back to `.ultraThinMaterial` via a new `adaptiveGlass(in:interactive:)` view modifier, so the app keeps its iOS 17.6 minimum deployment target instead of requiring iOS 26 [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- **Navigation:** Merged the bottom navigation into a single toolbar and added tab labels alongside the icons [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- **Insights:** Added Highlights/Recall sections and a full-screen "All Joys" page [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- **Insights (iPad):** Joys, Day Streak, and Joyful Hours are now shown as one square row on iPad [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- **Record Button:** Added selection haptic feedback when tapping the record button [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+
+### Changed
+- **Record Input:** The "New Joy" input is now a full in-flow page pushed onto the screen, matching the `See all joys` / `Language` pages, instead of a `.sheet` presentation [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- **Design:** Replaced the custom-styled alert overlays (iCloud sync error, `Clear All Data` confirmation, and save/delete failure dialogs) with native system `.alert()` dialogs, for a more consistent, platform-standard experience [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- **Design:** Switched the app font from SF Mono to SF Pro and dropped forced all-caps text app-wide [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- **Design:** Record cards are now transparent with a white border; edit/delete buttons redesigned as glass buttons with labels [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- **iPad:** Removed the iPad 1.5x scaling system entirely, in favor of native, unscaled sizing across the UI [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+
+### Fixed
+- **iPad:** Fixed glass UI chrome, the calendar grid, and record cards being incorrectly scaled up on iPad [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
 
 ## [1.0.0] - 2026-09-17
 ### Added
