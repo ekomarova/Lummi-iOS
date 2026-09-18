@@ -47,7 +47,7 @@ final class InsightsUITests: XCTestCase {
         app.buttons["InsightsButton_Inactive"].tap()
 
         XCTAssertTrue(app.staticTexts["Joys"].waitForExistence(timeout: 2.0))
-        XCTAssertTrue(app.staticTexts["Day streak"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Day Streak"].waitForExistence(timeout: 2.0))
         XCTAssertTrue(app.staticTexts["Joyful Hours"].waitForExistence(timeout: 2.0))
     }
     

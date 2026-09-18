@@ -144,7 +144,7 @@ struct InsightsView: View {
 
                                     GlowCard(
                                         value: "\(monthStreak)",
-                                        subtitle: "Day streak",
+                                        subtitle: "Day Streak",
                                         systemImage: "flame.fill",
                                         iconColor: Color(red: 0.95, green: 0.2, blue: 0.2),
                                         gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)],
@@ -169,7 +169,7 @@ struct InsightsView: View {
 
                                     GlowCard(
                                         value: "\(monthStreak)",
-                                        subtitle: "Day streak",
+                                        subtitle: "Day Streak",
                                         systemImage: "flame.fill",
                                         iconColor: Color(red: 0.95, green: 0.2, blue: 0.2),
                                         gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)],
@@ -185,7 +185,7 @@ struct InsightsView: View {
                                     subtitle: "Joyful Hours",
                                     systemImage: "sun.max.fill",
                                     gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)],
-                                    height: 100,
+                                    height: 130,
                                     valueFontSize: 28,
                                     valuePadding: 30
                                 )
