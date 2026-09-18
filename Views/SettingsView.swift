@@ -51,96 +51,38 @@ struct SettingsView: View {
     }
 
     private var settingsContent: some View {
-        ZStack {
-            VStack(alignment: .leading, spacing: 15) {
-                Text("Settings")
-                    .font(.lummiFont(size: 24, weight: .bold))
-                    .foregroundColor(themeManager.currentTheme.textColor)
-                    .padding(.top, 10)
+        VStack(alignment: .leading, spacing: 15) {
+            Text("Settings")
+                .font(.lummiFont(size: 24, weight: .bold))
+                .foregroundColor(themeManager.currentTheme.textColor)
+                .padding(.top, 10)
+                .padding(.horizontal, 20)
+
+            ScrollView(showsIndicators: false) {
+                settingsSections
                     .padding(.horizontal, 20)
-
-                ScrollView(showsIndicators: false) {
-                    settingsSections
-                        .padding(.horizontal, 20)
-                        .padding(.bottom, 100)
-                }
-                .ignoresSafeArea(.container, edges: .bottom)
+                    .padding(.bottom, 100)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .blur(radius: showClearDataAlert ? 10 : 0)
-            .animation(.easeInOut(duration: 0.25), value: showClearDataAlert)
-            .task(id: isICloudSyncEnabled) {
-                guard isICloudSyncEnabled else {
-                    syncBannerVisible = false
-                    return
-                }
-                // Wait long enough for a container-error revert to complete before
-                // allowing the banner to appear, so a failed toggle never flashes the banner.
-                try? await Task.sleep(for: .milliseconds(300))
-                syncBannerVisible = isICloudSyncEnabled
+            .ignoresSafeArea(.container, edges: .bottom)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .task(id: isICloudSyncEnabled) {
+            guard isICloudSyncEnabled else {
+                syncBannerVisible = false
+                return
             }
-
-            if showClearDataAlert {
-                Color.black.opacity(0.4)
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        withAnimation { showClearDataAlert = false }
-                    }
-                    .zIndex(1)
-
-                VStack(spacing: 20) {
-                    Text("Clear All Data?")
-                        .font(.lummiFont(size: 20))
-                        .foregroundColor(themeManager.currentTheme.backgroundColor)
-                        .accessibilityIdentifier("ClearDataAlertTitle")
-
-                    Text("This will permanently delete all your entries locally and in iCloud!")
-                        .font(.lummiFont(size: 16))
-                        .foregroundColor(themeManager.currentTheme.backgroundColor)
-                        .multilineTextAlignment(.center)
-
-                    HStack(spacing: 16) {
-                        Button(
-                            action: {
-                                withAnimation { showClearDataAlert = false }
-                            },
-                            label: {
-                                Text("Cancel")
-                                    .font(.lummiFont(size: 16))
-                                    .foregroundColor(themeManager.currentTheme.backgroundColor)
-                                    .padding(.vertical, 12)
-                                    .padding(.horizontal, 24)
-                                    .background(Capsule().stroke(themeManager.currentTheme.backgroundColor, lineWidth: 1))
-                            }
-                        )
-                        .accessibilityIdentifier("ClearDataCancelButton")
-
-                        Button(
-                            action: {
-                                clearAllData()
-                                withAnimation { showClearDataAlert = false }
-                            },
-                            label: {
-                                Text("Delete")
-                                    .font(.lummiFont(size: 16))
-                                    .foregroundColor(Color(red: 0.95, green: 0.2, blue: 0.3))
-                                    .padding(.vertical, 12)
-                                    .padding(.horizontal, 24)
-                                    .background(Capsule().fill(themeManager.currentTheme.backgroundColor))
-                            }
-                        )
-                        .accessibilityIdentifier("ClearDataConfirmButton")
-                    }
-                }
-                .padding(24)
-                .background(
-                    RoundedRectangle(cornerRadius: 24)
-                        .fill(themeManager.currentTheme.textColor)
-                )
-                .padding(40)
-                .transition(.scale.combined(with: .opacity))
-                .zIndex(2)
+            // Wait long enough for a container-error revert to complete before
+            // allowing the banner to appear, so a failed toggle never flashes the banner.
+            try? await Task.sleep(for: .milliseconds(300))
+            syncBannerVisible = isICloudSyncEnabled
+        }
+        .alert("Clear All Data?", isPresented: $showClearDataAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Delete", role: .destructive) {
+                clearAllData()
             }
+        } message: {
+            Text("This will permanently delete all your entries locally and in iCloud!")
         }
     }
 

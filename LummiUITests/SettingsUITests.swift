@@ -168,20 +168,20 @@ final class SettingsUITests: XCTestCase {
         // Verify initial state: sync is off
         XCTAssertEqual(syncToggle.value as? String, "0", "iCloud sync should be off by default")
 
-        // Try to enable sync — should fail and trigger the error overlay
+        // Try to enable sync — should fail and trigger the error alert
         syncToggle.tap()
 
-        let alertTitle = app.staticTexts["SyncErrorAlertTitle"]
-        XCTAssertTrue(alertTitle.waitForExistence(timeout: 5.0), "Sync error overlay should appear after container failure")
+        let alert = app.alerts["iCloud Sync Error"]
+        XCTAssertTrue(alert.waitForExistence(timeout: 5.0), "Sync error alert should appear after container failure")
 
         // Toggle must have reverted back to disabled
         XCTAssertEqual(syncToggle.value as? String, "0", "iCloud toggle should revert to disabled after error")
 
-        // Dismiss the overlay
-        app.buttons["SyncErrorAlertOKButton"].tap()
+        // Dismiss the alert
+        alert.buttons["OK"].tap()
 
         let doesNotExistPredicate = NSPredicate(format: "exists == false")
-        let dismissExpectation = expectation(for: doesNotExistPredicate, evaluatedWith: alertTitle, handler: nil)
+        let dismissExpectation = expectation(for: doesNotExistPredicate, evaluatedWith: alert, handler: nil)
         wait(for: [dismissExpectation], timeout: 5.0)
     }
 
@@ -230,31 +230,31 @@ final class SettingsUITests: XCTestCase {
         XCTAssertTrue(clearDataBtn.waitForExistence(timeout: 2.0), "Clear All Data button is missing")
         
         clearDataBtn.tap()
-        
-        let alertTitle = app.staticTexts["ClearDataAlertTitle"]
-        XCTAssertTrue(alertTitle.waitForExistence(timeout: 2.0), "Clear Data alert should appear")
-        
-        let cancelButton = app.buttons["ClearDataCancelButton"]
-        let confirmButton = app.buttons["ClearDataConfirmButton"]
-        
+
+        let alert = app.alerts["Clear All Data?"]
+        XCTAssertTrue(alert.waitForExistence(timeout: 2.0), "Clear Data alert should appear")
+
+        let cancelButton = alert.buttons["Cancel"]
+        let confirmButton = alert.buttons["Delete"]
+
         XCTAssertTrue(cancelButton.exists, "Cancel button is missing")
         XCTAssertTrue(confirmButton.exists, "Confirm button is missing")
-        
+
         // Cancel first
         cancelButton.tap()
-        
+
         // Wait for the alert to completely disappear
         let doesNotExistPredicate = NSPredicate(format: "exists == false")
-        let cancelExpectation = expectation(for: doesNotExistPredicate, evaluatedWith: alertTitle, handler: nil)
+        let cancelExpectation = expectation(for: doesNotExistPredicate, evaluatedWith: alert, handler: nil)
         wait(for: [cancelExpectation], timeout: 2.0)
-        
+
         // Tap again and confirm
         clearDataBtn.tap()
-        XCTAssertTrue(alertTitle.waitForExistence(timeout: 2.0), "Clear Data alert should appear on second tap")
-        
+        XCTAssertTrue(alert.waitForExistence(timeout: 2.0), "Clear Data alert should appear on second tap")
+
         confirmButton.tap()
-        
-        let confirmExpectation = expectation(for: doesNotExistPredicate, evaluatedWith: alertTitle, handler: nil)
+
+        let confirmExpectation = expectation(for: doesNotExistPredicate, evaluatedWith: alert, handler: nil)
         wait(for: [confirmExpectation], timeout: 2.0)
     }
 
@@ -270,13 +270,13 @@ final class SettingsUITests: XCTestCase {
         XCTAssertTrue(clearDataBtn.waitForExistence(timeout: 2.0))
         clearDataBtn.tap()
 
-        let alertTitle = app.staticTexts["ClearDataAlertTitle"]
-        XCTAssertTrue(alertTitle.waitForExistence(timeout: 2.0))
-        app.buttons["ClearDataConfirmButton"].tap()
-        
+        let alert = app.alerts["Clear All Data?"]
+        XCTAssertTrue(alert.waitForExistence(timeout: 2.0))
+        alert.buttons["Delete"].tap()
+
         // Wait for dismissal
         let doesNotExistPredicate = NSPredicate(format: "exists == false")
-        let confirmExpectation = expectation(for: doesNotExistPredicate, evaluatedWith: alertTitle, handler: nil)
+        let confirmExpectation = expectation(for: doesNotExistPredicate, evaluatedWith: alert, handler: nil)
         wait(for: [confirmExpectation], timeout: 2.0)
         
         // Navigate back to the Home Screen

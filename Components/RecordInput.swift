@@ -134,49 +134,10 @@ struct RecordInput: View {
             .padding(.horizontal, 20)
         }
         .transition(.move(edge: .trailing).combined(with: .opacity))
-        .blur(radius: showSaveAlert ? 10 : 0)
-        .animation(.easeInOut(duration: 0.25), value: showSaveAlert)
-        .overlay {
-            if showSaveAlert {
-                Color.black.opacity(0.4)
-                    .ignoresSafeArea()
-                    .onTapGesture { withAnimation { showSaveAlert = false } }
-                    .zIndex(1)
-
-                VStack(spacing: 20) {
-                    Text("Failed to Save")
-                        .font(.lummiFont(size: 20))
-                        .foregroundColor(themeManager.currentTheme.backgroundColor)
-                        .multilineTextAlignment(.center)
-                        .accessibilityIdentifier("SaveAlertTitle")
-
-                    Text("Your moment could not be saved. Please try again.")
-                        .font(.lummiFont(size: 16))
-                        .foregroundColor(themeManager.currentTheme.backgroundColor)
-                        .multilineTextAlignment(.center)
-
-                    Button(
-                        action: { withAnimation { showSaveAlert = false } },
-                        label: {
-                            Text("OK")
-                                .font(.lummiFont(size: 16))
-                                .foregroundColor(themeManager.currentTheme.textColor)
-                                .padding(.vertical, 12)
-                                .padding(.horizontal, 40)
-                                .background(Capsule().fill(themeManager.currentTheme.backgroundColor))
-                        }
-                    )
-                    .accessibilityIdentifier("SaveAlertOKButton")
-                }
-                .padding(24)
-                .background(
-                    RoundedRectangle(cornerRadius: 24)
-                        .fill(themeManager.currentTheme.textColor)
-                )
-                .padding(40)
-                .transition(.scale.combined(with: .opacity))
-                .zIndex(2)
-            }
+        .alert("Failed to Save", isPresented: $showSaveAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Your moment could not be saved. Please try again.")
         }
     }
 }

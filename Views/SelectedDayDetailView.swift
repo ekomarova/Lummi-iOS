@@ -41,20 +41,6 @@ struct SelectedDayDetailView: View {
             case .deleteFailed: return "Your record could not be deleted. Please try again."
             }
         }
-
-        var titleAccessibilityID: String {
-            switch self {
-            case .editFailed: return "SaveAlertTitle"
-            case .deleteFailed: return "DeleteAlertTitle"
-            }
-        }
-
-        var okButtonAccessibilityID: String {
-            switch self {
-            case .editFailed: return "SaveAlertOKButton"
-            case .deleteFailed: return "DeleteAlertOKButton"
-            }
-        }
     }
 
     private var today: Date { Date() }
@@ -110,66 +96,24 @@ struct SelectedDayDetailView: View {
                 .ignoresSafeArea(.container, edges: .bottom)
             }
         }
-        .blur(radius: saveAlert != nil ? 10 : 0)
-        .animation(.easeInOut(duration: 0.25), value: saveAlert != nil)
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: selectedDate)
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: activeEntryID)
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: isEditing)
         .onChange(of: selectedDate) { _, _ in saveAndDismiss() }
         .onDisappear { saveAndDismiss() }
-        .overlay {
-            if let alert = saveAlert {
-                Color.black.opacity(0.4)
-                    .ignoresSafeArea()
-                    .onTapGesture { dismissSaveAlert() }
-                    .zIndex(1)
-
-                saveAlertCard(alert)
-                    .transition(.scale.combined(with: .opacity))
-                    .zIndex(2)
-            }
-        }
-    }
-}
-
-// MARK: - Alert Card
-
-private extension SelectedDayDetailView {
-
-    @ViewBuilder
-    func saveAlertCard(_ alert: SaveAlertKind) -> some View {
-        VStack(spacing: 20) {
-            Text(alert.title)
-                .font(.lummiFont(size: 20))
-                .foregroundColor(themeManager.currentTheme.backgroundColor)
-                .multilineTextAlignment(.center)
-                .accessibilityIdentifier(alert.titleAccessibilityID)
-
-            Text(alert.message)
-                .font(.lummiFont(size: 16))
-                .foregroundColor(themeManager.currentTheme.backgroundColor)
-                .multilineTextAlignment(.center)
-
-            Button(
-                action: { dismissSaveAlert() },
-                label: {
-                    Text("OK")
-                        .font(.lummiFont(size: 16))
-                        .foregroundColor(themeManager.currentTheme.textColor)
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 40)
-                        .background(Capsule().fill(themeManager.currentTheme.backgroundColor))
+        .alert(
+            saveAlert?.title ?? "",
+            isPresented: Binding(
+                get: { saveAlert != nil },
+                set: { isPresented in
+                    if !isPresented { dismissSaveAlert() }
                 }
             )
-            .accessibilityIdentifier(alert.okButtonAccessibilityID)
+        ) {
+            Button("OK", role: .cancel) { dismissSaveAlert() }
+        } message: {
+            Text(saveAlert?.message ?? "")
         }
-        .padding(24)
-        .background(
-            RoundedRectangle(cornerRadius: 24)
-                .fill(themeManager.currentTheme.textColor)
-        )
-        .padding(40)
-        .zIndex(2)
     }
 }
 

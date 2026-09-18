@@ -108,59 +108,21 @@ struct ContentView: View {
                 }
                 .padding(.top, 8)
                 .ignoresSafeArea(.container, edges: .bottom)
-                .blur(radius: syncError.wrappedValue != nil ? 10 : 0)
-                .animation(.easeInOut(duration: 0.25), value: syncError.wrappedValue == nil)
-
-                // MARK: - iCloud Sync Error Overlay
-                if let error = syncError.wrappedValue {
-                    Color.black.opacity(0.4)
-                        .ignoresSafeArea()
-                        .onTapGesture {
-                            withAnimation { syncError.wrappedValue = nil }
-                        }
-                        .zIndex(1)
-
-                    VStack {
-                        Spacer()
-                        VStack(spacing: 20) {
-                            Image(systemName: "icloud.slash.fill")
-                                .font(.system(size: 32))
-                                .foregroundColor(themeManager.currentTheme.backgroundColor)
-
-                            Text("iCloud Sync Error")
-                                .font(.lummiFont(size: 20))
-                                .foregroundColor(themeManager.currentTheme.backgroundColor)
-                                .accessibilityIdentifier("SyncErrorAlertTitle")
-
-                            Text(error.localizedDescription)
-                                .font(.lummiFont(size: 16))
-                                .foregroundColor(themeManager.currentTheme.backgroundColor)
-                                .multilineTextAlignment(.center)
-
-                            Button {
-                                withAnimation { syncError.wrappedValue = nil }
-                            } label: {
-                                Text("OK")
-                                    .font(.lummiFont(size: 16))
-                                    .foregroundColor(themeManager.currentTheme.backgroundColor)
-                                    .padding(.vertical, 12)
-                                    .padding(.horizontal, 40)
-                                    .background(Capsule().stroke(themeManager.currentTheme.backgroundColor, lineWidth: 1))
-                            }
-                            .buttonStyle(.plain)
-                            .accessibilityIdentifier("SyncErrorAlertOKButton")
-                        }
-                        .padding(24)
-                        .background(
-                            RoundedRectangle(cornerRadius: 24)
-                                .fill(themeManager.currentTheme.textColor)
-                        )
-                        .padding(40)
-                        Spacer()
+            }
+            .alert(
+                "iCloud Sync Error",
+                isPresented: Binding(
+                    get: { syncError.wrappedValue != nil },
+                    set: { isPresented in
+                        if !isPresented { syncError.wrappedValue = nil }
                     }
-                    .transition(.scale.combined(with: .opacity))
-                    .zIndex(2)
+                )
+            ) {
+                Button("OK", role: .cancel) {
+                    syncError.wrappedValue = nil
                 }
+            } message: {
+                Text(syncError.wrappedValue?.localizedDescription ?? "")
             }
 
             // Listenen to system keyboard notifications
