@@ -52,182 +52,20 @@ struct SettingsView: View {
 
     private var settingsContent: some View {
         ZStack {
-            VStack(alignment: .leading, spacing: 30) {
+            VStack(alignment: .leading, spacing: 15) {
                 Text("Settings")
                     .font(.lummiFont(size: 24, weight: .bold))
                     .foregroundColor(themeManager.currentTheme.textColor)
                     .padding(.top, 10)
-
-                // MARK: - Appearance
-                VStack(alignment: .leading, spacing: 15) {
-                    Text("Appearance")
-                        .font(.lummiFont(size: 20, weight: .bold))
-                        .foregroundColor(themeManager.currentTheme.textColor)
-
-                    HStack(spacing: 0) {
-                        ThemeOptionButton(
-                            title: "Light",
-                            isSelected: !themeManager.isDark,
-                            accessibilityID: "LightThemeButton",
-                            action: { withAnimation(.spring()) { themeManager.isDark = false } }
-                        )
-
-                        ThemeOptionButton(
-                            title: "Dark",
-                            isSelected: themeManager.isDark,
-                            accessibilityID: "DarkThemeButton",
-                            action: { withAnimation(.spring()) { themeManager.isDark = true } }
-                        )
-                    }
-                    .padding(.vertical, 20)
-                    .background(
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
-                    )
-                }
-                
-                // MARK: - Language
-                VStack(alignment: .leading, spacing: 15) {
-                    Text("Language")
-                        .font(.lummiFont(size: 20, weight: .bold))
-                        .foregroundColor(themeManager.currentTheme.textColor)
-                        .accessibilityIdentifier("LanguageLabel")
-
-                    Button(
-                        action: {
-                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                                isShowingLanguageSelection = true
-                            }
-                        },
-                        label: {
-                            HStack {
-                                Text(selectedLanguage.displayName)
-                                    .font(.lummiFont(size: 17))
-                                    .foregroundColor(themeManager.currentTheme.textColor)
-
-                                Spacer()
-
-                                Image(systemName: "chevron.right")
-                                    .font(.system(size: 14, weight: .bold))
-                                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
-                            }
-                            .frame(minHeight: 31)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 14)
-                            .background(
-                                Capsule()
-                                    .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                            )
-                            .overlay(
-                                Capsule()
-                                    .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
-                            )
-                        }
-                    )
-                    .buttonStyle(.plain)
-                    .accessibilityIdentifier("LanguageSelectorButton")
-                }
-
-                // MARK: - Sync
-                VStack(alignment: .leading, spacing: 15) {
-                    Text("Sync")
-                        .font(.lummiFont(size: 20, weight: .bold))
-                        .foregroundColor(themeManager.currentTheme.textColor)
-
-                    HStack {
-                        Text("iCloud")
-                            .font(.lummiFont(size: 17))
-                            .foregroundColor(themeManager.currentTheme.textColor)
-
-                        Spacer()
-
-                        Toggle(
-                            "iCloud",
-                            isOn: Binding(
-                                get: { isICloudSyncEnabled },
-                                set: { newValue in
-                                    if newValue { syncBannerVisible = false }
-                                    withAnimation(.spring()) { isICloudSyncEnabled = newValue }
-                                }
-                            )
-                        )
-                        .labelsHidden()
-                        .toggleStyle(.switch)
-                        .accessibilityIdentifier("iCloudSyncToggle")
-                    }
                     .padding(.horizontal, 20)
-                    .padding(.vertical, 14)
-                    .background(
-                        Capsule()
-                            .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                    )
-                    .overlay(
-                        Capsule()
-                            .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
-                    )
 
-                    // MARK: - iCloud Sync Banner
-                    if isICloudSyncEnabled && syncBannerVisible, let syncMessage = syncMonitor.syncState.message {
-                        HStack(alignment: .top, spacing: 12) {
-                            Image(systemName: "exclamationmark.icloud.fill")
-                                .font(.system(size: 20))
-                                .foregroundColor(.white)
-
-                            Text(syncMessage)
-                                .font(.lummiFont(size: 14))
-                                .foregroundColor(.white)
-                                .multilineTextAlignment(.leading)
-                                .accessibilityIdentifier("SyncBannerMessage")
-                        }
-                        .padding(15)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(
-                            RoundedRectangle(cornerRadius: 16)
-                                .fill(Color.red.opacity(0.8))
-                        )
-                        .transition(.opacity.combined(with: .scale(scale: 0.95, anchor: .top)))
-                        .animation(.spring(), value: syncMonitor.syncState)
-                    }
+                ScrollView(showsIndicators: false) {
+                    settingsSections
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 100)
                 }
-
-                // MARK: - Clear All Data
-                VStack(alignment: .leading, spacing: 15) {
-                    Text("Data")
-                        .font(.lummiFont(size: 20, weight: .bold))
-                        .foregroundColor(themeManager.currentTheme.textColor)
-
-                    Button(
-                        action: {
-                            withAnimation { showClearDataAlert = true }
-                        },
-                        label: {
-                            Text("Delete")
-                                .font(.lummiFont(size: 17))
-                                .foregroundColor(Color(red: 0.95, green: 0.2, blue: 0.3))
-                                .frame(maxWidth: .infinity, minHeight: 31, alignment: .leading)
-                                .padding(.horizontal, 20)
-                                .padding(.vertical, 14)
-                                .background(
-                                    Capsule()
-                                        .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                                )
-                                .overlay(
-                                    Capsule()
-                                        .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
-                                )
-                        }
-                    )
-                    .buttonStyle(.plain)
-                    .accessibilityIdentifier("ClearAllDataButton")
-                }
-
-                Spacer()
+                .ignoresSafeArea(.container, edges: .bottom)
             }
-            .padding(.horizontal, 20)
             .frame(maxWidth: .infinity, alignment: .leading)
             .blur(radius: showClearDataAlert ? 10 : 0)
             .animation(.easeInOut(duration: 0.25), value: showClearDataAlert)
@@ -249,18 +87,18 @@ struct SettingsView: View {
                         withAnimation { showClearDataAlert = false }
                     }
                     .zIndex(1)
-                
+
                 VStack(spacing: 20) {
                     Text("Clear All Data?")
                         .font(.lummiFont(size: 20))
                         .foregroundColor(themeManager.currentTheme.backgroundColor)
                         .accessibilityIdentifier("ClearDataAlertTitle")
-                    
+
                     Text("This will permanently delete all your entries locally and in iCloud!")
                         .font(.lummiFont(size: 16))
                         .foregroundColor(themeManager.currentTheme.backgroundColor)
                         .multilineTextAlignment(.center)
-                    
+
                     HStack(spacing: 16) {
                         Button(
                             action: {
@@ -276,7 +114,7 @@ struct SettingsView: View {
                             }
                         )
                         .accessibilityIdentifier("ClearDataCancelButton")
-                        
+
                         Button(
                             action: {
                                 clearAllData()
@@ -305,7 +143,178 @@ struct SettingsView: View {
             }
         }
     }
-    
+
+    private var settingsSections: some View {
+        VStack(alignment: .leading, spacing: 30) {
+            // MARK: - Appearance
+            VStack(alignment: .leading, spacing: 15) {
+                Text("Appearance")
+                    .font(.lummiFont(size: 20, weight: .bold))
+                    .foregroundColor(themeManager.currentTheme.textColor)
+
+                HStack(spacing: 0) {
+                    ThemeOptionButton(
+                        title: "Light",
+                        isSelected: !themeManager.isDark,
+                        accessibilityID: "LightThemeButton",
+                        action: { withAnimation(.spring()) { themeManager.isDark = false } }
+                    )
+
+                    ThemeOptionButton(
+                        title: "Dark",
+                        isSelected: themeManager.isDark,
+                        accessibilityID: "DarkThemeButton",
+                        action: { withAnimation(.spring()) { themeManager.isDark = true } }
+                    )
+                }
+                .padding(.vertical, 20)
+                .background(
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
+                )
+            }
+
+            // MARK: - Language
+            VStack(alignment: .leading, spacing: 15) {
+                Text("Language")
+                    .font(.lummiFont(size: 20, weight: .bold))
+                    .foregroundColor(themeManager.currentTheme.textColor)
+                    .accessibilityIdentifier("LanguageLabel")
+
+                Button(
+                    action: {
+                        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                            isShowingLanguageSelection = true
+                        }
+                    },
+                    label: {
+                        HStack {
+                            Text(selectedLanguage.displayName)
+                                .font(.lummiFont(size: 17))
+                                .foregroundColor(themeManager.currentTheme.textColor)
+
+                            Spacer()
+
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
+                        }
+                        .frame(minHeight: 31)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 14)
+                        .background(
+                            Capsule()
+                                .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                        )
+                        .overlay(
+                            Capsule()
+                                .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
+                        )
+                    }
+                )
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("LanguageSelectorButton")
+            }
+
+            // MARK: - Sync
+            VStack(alignment: .leading, spacing: 15) {
+                Text("Sync")
+                    .font(.lummiFont(size: 20, weight: .bold))
+                    .foregroundColor(themeManager.currentTheme.textColor)
+
+                HStack {
+                    Text("iCloud")
+                        .font(.lummiFont(size: 17))
+                        .foregroundColor(themeManager.currentTheme.textColor)
+
+                    Spacer()
+
+                    Toggle(
+                        "iCloud",
+                        isOn: Binding(
+                            get: { isICloudSyncEnabled },
+                            set: { newValue in
+                                if newValue { syncBannerVisible = false }
+                                withAnimation(.spring()) { isICloudSyncEnabled = newValue }
+                            }
+                        )
+                    )
+                    .labelsHidden()
+                    .toggleStyle(.switch)
+                    .accessibilityIdentifier("iCloudSyncToggle")
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 14)
+                .background(
+                    Capsule()
+                        .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                )
+                .overlay(
+                    Capsule()
+                        .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
+                )
+
+                // MARK: - iCloud Sync Banner
+                if isICloudSyncEnabled && syncBannerVisible, let syncMessage = syncMonitor.syncState.message {
+                    HStack(alignment: .top, spacing: 12) {
+                        Image(systemName: "exclamationmark.icloud.fill")
+                            .font(.system(size: 20))
+                            .foregroundColor(.white)
+
+                        Text(syncMessage)
+                            .font(.lummiFont(size: 14))
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.leading)
+                            .accessibilityIdentifier("SyncBannerMessage")
+                    }
+                    .padding(15)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(Color.red.opacity(0.8))
+                    )
+                    .transition(.opacity.combined(with: .scale(scale: 0.95, anchor: .top)))
+                    .animation(.spring(), value: syncMonitor.syncState)
+                }
+            }
+
+            // MARK: - Clear All Data
+            VStack(alignment: .leading, spacing: 15) {
+                Text("Data")
+                    .font(.lummiFont(size: 20, weight: .bold))
+                    .foregroundColor(themeManager.currentTheme.textColor)
+
+                Button(
+                    action: {
+                        withAnimation { showClearDataAlert = true }
+                    },
+                    label: {
+                        Text("Delete")
+                            .font(.lummiFont(size: 17))
+                            .foregroundColor(Color(red: 0.95, green: 0.2, blue: 0.3))
+                            .frame(maxWidth: .infinity, minHeight: 31, alignment: .leading)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 14)
+                            .background(
+                                Capsule()
+                                    .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                            )
+                            .overlay(
+                                Capsule()
+                                    .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
+                            )
+                    }
+                )
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("ClearAllDataButton")
+            }
+        }
+    }
+
     // MARK: - Actions
     
     private func clearAllData() {
