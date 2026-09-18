@@ -688,6 +688,23 @@
         }
       }
     },
+    "Your entries could not be deleted. Please try again." : {
+      "comment" : "A message displayed when clearing all data in Settings fails.",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Einträge konnten nicht gelöscht werden. Bitte versuche es erneut."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Записи не удалось удалить. Попробуйте снова."
+          }
+        }
+      }
+    },
     "Your record could not be deleted. Please try again." : {
       "comment" : "A message displayed when a user fails to delete a record.",
       "localizations" : {
