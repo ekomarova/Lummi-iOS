@@ -41,20 +41,6 @@ struct SelectedDayDetailView: View {
             case .deleteFailed: return "Your record could not be deleted. Please try again."
             }
         }
-
-        var titleAccessibilityID: String {
-            switch self {
-            case .editFailed: return "SaveAlertTitle"
-            case .deleteFailed: return "DeleteAlertTitle"
-            }
-        }
-
-        var okButtonAccessibilityID: String {
-            switch self {
-            case .editFailed: return "SaveAlertOKButton"
-            case .deleteFailed: return "DeleteAlertOKButton"
-            }
-        }
     }
 
     private var today: Date { Date() }
@@ -79,26 +65,26 @@ struct SelectedDayDetailView: View {
 
                 ScrollView(.vertical, showsIndicators: false) {
                     ScrollViewReader { proxy in
-                        VStack(spacing: AdaptiveLayout.getSize(for: 15)) {
+                        VStack(spacing: 15) {
                             if let selected = selectedDate {
                                 if Calendar.current.startOfDay(for: selected) > Calendar.current.startOfDay(for: today) {
                                     futureDayView
                                         .blur(radius: activeEntryID != nil ? 6 : 0)
                                         .opacity(activeEntryID != nil ? 0.5 : 1.0)
-                                        .padding(.top, AdaptiveLayout.getSize(for: 40))
+                                        .padding(.top, 40)
                                 } else if !todaysEntries.isEmpty {
                                     notesListView(entries: todaysEntries, proxy: proxy)
-                                        .padding(.top, AdaptiveLayout.getSize(for: 10))
+                                        .padding(.top, 10)
                                 } else {
                                     noRecordsView
                                         .blur(radius: activeEntryID != nil ? 6 : 0)
                                         .opacity(activeEntryID != nil ? 0.5 : 1.0)
-                                        .padding(.top, AdaptiveLayout.getSize(for: 40))
+                                        .padding(.top, 40)
                                 }
                             }
                         }
                         .padding(.horizontal)
-                        .padding(.bottom, AdaptiveLayout.getSize(for: 160))
+                        .padding(.bottom, 160)
                         .frame(maxWidth: .infinity)
                         .frame(minHeight: geometry.size.height, alignment: .top)
                         .background(
@@ -107,70 +93,27 @@ struct SelectedDayDetailView: View {
                         )
                     }
                 }
+                .ignoresSafeArea(.container, edges: .bottom)
             }
         }
-        .blur(radius: saveAlert != nil ? 10 : 0)
-        .animation(.easeInOut(duration: 0.25), value: saveAlert != nil)
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: selectedDate)
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: activeEntryID)
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: isEditing)
         .onChange(of: selectedDate) { _, _ in saveAndDismiss() }
         .onDisappear { saveAndDismiss() }
-        .overlay {
-            if let alert = saveAlert {
-                Color.black.opacity(0.4)
-                    .ignoresSafeArea()
-                    .onTapGesture { dismissSaveAlert() }
-                    .zIndex(1)
-
-                saveAlertCard(alert)
-                    .transition(.scale.combined(with: .opacity))
-                    .zIndex(2)
-            }
-        }
-    }
-}
-
-// MARK: - Alert Card
-
-private extension SelectedDayDetailView {
-
-    @ViewBuilder
-    func saveAlertCard(_ alert: SaveAlertKind) -> some View {
-        VStack(spacing: 20) {
-            Text(alert.title)
-                .textCase(.uppercase)
-                .font(.lummiFont(size: 20))
-                .foregroundColor(themeManager.currentTheme.backgroundColor)
-                .multilineTextAlignment(.center)
-                .accessibilityIdentifier(alert.titleAccessibilityID)
-
-            Text(alert.message)
-                .font(.lummiFont(size: 16))
-                .foregroundColor(themeManager.currentTheme.backgroundColor)
-                .multilineTextAlignment(.center)
-
-            Button(
-                action: { dismissSaveAlert() },
-                label: {
-                    Text("OK")
-                        .textCase(.uppercase)
-                        .font(.lummiFont(size: 16))
-                        .foregroundColor(themeManager.currentTheme.textColor)
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 40)
-                        .background(Capsule().fill(themeManager.currentTheme.backgroundColor))
+        .alert(
+            saveAlert?.title ?? "",
+            isPresented: Binding(
+                get: { saveAlert != nil },
+                set: { isPresented in
+                    if !isPresented { dismissSaveAlert() }
                 }
             )
-            .accessibilityIdentifier(alert.okButtonAccessibilityID)
+        ) {
+            Button("OK", role: .cancel) { dismissSaveAlert() }
+        } message: {
+            Text(saveAlert?.message ?? "")
         }
-        .padding(24)
-        .background(
-            RoundedRectangle(cornerRadius: 24)
-                .fill(themeManager.currentTheme.textColor)
-        )
-        .padding(40)
-        .zIndex(2)
     }
 }
 
@@ -179,12 +122,11 @@ private extension SelectedDayDetailView {
 private extension SelectedDayDetailView {
 
     var futureDayView: some View {
-        VStack(spacing: AdaptiveLayout.getSize(for: 12)) {
+        VStack(spacing: 12) {
             Image(systemName: "moon.stars.fill")
-                .font(.system(size: AdaptiveLayout.getSize(for: 40)))
+                .font(.system(size: 40))
                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.2))
             Text("Oops! This day has not started yet")
-                .textCase(.uppercase)
                 .font(.lummiFont(size: 16))
                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
         }
@@ -192,13 +134,12 @@ private extension SelectedDayDetailView {
 
     var noRecordsView: some View {
         Text("No records for this day")
-            .textCase(.uppercase)
             .font(.lummiFont(size: 16))
             .foregroundColor(themeManager.currentTheme.textColor.opacity(0.3))
     }
 
     func notesListView(entries: [JoyEntry], proxy: ScrollViewProxy) -> some View {
-        VStack(alignment: .leading, spacing: AdaptiveLayout.getSize(for: 15)) {
+        VStack(alignment: .leading, spacing: 15) {
             ForEach(Array(entries.enumerated()), id: \.element.persistentModelID) { index, entry in
                 noteCell(for: entry, index: index, proxy: proxy)
             }
@@ -209,7 +150,7 @@ private extension SelectedDayDetailView {
     func noteCell(for entry: JoyEntry, index: Int, proxy: ScrollViewProxy) -> some View {
         let isActive = (activeEntryID == entry.persistentModelID)
 
-        VStack(alignment: .trailing, spacing: AdaptiveLayout.getSize(for: 8)) {
+        VStack(alignment: .trailing, spacing: 8) {
             if isActive && !isEditing {
                 noteCellActionButtons(entry: entry, proxy: proxy)
             }
@@ -236,18 +177,23 @@ private extension SelectedDayDetailView {
     }
 
     func noteCellActionButtons(entry: JoyEntry, proxy: ScrollViewProxy) -> some View {
-        HStack(spacing: AdaptiveLayout.getSize(for: 12)) {
+        HStack(spacing: 12) {
             Button(
                 action: {
                     editingText = entry.text
                     isEditing = true
                 },
                 label: {
-                    Image(systemName: "pencil")
-                        .font(.lummiFont(size: 16))
-                        .foregroundColor(themeManager.currentTheme.backgroundColor)
-                        .frame(width: AdaptiveLayout.getSize(for: 44), height: AdaptiveLayout.getSize(for: 44))
-                        .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.85)))
+                    HStack(spacing: 6) {
+                        Image(systemName: "pencil")
+                            .font(.lummiFont(size: 14))
+                        Text("Edit")
+                            .font(.lummiFont(size: 14))
+                    }
+                    .foregroundColor(themeManager.currentTheme.textColor)
+                    .padding(.horizontal, 16)
+                    .frame(height: 44)
+                    .adaptiveGlass(in: Capsule())
                 }
             )
             .accessibilityIdentifier("EditRecordButton")
@@ -255,11 +201,16 @@ private extension SelectedDayDetailView {
             Button(
                 action: { deleteNote(entry) },
                 label: {
-                    Image(systemName: "trash")
-                        .font(.lummiFont(size: 16))
-                        .foregroundColor(themeManager.currentTheme.backgroundColor)
-                        .frame(width: AdaptiveLayout.getSize(for: 44), height: AdaptiveLayout.getSize(for: 44))
-                        .background(Circle().fill(themeManager.currentTheme.textColor.opacity(0.85)))
+                    HStack(spacing: 6) {
+                        Image(systemName: "trash")
+                            .font(.lummiFont(size: 14))
+                        Text("Delete")
+                            .font(.lummiFont(size: 14))
+                    }
+                    .foregroundColor(themeManager.currentTheme.textColor)
+                    .padding(.horizontal, 16)
+                    .frame(height: 44)
+                    .adaptiveGlass(in: Capsule())
                 }
             )
             .accessibilityIdentifier("DeleteRecordButton")
@@ -268,40 +219,34 @@ private extension SelectedDayDetailView {
     }
 
     var noteCellEditField: some View {
-        TextField("What made you happy?", text: $editingText, axis: .vertical)
+        TextField("", text: $editingText, axis: .vertical)
+            .accessibilityLabel("Record text")
             .accessibilityIdentifier("EditRecordTextField")
             .focused($isTextFieldFocused)
             .font(.lummiFont(size: 16))
             .foregroundColor(themeManager.currentTheme.textColor)
-            .padding(AdaptiveLayout.getSize(for: 20))
+            .padding(20)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 20))
-                    .fill(themeManager.currentTheme.textColor.opacity(0.12))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 20))
-                            .stroke(themeManager.currentTheme.textColor.opacity(0.3), lineWidth: 1)
-                    )
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(Color.white.opacity(0.3), lineWidth: 1)
             )
     }
 
     func noteCellTextDisplay(entry: JoyEntry, index: Int, isActive: Bool, proxy: ScrollViewProxy) -> some View {
         Text(entry.text)
-            .font(.lummiFont(size: 16))
+            .font(.lummiFont(size: 17))
             .foregroundColor(themeManager.currentTheme.textColor)
-            .padding(AdaptiveLayout.getSize(for: 20))
+            .padding(20)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 20))
-                    .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 20))
-                            .stroke(
-                                themeManager.currentTheme.textColor.opacity(isActive ? 0.3 : 0.1),
-                                lineWidth: isActive ? 2 : 1
-                            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(
+                        Color.white.opacity(isActive ? 0.5 : 0.25),
+                        lineWidth: isActive ? 2 : 1
                     )
             )
+            .contentShape(RoundedRectangle(cornerRadius: 20))
             .onTapGesture {
                 if activeEntryID != nil { saveAndDismiss() }
             }

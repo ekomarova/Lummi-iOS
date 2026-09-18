@@ -37,7 +37,7 @@ final class InsightsUITests: XCTestCase {
         launchApp(with: [""])
         app.buttons["InsightsButton_Inactive"].tap()
         
-        let title = app.staticTexts["Insights".uppercased()]
+        let title = app.staticTexts["Insights"]
         XCTAssertTrue(title.waitForExistence(timeout: 2.0), "Insights header did not appear on the screen.")
     }
     
@@ -46,9 +46,9 @@ final class InsightsUITests: XCTestCase {
         launchApp(with: [""])
         app.buttons["InsightsButton_Inactive"].tap()
 
-        XCTAssertTrue(app.staticTexts["Joys".uppercased()].waitForExistence(timeout: 2.0))
-        XCTAssertTrue(app.staticTexts["Day streak".uppercased()].waitForExistence(timeout: 2.0))
-        XCTAssertTrue(app.staticTexts["Joyful hours".uppercased()].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Joys"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Day Streak"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Joyful Hours"].waitForExistence(timeout: 2.0))
     }
     
     // MARK: - Other tests
@@ -64,11 +64,11 @@ final class InsightsUITests: XCTestCase {
         let fours = app.staticTexts.matching(NSPredicate(format: "label == '4'"))
         XCTAssertTrue(fours.count >= 2, "Expected to find the number '4' for Joys and Day Streak")
 
-        let timePredicate = NSPredicate(format: "label CONTAINS '8:00' AND label CONTAINS '10:00'")
+        let timePredicate = NSPredicate(format: "label CONTAINS '8:00' AND label CONTAINS '9:00'")
         let joyfulHoursTime = app.staticTexts.matching(timePredicate).firstMatch
         XCTAssertTrue(joyfulHoursTime.waitForExistence(timeout: 2.0), "The time of 'Joyful Hours' does not match the expected range")
 
-        let expandButtonText = app.staticTexts["Want to see all moments?".uppercased()]
+        let expandButtonText = app.staticTexts["Show All Joys"]
         XCTAssertTrue(expandButtonText.waitForExistence(timeout: 2.0))
         expandButtonText.tap()
 

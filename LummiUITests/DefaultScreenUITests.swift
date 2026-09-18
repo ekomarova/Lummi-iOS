@@ -47,10 +47,9 @@ final class DefaultScreenUITests: XCTestCase {
         XCTAssertTrue(headerButton.waitForExistence(timeout: 5.0), "No Header text date on the screen")
         
         let today = Date()
-        let month = today.formatted(.dateTime.month(.wide)).uppercased()
-        let year = today.formatted(.dateTime.year())
+        let month = today.formatted(.dateTime.month(.wide))
         let day = Calendar.current.component(.day, from: today)
-        let expectedDateString = "\(day) \(month) \(year)"
+        let expectedDateString = "\(day) \(month)"
         
         XCTAssertEqual(headerButton.label, expectedDateString, "Header does not display today's date")
     }
@@ -61,7 +60,7 @@ final class DefaultScreenUITests: XCTestCase {
     }
 
     private func verifyRecords() {
-        let noRecordsText = app.staticTexts["No records for this day".uppercased()]
+        let noRecordsText = app.staticTexts["No records for this day"]
         XCTAssertTrue(noRecordsText.waitForExistence(timeout: 5.0), "There is no label w/o record")
     }
     

@@ -19,32 +19,28 @@ struct HeaderView: View {
 
     private var headerDateText: String {
         if isExpanded {
-            date.format("LLLL yyyy", locale: locale).uppercased()
+            date.format("LLLL yyyy", locale: locale).capitalizedFirstLetter
         } else {
-            date.format("d MMMM yyyy", locale: locale).uppercased()
+            "\(date.format("d", locale: locale)) \(date.format("MMMM", locale: locale).capitalizedFirstLetter)"
         }
     }
 
     var body: some View {
         Button(action: onTap) {
-            HStack(spacing: 6) {
-                Text(headerDateText)
-                    .font(.lummiFont(size: 24))
-                    .foregroundColor(themeManager.currentTheme.textColor)
-                    .accessibilityIdentifier("HeaderDateText")
-
-                Image(systemName: "chevron.down")
-                    .font(.lummiFont(size: 20))
-                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
-                    .rotationEffect(.degrees(isExpanded ? 180 : 0))
-                    .offset(y: 1)
-            }
-            .contentShape(Rectangle())
-            .frame(maxWidth: .infinity)
+            Text(headerDateText)
+                // Smaller than the 24pt used by Insights/Settings headers to offset the capsule background, 
+                // which makes text look larger
+                .font(.lummiFont(size: 22))
+                .foregroundColor(themeManager.currentTheme.textColor)
+                .accessibilityIdentifier("HeaderDateText")
+                .padding(.horizontal, 26)
+                .padding(.vertical, 10)
+                .adaptiveGlass(in: Capsule())
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier("HeaderToggleButton")
         .frame(maxWidth: .infinity, alignment: .center)
         .animation(.spring(response: 0.3, dampingFraction: 0.8), value: isExpanded)
+        .sensoryFeedback(.selection, trigger: isExpanded)
     }
 }

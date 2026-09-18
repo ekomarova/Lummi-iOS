@@ -10,12 +10,9 @@
 		470FC4E7304A309F00F50A7A /* ModelContextSave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470FC4E6304A309F00F50A7A /* ModelContextSave.swift */; };
 		4714236F2F9CFAA000C1D681 /* SelectedDayDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4714236E2F9CFAA000C1D681 /* SelectedDayDetailView.swift */; };
 		4726FFA82F9DA410008B5D3C /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFA72F9DA1FF008B5D3C /* DateExtension.swift */; };
-		4726FFAA2F9EC5EA008B5D3C /* HomeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFA92F9EC5E8008B5D3C /* HomeButton.swift */; };
 		4726FFBD2FA033FB008B5D3C /* FontExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFBC2FA033F1008B5D3C /* FontExtension.swift */; };
 		4726FFC62FA2B41F008B5D3C /* JoyEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFC52FA2B414008B5D3C /* JoyEntry.swift */; };
-		4726FFC82FA3D98E008B5D3C /* SettingsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFC72FA3D970008B5D3C /* SettingsButton.swift */; };
 		4726FFCA2FA3DA0F008B5D3C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFC92FA3DA0D008B5D3C /* SettingsView.swift */; };
-		4726FFD12FA40B00008B5D3C /* InsightsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFD02FA40AFA008B5D3C /* InsightsButton.swift */; };
 		47289DCE2FAED17700E46B84 /* InsightsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFD22FA40B28008B5D3C /* InsightsView.swift */; };
 		473B04202F9AB1AA00C482FA /* LummiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B041F2F9AB1AA00C482FA /* LummiApp.swift */; };
 		473B04222F9AB1AA00C482FA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04212F9AB1AA00C482FA /* ContentView.swift */; };
@@ -33,6 +30,11 @@
 		47981EAD2FA54745005ADAB1 /* InsightsCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47981EAC2FA5473E005ADAB1 /* InsightsCalculator.swift */; };
 		47981EB82FA5928F005ADAB1 /* MockDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47981EB32FA59262005ADAB1 /* MockDataManager.swift */; };
 		47981EC02FA7E5EC005ADAB1 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 47981EBF2FA7E5EC005ADAB1 /* Localizable.xcstrings */; };
+		47BB00022FC0A5EA008B5D02 /* BottomToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB00012FC0A5EA008B5D01 /* BottomToolbar.swift */; };
+		47BB00032FC0A5EA008B5D03 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB00042FC0A5EA008B5D04 /* StringExtension.swift */; };
+		47BB00052FC0A5EA008B5D05 /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB00062FC0A5EA008B5D06 /* ViewExtension.swift */; };
+		24DEA4823F27415591ADBA5F /* AllJoysView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A75A501776D443E1961E0695 /* AllJoysView.swift */; };
+		3994D6B50DC44AD6A11FE59F /* ThemeOptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,12 +58,9 @@
 		470FC4E6304A309F00F50A7A /* ModelContextSave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContextSave.swift; sourceTree = "<group>"; };
 		4714236E2F9CFAA000C1D681 /* SelectedDayDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedDayDetailView.swift; sourceTree = "<group>"; };
 		4726FFA72F9DA1FF008B5D3C /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
-		4726FFA92F9EC5E8008B5D3C /* HomeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeButton.swift; sourceTree = "<group>"; };
 		4726FFBC2FA033F1008B5D3C /* FontExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontExtension.swift; sourceTree = "<group>"; };
 		4726FFC52FA2B414008B5D3C /* JoyEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoyEntry.swift; sourceTree = "<group>"; };
-		4726FFC72FA3D970008B5D3C /* SettingsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsButton.swift; sourceTree = "<group>"; };
 		4726FFC92FA3DA0D008B5D3C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		4726FFD02FA40AFA008B5D3C /* InsightsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsButton.swift; sourceTree = "<group>"; };
 		4726FFD22FA40B28008B5D3C /* InsightsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsView.swift; sourceTree = "<group>"; };
 		47289DCF2FB2754200E46B84 /* Lummi-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Lummi-Info.plist"; sourceTree = "<group>"; };
 		47289DD02FB275BA00E46B84 /* Lummi.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Lummi.entitlements; sourceTree = "<group>"; };
@@ -86,6 +85,11 @@
 		47981EAC2FA5473E005ADAB1 /* InsightsCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsCalculator.swift; sourceTree = "<group>"; };
 		47981EB32FA59262005ADAB1 /* MockDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataManager.swift; sourceTree = "<group>"; };
 		47981EBF2FA7E5EC005ADAB1 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		47BB00012FC0A5EA008B5D01 /* BottomToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomToolbar.swift; sourceTree = "<group>"; };
+		47BB00042FC0A5EA008B5D04 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		47BB00062FC0A5EA008B5D06 /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
+		A75A501776D443E1961E0695 /* AllJoysView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllJoysView.swift; sourceTree = "<group>"; };
+		E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeOptionButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -131,6 +135,8 @@
 			children = (
 				4726FFBC2FA033F1008B5D3C /* FontExtension.swift */,
 				4726FFA72F9DA1FF008B5D3C /* DateExtension.swift */,
+				47BB00042FC0A5EA008B5D04 /* StringExtension.swift */,
+				47BB00062FC0A5EA008B5D06 /* ViewExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -200,12 +206,12 @@
 		473B044C2F9ACF8D00C482FA /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				4726FFD02FA40AFA008B5D3C /* InsightsButton.swift */,
-				4726FFC72FA3D970008B5D3C /* SettingsButton.swift */,
-				4726FFA92F9EC5E8008B5D3C /* HomeButton.swift */,
+				47BB00012FC0A5EA008B5D01 /* BottomToolbar.swift */,
 				473B045A2F9BB79B00C482FA /* RecordInput.swift */,
 				473B044F2F9AD05100C482FA /* DayCell.swift */,
 				473B044D2F9ACF9500C482FA /* RecordButton.swift */,
+				A75A501776D443E1961E0695 /* AllJoysView.swift */,
+				E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -395,6 +401,8 @@
 			files = (
 				473B04222F9AB1AA00C482FA /* ContentView.swift in Sources */,
 				4726FFA82F9DA410008B5D3C /* DateExtension.swift in Sources */,
+				47BB00032FC0A5EA008B5D03 /* StringExtension.swift in Sources */,
+				47BB00052FC0A5EA008B5D05 /* ViewExtension.swift in Sources */,
 				4726FFBD2FA033FB008B5D3C /* FontExtension.swift in Sources */,
 				473B04562F9BB2F800C482FA /* AppThemes.swift in Sources */,
 				473B045B2F9BB79C00C482FA /* RecordInput.swift in Sources */,
@@ -410,12 +418,12 @@
 				473B044E2F9ACF9D00C482FA /* RecordButton.swift in Sources */,
 				47289DCE2FAED17700E46B84 /* InsightsView.swift in Sources */,
 				4766220D303F8AB000041521 /* CloudKitSyncMonitor.swift in Sources */,
-				4726FFC82FA3D98E008B5D3C /* SettingsButton.swift in Sources */,
 				4714236F2F9CFAA000C1D681 /* SelectedDayDetailView.swift in Sources */,
 				470FC4E7304A309F00F50A7A /* ModelContextSave.swift in Sources */,
 				473B04552F9BB2F400C482FA /* ThemeManager.swift in Sources */,
-				4726FFD12FA40B00008B5D3C /* InsightsButton.swift in Sources */,
-				4726FFAA2F9EC5EA008B5D3C /* HomeButton.swift in Sources */,
+				47BB00022FC0A5EA008B5D02 /* BottomToolbar.swift in Sources */,
+				24DEA4823F27415591ADBA5F /* AllJoysView.swift in Sources */,
+				3994D6B50DC44AD6A11FE59F /* ThemeOptionButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -587,7 +595,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Lummi.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -604,7 +612,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.ekomarova.Lummi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -624,7 +632,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Lummi.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -641,7 +649,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.ekomarova.Lummi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -704,6 +712,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.ekomarova.LummiUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -723,6 +732,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.ekomarova.LummiUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";

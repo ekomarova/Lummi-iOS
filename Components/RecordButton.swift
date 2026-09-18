@@ -11,22 +11,37 @@ import SwiftUI
 
 struct RecordButton: View {
     @Environment(ThemeManager.self) private var themeManager
-    
+    @State private var didTap = false
+
     let selectedDate: Date?
     var onTap: () -> Void
 
     var body: some View {
         Group {
             if selectedDate != nil {
-                Button(action: onTap) {
-                    Image(systemName: "star.fill")
-                        .font(.lummiFont(size: 43))
-                        .foregroundColor(themeManager.currentTheme.bottomPanelStarIconColor)
-                        .frame(maxWidth: .infinity, minHeight: 48)
-                }
+                Button(
+                    action: {
+                        didTap.toggle()
+                        onTap()
+                    },
+                    label: {
+                        let size: CGFloat = 64
+
+                        Circle()
+                            .fill(themeManager.currentTheme.recordButtonColor.opacity(0.35))
+                            .adaptiveGlass(in: Circle())
+                            .frame(width: size, height: size)
+                            .overlay(
+                                Image(systemName: "plus")
+                                    .font(.lummiFont(size: 20))
+                                    .foregroundColor(themeManager.currentTheme.textColor)
+                            )
+                    }
+                )
                 .buttonStyle(.plain)
                 .accessibilityLabel("Record the joy")
                 .accessibilityIdentifier("MainRecordButton")
+                .sensoryFeedback(.selection, trigger: didTap)
             } else {
                 EmptyView()
             }

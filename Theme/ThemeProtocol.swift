@@ -19,11 +19,8 @@ protocol AppTheme {
     var inactiveOpacity: Double { get }
     
     // Calendar
-    var calendarBackground: Color { get }
-    var calendarContentColor: Color { get }
-    var todayColor: Color { get }
     var dayFilledColor: Color { get }
     
     // Bottom panel
-    var bottomPanelStarIconColor: Color { get }
+    var recordButtonColor: Color { get }
 }

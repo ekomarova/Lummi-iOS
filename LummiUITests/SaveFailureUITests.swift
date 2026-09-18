@@ -25,12 +25,12 @@ final class SaveFailureUITests: XCTestCase {
 
         app.buttons["SaveRecordButton"].tap()
 
-        let alertTitle = app.staticTexts["SaveAlertTitle"]
-        XCTAssertTrue(alertTitle.waitForExistence(timeout: 2.0), "Save failure alert did not appear")
+        let alert = app.alerts["Failed to Save"]
+        XCTAssertTrue(alert.waitForExistence(timeout: 2.0), "Save failure alert did not appear")
         // Sheet must stay open — dismissing on failure is the bug being fixed
         XCTAssertTrue(textEditor.exists, "Input sheet must remain open after save failure")
 
-        app.buttons["SaveAlertOKButton"].tap()
+        alert.buttons["OK"].tap()
 
         XCTAssertTrue(textEditor.waitForExistence(timeout: 1.0), "Input sheet should still be open after alert dismissal")
         // Entry must not have leaked into the main view
@@ -55,10 +55,10 @@ final class SaveFailureUITests: XCTestCase {
         XCTAssertTrue(deleteButton.waitForExistence(timeout: 2.0), "Delete button did not appear")
         deleteButton.tap()
 
-        let alertTitle = app.staticTexts["DeleteAlertTitle"]
-        XCTAssertTrue(alertTitle.waitForExistence(timeout: 2.0), "Delete failure alert did not appear")
+        let alert = app.alerts["Failed to Delete"]
+        XCTAssertTrue(alert.waitForExistence(timeout: 2.0), "Delete failure alert did not appear")
 
-        app.buttons["DeleteAlertOKButton"].tap()
+        alert.buttons["OK"].tap()
 
         // Record should be restored after rollback
         XCTAssertTrue(app.staticTexts["RecordText_0"].waitForExistence(timeout: 2.0), "Record should be restored after failed delete")
@@ -89,12 +89,12 @@ final class SaveFailureUITests: XCTestCase {
         // Tap the global dismiss area to trigger saveAndDismiss
         app.otherElements["GlobalDismissArea"].firstMatch.tap()
 
-        let alertTitle = app.staticTexts["SaveAlertTitle"]
-        XCTAssertTrue(alertTitle.waitForExistence(timeout: 2.0), "Save failure alert did not appear")
+        let alert = app.alerts["Failed to Save"]
+        XCTAssertTrue(alert.waitForExistence(timeout: 2.0), "Save failure alert did not appear")
         XCTAssertTrue(editField.exists, "Edit field should remain visible while alert is shown")
 
         // Tapping OK exits edit mode
-        app.buttons["SaveAlertOKButton"].tap()
+        alert.buttons["OK"].tap()
         XCTAssertFalse(editField.waitForExistence(timeout: 2.0), "Edit field should be dismissed after OK")
     }
 }

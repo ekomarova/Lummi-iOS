@@ -24,6 +24,7 @@ struct ContentView: View {
     @State private var isKeyboardVisible = false
     @State private var isShowingSettings = false
     @State private var isShowingInsights = false
+    @State private var isShowingAllJoys = false
 
     var body: some View {
         GeometryReader { _ in
@@ -42,9 +43,9 @@ struct ContentView: View {
                         }
                 }
 
-                VStack(spacing: AdaptiveLayout.getSize(for: 15)) {
+                VStack(spacing: 15) {
                     // MARK: - Header View
-                    if !isShowingSettings && !isShowingInsights {
+                    if !isShowingSettings && !isShowingInsights && !isShowingSheet {
                         HeaderView(
                             date: isCalendarExpanded ? visibleMonth : (selectedDate ?? Date()),
                             isExpanded: isCalendarExpanded,
@@ -60,37 +61,40 @@ struct ContentView: View {
                         .transition(.move(edge: .top).combined(with: .opacity))
                     }
                         
-                    if isShowingSettings {
+                    if isShowingSheet {
+                        // MARK: - Record Input
+                        RecordInput(
+                            selectedDate: Date(),
+                            onDismiss: {
+                                withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                    isShowingSheet = false
+                                }
+                            }
+                        )
+                        .environment(themeManager)
+                    } else if isShowingSettings {
                         // MARK: - Settings View
                         SettingsView()
                             .transition(.move(edge: .trailing).combined(with: .opacity))
                     } else if isShowingInsights {
                         // MARK: - Insights View
-                        InsightsView()
+                        InsightsView(isShowingAllJoys: $isShowingAllJoys)
                             .transition(.move(edge: .leading).combined(with: .opacity))
                     } else if isCalendarExpanded {
-                        ZStack(alignment: .top) {
-                            RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 24))
-                                .fill(themeManager.currentTheme.calendarBackground.opacity(0.83))
-                                .background(
-                                    RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 24))
-                                        .fill(.ultraThinMaterial)
-                                )
-                            
-                            // MARK: - Calenadar View
-                            MainCalendarView(
-                                selectedDate: $selectedDate,
-                                isCalendarExpanded: $isCalendarExpanded,
-                                visibleMonth: $visibleMonth
-                            )
-                            .padding(.horizontal, AdaptiveLayout.getSize(for: 8))
-                            .padding(.vertical, AdaptiveLayout.getSize(for: 18))
-                        }
-                        .frame(height: AdaptiveLayout.getSize(for: 340))
+                        // MARK: - Calenadar View
+                        MainCalendarView(
+                            selectedDate: $selectedDate,
+                            isCalendarExpanded: $isCalendarExpanded,
+                            visibleMonth: $visibleMonth
+                        )
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 18)
+                        .frame(maxWidth: AdaptiveLayout.isPad ? 420 : .infinity)
+                        .frame(height: 340)
+                        .adaptiveGlass(in: RoundedRectangle(cornerRadius: 24))
                         .transition(.move(edge: .top).combined(with: .opacity))
-                        .clipShape(RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 24)))
-                        .padding(.top, AdaptiveLayout.getSize(for: 28))
-                        .padding(.horizontal, AdaptiveLayout.getSize(for: 20))
+                        .padding(.top, 28)
+                        .padding(.horizontal, 20)
                         .onTapGesture { }
                     } else {
                         // MARK: - Selected Day View
@@ -102,61 +106,23 @@ struct ContentView: View {
                     
                     Spacer()
                 }
-                .padding(.top, AdaptiveLayout.getSize(for: 8))
-                .blur(radius: syncError.wrappedValue != nil ? 10 : 0)
-                .animation(.easeInOut(duration: 0.25), value: syncError.wrappedValue == nil)
-
-                // MARK: - iCloud Sync Error Overlay
-                if let error = syncError.wrappedValue {
-                    Color.black.opacity(0.4)
-                        .ignoresSafeArea()
-                        .onTapGesture {
-                            withAnimation { syncError.wrappedValue = nil }
-                        }
-                        .zIndex(1)
-
-                    VStack {
-                        Spacer()
-                        VStack(spacing: 20) {
-                            Image(systemName: "icloud.slash.fill")
-                                .font(.system(size: 32))
-                                .foregroundColor(themeManager.currentTheme.backgroundColor)
-
-                            Text("iCloud Sync Error")
-                                .font(.lummiFont(size: 20))
-                                .foregroundColor(themeManager.currentTheme.backgroundColor)
-                                .accessibilityIdentifier("SyncErrorAlertTitle")
-
-                            Text(error.localizedDescription)
-                                .font(.lummiFont(size: 16))
-                                .foregroundColor(themeManager.currentTheme.backgroundColor)
-                                .multilineTextAlignment(.center)
-
-                            Button {
-                                withAnimation { syncError.wrappedValue = nil }
-                            } label: {
-                                Text("OK")
-                                    .textCase(.uppercase)
-                                    .font(.lummiFont(size: 16))
-                                    .foregroundColor(themeManager.currentTheme.backgroundColor)
-                                    .padding(.vertical, 12)
-                                    .padding(.horizontal, 40)
-                                    .background(Capsule().stroke(themeManager.currentTheme.backgroundColor, lineWidth: 1))
-                            }
-                            .buttonStyle(.plain)
-                            .accessibilityIdentifier("SyncErrorAlertOKButton")
-                        }
-                        .padding(24)
-                        .background(
-                            RoundedRectangle(cornerRadius: 24)
-                                .fill(themeManager.currentTheme.textColor)
-                        )
-                        .padding(40)
-                        Spacer()
+                .padding(.top, 8)
+                .ignoresSafeArea(.container, edges: .bottom)
+            }
+            .alert(
+                "iCloud Sync Error",
+                isPresented: Binding(
+                    get: { syncError.wrappedValue != nil },
+                    set: { isPresented in
+                        if !isPresented { syncError.wrappedValue = nil }
                     }
-                    .transition(.scale.combined(with: .opacity))
-                    .zIndex(2)
+                )
+            ) {
+                Button("OK", role: .cancel) {
+                    syncError.wrappedValue = nil
                 }
+            } message: {
+                Text(syncError.wrappedValue?.localizedDescription ?? "")
             }
 
             // Listenen to system keyboard notifications
@@ -171,77 +137,66 @@ struct ContentView: View {
                 }
             }
         }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            if !isKeyboardVisible {
-                HStack(spacing: 0) {
-                    // MARK: - Home button
-                    HomeButton(
-                        isActive: !isCalendarExpanded && !isShowingSettings && !isShowingInsights &&
+        .overlay(alignment: .bottom) {
+            if !isKeyboardVisible && !isShowingSheet {
+                HStack(spacing: 16) {
+                    // MARK: - Bottom toolbar
+                    BottomToolbar(
+                        isHomeActive: !isCalendarExpanded && !isShowingSettings && !isShowingInsights && !isShowingSheet &&
                             Calendar.current.isDateInToday(selectedDate ?? Date()),
-                        onTap: {
+                        isInsightsActive: isShowingInsights && !isShowingAllJoys,
+                        isSettingsActive: isShowingSettings,
+                        onHomeTap: {
                             withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                isShowingSheet = false
                                 isShowingSettings = false
                                 isShowingInsights = false
+                                isShowingAllJoys = false
                                 isCalendarExpanded = false
                                 selectedDate = Date()
                                 visibleMonth = Date().startOfMonth
                             }
-                        }
-                    )
-                    
-                    Spacer()
-                    
-                    // MARK: - Insights button
-                    InsightsButton(
-                        isActive: isShowingInsights,
-                        onTap: {
+                        },
+                        onInsightsTap: {
                             withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                isShowingSheet = false
                                 isShowingSettings = false
                                 isCalendarExpanded = false
                                 isShowingInsights = true
+                                isShowingAllJoys = false
                             }
-                        }
-                    )
-                    
-                    Spacer()
-                    
-                    // MARK: - Settings button
-                    SettingsButton(
-                        isActive: isShowingSettings,
-                        onTap: {
+                        },
+                        onSettingsTap: {
                             withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                isShowingSheet = false
                                 isShowingInsights = false
+                                isShowingAllJoys = false
                                 isCalendarExpanded = false
                                 isShowingSettings = true
                             }
                         }
                     )
-                    
-                    Spacer()
-                    
+                    .frame(maxWidth: .infinity)
+
                     // MARK: - Record button
                     RecordButton(
                         selectedDate: selectedDate,
                         onTap: {
-                            isCalendarExpanded = false
-                            isShowingSheet = true
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                isCalendarExpanded = false
+                                isShowingSheet = true
+                            }
                         }
                     )
-                    .frame(width: AdaptiveLayout.getSize(for: 70))
                 }
-                .padding(.horizontal, AdaptiveLayout.getSize(for: 40))
-                .padding(.bottom, AdaptiveLayout.getSize(for: 10))
+                .frame(maxWidth: AdaptiveLayout.isPad ? 420 : .infinity)
+                .padding(.horizontal, 16)
+                .padding(.bottom, 10)
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
-        .blur(radius: isShowingSheet ? 10 : 0)
-        .animation(.easeInOut(duration: 0.25), value: isShowingSheet)
-        .sheet(isPresented: $isShowingSheet) {
-            // MARK: - Record Input
-            RecordInput(selectedDate: Date())
-                .environment(themeManager)
-        }
         .environment(themeManager)
+        .preferredColorScheme(themeManager.isDark ? .dark : .light)
         // MARK: For tests only
         .onAppear {
 #if DEBUG

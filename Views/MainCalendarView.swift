@@ -52,8 +52,8 @@ struct MainCalendarView: View {
     var body: some View {
         VStack(spacing: 0) {
             WeekdayHeaderView()
-                .padding(.top, AdaptiveLayout.getSize(for: 10))
-                .padding(.bottom, AdaptiveLayout.getSize(for: 10))
+                .padding(.top, 10)
+                .padding(.bottom, 10)
             
             // Vertical scroll
             ScrollView(.vertical, showsIndicators: false) {
@@ -96,7 +96,7 @@ struct SingleMonthView: View {
     
     let filledDates: Set<String>
     
-    let columns = Array(repeating: GridItem(.flexible(), spacing: AdaptiveLayout.getSize(for: 7)), count: 7)
+    let columns = Array(repeating: GridItem(.flexible(), spacing: 7), count: 7)
 
     private var calendar: Calendar {
         var cal = Calendar.current
@@ -121,9 +121,9 @@ struct SingleMonthView: View {
     var body: some View {
         VStack(spacing: 0) {
             Spacer()
-            LazyVGrid(columns: columns, spacing: AdaptiveLayout.getSize(for: 4)) {
+            LazyVGrid(columns: columns, spacing: 4) {
                 ForEach((-firstDayOffset)..<0, id: \.self) { _ in
-                    Color.clear.frame(height: AdaptiveLayout.getSize(for: 38))
+                    Color.clear.frame(height: 38)
                 }
                 
                 ForEach(1...daysInMonth, id: \.self) { day in
@@ -172,9 +172,8 @@ struct WeekdayHeaderView: View {
         HStack(spacing: 0) {
             ForEach(labels.indices, id: \.self) { index in
                 Text(labels[index])
-                    .textCase(.uppercase)
                     .font(.lummiFont(size: 13))
-                    .foregroundColor(themeManager.currentTheme.calendarContentColor.opacity(0.4))
+                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.4))
                     .frame(maxWidth: .infinity)
             }
         }

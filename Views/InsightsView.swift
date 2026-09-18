@@ -14,8 +14,8 @@ struct InsightsView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale
     @Query private var allEntries: [JoyEntry]
+    @Binding var isShowingAllJoys: Bool
     @State private var selectedMonth: Date = Date().startOfMonth
-    @State private var isListExpanded: Bool = false
 
     private var monthlyEntries: [JoyEntry] {
         InsightsCalculator.filterEntries(allEntries, for: selectedMonth)
@@ -39,157 +39,214 @@ struct InsightsView: View {
 
     // MARK: - Body
     var body: some View {
+        if isShowingAllJoys {
+            AllJoysView(entries: monthlyEntries, isShowingAllJoys: $isShowingAllJoys)
+        } else {
+            insightsContent
+        }
+    }
+
+    private var insightsContent: some View {
         GeometryReader { geometry in
-            VStack(alignment: .leading, spacing: AdaptiveLayout.getSize(for: 20)) {
+            VStack(alignment: .leading, spacing: 20) {
 
                 Text("Insights")
-                    .textCase(.uppercase)
-                    .font(.lummiFont(size: 24))
+                    .font(.lummiFont(size: 24, weight: .bold))
                     .foregroundColor(themeManager.currentTheme.textColor)
                     .padding(.top, 10)
-                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.horizontal, 20)
 
                 // MARK: - Month Selector
                 HStack(spacing: 20) {
                     Button(
                         action: { changeMonth(by: -1) },
                         label: {
-                            Image(systemName: "chevron.left")
-                                .font(.lummiFont(size: 18))
-                                .foregroundColor(themeManager.currentTheme.textColor.opacity(isOldestMonth ? 0.2 : 0.8))
+                            Circle()
+                                .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                                .adaptiveGlass(in: Circle())
+                                .frame(width: 36, height: 36)
+                                .overlay(
+                                    Image(systemName: "chevron.left")
+                                        .font(.lummiFont(size: 16, weight: .bold))
+                                        .foregroundColor(themeManager.currentTheme.textColor.opacity(isOldestMonth ? 0.2 : 0.8))
+                                )
                         }
                     )
                     .disabled(isOldestMonth)
                     .accessibilityIdentifier("PreviousMonthButton")
-                    
+
                     Text(formatMonth(selectedMonth))
                         .font(.lummiFont(size: 20))
                         .foregroundColor(themeManager.currentTheme.textColor.opacity(0.7))
                         .frame(minWidth: 160, alignment: .center)
                         .accessibilityIdentifier("CurrentMonthLabel")
-                    
+
                     Button(
                         action: { changeMonth(by: 1) },
                         label: {
-                            Image(systemName: "chevron.right")
-                                .font(.lummiFont(size: 18))
-                                .foregroundColor(themeManager.currentTheme.textColor.opacity(isCurrentMonth ? 0.2 : 0.8))
+                            Circle()
+                                .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                                .adaptiveGlass(in: Circle())
+                                .frame(width: 36, height: 36)
+                                .overlay(
+                                    Image(systemName: "chevron.right")
+                                        .font(.lummiFont(size: 16, weight: .bold))
+                                        .foregroundColor(themeManager.currentTheme.textColor.opacity(isCurrentMonth ? 0.2 : 0.8))
+                                )
                         }
                     )
                     .disabled(isCurrentMonth)
                     .accessibilityIdentifier("NextMonthButton")
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
-                .padding(.bottom, 10)
 
                 // MARK: - Main Content Area
                 ScrollView(showsIndicators: false) {
-                    VStack(spacing: AdaptiveLayout.getSize(for: 35)) {
-                        
-                        let itemSize = geometry.size.width * 0.42
-                        
-                        // MARK: - Joys & Streak
-                        HStack(spacing: AdaptiveLayout.getSize(for: 15)) {
-                            GlowCard(
-                                value: "\(monthlyEntries.count)",
-                                subtitle: "Joys",
-                                gradientColors: [Color(red: 1.0, green: 0.7, blue: 0.75), Color(red: 0.95, green: 0.4, blue: 0.55)]
-                            )
-                            
-                            GlowCard(
-                                value: "\(monthStreak)",
-                                subtitle: "Day streak",
-                                gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)]
-                            )
+                    VStack(spacing: 35) {
+
+                        let itemSize = geometry.size.width * 0.09
+
+                        // MARK: - Highlights
+                        VStack(alignment: .leading, spacing: 15) {
+                            Text("Highlights")
+                                .font(.lummiFont(size: 20, weight: .bold))
+                                .foregroundColor(themeManager.currentTheme.textColor)
+                                // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
+                                .padding(.leading, 10)
+
+                            if AdaptiveLayout.isPad {
+                                // MARK: - Joys, Streak & Joyful Hours (iPad: one row of squares)
+                                let padCardSize = (geometry.size.width - 50) / 3
+
+                                HStack(spacing: 15) {
+                                    GlowCard(
+                                        value: "\(monthlyEntries.count)",
+                                        subtitle: "Joys",
+                                        systemImage: "star.fill",
+                                        iconColor: Color(red: 1.0, green: 0.55, blue: 0.1),
+                                        gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.2, green: 0.6, blue: 0.3)],
+                                        height: padCardSize,
+                                        valueFontSize: 28,
+                                        valuePadding: 12
+                                    )
+                                    .frame(width: padCardSize)
+
+                                    GlowCard(
+                                        value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
+                                        subtitle: "Joyful Hours",
+                                        systemImage: "sun.max.fill",
+                                        gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)],
+                                        height: padCardSize,
+                                        valueFontSize: 28,
+                                        valuePadding: 12
+                                    )
+                                    .frame(width: padCardSize)
+
+                                    GlowCard(
+                                        value: "\(monthStreak)",
+                                        subtitle: "Day Streak",
+                                        systemImage: "flame.fill",
+                                        iconColor: Color(red: 0.95, green: 0.2, blue: 0.2),
+                                        gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)],
+                                        height: padCardSize,
+                                        valueFontSize: 28,
+                                        valuePadding: 12
+                                    )
+                                    .frame(width: padCardSize)
+                                }
+                            } else {
+                                // MARK: - Joys & Streak
+                                HStack(spacing: 15) {
+                                    GlowCard(
+                                        value: "\(monthlyEntries.count)",
+                                        subtitle: "Joys",
+                                        systemImage: "star.fill",
+                                        iconColor: Color(red: 1.0, green: 0.55, blue: 0.1),
+                                        gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.2, green: 0.6, blue: 0.3)],
+                                        valueFontSize: 28,
+                                        valuePadding: 12
+                                    )
+
+                                    GlowCard(
+                                        value: "\(monthStreak)",
+                                        subtitle: "Day Streak",
+                                        systemImage: "flame.fill",
+                                        iconColor: Color(red: 0.95, green: 0.2, blue: 0.2),
+                                        gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)],
+                                        valueFontSize: 28,
+                                        valuePadding: 12
+                                    )
+                                }
+                                .frame(maxWidth: .infinity, minHeight: itemSize * 0.65)
+
+                                // MARK: - Joyful Hours
+                                GlowCard(
+                                    value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
+                                    subtitle: "Joyful Hours",
+                                    systemImage: "sun.max.fill",
+                                    gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)],
+                                    height: 130,
+                                    valueFontSize: 28,
+                                    valuePadding: 30
+                                )
+                            }
                         }
-                        .frame(maxWidth: .infinity, minHeight: itemSize * 0.8)
-                        
-                        // MARK: - Joyful Hours
-                        GlowCard(
-                            value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
-                            subtitle: "Joyful Hours",
-                            gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)],
-                            height: 130,
-                            valueFontSize: 38,
-                            valuePadding: 50
-                        )
-                        
-                        // MARK: - All Moments
+
+                        // MARK: - Recall
                         if !monthlyEntries.isEmpty {
-                            VStack(spacing: 0) {
+                            VStack(alignment: .leading, spacing: 15) {
+                                Text("Recall")
+                                    .font(.lummiFont(size: 20, weight: .bold))
+                                    .foregroundColor(themeManager.currentTheme.textColor)
+                                    // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
+                                    .padding(.leading, 10)
+
                                 Button(
                                     action: {
                                         withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                                            isListExpanded.toggle()
+                                            isShowingAllJoys = true
                                         }
                                     },
                                     label: {
                                         ZStack {
-                                            HStack(spacing: 8) {
-                                                Text("Want to see all moments?")
-                                                    .textCase(.uppercase)
-                                                    .font(.lummiFont(size: 18))
+                                            RoundedRectangle(cornerRadius: 30)
+                                                .fill(themeManager.currentTheme.textColor.opacity(0.05))
+
+                                            HStack(spacing: 10) {
+                                                Image(systemName: "list.star")
+                                                    .font(.system(size: 17, weight: .semibold))
+                                                    .foregroundColor(Color(red: 0.3, green: 0.6, blue: 0.95))
+
+                                                Text("Show All Joys")
+                                                    .font(.lummiFont(size: 17))
                                                     .foregroundColor(themeManager.currentTheme.textColor)
-                                                
-                                                Image(systemName: "chevron.down")
+
+                                                Spacer()
+
+                                                Image(systemName: "chevron.right")
                                                     .font(.system(size: 14, weight: .bold))
                                                     .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
-                                                    .rotationEffect(.degrees(isListExpanded ? 180 : 0))
                                             }
-                                            VStack {
-                                                Spacer()
-                                                Text("Tap here")
-                                                    .font(.lummiFont(size: 12))
-                                                    .opacity(0.7)
-                                                    .textCase(.uppercase)
-                                                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.85))
-                                                    .padding(.bottom, AdaptiveLayout.getSize(for: 16))
-                                            }
+                                            .padding(.horizontal, 26)
                                         }
                                         .frame(maxWidth: .infinity)
-                                        .frame(height: AdaptiveLayout.getSize(for: 130))
-                                        .background {
-                                            ZStack {
-                                                RoundedRectangle(cornerRadius: 30)
-                                                    .fill(
-                                                        LinearGradient(
-                                                            colors: [
-                                                                Color(red: 1.0, green: 0.8, blue: 0.3),
-                                                                Color(red: 0.2, green: 0.6, blue: 0.3)
-                                                            ],
-                                                            startPoint: .topLeading,
-                                                            endPoint: .bottomTrailing
-                                                        )
-                                                    )
-                                                    .blur(radius: 15)
-                                                    .opacity(0.8)
-                                            }
-                                            .frame(maxWidth: .infinity)
-                                            .padding(.horizontal, AdaptiveLayout.getSize(for: 15))
-                                        }
+                                        // Matches the Settings screen's row ovals (31pt content + 14pt vertical padding)
+                                        .frame(height: 59)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 30)
+                                                .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
+                                        )
                                     }
                                 )
                                 .buttonStyle(.plain)
-                                .zIndex(1)
-                                
-                                if isListExpanded {
-                                    VStack(spacing: AdaptiveLayout.getSize(for: 12)) {
-                                        ForEach(monthlyEntries.sorted(by: { $0.date > $1.date })) { entry in
-                                            MonthlyMomentCell(entry: entry)
-                                        }
-                                    }
-                                    .padding(.top, AdaptiveLayout.getSize(for: 35))
-                                    .zIndex(0)
-                                    .transition(.opacity.combined(with: .offset(y: -40)))
-                                }
+                                .accessibilityIdentifier("SeeAllJoysButton")
                             }
-                            .padding(.bottom, AdaptiveLayout.getSize(for: 40))
                         }
                     }
-                    .padding(.top, AdaptiveLayout.getSize(for: 30))
-                    .padding(.horizontal, AdaptiveLayout.getSize(for: 10))
-                    .padding(.bottom, AdaptiveLayout.getSize(for: 100))
+                    .padding(.horizontal, 10)
+                    .padding(.bottom, 100)
                 }
+                .ignoresSafeArea(.container, edges: .bottom)
             }
         }
         .onAppear {
@@ -203,13 +260,12 @@ struct InsightsView: View {
         if let newMonth = Calendar.current.date(byAdding: .month, value: value, to: selectedMonth) {
             withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
                 selectedMonth = newMonth
-                isListExpanded = false
             }
         }
     }
     
     private func formatMonth(_ date: Date) -> String {
-        date.format("LLLL yyyy", locale: locale).uppercased()
+        date.format("LLLL yyyy", locale: locale).capitalizedFirstLetter
     }
 }
 
@@ -219,6 +275,8 @@ struct GlowCard: View {
     @Environment(ThemeManager.self) private var themeManager
     var value: String
     var subtitle: LocalizedStringResource
+    var systemImage: String
+    var iconColor: Color?
     var gradientColors: [Color]
     var height: CGFloat = 170
     var valueFontSize: CGFloat = 45
@@ -226,32 +284,39 @@ struct GlowCard: View {
 
     var body: some View {
         ZStack {
+            RoundedRectangle(cornerRadius: 30)
+                .fill(LinearGradient(colors: gradientColors, startPoint: .topLeading, endPoint: .bottomTrailing))
+                .opacity(0.35)
+                .adaptiveGlass(in: RoundedRectangle(cornerRadius: 30))
+
             Text(value)
                 .font(.lummiFont(size: valueFontSize))
                 .foregroundColor(themeManager.currentTheme.textColor)
-                .minimumScaleFactor(0.4)
+                .minimumScaleFactor(0.3)
                 .lineLimit(1)
-                .padding(.horizontal, AdaptiveLayout.getSize(for: valuePadding))
+                .padding(.horizontal, valuePadding)
 
             VStack {
                 Spacer()
-                Text(subtitle)
-                    .textCase(.uppercase)
-                    .font(.lummiFont(size: 12))
-                    .opacity(0.7)
-                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.85))
-                    .padding(.bottom, AdaptiveLayout.getSize(for: 16))
+                HStack(spacing: 4) {
+                    Image(systemName: systemImage)
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundColor(iconColor ?? gradientColors.first ?? themeManager.currentTheme.textColor)
+
+                    Text(subtitle)
+                        .font(.lummiFont(size: 12))
+                        .opacity(0.7)
+                        .foregroundColor(themeManager.currentTheme.textColor.opacity(0.85))
+                }
+                .padding(.bottom, 16)
             }
         }
         .frame(maxWidth: .infinity)
-        .frame(height: AdaptiveLayout.getSize(for: height))
-        .background {
+        .frame(height: height)
+        .overlay(
             RoundedRectangle(cornerRadius: 30)
-                .fill(LinearGradient(colors: gradientColors, startPoint: .topLeading, endPoint: .bottomTrailing))
-                .blur(radius: 15)
-                .opacity(0.8)
-                .padding(.horizontal, AdaptiveLayout.getSize(for: 15))
-        }
+                .stroke(themeManager.currentTheme.textColor.opacity(0.15), lineWidth: 1)
+        )
     }
 }
 
@@ -261,34 +326,30 @@ struct MonthlyMomentCell: View {
     let entry: JoyEntry
     
     var body: some View {
-        HStack(alignment: .top, spacing: AdaptiveLayout.getSize(for: 12)) {
+        HStack(alignment: .top, spacing: 12) {
             VStack(alignment: .center, spacing: 2) {
                 Text(entry.date.format("dd", locale: locale))
                     .font(.lummiFont(size: 18))
                     .foregroundColor(themeManager.currentTheme.textColor)
                 
-                Text(entry.date.format("MMM", locale: locale).uppercased())
+                Text(entry.date.format("MMM", locale: locale).capitalizedFirstLetter)
                     .font(.lummiFont(size: 11))
                     .foregroundColor(themeManager.currentTheme.textColor.opacity(0.5))
             }
-            .frame(width: AdaptiveLayout.getSize(for: 35))
-            .padding(.top, AdaptiveLayout.getSize(for: 4))
+            .frame(width: 35)
+            .padding(.top, 4)
 
             Text(entry.text)
-                .font(.lummiFont(size: 16))
+                .font(.lummiFont(size: 17))
                 .foregroundColor(themeManager.currentTheme.textColor)
+                .padding(20)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(AdaptiveLayout.getSize(for: 16))
-                .background(
-                    RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 16))
-                        .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: AdaptiveLayout.getSize(for: 16))
-                                .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
-                        )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(Color.white.opacity(0.25), lineWidth: 1)
                 )
         }
-        .padding(.leading, AdaptiveLayout.getSize(for: 4))
-        .padding(.trailing, AdaptiveLayout.getSize(for: 15))
+        .padding(.leading, 4)
+        .padding(.trailing, 15)
     }
 }
