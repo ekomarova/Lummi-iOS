@@ -122,6 +122,8 @@ struct InsightsView: View {
                                     GlowCard(
                                         value: "\(monthlyEntries.count)",
                                         subtitle: "Joys",
+                                        systemImage: "star.fill",
+                                        iconColor: Color(red: 1.0, green: 0.55, blue: 0.1),
                                         gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.2, green: 0.6, blue: 0.3)],
                                         height: padCardSize,
                                         valueFontSize: 28,
@@ -132,6 +134,7 @@ struct InsightsView: View {
                                     GlowCard(
                                         value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
                                         subtitle: "Joyful Hours",
+                                        systemImage: "sun.max.fill",
                                         gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)],
                                         height: padCardSize,
                                         valueFontSize: 28,
@@ -142,6 +145,8 @@ struct InsightsView: View {
                                     GlowCard(
                                         value: "\(monthStreak)",
                                         subtitle: "Day streak",
+                                        systemImage: "flame.fill",
+                                        iconColor: Color(red: 0.95, green: 0.2, blue: 0.2),
                                         gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)],
                                         height: padCardSize,
                                         valueFontSize: 28,
@@ -155,6 +160,8 @@ struct InsightsView: View {
                                     GlowCard(
                                         value: "\(monthlyEntries.count)",
                                         subtitle: "Joys",
+                                        systemImage: "star.fill",
+                                        iconColor: Color(red: 1.0, green: 0.55, blue: 0.1),
                                         gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.2, green: 0.6, blue: 0.3)],
                                         valueFontSize: 28,
                                         valuePadding: 12
@@ -163,6 +170,8 @@ struct InsightsView: View {
                                     GlowCard(
                                         value: "\(monthStreak)",
                                         subtitle: "Day streak",
+                                        systemImage: "flame.fill",
+                                        iconColor: Color(red: 0.95, green: 0.2, blue: 0.2),
                                         gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)],
                                         valueFontSize: 28,
                                         valuePadding: 12
@@ -174,6 +183,7 @@ struct InsightsView: View {
                                 GlowCard(
                                     value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
                                     subtitle: "Joyful Hours",
+                                    systemImage: "sun.max.fill",
                                     gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)],
                                     height: 100,
                                     valueFontSize: 28,
@@ -202,9 +212,13 @@ struct InsightsView: View {
                                             RoundedRectangle(cornerRadius: 30)
                                                 .fill(themeManager.currentTheme.textColor.opacity(0.05))
 
-                                            HStack {
-                                                Text("See all joys")
-                                                    .font(.lummiFont(size: 18))
+                                            HStack(spacing: 10) {
+                                                Image(systemName: "list.star")
+                                                    .font(.system(size: 17, weight: .semibold))
+                                                    .foregroundColor(Color(red: 0.3, green: 0.6, blue: 0.95))
+
+                                                Text("Show All Joys")
+                                                    .font(.lummiFont(size: 17))
                                                     .foregroundColor(themeManager.currentTheme.textColor)
 
                                                 Spacer()
@@ -261,6 +275,8 @@ struct GlowCard: View {
     @Environment(ThemeManager.self) private var themeManager
     var value: String
     var subtitle: LocalizedStringResource
+    var systemImage: String
+    var iconColor: Color? = nil
     var gradientColors: [Color]
     var height: CGFloat = 170
     var valueFontSize: CGFloat = 45
@@ -282,11 +298,17 @@ struct GlowCard: View {
 
             VStack {
                 Spacer()
-                Text(subtitle)
-                    .font(.lummiFont(size: 12))
-                    .opacity(0.7)
-                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.85))
-                    .padding(.bottom, 16)
+                HStack(spacing: 4) {
+                    Image(systemName: systemImage)
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundColor(iconColor ?? gradientColors.first ?? themeManager.currentTheme.textColor)
+
+                    Text(subtitle)
+                        .font(.lummiFont(size: 12))
+                        .opacity(0.7)
+                        .foregroundColor(themeManager.currentTheme.textColor.opacity(0.85))
+                }
+                .padding(.bottom, 16)
             }
         }
         .frame(maxWidth: .infinity)
