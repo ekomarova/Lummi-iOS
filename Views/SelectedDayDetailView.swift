@@ -290,7 +290,7 @@ private extension SelectedDayDetailView {
 
     func noteCellTextDisplay(entry: JoyEntry, index: Int, isActive: Bool, proxy: ScrollViewProxy) -> some View {
         Text(entry.text)
-            .font(.lummiFont(size: 16))
+            .font(.lummiFont(size: 17))
             .foregroundColor(themeManager.currentTheme.textColor)
             .padding(20)
             .frame(maxWidth: .infinity, alignment: .leading)

@@ -329,7 +329,7 @@ struct MonthlyMomentCell: View {
             .padding(.top, 4)
 
             Text(entry.text)
-                .font(.lummiFont(size: 16))
+                .font(.lummiFont(size: 17))
                 .foregroundColor(themeManager.currentTheme.textColor)
                 .padding(20)
                 .frame(maxWidth: .infinity, alignment: .leading)
