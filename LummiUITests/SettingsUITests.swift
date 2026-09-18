@@ -85,38 +85,39 @@ final class SettingsUITests: XCTestCase {
     func test_LanguageSectionExists() throws {
         launchApp(with: ["-UI_TESTING_CALENDAR"])
         app.buttons["SettingsButton_Inactive"].tap()
-        
+
         let languageLabel = app.staticTexts["LanguageLabel"]
         XCTAssertTrue(languageLabel.waitForExistence(timeout: 2.0), "Language label is missing")
 
-        let languagePicker = app.buttons["LanguagePicker"]
-        XCTAssertTrue(languagePicker.exists, "Language picker is missing")
+        let languageSelector = app.buttons["LanguageSelectorButton"]
+        XCTAssertTrue(languageSelector.exists, "Language selector is missing")
     }
-    
+
     // Check language changing
     func test_LanguageSelectionChangesAppLanguage() throws {
         launchApp(with: ["-UI_TESTING_CALENDAR"])
         app.buttons["SettingsButton_Inactive"].tap()
-        
+
         let languageLabel = app.staticTexts["LanguageLabel"]
-        let languagePicker = app.buttons["LanguagePicker"]
+        let languageSelector = app.buttons["LanguageSelectorButton"]
 
         XCTAssertTrue(languageLabel.waitForExistence(timeout: 2.0))
-        XCTAssertTrue(languagePicker.waitForExistence(timeout: 2.0))
+        XCTAssertTrue(languageSelector.waitForExistence(timeout: 2.0))
 
-        languagePicker.tap()
-        app.buttons["Русский"].tap()
+        languageSelector.tap()
+        app.buttons["LanguageOption_ru"].tap()
 
+        XCTAssertTrue(languageSelector.waitForExistence(timeout: 2.0), "Should navigate back to settings after selecting a language")
         XCTAssertEqual(languageLabel.label.uppercased(), "Язык".uppercased(), "The language has not switched to Russian")
 
-        languagePicker.tap()
-        app.buttons["Deutsch"].tap()
-        
+        languageSelector.tap()
+        app.buttons["LanguageOption_de"].tap()
+
         XCTAssertEqual(languageLabel.label.uppercased(), "Sprache".uppercased(), "The language has not switched to German")
 
-        languagePicker.tap()
-        app.buttons["English"].tap()
-        
+        languageSelector.tap()
+        app.buttons["LanguageOption_en"].tap()
+
         XCTAssertEqual(languageLabel.label.uppercased(), "Language".uppercased(), "The language has not switched to English")
     }
     
@@ -126,60 +127,55 @@ final class SettingsUITests: XCTestCase {
     func test_iCloudSyncSectionExists() throws {
         launchApp(with: ["-UI_TESTING_CALENDAR"])
         app.buttons["SettingsButton_Inactive"].tap()
-        
-        let iCloudLabel = app.staticTexts["iCloud Sync"]
-        XCTAssertTrue(iCloudLabel.waitForExistence(timeout: 2.0), "iCloud Sync label is missing")
-        
-        let disabledBtn = app.buttons["iCloudDisabledButton"]
-        let enabledBtn = app.buttons["iCloudEnabledButton"]
-        
-        XCTAssertTrue(disabledBtn.exists, "iCloud disabled button is missing")
-        XCTAssertTrue(enabledBtn.exists, "iCloud enabled button is missing")
+
+        let syncLabel = app.staticTexts["Sync"]
+        XCTAssertTrue(syncLabel.waitForExistence(timeout: 2.0), "Sync label is missing")
+
+        let iCloudLabel = app.staticTexts["iCloud"]
+        XCTAssertTrue(iCloudLabel.waitForExistence(timeout: 2.0), "iCloud label is missing")
+
+        let syncToggle = app.switches["iCloudSyncToggle"]
+        XCTAssertTrue(syncToggle.exists, "iCloud Sync toggle is missing")
     }
 
     // Check iCloud sync state change
     func test_iCloudSyncSelectionSwitchesState() throws {
         launchApp(with: ["-UI_TESTING_CALENDAR"])
         app.buttons["SettingsButton_Inactive"].tap()
-        
-        let disabledBtn = app.buttons["iCloudDisabledButton"]
-        let enabledBtn = app.buttons["iCloudEnabledButton"]
-        XCTAssertTrue(disabledBtn.waitForExistence(timeout: 2.0))
-        
-        enabledBtn.tap()
 
-        XCTAssertEqual(enabledBtn.value as? String, "Selected", "iCloud Sync did not become enabled")
-        XCTAssertEqual(disabledBtn.value as? String, "Unselected", "iCloud disabled button is still active")
+        let syncToggle = app.switches["iCloudSyncToggle"]
+        XCTAssertTrue(syncToggle.waitForExistence(timeout: 2.0))
 
-        disabledBtn.tap()
+        XCTAssertEqual(syncToggle.value as? String, "0", "iCloud Sync should be off by default")
 
-        XCTAssertEqual(disabledBtn.value as? String, "Selected", "iCloud Sync did not become disabled")
-        XCTAssertEqual(enabledBtn.value as? String, "Unselected", "iCloud enabled button is still active")
+        syncToggle.tap()
+
+        XCTAssertEqual(syncToggle.value as? String, "1", "iCloud Sync did not become enabled")
+
+        syncToggle.tap()
+
+        XCTAssertEqual(syncToggle.value as? String, "0", "iCloud Sync did not become disabled")
     }
-    
+
     func test_iCloudSyncErrorOverlayAppearsAndReverts() throws {
         launchApp(with: ["-UI_TESTING_FORCE_SYNC_ERROR"])
 
         app.buttons["SettingsButton_Inactive"].tap()
 
-        let disabledBtn = app.buttons["iCloudDisabledButton"]
-        let enabledBtn = app.buttons["iCloudEnabledButton"]
-        XCTAssertTrue(disabledBtn.waitForExistence(timeout: 5.0))
-        XCTAssertTrue(enabledBtn.waitForExistence(timeout: 5.0))
+        let syncToggle = app.switches["iCloudSyncToggle"]
+        XCTAssertTrue(syncToggle.waitForExistence(timeout: 5.0))
 
         // Verify initial state: sync is off
-        XCTAssertEqual(disabledBtn.value as? String, "Selected", "iCloud sync should be off by default")
-        XCTAssertEqual(enabledBtn.value as? String, "Unselected")
+        XCTAssertEqual(syncToggle.value as? String, "0", "iCloud sync should be off by default")
 
         // Try to enable sync — should fail and trigger the error overlay
-        enabledBtn.tap()
+        syncToggle.tap()
 
         let alertTitle = app.staticTexts["SyncErrorAlertTitle"]
         XCTAssertTrue(alertTitle.waitForExistence(timeout: 5.0), "Sync error overlay should appear after container failure")
 
         // Toggle must have reverted back to disabled
-        XCTAssertEqual(disabledBtn.value as? String, "Selected", "iCloud toggle should revert to disabled after error")
-        XCTAssertEqual(enabledBtn.value as? String, "Unselected", "iCloud enabled button should be unselected after error")
+        XCTAssertEqual(syncToggle.value as? String, "0", "iCloud toggle should revert to disabled after error")
 
         // Dismiss the overlay
         app.buttons["SyncErrorAlertOKButton"].tap()
@@ -202,9 +198,9 @@ final class SettingsUITests: XCTestCase {
         XCTAssertFalse(bannerMessage.exists, "Banner should not be visible when iCloud Sync is disabled")
 
         // Enable Sync
-        let enableSyncBtn = app.buttons["iCloudEnabledButton"]
-        XCTAssertTrue(enableSyncBtn.waitForExistence(timeout: 5.0))
-        enableSyncBtn.tap()
+        let syncToggle = app.switches["iCloudSyncToggle"]
+        XCTAssertTrue(syncToggle.waitForExistence(timeout: 5.0))
+        syncToggle.tap()
 
         XCTAssertTrue(bannerMessage.waitForExistence(timeout: 5.0), "Banner should be visible when iCloud Sync is enabled but unavailable")
     }
@@ -216,9 +212,9 @@ final class SettingsUITests: XCTestCase {
         launchApp(with: ["-UI_TESTING_CALENDAR", "-UI_TESTING_ICLOUD_LOGGED_OUT"])
 
         app.buttons["SettingsButton_Inactive"].tap()
-        let enableSyncBtn = app.buttons["iCloudEnabledButton"]
-        XCTAssertTrue(enableSyncBtn.waitForExistence(timeout: 5.0))
-        enableSyncBtn.tap()
+        let syncToggle = app.switches["iCloudSyncToggle"]
+        XCTAssertTrue(syncToggle.waitForExistence(timeout: 5.0))
+        syncToggle.tap()
 
         let bannerMessage = app.staticTexts["Synchronization is suspended. Please log in to iCloud in Settings."]
         XCTAssertTrue(bannerMessage.waitForExistence(timeout: 5.0), "Banner should show the logged-out message when iCloud account is signed out")

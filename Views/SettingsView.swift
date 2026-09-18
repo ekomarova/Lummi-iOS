@@ -37,8 +37,20 @@ struct SettingsView: View {
     @State private var syncBannerVisible = false
 
     @State private var showClearDataAlert: Bool = false
+    @State private var isShowingLanguageSelection: Bool = false
 
     var body: some View {
+        if isShowingLanguageSelection {
+            LanguageSelectionView(
+                selectedLanguage: $selectedLanguage,
+                isShowingLanguageSelection: $isShowingLanguageSelection
+            )
+        } else {
+            settingsContent
+        }
+    }
+
+    private var settingsContent: some View {
         ZStack {
             VStack(alignment: .leading, spacing: 30) {
                 Text("Settings")
@@ -47,30 +59,109 @@ struct SettingsView: View {
                     .padding(.top, 10)
 
                 // MARK: - Appearance
-                HStack {
+                VStack(alignment: .leading, spacing: 15) {
                     Text("Appearance")
-                        .font(.lummiFont(size: 18))
+                        .font(.lummiFont(size: 20, weight: .bold))
                         .foregroundColor(themeManager.currentTheme.textColor)
-                    
-                    Spacer()
-                    
+
                     HStack(spacing: 0) {
-                        LummiSegmentButton(
-                            // Light
-                            icon: "sun.max.fill",
+                        ThemeOptionButton(
+                            title: "Light",
                             isSelected: !themeManager.isDark,
                             accessibilityID: "LightThemeButton",
                             action: { withAnimation(.spring()) { themeManager.isDark = false } }
                         )
-                        
-                        LummiSegmentButton(
-                            // Dark
-                            icon: "moon.stars.fill",
+
+                        ThemeOptionButton(
+                            title: "Dark",
                             isSelected: themeManager.isDark,
                             accessibilityID: "DarkThemeButton",
                             action: { withAnimation(.spring()) { themeManager.isDark = true } }
                         )
                     }
+                    .padding(.vertical, 20)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
+                    )
+                }
+                
+                // MARK: - Language
+                VStack(alignment: .leading, spacing: 15) {
+                    Text("Language")
+                        .font(.lummiFont(size: 20, weight: .bold))
+                        .foregroundColor(themeManager.currentTheme.textColor)
+                        .accessibilityIdentifier("LanguageLabel")
+
+                    Button(
+                        action: {
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                isShowingLanguageSelection = true
+                            }
+                        },
+                        label: {
+                            HStack {
+                                Text(selectedLanguage.displayName)
+                                    .font(.lummiFont(size: 17))
+                                    .foregroundColor(themeManager.currentTheme.textColor)
+
+                                Spacer()
+
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 14, weight: .bold))
+                                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
+                            }
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 14)
+                            .background(
+                                Capsule()
+                                    .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                            )
+                            .overlay(
+                                Capsule()
+                                    .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
+                            )
+                        }
+                    )
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("LanguageSelectorButton")
+                }
+
+                // MARK: - Sync
+                VStack(alignment: .leading, spacing: 15) {
+                    Text("Sync")
+                        .font(.lummiFont(size: 20, weight: .bold))
+                        .foregroundColor(themeManager.currentTheme.textColor)
+
+                    HStack {
+                        Text("iCloud")
+                            .font(.lummiFont(size: 17))
+                            .foregroundColor(themeManager.currentTheme.textColor)
+
+                        Spacer()
+
+                        Toggle(
+                            "iCloud",
+                            isOn: Binding(
+                                get: { isICloudSyncEnabled },
+                                set: { newValue in
+                                    if newValue { syncBannerVisible = false }
+                                    withAnimation(.spring()) { isICloudSyncEnabled = newValue }
+                                }
+                            )
+                        )
+                        .labelsHidden()
+                        .toggleStyle(.switch)
+                        .scaleEffect(0.75)
+                        .frame(width: 38, height: 23)
+                        .accessibilityIdentifier("iCloudSyncToggle")
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 14)
                     .background(
                         Capsule()
                             .fill(themeManager.currentTheme.textColor.opacity(0.05))
@@ -79,43 +170,7 @@ struct SettingsView: View {
                         Capsule()
                             .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
                     )
-                }
-                
-                // MARK: - iCloud sync
-                VStack(spacing: 15) {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("iCloud Sync")
-                                .font(.lummiFont(size: 17))
-                                .foregroundColor(themeManager.currentTheme.textColor)
-                        }
-                        
-                        Spacer()
-                        
-                        HStack(spacing: 0) {
-                            LummiSegmentButton(
-                                icon: "xmark.circle.fill",
-                                isSelected: !isICloudSyncEnabled,
-                                color: isICloudSyncEnabled ? nil : Color(red: 0.95, green: 0.2, blue: 0.3),
-                                accessibilityID: "iCloudDisabledButton",
-                                action: { withAnimation(.spring()) { isICloudSyncEnabled = false } }
-                            )
 
-                            LummiSegmentButton(
-                                icon: "checkmark.circle.fill",
-                                isSelected: isICloudSyncEnabled,
-                                color: !isICloudSyncEnabled ? nil : Color(red: 0.2, green: 0.9, blue: 0.4),
-                                accessibilityID: "iCloudEnabledButton",
-                                action: {
-                                    syncBannerVisible = false
-                                    withAnimation(.spring()) { isICloudSyncEnabled = true }
-                                }
-                            )
-                        }
-                        .background(Capsule().fill(themeManager.currentTheme.textColor.opacity(0.05)))
-                        .overlay(Capsule().stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1))
-                    }
-                    
                     // MARK: - iCloud Sync Banner
                     if isICloudSyncEnabled && syncBannerVisible, let syncMessage = syncMonitor.syncState.message {
                         HStack(alignment: .top, spacing: 12) {
@@ -139,59 +194,39 @@ struct SettingsView: View {
                         .animation(.spring(), value: syncMonitor.syncState)
                     }
                 }
-                
-                // MARK: - Language
-                HStack {
-                    Text("Language")
-                        .font(.lummiFont(size: 18))
+
+                // MARK: - Clear All Data
+                VStack(alignment: .leading, spacing: 15) {
+                    Text("Data")
+                        .font(.lummiFont(size: 20, weight: .bold))
                         .foregroundColor(themeManager.currentTheme.textColor)
-                        .accessibilityIdentifier("LanguageLabel")
-                    
-                    Spacer()
-                    
-                    ZStack {
-                        HStack(spacing: 4) {
-                            Text(selectedLanguage.displayName)
+
+                    Button(
+                        action: {
+                            withAnimation { showClearDataAlert = true }
+                        },
+                        label: {
+                            Text("Delete")
                                 .font(.lummiFont(size: 17))
-                            
-                            Image(systemName: "chevron.up.chevron.down")
-                                .font(.system(size: 15, weight: .medium))
+                                .foregroundColor(Color(red: 0.95, green: 0.2, blue: 0.3))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 14)
+                                .background(
+                                    Capsule()
+                                        .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                                )
+                                .overlay(
+                                    Capsule()
+                                        .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
+                                )
                         }
-                        .foregroundColor(themeManager.currentTheme.textColor)
-
-                        Picker("Language", selection: $selectedLanguage) {
-                            ForEach(AppLanguage.allCases) { language in
-                                Text(language.displayName)
-                                    .tag(language)
-                                    .font(.lummiFont(size: 17))
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        .tint(.clear)
-                        .accessibilityIdentifier("LanguagePicker")
-                    }
+                    )
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("ClearAllDataButton")
                 }
-                
-                Spacer()
 
-                // MARK: - Delete all data!
-                Button(
-                    action: {
-                        withAnimation { showClearDataAlert = true }
-                    },
-                    label: {
-                        Text("Clear All Data")
-                            .font(.lummiFont(size: 16))
-                            .foregroundColor(Color(red: 0.95, green: 0.2, blue: 0.3))
-                            .padding(.vertical, 12)
-                            .padding(.horizontal, 40)
-                            .background(Capsule().fill(Color(red: 0.95, green: 0.2, blue: 0.3).opacity(0.1)))
-                            .overlay(Capsule().stroke(Color(red: 0.95, green: 0.2, blue: 0.3), lineWidth: 1))
-                    }
-                )
-                .frame(maxWidth: .infinity, alignment: .center)
-                .padding(.bottom, 100)
-                .accessibilityIdentifier("ClearAllDataButton")
+                Spacer()
             }
             .padding(.horizontal, 20)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -288,22 +323,127 @@ struct SettingsView: View {
     }
 }
 
-struct LummiSegmentButton: View {
+struct LanguageSelectionView: View {
     @Environment(ThemeManager.self) private var themeManager
-    
-    let icon: String
+    @Binding var selectedLanguage: AppLanguage
+    @Binding var isShowingLanguageSelection: Bool
+
+    var body: some View {
+        VStack(spacing: 0) {
+            ZStack {
+                Text("Language")
+                    .font(.lummiFont(size: 24, weight: .bold))
+                    .foregroundColor(themeManager.currentTheme.textColor)
+                    .frame(maxWidth: .infinity, alignment: .center)
+
+                HStack {
+                    Button(
+                        action: {
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                isShowingLanguageSelection = false
+                            }
+                        },
+                        label: {
+                            Circle()
+                                .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                                .adaptiveGlass(in: Circle())
+                                .frame(width: 44, height: 44)
+                                .overlay(
+                                    Image(systemName: "arrow.left")
+                                        .font(.lummiFont(size: 16, weight: .bold))
+                                        .foregroundColor(themeManager.currentTheme.textColor)
+                                )
+                        }
+                    )
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("LanguageSelectionBackButton")
+
+                    Spacer()
+                }
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 10)
+
+            VStack(spacing: 12) {
+                ForEach(AppLanguage.allCases) { language in
+                    Button(
+                        action: {
+                            selectedLanguage = language
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                isShowingLanguageSelection = false
+                            }
+                        },
+                        label: {
+                            HStack {
+                                Text(language.displayName)
+                                    .font(.lummiFont(size: 17))
+                                    .foregroundColor(themeManager.currentTheme.textColor)
+
+                                Spacer()
+
+                                if language == selectedLanguage {
+                                    Image(systemName: "checkmark")
+                                        .font(.system(size: 15, weight: .bold))
+                                        .foregroundColor(themeManager.currentTheme.textColor)
+                                }
+                            }
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 16)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
+                            )
+                        }
+                    )
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("LanguageOption_\(language.rawValue)")
+                }
+            }
+            .padding(.top, 30)
+            .padding(.horizontal, 20)
+
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .transition(.move(edge: .trailing).combined(with: .opacity))
+    }
+}
+
+struct ThemeOptionButton: View {
+    @Environment(ThemeManager.self) private var themeManager
+
+    let title: LocalizedStringKey
     let isSelected: Bool
-    var color: Color?
     let accessibilityID: String
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
-            Image(systemName: icon)
-                .font(.lummiFont(size: 16))
-                .foregroundColor(isSelected ? themeManager.currentTheme.backgroundColor : themeManager.currentTheme.textColor.opacity(0.4))
-                .frame(width: 60, height: 36)
-                .background(Capsule().fill(isSelected ? (color ?? themeManager.currentTheme.textColor.opacity(0.85)) : Color.clear))
+            VStack(spacing: 12) {
+                Text(title)
+                    .font(.lummiFont(size: 16))
+                    .foregroundColor(themeManager.currentTheme.textColor)
+
+                ZStack {
+                    Circle()
+                        .fill(isSelected ? Color.blue : Color.clear)
+                        .overlay(
+                            Circle()
+                                .stroke(themeManager.currentTheme.textColor.opacity(isSelected ? 0 : 0.3), lineWidth: 1.5)
+                        )
+
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 9, weight: .bold))
+                        .foregroundColor(.white)
+                        .opacity(isSelected ? 1 : 0)
+                }
+                .frame(width: 18, height: 18)
+            }
+            .frame(maxWidth: .infinity)
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier(accessibilityID)
