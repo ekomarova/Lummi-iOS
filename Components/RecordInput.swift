@@ -98,7 +98,7 @@ struct RecordInput: View {
             VStack(spacing: 25) {
                 TextEditor(text: $text)
                     .focused($isTextEditorFocused)
-                    .frame(height: 150)
+                    .frame(height: AdaptiveLayout.isPad ? 280 : 150)
                     .padding()
                     .scrollContentBackground(.hidden)
                     .background(
