@@ -122,7 +122,7 @@ struct InsightsView: View {
                                     GlowCard(
                                         value: "\(monthlyEntries.count)",
                                         subtitle: "Joys",
-                                        gradientColors: [Color(red: 1.0, green: 0.7, blue: 0.75), Color(red: 0.95, green: 0.4, blue: 0.55)],
+                                        gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.2, green: 0.6, blue: 0.3)],
                                         height: padCardSize,
                                         valueFontSize: 28,
                                         valuePadding: 12
@@ -155,7 +155,7 @@ struct InsightsView: View {
                                     GlowCard(
                                         value: "\(monthlyEntries.count)",
                                         subtitle: "Joys",
-                                        gradientColors: [Color(red: 1.0, green: 0.7, blue: 0.75), Color(red: 0.95, green: 0.4, blue: 0.55)],
+                                        gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.2, green: 0.6, blue: 0.3)],
                                         valueFontSize: 28,
                                         valuePadding: 12
                                     )
@@ -200,18 +200,7 @@ struct InsightsView: View {
                                     label: {
                                         ZStack {
                                             RoundedRectangle(cornerRadius: 30)
-                                                .fill(
-                                                    LinearGradient(
-                                                        colors: [
-                                                            Color(red: 1.0, green: 0.8, blue: 0.3),
-                                                            Color(red: 0.2, green: 0.6, blue: 0.3)
-                                                        ],
-                                                        startPoint: .topLeading,
-                                                        endPoint: .bottomTrailing
-                                                    )
-                                                )
-                                                .opacity(0.35)
-                                                .adaptiveGlass(in: RoundedRectangle(cornerRadius: 30))
+                                                .fill(themeManager.currentTheme.textColor.opacity(0.05))
 
                                             HStack {
                                                 Text("See all joys")
@@ -231,7 +220,7 @@ struct InsightsView: View {
                                         .frame(height: 59)
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 30)
-                                                .stroke(themeManager.currentTheme.textColor.opacity(0.15), lineWidth: 1)
+                                                .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
                                         )
                                     }
                                 )
