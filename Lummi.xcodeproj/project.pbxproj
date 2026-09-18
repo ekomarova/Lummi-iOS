@@ -33,6 +33,8 @@
 		47BB00022FC0A5EA008B5D02 /* BottomToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB00012FC0A5EA008B5D01 /* BottomToolbar.swift */; };
 		47BB00032FC0A5EA008B5D03 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB00042FC0A5EA008B5D04 /* StringExtension.swift */; };
 		47BB00052FC0A5EA008B5D05 /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB00062FC0A5EA008B5D06 /* ViewExtension.swift */; };
+		24DEA4823F27415591ADBA5F /* AllJoysView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A75A501776D443E1961E0695 /* AllJoysView.swift */; };
+		3994D6B50DC44AD6A11FE59F /* ThemeOptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,6 +88,8 @@
 		47BB00012FC0A5EA008B5D01 /* BottomToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomToolbar.swift; sourceTree = "<group>"; };
 		47BB00042FC0A5EA008B5D04 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		47BB00062FC0A5EA008B5D06 /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
+		A75A501776D443E1961E0695 /* AllJoysView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllJoysView.swift; sourceTree = "<group>"; };
+		E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeOptionButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -206,6 +210,8 @@
 				473B045A2F9BB79B00C482FA /* RecordInput.swift */,
 				473B044F2F9AD05100C482FA /* DayCell.swift */,
 				473B044D2F9ACF9500C482FA /* RecordButton.swift */,
+				A75A501776D443E1961E0695 /* AllJoysView.swift */,
+				E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -416,6 +422,8 @@
 				470FC4E7304A309F00F50A7A /* ModelContextSave.swift in Sources */,
 				473B04552F9BB2F400C482FA /* ThemeManager.swift in Sources */,
 				47BB00022FC0A5EA008B5D02 /* BottomToolbar.swift in Sources */,
+				24DEA4823F27415591ADBA5F /* AllJoysView.swift in Sources */,
+				3994D6B50DC44AD6A11FE59F /* ThemeOptionButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

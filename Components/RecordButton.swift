@@ -19,22 +19,25 @@ struct RecordButton: View {
     var body: some View {
         Group {
             if selectedDate != nil {
-                Button(action: {
-                    didTap.toggle()
-                    onTap()
-                }) {
-                    let size: CGFloat = 64
+                Button(
+                    action: {
+                        didTap.toggle()
+                        onTap()
+                    },
+                    label: {
+                        let size: CGFloat = 64
 
-                    Circle()
-                        .fill(themeManager.currentTheme.recordButtonColor.opacity(0.35))
-                        .adaptiveGlass(in: Circle())
-                        .frame(width: size, height: size)
-                        .overlay(
-                            Image(systemName: "plus")
-                                .font(.lummiFont(size: 20))
-                                .foregroundColor(themeManager.currentTheme.textColor)
-                        )
-                }
+                        Circle()
+                            .fill(themeManager.currentTheme.recordButtonColor.opacity(0.35))
+                            .adaptiveGlass(in: Circle())
+                            .frame(width: size, height: size)
+                            .overlay(
+                                Image(systemName: "plus")
+                                    .font(.lummiFont(size: 20))
+                                    .foregroundColor(themeManager.currentTheme.textColor)
+                            )
+                    }
+                )
                 .buttonStyle(.plain)
                 .accessibilityLabel("Record the joy")
                 .accessibilityIdentifier("MainRecordButton")
