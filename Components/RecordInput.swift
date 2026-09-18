@@ -12,11 +12,11 @@ import SwiftData
 
 struct RecordInput: View {
     @Environment(ThemeManager.self) private var themeManager
-    @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) private var modelContext
-    
+
     let selectedDate: Date?
-    
+    let onDismiss: () -> Void
+
     private let maxLength = 280
 
     @State private var text: String = ""
@@ -27,69 +27,34 @@ struct RecordInput: View {
     }
 
     var body: some View {
-        NavigationView {
+        VStack(spacing: 0) {
             ZStack {
-                themeManager.currentTheme.bgGradient.ignoresSafeArea()
-                
-                VStack(spacing: 25) {
-                    Text("What made you happy?")
-                        .font(.lummiFont(size: 24))
-                        .foregroundColor(themeManager.currentTheme.textColor)
-                        .padding(.top, 5)
-                    
-                    TextEditor(text: $text)
-                        .frame(height: 150)
-                        .padding()
-                        .scrollContentBackground(.hidden)
-                        .background(
-                            RoundedRectangle(cornerRadius: 20)
-                                .fill(themeManager.currentTheme.textColor.opacity(0.1))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .stroke(themeManager.currentTheme.textColor.opacity(0.2), lineWidth: 1)
-                                )
-                        )
-                        .foregroundColor(themeManager.currentTheme.textColor)
-                        .font(.lummiFont(size: 18))
-                        .accessibilityIdentifier("RecordInputTextEditor")
-                        .onChange(of: text) { _, newValue in
-                            if newValue.count > maxLength {
-                                text = String(newValue.prefix(maxLength))
-                            }
-                        }
+                Text("New Joy")
+                    .font(.lummiFont(size: 20, weight: .bold))
+                    .foregroundColor(themeManager.currentTheme.textColor)
+                    .frame(maxWidth: .infinity, alignment: .center)
 
-                    HStack {
-                        Spacer()
-                        Text("\(text.count)/\(maxLength)")
-                            .font(.lummiFont(size: 12))
-                            .foregroundColor(themeManager.currentTheme.textColor.opacity(
-                                text.count > maxLength - 20 ? 0.7 : 0.35
-                            ))
-                    }
-                    .padding(.horizontal, 5)
-
-                    Spacer()
-                }
-                .padding(.horizontal, 20)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                HStack {
                     Button(
-                        action: { dismiss() },
+                        action: onDismiss,
                         label: {
-                            Image(systemName: "chevron.left")
-                                .font(.lummiFont(size: 15))
-                                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
-                                .background(Circle().stroke(Color.clear))
-                                .frame(width: 34, height: 34)
-                                .contentShape(Circle())
+                            Circle()
+                                .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                                .adaptiveGlass(in: Circle())
+                                .frame(width: 44, height: 44)
+                                .overlay(
+                                    Image(systemName: "chevron.left")
+                                        .font(.lummiFont(size: 16, weight: .bold))
+                                        .foregroundColor(themeManager.currentTheme.textColor)
+                                )
                         }
                     )
+                    .buttonStyle(.plain)
                     .accessibilityLabel("Cancel")
                     .accessibilityIdentifier("CancelRecordButton")
-                }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
+
+                    Spacer()
+
                     Button(
                         action: {
                             if let date = selectedDate, isSaveEnabled {
@@ -97,7 +62,7 @@ struct RecordInput: View {
                                 modelContext.insert(newEntry)
                                 do {
                                     try modelContext.saveOrSimulate()
-                                    dismiss()
+                                    onDismiss()
                                 } catch {
                                     modelContext.rollback()
                                     withAnimation { showSaveAlert = true }
@@ -105,20 +70,64 @@ struct RecordInput: View {
                             }
                         },
                         label: {
-                            Image(systemName: "checkmark")
-                                .font(.lummiFont(size: 15))
-                                .foregroundColor(themeManager.currentTheme.textColor.opacity(isSaveEnabled ? 0.6 : 0.2))
-                                .background(Circle().stroke(Color.clear))
-                                .frame(width: 34, height: 34)
-                                .contentShape(Circle())
+                            Circle()
+                                .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                                .adaptiveGlass(in: Circle())
+                                .frame(width: 44, height: 44)
+                                .overlay(
+                                    Image(systemName: "checkmark")
+                                        .font(.lummiFont(size: 16, weight: .bold))
+                                        .foregroundColor(themeManager.currentTheme.textColor.opacity(isSaveEnabled ? 0.8 : 0.2))
+                                )
                         }
                     )
+                    .buttonStyle(.plain)
                     .disabled(!isSaveEnabled)
                     .accessibilityLabel("Save")
                     .accessibilityIdentifier("SaveRecordButton")
                 }
             }
+            .padding(.horizontal, 20)
+            .padding(.top, 10)
+
+            VStack(spacing: 25) {
+                TextEditor(text: $text)
+                    .frame(height: 150)
+                    .padding()
+                    .scrollContentBackground(.hidden)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(themeManager.currentTheme.textColor.opacity(0.1))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(themeManager.currentTheme.textColor.opacity(0.2), lineWidth: 1)
+                            )
+                    )
+                    .foregroundColor(themeManager.currentTheme.textColor)
+                    .font(.lummiFont(size: 18))
+                    .accessibilityIdentifier("RecordInputTextEditor")
+                    .onChange(of: text) { _, newValue in
+                        if newValue.count > maxLength {
+                            text = String(newValue.prefix(maxLength))
+                        }
+                    }
+
+                HStack {
+                    Spacer()
+                    Text("\(text.count)/\(maxLength)")
+                        .font(.lummiFont(size: 12))
+                        .foregroundColor(themeManager.currentTheme.textColor.opacity(
+                            text.count > maxLength - 20 ? 0.7 : 0.35
+                        ))
+                }
+                .padding(.horizontal, 5)
+
+                Spacer()
+            }
+            .padding(.top, 30)
+            .padding(.horizontal, 20)
         }
+        .transition(.move(edge: .trailing).combined(with: .opacity))
         .blur(radius: showSaveAlert ? 10 : 0)
         .animation(.easeInOut(duration: 0.25), value: showSaveAlert)
         .overlay {

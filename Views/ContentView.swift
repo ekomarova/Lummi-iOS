@@ -45,7 +45,7 @@ struct ContentView: View {
 
                 VStack(spacing: 15) {
                     // MARK: - Header View
-                    if !isShowingSettings && !isShowingInsights {
+                    if !isShowingSettings && !isShowingInsights && !isShowingSheet {
                         HeaderView(
                             date: isCalendarExpanded ? visibleMonth : (selectedDate ?? Date()),
                             isExpanded: isCalendarExpanded,
@@ -61,7 +61,18 @@ struct ContentView: View {
                         .transition(.move(edge: .top).combined(with: .opacity))
                     }
                         
-                    if isShowingSettings {
+                    if isShowingSheet {
+                        // MARK: - Record Input
+                        RecordInput(
+                            selectedDate: Date(),
+                            onDismiss: {
+                                withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                    isShowingSheet = false
+                                }
+                            }
+                        )
+                        .environment(themeManager)
+                    } else if isShowingSettings {
                         // MARK: - Settings View
                         SettingsView()
                             .transition(.move(edge: .trailing).combined(with: .opacity))
@@ -165,16 +176,17 @@ struct ContentView: View {
             }
         }
         .overlay(alignment: .bottom) {
-            if !isKeyboardVisible {
+            if !isKeyboardVisible && !isShowingSheet {
                 HStack(spacing: 16) {
                     // MARK: - Bottom toolbar
                     BottomToolbar(
-                        isHomeActive: !isCalendarExpanded && !isShowingSettings && !isShowingInsights &&
+                        isHomeActive: !isCalendarExpanded && !isShowingSettings && !isShowingInsights && !isShowingSheet &&
                             Calendar.current.isDateInToday(selectedDate ?? Date()),
                         isInsightsActive: isShowingInsights && !isShowingAllJoys,
                         isSettingsActive: isShowingSettings,
                         onHomeTap: {
                             withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                isShowingSheet = false
                                 isShowingSettings = false
                                 isShowingInsights = false
                                 isShowingAllJoys = false
@@ -185,6 +197,7 @@ struct ContentView: View {
                         },
                         onInsightsTap: {
                             withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                isShowingSheet = false
                                 isShowingSettings = false
                                 isCalendarExpanded = false
                                 isShowingInsights = true
@@ -193,6 +206,7 @@ struct ContentView: View {
                         },
                         onSettingsTap: {
                             withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                isShowingSheet = false
                                 isShowingInsights = false
                                 isShowingAllJoys = false
                                 isCalendarExpanded = false
@@ -206,8 +220,10 @@ struct ContentView: View {
                     RecordButton(
                         selectedDate: selectedDate,
                         onTap: {
-                            isCalendarExpanded = false
-                            isShowingSheet = true
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                isCalendarExpanded = false
+                                isShowingSheet = true
+                            }
                         }
                     )
                 }
@@ -216,13 +232,6 @@ struct ContentView: View {
                 .padding(.bottom, 10)
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }
-        }
-        .blur(radius: isShowingSheet ? 10 : 0)
-        .animation(.easeInOut(duration: 0.25), value: isShowingSheet)
-        .sheet(isPresented: $isShowingSheet) {
-            // MARK: - Record Input
-            RecordInput(selectedDate: Date())
-                .environment(themeManager)
         }
         .environment(themeManager)
         .preferredColorScheme(themeManager.isDark ? .dark : .light)

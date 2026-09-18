@@ -341,7 +341,7 @@ struct AllJoysView: View {
         VStack(spacing: 0) {
             ZStack {
                 Text("All joys")
-                    .font(.lummiFont(size: 24, weight: .bold))
+                    .font(.lummiFont(size: 20, weight: .bold))
                     .foregroundColor(themeManager.currentTheme.textColor)
                     .frame(maxWidth: .infinity, alignment: .center)
 

@@ -275,7 +275,8 @@ private extension SelectedDayDetailView {
     }
 
     var noteCellEditField: some View {
-        TextField("What made you happy?", text: $editingText, axis: .vertical)
+        TextField("", text: $editingText, axis: .vertical)
+            .accessibilityLabel("Record text")
             .accessibilityIdentifier("EditRecordTextField")
             .focused($isTextFieldFocused)
             .font(.lummiFont(size: 16))
