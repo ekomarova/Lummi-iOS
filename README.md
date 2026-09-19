@@ -54,6 +54,17 @@ UI tests written with **XCUITest** cover end-to-end user flows: calendar navigat
 ### Mocking
 A dedicated `MockDataManager` (under `#if DEBUG`) populates the database with specific states based on launch arguments, allowing robust UI testing of various scenarios without touching real user data.
 
+## 🤖 AI-assisted development (Claude Code)
+
+The repository ships with [Claude Code](https://claude.com/claude-code) configuration, so contributors using it get the same conventions and safety checks automatically:
+
+| File | What it does |
+|---|---|
+| `CLAUDE.md` | Project conventions loaded into every session: layout, git flow, code style, localization, theming, CloudKit model rules, testing and changelog requirements |
+| `.claude/settings.json` + `.claude/hooks/pre-commit.sh` | Hook that runs before every `git commit` made by Claude: blocks the commit if SwiftLint fails and restores `DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";` in `project.pbxproj` (Xcode overwrites it with automatic signing) |
+| `.claude/skills/refactor-analysis` | On-demand `/refactor-analysis [path]`: read-only search for duplicated code, hardcoded values and hacks, and design weaknesses, with a summary and a table of proposed improvements |
+| `.claude/skills/audit` | On-demand `/audit [path]`: read-only audit of bugs, security, code quality, licenses, git hygiene and release readiness, with a prioritized report |
+
 ## 💻 Setup & Requirements
 
 * **iOS 17.6+** (native Liquid Glass on iOS 26+, with a graceful fallback below that)
