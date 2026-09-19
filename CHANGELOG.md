@@ -19,6 +19,7 @@ All notable changes to the project will be documented in this file.
 
 ### Fixed
 - **iPad:** Fixed glass UI chrome, the calendar grid, and record cards being incorrectly scaled up on iPad [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- **Settings:** Fixed `Clear All Data` silently hiding a failed delete. When `save()` threw, `clearAllData()` only printed the error and never rolled back the `ModelContext`, so the deleted entries disappeared from the UI even though they were still in the store and could reappear after a relaunch. The context is now rolled back and a "Failed to Delete" alert is shown, consistent with the record delete and edit flows [#14](https://github.com/ekomarova/Lummi-iOS/pull/14)
 
 ## [1.0.0] - 2026-09-17
 ### Added

@@ -37,6 +37,7 @@ struct SettingsView: View {
     @State private var syncBannerVisible = false
 
     @State private var showClearDataAlert: Bool = false
+    @State private var showClearDataFailedAlert: Bool = false
     @State private var isShowingLanguageSelection: Bool = false
 
     var body: some View {
@@ -83,6 +84,11 @@ struct SettingsView: View {
             }
         } message: {
             Text("This will permanently delete all your entries locally and in iCloud!")
+        }
+        .alert("Failed to Delete", isPresented: $showClearDataFailedAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Your entries could not be deleted. Please try again.")
         }
     }
 
@@ -266,9 +272,11 @@ struct SettingsView: View {
             for entry in entries {
                 modelContext.delete(entry)
             }
-            try modelContext.save()
+            try modelContext.saveOrSimulate()
         } catch {
+            modelContext.rollback()
             print("Failed to clear data: \(error)")
+            withAnimation { showClearDataFailedAlert = true }
         }
     }
 }

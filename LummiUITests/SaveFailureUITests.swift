@@ -64,6 +64,38 @@ final class SaveFailureUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["RecordText_0"].waitForExistence(timeout: 2.0), "Record should be restored after failed delete")
     }
 
+    // MARK: - Clear All Data
+
+    func test_ClearAllData_ShowsAlertAndRecordsPersist_OnSaveFailure() throws {
+        app = XCUIApplication()
+        app.launchArguments = ["-UI_TESTING_10_RECORDS", "-UI_TESTING_SIMULATE_SAVE_FAILURE"]
+        app.launch()
+
+        XCTAssertTrue(app.staticTexts["RecordText_0"].waitForExistence(timeout: 2.0), "Pre-populated records not found")
+
+        app.buttons["SettingsButton_Inactive"].tap()
+
+        let clearDataButton = app.buttons["ClearAllDataButton"]
+        XCTAssertTrue(clearDataButton.waitForExistence(timeout: 2.0), "Clear All Data button is missing")
+        clearDataButton.tap()
+
+        let confirmAlert = app.alerts["Clear All Data?"]
+        XCTAssertTrue(confirmAlert.waitForExistence(timeout: 2.0), "Clear Data confirmation did not appear")
+        confirmAlert.buttons["Delete"].tap()
+
+        let failureAlert = app.alerts["Failed to Delete"]
+        XCTAssertTrue(failureAlert.waitForExistence(timeout: 2.0), "Clear data failure alert did not appear")
+        failureAlert.buttons["OK"].tap()
+
+        // Records must be restored after rollback, not silently lost
+        let homeButton = app.buttons["HomeButton_Inactive"]
+        if homeButton.waitForExistence(timeout: 2.0) {
+            homeButton.tap()
+        }
+        XCTAssertTrue(app.staticTexts["RecordText_0"].waitForExistence(timeout: 3.0), "Records should persist after failed clear")
+        XCTAssertFalse(app.staticTexts["No records for this day"].exists, "Empty state must not be shown after failed clear")
+    }
+
     // MARK: - Edit Record
 
     func test_EditRecord_ShowsAlertAndStaysInEditMode_OnSaveFailure() throws {
