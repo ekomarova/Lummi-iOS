@@ -1,6 +1,6 @@
 # Lummi iOS
 
-Minimalist joy journal app. SwiftUI + SwiftData, opt-in iCloud sync via CloudKit, iOS 17.6+, Xcode 16+, Swift 5.x.
+Minimalist joy journal app. SwiftUI + SwiftData, opt-in iCloud sync via CloudKit, iOS 17.6+, Xcode 26.0+, Swift 5.x.
 Supported languages: English, Russian, German.
 
 ## Project layout
