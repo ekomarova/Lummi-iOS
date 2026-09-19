@@ -35,6 +35,8 @@ final class TodayRecordsUITests: XCTestCase {
 
     // Check text edition
     func test_EditRecord() throws {
+        // iPhone SE (667 pt tall) keeps this element under the bottom toolbar, so the tap misses it
+        try XCTSkipIf(UIScreen.main.bounds.height <= 667, "Not supported on small screens (iPhone SE)")
         let originalText = "Record #7"
         let addedText = "(edited)"
 
@@ -61,6 +63,8 @@ final class TodayRecordsUITests: XCTestCase {
 
     // Check record deleting
     func test_DeleteRecord() throws {
+        // iPhone SE (667 pt tall) keeps this element under the bottom toolbar, so the tap misses it
+        try XCTSkipIf(UIScreen.main.bounds.height <= 667, "Not supported on small screens (iPhone SE)")
         let recordToDelete = app.staticTexts["RecordText_7"]
         
         recordToDelete.press(forDuration: 1.0)

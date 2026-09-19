@@ -8,6 +8,12 @@ final class SaveFailureUITests: XCTestCase {
         app = nil
     }
 
+    // `TextField(axis: .vertical)` is reported as a text view on iOS 17 and as a text field
+    // on newer versions, so match the edit field by identifier regardless of type.
+    private var editRecordField: XCUIElement {
+        app.descendants(matching: .any)["EditRecordTextField"].firstMatch
+    }
+
     // MARK: - New Record
 
     func test_NewRecord_ShowsAlertAndRemainsOpen_OnSaveFailure() throws {
@@ -112,7 +118,7 @@ final class SaveFailureUITests: XCTestCase {
         XCTAssertTrue(editButton.waitForExistence(timeout: 2.0), "Edit button did not appear")
         editButton.tap()
 
-        let editField = app.textFields["EditRecordTextField"]
+        let editField = editRecordField
         XCTAssertTrue(editField.waitForExistence(timeout: 2.0), "Edit field did not appear")
 
         editField.tap()

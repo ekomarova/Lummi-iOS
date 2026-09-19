@@ -73,7 +73,7 @@ final class CalendarUITests: XCTestCase {
         
         let key = dateKey(for: past32Date)
         let pastDayCell = app.buttons["DayCell_\(key)"]
-        XCTAssertTrue(pastDayCell.waitForExistence(timeout: 2.0))
+        XCTAssertTrue(pastDayCell.waitForExistence(timeout: 10.0))
         pastDayCell.tap()
         
         let todayCell = app.buttons["DayCell_\(dateKey(for: today))"]

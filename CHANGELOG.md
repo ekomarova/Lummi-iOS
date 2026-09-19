@@ -20,6 +20,8 @@ All notable changes to the project will be documented in this file.
 ### Fixed
 - **iPad:** Fixed glass UI chrome, the calendar grid, and record cards being incorrectly scaled up on iPad [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
 - **Settings:** Fixed `Clear All Data` silently hiding a failed delete. When `save()` threw, `clearAllData()` only printed the error and never rolled back the `ModelContext`, so the deleted entries disappeared from the UI even though they were still in the store and could reappear after a relaunch. The context is now rolled back and a "Failed to Delete" alert is shown, consistent with the record delete and edit flows [#14](https://github.com/ekomarova/Lummi-iOS/pull/14)
+- **Settings (iOS 17):** Fixed `Clear All Data` leaving an empty list after a failed save on iOS 17.0. There `ModelContext.rollback()` did not restore the bulk-deleted entries, so they stayed hidden even though the store was unchanged. Entries are now deleted in a separate `ModelContext` with autosave off, which is simply discarded when `save()` fails, so the visible context is never touched; the "Failed to Delete" alert is unchanged [#17](https://github.com/ekomarova/Lummi-iOS/pull/17)
+- **Settings (iOS 17):** Removed the spring animation around the theme switch and the iCloud toggle. Animating the `preferredColorScheme` change across the whole view tree, with `.ultraThinMaterial` backgrounds, caused UI freezes on iOS 17 [#17](https://github.com/ekomarova/Lummi-iOS/pull/17)
 
 ## [1.0.0] - 2026-09-17
 ### Added
