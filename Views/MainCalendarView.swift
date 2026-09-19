@@ -25,28 +25,28 @@ struct MainCalendarView: View {
         Set(allEntries.map { $0.dateKey })
     }
     
-    private var months: [Date] {
+    // Months shown in the calendar: from the earliest record up to and including the current month.
+    // The start is clamped on both sides so a record with a bogus date (wrong device clock)
+    // can neither blow the list up to thousands of months nor leave it empty.
+    static func months(firstEntryDate: Date?, now: Date) -> [Date] {
         let calendar = Calendar.current
-        let today = Date()
-        let currentMonthStart = today.startOfMonth
-        
-        // Defining the initial month
-        // If there are no records, start with the current month
-        // If there is, take the earliest date and get the beginning of its month
-        let firstEntryDate = allEntries.first?.date ?? today
-        let startMonth = firstEntryDate.startOfMonth
-        
-        // Generate array from the earliest record up to and including the current month
+        let currentMonthStart = now.startOfMonth
+        let startMonth = min(max((firstEntryDate ?? now).startOfMonth, Date.earliestAllowedMonth), currentMonthStart)
+
         var result: [Date] = []
         var iterator = startMonth
-        
+
         while iterator <= currentMonthStart {
             result.append(iterator)
             guard let nextMonth = calendar.date(byAdding: .month, value: 1, to: iterator) else { break }
             iterator = nextMonth
         }
-        
+
         return result
+    }
+
+    private var months: [Date] {
+        Self.months(firstEntryDate: allEntries.first?.date, now: Date())
     }
 
     var body: some View {

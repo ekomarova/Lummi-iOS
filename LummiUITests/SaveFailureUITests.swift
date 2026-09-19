@@ -37,6 +37,31 @@ final class SaveFailureUITests: XCTestCase {
         XCTAssertFalse(app.staticTexts["Simulated failure test"].exists, "Failed entry should not appear in the records list")
     }
 
+    func test_NewRecord_ShowsClockAlertAndRemainsOpen_OnBadDeviceDate() throws {
+        app = XCUIApplication()
+        app.launchArguments = ["-UI_TESTING_SIMULATE_BAD_DEVICE_DATE"]
+        app.launch()
+
+        app.buttons["MainRecordButton"].tap()
+
+        let textEditor = app.textViews["RecordInputTextEditor"]
+        XCTAssertTrue(textEditor.waitForExistence(timeout: 2.0), "Input sheet did not open")
+
+        textEditor.tap()
+        textEditor.typeText("Bad date test")
+
+        app.buttons["SaveRecordButton"].tap()
+
+        let alert = app.alerts["Check Your Device Date"]
+        XCTAssertTrue(alert.waitForExistence(timeout: 2.0), "Device date alert did not appear")
+        XCTAssertTrue(textEditor.exists, "Input sheet must remain open when the device date is invalid")
+
+        alert.buttons["OK"].tap()
+
+        XCTAssertTrue(textEditor.waitForExistence(timeout: 1.0), "Input sheet should still be open after alert dismissal")
+        XCTAssertFalse(app.staticTexts["Bad date test"].exists, "Entry with a bad date must not be created")
+    }
+
     // MARK: - Delete Record
 
     func test_DeleteRecord_ShowsAlertAndRecordPersists_OnSaveFailure() throws {

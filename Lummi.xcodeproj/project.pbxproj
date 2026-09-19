@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		24DEA4823F27415591ADBA5F /* AllJoysView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A75A501776D443E1961E0695 /* AllJoysView.swift */; };
+		3994D6B50DC44AD6A11FE59F /* ThemeOptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */; };
 		470FC4E7304A309F00F50A7A /* ModelContextSave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470FC4E6304A309F00F50A7A /* ModelContextSave.swift */; };
 		4714236F2F9CFAA000C1D681 /* SelectedDayDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4714236E2F9CFAA000C1D681 /* SelectedDayDetailView.swift */; };
 		4726FFA82F9DA410008B5D3C /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4726FFA72F9DA1FF008B5D3C /* DateExtension.swift */; };
@@ -33,8 +35,7 @@
 		47BB00022FC0A5EA008B5D02 /* BottomToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB00012FC0A5EA008B5D01 /* BottomToolbar.swift */; };
 		47BB00032FC0A5EA008B5D03 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB00042FC0A5EA008B5D04 /* StringExtension.swift */; };
 		47BB00052FC0A5EA008B5D05 /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB00062FC0A5EA008B5D06 /* ViewExtension.swift */; };
-		24DEA4823F27415591ADBA5F /* AllJoysView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A75A501776D443E1961E0695 /* AllJoysView.swift */; };
-		3994D6B50DC44AD6A11FE59F /* ThemeOptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */; };
+		47DC00022FC1A000008B5D01 /* DeviceClockCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47DC00012FC1A000008B5D01 /* DeviceClockCheck.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,6 +89,7 @@
 		47BB00012FC0A5EA008B5D01 /* BottomToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomToolbar.swift; sourceTree = "<group>"; };
 		47BB00042FC0A5EA008B5D04 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		47BB00062FC0A5EA008B5D06 /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
+		47DC00012FC1A000008B5D01 /* DeviceClockCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceClockCheck.swift; sourceTree = "<group>"; };
 		A75A501776D443E1961E0695 /* AllJoysView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllJoysView.swift; sourceTree = "<group>"; };
 		E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeOptionButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -238,6 +240,7 @@
 			isa = PBXGroup;
 			children = (
 				4766220C303F8AAC00041521 /* CloudKitSyncMonitor.swift */,
+				47DC00012FC1A000008B5D01 /* DeviceClockCheck.swift */,
 				47981EAC2FA5473E005ADAB1 /* InsightsCalculator.swift */,
 				470FC4E6304A309F00F50A7A /* ModelContextSave.swift */,
 			);
@@ -418,6 +421,7 @@
 				473B044E2F9ACF9D00C482FA /* RecordButton.swift in Sources */,
 				47289DCE2FAED17700E46B84 /* InsightsView.swift in Sources */,
 				4766220D303F8AB000041521 /* CloudKitSyncMonitor.swift in Sources */,
+				47DC00022FC1A000008B5D01 /* DeviceClockCheck.swift in Sources */,
 				4714236F2F9CFAA000C1D681 /* SelectedDayDetailView.swift in Sources */,
 				470FC4E7304A309F00F50A7A /* ModelContextSave.swift in Sources */,
 				473B04552F9BB2F400C482FA /* ThemeManager.swift in Sources */,

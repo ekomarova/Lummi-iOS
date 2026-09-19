@@ -21,6 +21,7 @@ struct RecordInput: View {
 
     @State private var text: String = ""
     @State private var showSaveAlert = false
+    @State private var showClockAlert = false
     @FocusState private var isTextEditorFocused: Bool
 
     var isSaveEnabled: Bool {
@@ -62,6 +63,11 @@ struct RecordInput: View {
                     Button(
                         action: {
                             if let date = selectedDate, isSaveEnabled {
+                                guard DeviceClockCheck.isPlausible(now: date) else {
+                                    isTextEditorFocused = false
+                                    withAnimation { showClockAlert = true }
+                                    return
+                                }
                                 let newEntry = JoyEntry(text: text, date: date)
                                 modelContext.insert(newEntry)
                                 do {
@@ -138,6 +144,11 @@ struct RecordInput: View {
             Button("OK", role: .cancel) { }
         } message: {
             Text("Your moment could not be saved. Please try again.")
+        }
+        .alert("Check Your Device Date", isPresented: $showClockAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Your device's date looks incorrect, so this moment was not saved. Please fix the date in Settings and try again.")
         }
     }
 }

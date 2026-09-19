@@ -9,6 +9,8 @@ All notable changes to the project will be documented in this file.
 - **Insights:** Added Highlights/Recall sections and a full-screen "All Joys" page [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
 - **Insights (iPad):** Joys, Day Streak, and Joyful Hours are now shown as one square row on iPad [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
 - **Record Button:** Added selection haptic feedback when tapping the record button [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- **Data Safety:** Saving a new record is now blocked with a "Check Your Device Date" alert (localized in English, German, and Russian) when the device clock is set before the earliest supported date (2026-01-01), so a wrong clock can no longer create entries with anomalous dates. The check compares only against this fixed lower bound and not against existing records, so a single record saved with a clock set ahead can never lock out saving after the clock is corrected
+- **Testing:** Added `DeviceClockCheckTests` and `MainCalendarViewMonthsTests` unit tests, a `DateExtensionTests` case for the Insights month clamp, and a `SaveFailureUITests` case for the device date alert, driven by a new `-UI_TESTING_SIMULATE_BAD_DEVICE_DATE` launch argument
 
 ### Changed
 - **Record Input:** The "New Joy" input is now a full in-flow page pushed onto the screen, matching the `See all joys` / `Language` pages, instead of a `.sheet` presentation [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
@@ -20,6 +22,8 @@ All notable changes to the project will be documented in this file.
 ### Fixed
 - **iPad:** Fixed glass UI chrome, the calendar grid, and record cards being incorrectly scaled up on iPad [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
 - **Settings:** Fixed `Clear All Data` silently hiding a failed delete. When `save()` threw, `clearAllData()` only printed the error and never rolled back the `ModelContext`, so the deleted entries disappeared from the UI even though they were still in the store and could reappear after a relaunch. The context is now rolled back and a "Failed to Delete" alert is shown, consistent with the record delete and edit flows [#14](https://github.com/ekomarova/Lummi-iOS/pull/14)
+- **Calendar:** Fixed the calendar building a month list from a record with a bogus date (e.g. a device clock set to 1990) all the way to the present, which could freeze the UI when the calendar was expanded. The list now starts no earlier than the earliest supported month (January 2026), and a record dated in the future no longer leaves the calendar empty: the current month is always shown. The range logic is extracted into a pure, unit-tested function
+- **Insights:** The previous-month button no longer lets you page back through decades of empty months because of a record with a bogus past date; it uses the same earliest-supported-month limit as the calendar
 
 ## [1.0.0] - 2026-09-17
 ### Added

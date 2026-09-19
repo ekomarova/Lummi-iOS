@@ -100,6 +100,13 @@ struct DateExtensionTests {
         #expect(!Date.isOldestMonth(selectedMonth: selected, allEntries: [entry]))
     }
 
+    @Test func isOldestMonth_entryFrom1990_isClampedToEarliestSupportedMonth() {
+        let entry = JoyEntry(text: "bogus", date: makeDate(year: 1990, month: 1, day: 1))
+        let limit = Date.earliestAllowedMonth
+        #expect(Date.isOldestMonth(selectedMonth: limit, allEntries: [entry]))
+        #expect(!Date.isOldestMonth(selectedMonth: limit.addingTimeInterval(40 * 24 * 60 * 60), allEntries: [entry]))
+    }
+
     @Test func isOldestMonth_multipleEntries_picksActualOldest() {
         let entries = [
             JoyEntry(text: "", date: makeDate(year: 2026, month: 5, day: 1)),

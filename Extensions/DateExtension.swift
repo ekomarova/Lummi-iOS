@@ -53,8 +53,14 @@ extension Date {
     
     static func isOldestMonth(selectedMonth: Date, allEntries: [JoyEntry]) -> Bool {
         guard let oldestEntry = allEntries.min(by: { $0.date < $1.date }) else { return true }
-        let oldestMonth = oldestEntry.date.startOfMonth
+        let oldestMonth = max(oldestEntry.date.startOfMonth, earliestAllowedMonth)
         return selectedMonth <= oldestMonth
+    }
+    
+    // No genuine record can predate the earliest supported date, so month ranges start no earlier than this month.
+    // Keeps a record with a bogus date (e.g. wrong device clock) from opening decades of empty months
+    static var earliestAllowedMonth: Date {
+        DeviceClockCheck.earliestSupportedDate.startOfMonth
     }
     
 }
