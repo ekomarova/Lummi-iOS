@@ -220,6 +220,19 @@ struct InsightsCalculatorTests {
         #expect(result == "14:00 - 17:00")
     }
 
+    @Test func calculateGoldenHours_picksThreeHourWindowWithMostEntries() {
+        // 9, 10 and 11 each have one entry, while 15 alone has two: the 9-12 window (3 entries) beats it.
+        let entries = [
+            entry(year: 2026, month: 1, day: 1, hour: 9),
+            entry(year: 2026, month: 1, day: 2, hour: 10),
+            entry(year: 2026, month: 1, day: 3, hour: 11),
+            entry(year: 2026, month: 1, day: 4, hour: 15),
+            entry(year: 2026, month: 1, day: 5, hour: 15)
+        ]
+        let result = InsightsCalculator.calculateGoldenHours(entries: entries, locale: Locale(identifier: "en_GB"))
+        #expect(result == "09:00 - 12:00")
+    }
+
     @Test func calculateGoldenHours_midnightWrapAround_producesValidRange() {
         let entries = [
             entry(year: 2026, month: 1, day: 1, hour: 23),
