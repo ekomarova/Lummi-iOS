@@ -22,10 +22,7 @@ See [LICENSE](./LICENSE.md) for the full terms.
     *   Instant access to your full monthly history with interactive, beautifully blurred data cards
 * **Dynamic Themes**: Full support for Light and Dark modes managed via a custom `ThemeManager`
 * **Seamless iCloud Sync:** Keep your joyful moments safe and synchronized across your iPhone and iPad (Opt-in via Settings)
-* **Multi-language Support**: 
-    *   English
-    *   Russian
-    *   German
+* **Multi-language Support**: English, Russian, German
 
 ## 🔒 Privacy
 Your data is yours. Using SwiftData and CloudKit, the text of your moments is encrypted during iCloud sync (`.allowsCloudEncryption`). Apple handles the secure key management, meaning your entries stay private and safe.
@@ -39,14 +36,7 @@ Your data is yours. Using SwiftData and CloudKit, the text of your moments is en
 ## 🧪 Testing
 
 ### Unit Tests
-Unit tests written with the **Swift Testing** framework (`import Testing`) cover all testable business logic:
-
-| Suite | Coverage |
-|---|---|
-| `InsightsCalculatorTests` | `filterEntries`, `uniqueDaysCount`, `daysNeededForReport`, `longestStreak`, `calculateGoldenHours` — including edge cases: month boundaries, midnight wrap-around, tie-breaking, duplicate days |
-| `DateExtensionTests` | `stringKey`, `format` (with cache), `startOfMonth`, `previousMonth`, `isCurrentMonth`, `isOldestMonth` |
-| `ThemeManagerTests` | Default theme, toggle persistence to `UserDefaults`, reading saved preference on init |
-| `JoyEntryTests` | `dateKey` computed property consistency |
+Unit tests written with the **Swift Testing** framework (`import Testing`) cover all testable business logic.
 
 ### UI Tests
 UI tests written with **XCUITest** cover end-to-end user flows: calendar navigation, record creation/edit/delete, insights display, settings, iCloud sync toggle, and save failure paths.
