@@ -1,8 +1,9 @@
 # Changelog
 
 All notable changes to the project will be documented in this file.
+## [1.2.0] - 2026-MM-DD
 
-## [1.1.0] - 2026-MM-DD
+## [1.1.0] - 2026-09-19
 ### Added
 - **Design:** Introduced a complete visual redesign of the app around Apple's native Liquid Glass material (`glassEffect`), covering the header date, calendar, record button, Insights, and Settings. On iOS 17.6-18, these fall back to `.ultraThinMaterial` via a new `adaptiveGlass(in:interactive:)` view modifier, so the app keeps its iOS 17.6 minimum deployment target instead of requiring iOS 26 [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
 - **Navigation:** Merged the bottom navigation into a single toolbar and added tab labels alongside the icons [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
