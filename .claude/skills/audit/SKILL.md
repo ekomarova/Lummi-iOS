@@ -66,6 +66,7 @@ Write the report in the user's language. Be concise and to the point, no filler.
 |----------|---|-------------------------|----------------|
 
    Priorities: **Critical** (blocks release or creates risk of bugs, vulnerabilities, data leaks), **Important** (fix in the next iterations), **Desirable** (quality improvements, refactoring, tech debt).
+
 9. **Overall assessment**: architecture, quality and maturity of the implementation, plus a list of analysis limitations and open questions.
 
 Do not start fixing anything. End by asking which items the user wants to address.
