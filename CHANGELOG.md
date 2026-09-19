@@ -2,6 +2,8 @@
 
 All notable changes to the project will be documented in this file.
 ## [1.2.0] - 2026-MM-DD
+### Fixed
+- **Insights:** Fixed `Joyful Hours` being calculated from a single peak hour and simply extended three hours forward. `InsightsCalculator.calculateGoldenHours` now slides a three-hour window around the clock (wrapping past midnight) and picks the window that contains the most entries; ties are broken in favor of the window with the most recent entry [#18](https://github.com/ekomarova/Lummi-iOS/pull/18)
 
 ## [1.1.0] - 2026-09-19
 ### Added

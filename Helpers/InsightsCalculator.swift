@@ -76,18 +76,29 @@ struct InsightsCalculator {
             }
         }
         
-        guard let peakHour = hourCounts.max(by: { lhs, rhs in
-            if lhs.value == rhs.value {
-                // If counts are equal, deterministically pick the one with the latest overall entry
-                let dateA = lastEntryDateForHour[lhs.key] ?? .distantPast
-                let dateB = lastEntryDateForHour[rhs.key] ?? .distantPast
-                return dateA < dateB
+        // Slide a window of `goldenHourWindowSize` hours around the clock (wrapping past midnight)
+        // and pick the one that contains the most entries. Windows only start at an hour that has
+        // entries: any best window can be shifted to begin at its first occupied hour.
+        var bestStart = 0
+        var bestCount = -1
+        var bestLatest = Date.distantPast
+
+        for start in hourCounts.keys.sorted() {
+            let hoursInWindow = (0..<goldenHourWindowSize).map { (start + $0) % 24 }
+            let count = hoursInWindow.reduce(0) { $0 + (hourCounts[$1] ?? 0) }
+            // If counts are equal, deterministically pick the window with the latest overall entry
+            let latest = hoursInWindow.compactMap { lastEntryDateForHour[$0] }.max() ?? .distantPast
+
+            if count > bestCount || (count == bestCount && latest > bestLatest) {
+                bestStart = start
+                bestCount = count
+                bestLatest = latest
             }
-            return lhs.value < rhs.value
-        })?.key else { return "-- : --" }
-        
+        }
+
+        let peakHour = bestStart
         let endHour = (peakHour + goldenHourWindowSize) % 24
-        
+
         guard let startDate = calendar.date(from: DateComponents(hour: peakHour)),
               let endDate = calendar.date(from: DateComponents(hour: endHour)) else { return "-- : --" }
         
