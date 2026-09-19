@@ -35,11 +35,9 @@ Your data is yours. Using SwiftData and CloudKit, the text of your moments is en
 
 ## 🧪 Testing
 
-### Unit Tests
-Unit tests written with the **Swift Testing** framework (`import Testing`) cover all testable business logic.
-
-### UI Tests
-UI tests written with **XCUITest** cover end-to-end user flows: calendar navigation, record creation/edit/delete, insights display, settings, iCloud sync toggle, and save failure paths.
+### Unit & UI Tests
+* **Unit tests** are written with the **Swift Testing** framework (`import Testing`) and cover all testable business logic.
+* **UI tests** are written with **XCUITest** and cover end-to-end user flows: calendar navigation, record creation/edit/delete, insights display, settings, iCloud sync toggle, and save failure paths.
 
 ### Mocking
 A dedicated `MockDataManager` (under `#if DEBUG`) populates the database with specific states based on launch arguments, allowing robust UI testing of various scenarios without touching real user data.
