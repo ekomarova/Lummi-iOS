@@ -195,8 +195,7 @@ struct InsightsCalculatorTests {
     @Test func calculateGoldenHours_singleEntry_returnsFormattedRange() {
         let entries = [entry(year: 2026, month: 1, day: 1, hour: 10)]
         let result = InsightsCalculator.calculateGoldenHours(entries: entries, locale: Locale(identifier: "en_GB"))
-        #expect(result.hasPrefix("10:"))
-        #expect(result.contains(" - "))
+        #expect(result == "10:00 - 13:00")
     }
 
     @Test func calculateGoldenHours_mostFrequentHourWins() {
@@ -207,7 +206,7 @@ struct InsightsCalculatorTests {
             entry(year: 2026, month: 1, day: 3, hour: 14)
         ]
         let result = InsightsCalculator.calculateGoldenHours(entries: entries, locale: Locale(identifier: "en_GB"))
-        #expect(result.hasPrefix("14:"))
+        #expect(result == "14:00 - 17:00")
     }
 
     @Test func calculateGoldenHours_tieBreaking_picksHourWithLatestEntry() {
@@ -218,7 +217,7 @@ struct InsightsCalculatorTests {
             entry(year: 2026, month: 2, day: 4, hour: 14)
         ]
         let result = InsightsCalculator.calculateGoldenHours(entries: entries, locale: Locale(identifier: "en_GB"))
-        #expect(result.hasPrefix("14:"))
+        #expect(result == "14:00 - 17:00")
     }
 
     @Test func calculateGoldenHours_midnightWrapAround_producesValidRange() {
@@ -228,7 +227,6 @@ struct InsightsCalculatorTests {
             entry(year: 2026, month: 1, day: 3, hour: 23)
         ]
         let result = InsightsCalculator.calculateGoldenHours(entries: entries, locale: Locale(identifier: "en_GB"))
-        #expect(result.hasPrefix("23:"))
-        #expect(result.contains(" - "))
+        #expect(result == "23:00 - 02:00")
     }
 }
