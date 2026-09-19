@@ -81,6 +81,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-SCREENSHOTS_DATA"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-UI_TESTING_SIMULATE_SAVE_FAILURE"
             isEnabled = "NO">
          </CommandLineArgument>

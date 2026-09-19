@@ -30,7 +30,8 @@ struct LummiApp: App {
         if isUITesting {
             UserDefaults.standard.set(false, forKey: "isICloudSyncEnabled")
         }
-        let isSyncEnabled = isUITesting ? false : UserDefaults.standard.bool(forKey: "isICloudSyncEnabled")
+        let isScreenshots = MockDataManager.isScreenshotsMode
+        let isSyncEnabled = (isUITesting || isScreenshots) ? false : UserDefaults.standard.bool(forKey: "isICloudSyncEnabled")
         #else
         let isSyncEnabled = UserDefaults.standard.bool(forKey: "isICloudSyncEnabled")
         #endif
@@ -58,7 +59,14 @@ struct LummiApp: App {
         
         let modelConfiguration: ModelConfiguration
         
-        if isUITesting {
+        #if DEBUG
+        // Screenshots mode also uses a throwaway in-memory store, so real data is never touched.
+        let usesInMemoryStore = isUITesting || MockDataManager.isScreenshotsMode
+        #else
+        let usesInMemoryStore = isUITesting
+        #endif
+
+        if usesInMemoryStore {
             modelConfiguration = ModelConfiguration(
                 schema: schema,
                 isStoredInMemoryOnly: true,
