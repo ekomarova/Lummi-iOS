@@ -105,14 +105,14 @@ struct SettingsView: View {
                         title: "Light",
                         isSelected: !themeManager.isDark,
                         accessibilityID: "LightThemeButton",
-                        action: { withAnimation(.spring()) { themeManager.isDark = false } }
+                        action: { themeManager.isDark = false }
                     )
 
                     ThemeOptionButton(
                         title: "Dark",
                         isSelected: themeManager.isDark,
                         accessibilityID: "DarkThemeButton",
-                        action: { withAnimation(.spring()) { themeManager.isDark = true } }
+                        action: { themeManager.isDark = true }
                     )
                 }
                 .padding(.vertical, 20)
@@ -187,7 +187,7 @@ struct SettingsView: View {
                             get: { isICloudSyncEnabled },
                             set: { newValue in
                                 if newValue { syncBannerVisible = false }
-                                withAnimation(.spring()) { isICloudSyncEnabled = newValue }
+                                isICloudSyncEnabled = newValue
                             }
                         )
                     )
@@ -266,15 +266,18 @@ struct SettingsView: View {
     // MARK: - Actions
     
     private func clearAllData() {
+        // Delete in a scratch context with autosave off: on iOS 17 `rollback()` does not bring
+        // back bulk-deleted objects, so a failed save would leave the visible context empty.
+        // Dropping an unsaved scratch context leaves the main context untouched.
+        let scratchContext = ModelContext(modelContext.container)
+        scratchContext.autosaveEnabled = false
         do {
-            let descriptor = FetchDescriptor<JoyEntry>()
-            let entries = try modelContext.fetch(descriptor)
+            let entries = try scratchContext.fetch(FetchDescriptor<JoyEntry>())
             for entry in entries {
-                modelContext.delete(entry)
+                scratchContext.delete(entry)
             }
-            try modelContext.saveOrSimulate()
+            try scratchContext.saveOrSimulate()
         } catch {
-            modelContext.rollback()
             print("Failed to clear data: \(error)")
             withAnimation { showClearDataFailedAlert = true }
         }
