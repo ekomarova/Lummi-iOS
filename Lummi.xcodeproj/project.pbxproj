@@ -35,6 +35,9 @@
 		47BB00022FC0A5EA008B5D02 /* BottomToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB00012FC0A5EA008B5D01 /* BottomToolbar.swift */; };
 		47BB00032FC0A5EA008B5D03 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB00042FC0A5EA008B5D04 /* StringExtension.swift */; };
 		47BB00052FC0A5EA008B5D05 /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB00062FC0A5EA008B5D06 /* ViewExtension.swift */; };
+		4A11C0DE0000000000000011 /* CalendarMonthLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11C0DE0000000000000001 /* CalendarMonthLayout.swift */; };
+		4A11C0DE0000000000000012 /* JoyEntryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11C0DE0000000000000002 /* JoyEntryStore.swift */; };
+		4A11C0DE0000000000000013 /* PreviewSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11C0DE0000000000000003 /* PreviewSupport.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,6 +91,9 @@
 		47BB00012FC0A5EA008B5D01 /* BottomToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomToolbar.swift; sourceTree = "<group>"; };
 		47BB00042FC0A5EA008B5D04 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		47BB00062FC0A5EA008B5D06 /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
+		4A11C0DE0000000000000001 /* CalendarMonthLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarMonthLayout.swift; sourceTree = "<group>"; };
+		4A11C0DE0000000000000002 /* JoyEntryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoyEntryStore.swift; sourceTree = "<group>"; };
+		4A11C0DE0000000000000003 /* PreviewSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewSupport.swift; sourceTree = "<group>"; };
 		A75A501776D443E1961E0695 /* AllJoysView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllJoysView.swift; sourceTree = "<group>"; };
 		E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeOptionButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -185,12 +191,12 @@
 		473B04462F9ABC0300C482FA /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				4726FFD22FA40B28008B5D3C /* InsightsView.swift */,
-				4726FFC92FA3DA0D008B5D3C /* SettingsView.swift */,
-				473B04492F9ABF1800C482FA /* HeaderView.swift */,
-				473B04472F9ABC2300C482FA /* MainCalendarView.swift */,
 				473B04212F9AB1AA00C482FA /* ContentView.swift */,
+				473B04492F9ABF1800C482FA /* HeaderView.swift */,
+				4726FFD22FA40B28008B5D3C /* InsightsView.swift */,
+				473B04472F9ABC2300C482FA /* MainCalendarView.swift */,
 				4714236E2F9CFAA000C1D681 /* SelectedDayDetailView.swift */,
+				4726FFC92FA3DA0D008B5D3C /* SettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -206,11 +212,11 @@
 		473B044C2F9ACF8D00C482FA /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				A75A501776D443E1961E0695 /* AllJoysView.swift */,
 				47BB00012FC0A5EA008B5D01 /* BottomToolbar.swift */,
-				473B045A2F9BB79B00C482FA /* RecordInput.swift */,
 				473B044F2F9AD05100C482FA /* DayCell.swift */,
 				473B044D2F9ACF9500C482FA /* RecordButton.swift */,
-				A75A501776D443E1961E0695 /* AllJoysView.swift */,
+				473B045A2F9BB79B00C482FA /* RecordInput.swift */,
 				E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */,
 			);
 			path = Components;
@@ -230,6 +236,7 @@
 			isa = PBXGroup;
 			children = (
 				47981EB32FA59262005ADAB1 /* MockDataManager.swift */,
+				4A11C0DE0000000000000003 /* PreviewSupport.swift */,
 			);
 			path = TestHelpers;
 			sourceTree = "<group>";
@@ -240,6 +247,8 @@
 				4766220C303F8AAC00041521 /* CloudKitSyncMonitor.swift */,
 				47981EAC2FA5473E005ADAB1 /* InsightsCalculator.swift */,
 				470FC4E6304A309F00F50A7A /* ModelContextSave.swift */,
+				4A11C0DE0000000000000002 /* JoyEntryStore.swift */,
+				4A11C0DE0000000000000001 /* CalendarMonthLayout.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -412,6 +421,7 @@
 				4726FFC62FA2B41F008B5D3C /* JoyEntry.swift in Sources */,
 				473B044A2F9ABF1D00C482FA /* HeaderView.swift in Sources */,
 				47981EB82FA5928F005ADAB1 /* MockDataManager.swift in Sources */,
+				4A11C0DE0000000000000013 /* PreviewSupport.swift in Sources */,
 				47981EAD2FA54745005ADAB1 /* InsightsCalculator.swift in Sources */,
 				473B04502F9AD05200C482FA /* DayCell.swift in Sources */,
 				473B04572F9BB2FD00C482FA /* ThemeProtocol.swift in Sources */,
@@ -420,6 +430,8 @@
 				4766220D303F8AB000041521 /* CloudKitSyncMonitor.swift in Sources */,
 				4714236F2F9CFAA000C1D681 /* SelectedDayDetailView.swift in Sources */,
 				470FC4E7304A309F00F50A7A /* ModelContextSave.swift in Sources */,
+				4A11C0DE0000000000000012 /* JoyEntryStore.swift in Sources */,
+				4A11C0DE0000000000000011 /* CalendarMonthLayout.swift in Sources */,
 				473B04552F9BB2F400C482FA /* ThemeManager.swift in Sources */,
 				47BB00022FC0A5EA008B5D02 /* BottomToolbar.swift in Sources */,
 				24DEA4823F27415591ADBA5F /* AllJoysView.swift in Sources */,

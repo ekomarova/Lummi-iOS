@@ -52,6 +52,11 @@ final class CloudKitSyncMonitor {
         // status can't be exercised without live entitlements.
         #if DEBUG
         let arguments = ProcessInfo.processInfo.arguments
+        // Xcode Previews run without the iCloud entitlement too, so they must not touch CloudKit either.
+        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
+            container = nil
+            return
+        }
         if arguments.contains("-UI_TESTING_ICLOUD_LOGGED_OUT") {
             container = nil
             syncState = .loggedOut

@@ -44,3 +44,16 @@ struct HeaderView: View {
         .sensoryFeedback(.selection, trigger: isExpanded)
     }
 }
+
+#if DEBUG
+#Preview {
+    // Same placement as in ContentView: pinned to the top, centered horizontally.
+    // Collapsed (selected day) and expanded (calendar month) states.
+    VStack(spacing: 15) {
+        HeaderView(date: Date(), isExpanded: false, onTap: { })
+        HeaderView(date: Date(), isExpanded: true, onTap: { })
+        Spacer()
+    }
+    .previewEnvironment()
+}
+#endif

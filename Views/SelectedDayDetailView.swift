@@ -269,12 +269,10 @@ private extension SelectedDayDetailView {
 private extension SelectedDayDetailView {
 
     func deleteNote(_ entry: JoyEntry) {
-        modelContext.delete(entry)
         do {
-            try modelContext.saveOrSimulate()
+            try JoyEntryStore(context: modelContext).delete(entry)
             withAnimation { activeEntryID = nil }
         } catch {
-            modelContext.rollback()
             withAnimation { saveAlert = .deleteFailed }
         }
     }
@@ -285,18 +283,11 @@ private extension SelectedDayDetailView {
         guard let id = activeEntryID else { return }
 
         if isEditing {
-            let trimmed = editingText.trimmingCharacters(in: .whitespacesAndNewlines)
             if let entry = todaysEntries.first(where: { $0.persistentModelID == id }) {
                 let originalText = entry.text
-                if trimmed.isEmpty {
-                    modelContext.delete(entry)
-                } else {
-                    entry.text = trimmed
-                }
                 do {
-                    try modelContext.saveOrSimulate()
+                    try JoyEntryStore(context: modelContext).applyEdit(to: entry, newText: editingText)
                 } catch {
-                    modelContext.rollback()
                     editingText = originalText
                     withAnimation { saveAlert = .editFailed }
                     return
@@ -321,3 +312,10 @@ private extension SelectedDayDetailView {
         }
     }
 }
+
+#if DEBUG
+#Preview {
+    SelectedDayDetailView(selectedDate: Date())
+        .previewEnvironment()
+}
+#endif

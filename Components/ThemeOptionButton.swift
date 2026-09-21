@@ -46,3 +46,17 @@ struct ThemeOptionButton: View {
         .accessibilityValue(isSelected ? Text("Selected") : Text("Unselected"))
     }
 }
+
+#if DEBUG
+#Preview {
+    @Previewable @State var isDark = true
+
+    // Same two options as the Settings screen (Light, Dark). Local state only, so the saved theme stays untouched.
+    HStack(spacing: 0) {
+        ThemeOptionButton(title: "Light", isSelected: !isDark, accessibilityID: "PreviewLightThemeButton", action: { isDark = false })
+        ThemeOptionButton(title: "Dark", isSelected: isDark, accessibilityID: "PreviewDarkThemeButton", action: { isDark = true })
+    }
+    .padding()
+    .previewEnvironment()
+}
+#endif
