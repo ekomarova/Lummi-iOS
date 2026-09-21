@@ -17,14 +17,14 @@ struct RecordInput: View {
     let selectedDate: Date?
     let onDismiss: () -> Void
 
-    private let maxLength = 280
+    private let maxLength = RecordInputRules.maxLength
 
     @State private var text: String = ""
     @State private var showSaveAlert = false
     @FocusState private var isTextEditorFocused: Bool
 
     var isSaveEnabled: Bool {
-        !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        RecordInputRules.canSave(text)
     }
 
     var body: some View {
@@ -62,14 +62,11 @@ struct RecordInput: View {
                     Button(
                         action: {
                             if let date = selectedDate, isSaveEnabled {
-                                let newEntry = JoyEntry(text: text, date: date)
-                                modelContext.insert(newEntry)
                                 do {
-                                    try modelContext.saveOrSimulate()
+                                    try JoyEntryStore(context: modelContext).add(text: text, date: date)
                                     isTextEditorFocused = false
                                     onDismiss()
                                 } catch {
-                                    modelContext.rollback()
                                     withAnimation { showSaveAlert = true }
                                 }
                             }
@@ -113,9 +110,8 @@ struct RecordInput: View {
                     .font(.lummiFont(size: 18))
                     .accessibilityIdentifier("RecordInputTextEditor")
                     .onChange(of: text) { _, newValue in
-                        if newValue.count > maxLength {
-                            text = String(newValue.prefix(maxLength))
-                        }
+                        let clamped = RecordInputRules.clamped(newValue)
+                        if clamped != newValue { text = clamped }
                     }
 
                 HStack {
@@ -141,3 +137,10 @@ struct RecordInput: View {
         }
     }
 }
+
+#if DEBUG
+#Preview {
+    RecordInput(selectedDate: Date(), onDismiss: { })
+        .previewEnvironment(withSampleEntries: false)
+}
+#endif

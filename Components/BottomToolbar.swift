@@ -87,3 +87,27 @@ struct BottomToolbar: View {
         .accessibilityIdentifier(isActive ? "\(accessibilityBase)_Active" : "\(accessibilityBase)_Inactive")
     }
 }
+
+#if DEBUG
+#Preview("Interactive (Live mode)") {
+    @Previewable @State var tab = 0
+
+    VStack {
+        Spacer()
+        HStack(spacing: 16) {
+            BottomToolbar(
+                isHomeActive: tab == 0,
+                isInsightsActive: tab == 1,
+                isSettingsActive: tab == 2,
+                onHomeTap: { tab = 0 },
+                onInsightsTap: { tab = 1 },
+                onSettingsTap: { tab = 2 }
+            )
+            RecordButton(selectedDate: Date(), onTap: { })
+        }
+        .padding(.horizontal, 16)
+        .padding(.bottom, 10)
+    }
+    .previewEnvironment()
+}
+#endif

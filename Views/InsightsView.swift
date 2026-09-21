@@ -353,3 +353,10 @@ struct MonthlyMomentCell: View {
         .padding(.trailing, 15)
     }
 }
+
+#if DEBUG
+#Preview {
+    InsightsView(isShowingAllJoys: .constant(false))
+        .previewEnvironment()
+}
+#endif

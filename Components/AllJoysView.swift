@@ -65,3 +65,10 @@ struct AllJoysView: View {
         .transition(.move(edge: .trailing).combined(with: .opacity))
     }
 }
+
+#if DEBUG
+#Preview {
+    AllJoysView(entries: [JoyEntry(text: "Coffee on the balcony", date: Date())], isShowingAllJoys: .constant(true))
+        .previewEnvironment()
+}
+#endif

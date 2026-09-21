@@ -49,3 +49,19 @@ struct RecordButton: View {
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: selectedDate)
     }
 }
+
+#if DEBUG
+#Preview {
+    // Same placement as in ContentView: bottom trailing corner
+    VStack {
+        Spacer()
+        HStack {
+            Spacer()
+            RecordButton(selectedDate: Date(), onTap: { })
+        }
+        .padding(.horizontal, 16)
+        .padding(.bottom, 10)
+    }
+    .previewEnvironment()
+}
+#endif

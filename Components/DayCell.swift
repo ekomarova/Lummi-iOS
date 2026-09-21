@@ -49,3 +49,13 @@ struct DayCell: View {
         .accessibilityValue(isFilled ? "Filled" : "Empty")
     }
 }
+
+#if DEBUG
+#Preview {
+    HStack {
+        DayCell(day: 12, isFilled: true, isToday: false, isSelected: false, dateKey: "2026-03-12")
+        DayCell(day: 13, isFilled: false, isToday: true, isSelected: true, dateKey: "2026-03-13")
+    }
+    .previewEnvironment()
+}
+#endif

@@ -26,27 +26,7 @@ struct MainCalendarView: View {
     }
     
     private var months: [Date] {
-        let calendar = Calendar.current
-        let today = Date()
-        let currentMonthStart = today.startOfMonth
-        
-        // Defining the initial month
-        // If there are no records, start with the current month
-        // If there is, take the earliest date and get the beginning of its month
-        let firstEntryDate = allEntries.first?.date ?? today
-        let startMonth = firstEntryDate.startOfMonth
-        
-        // Generate array from the earliest record up to and including the current month
-        var result: [Date] = []
-        var iterator = startMonth
-        
-        while iterator <= currentMonthStart {
-            result.append(iterator)
-            guard let nextMonth = calendar.date(byAdding: .month, value: 1, to: iterator) else { break }
-            iterator = nextMonth
-        }
-        
-        return result
+        CalendarMonthLayout.monthStarts(firstEntryDate: allEntries.first?.date, now: Date())
     }
 
     var body: some View {
@@ -104,18 +84,12 @@ struct SingleMonthView: View {
         return cal
     }
 
-    var daysInMonth: Int { calendar.range(of: .day, in: .month, for: monthDate)?.count ?? 31 }
-    
-    var firstDayOffset: Int {
-        let firstWeekday = calendar.component(.weekday, from: monthDate)
-        let firstDayOfWeek = calendar.firstWeekday
-        return (firstWeekday - firstDayOfWeek + 7) % 7
+    private var monthDates: [Date] {
+        CalendarMonthLayout.dates(inMonth: monthDate, calendar: calendar)
     }
-    
-    private func dateFor(day: Int) -> Date {
-        var components = calendar.dateComponents([.year, .month], from: monthDate)
-        components.day = day
-        return calendar.date(from: components) ?? Date()
+
+    private var firstDayOffset: Int {
+        CalendarMonthLayout.firstDayOffset(monthDate, calendar: calendar)
     }
 
     var body: some View {
@@ -126,8 +100,8 @@ struct SingleMonthView: View {
                     Color.clear.frame(height: 38)
                 }
                 
-                ForEach(1...daysInMonth, id: \.self) { day in
-                    let exactDate = dateFor(day: day)
+                ForEach(monthDates, id: \.self) { exactDate in
+                    let day = calendar.component(.day, from: exactDate)
                     let dateKey = exactDate.stringKey
                     let isToday = calendar.isDateInToday(exactDate)
                     let isSelected = selectedDate?.stringKey == dateKey
@@ -180,3 +154,10 @@ struct WeekdayHeaderView: View {
         .padding(.horizontal)
     }
 }
+
+#if DEBUG
+#Preview {
+    MainCalendarView(selectedDate: .constant(Date()), isCalendarExpanded: .constant(true), visibleMonth: .constant(Date().startOfMonth))
+        .previewEnvironment()
+}
+#endif

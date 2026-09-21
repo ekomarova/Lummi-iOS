@@ -14,6 +14,7 @@ Supported languages: English, Russian, German.
 - `LummiTests/`: unit tests. `LummiUITests/`: UI tests. `TestHelpers/`: shared test utilities
 
 ## Git
+- Never commit unless user explicitly asks. After finishing a task, leave the changes uncommitted and report what changed.
 - Before committing, check the current branch with `git branch --show-current`.
 - If the branch is `main` (or `master`) and there are uncommitted changes, create a new branch named after the changes (`feature/...`, `fix/...`, `chore/...`, kebab-case) and commit there.
 - Exception: if I explicitly ask to commit to `main`, commit to `main`.

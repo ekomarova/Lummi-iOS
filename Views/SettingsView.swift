@@ -266,17 +266,8 @@ struct SettingsView: View {
     // MARK: - Actions
     
     private func clearAllData() {
-        // Delete in a scratch context with autosave off: on iOS 17 `rollback()` does not bring
-        // back bulk-deleted objects, so a failed save would leave the visible context empty.
-        // Dropping an unsaved scratch context leaves the main context untouched.
-        let scratchContext = ModelContext(modelContext.container)
-        scratchContext.autosaveEnabled = false
         do {
-            let entries = try scratchContext.fetch(FetchDescriptor<JoyEntry>())
-            for entry in entries {
-                scratchContext.delete(entry)
-            }
-            try scratchContext.saveOrSimulate()
+            try JoyEntryStore(context: modelContext).clearAll()
         } catch {
             print("Failed to clear data: \(error)")
             withAnimation { showClearDataFailedAlert = true }
@@ -373,3 +364,15 @@ struct LanguageSelectionView: View {
         .transition(.move(edge: .trailing).combined(with: .opacity))
     }
 }
+
+#if DEBUG
+#Preview {
+    SettingsView()
+        .previewEnvironment()
+}
+
+#Preview {
+    LanguageSelectionView(selectedLanguage: .constant(.english), isShowingLanguageSelection: .constant(true))
+        .previewEnvironment()
+}
+#endif
