@@ -16,39 +16,16 @@ struct AllJoysView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ZStack {
-                Text("All joys")
-                    .font(.lummiFont(size: 20, weight: .bold))
-                    .foregroundColor(themeManager.currentTheme.textColor)
-                    .frame(maxWidth: .infinity, alignment: .center)
-
-                HStack {
-                    Button(
-                        action: {
-                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                                isShowingAllJoys = false
-                            }
-                        },
-                        label: {
-                            Circle()
-                                .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                                .adaptiveGlass(in: Circle())
-                                .frame(width: 44, height: 44)
-                                .overlay(
-                                    Image(systemName: "arrow.left")
-                                        .font(.lummiFont(size: 16, weight: .bold))
-                                        .foregroundColor(themeManager.currentTheme.textColor)
-                                )
+            ScreenHeader(
+                title: "All joys",
+                leftButton: {
+                    NavigationIconButton(systemImage: "arrow.left", accessibilityID: "AllJoysBackButton") {
+                        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                            isShowingAllJoys = false
                         }
-                    )
-                    .buttonStyle(.plain)
-                    .accessibilityIdentifier("AllJoysBackButton")
-
-                    Spacer()
+                    }
                 }
-            }
-            .padding(.horizontal, 20)
-            .padding(.top, 10)
+            )
 
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 12) {

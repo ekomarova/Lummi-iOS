@@ -4,6 +4,7 @@ All notable changes to the project will be documented in this file.
 ## [1.2.0] - 2026-MM-DD
 ### Changed
 - **Code quality:** Added `#Preview` to every view and component (backed by an in-memory `PreviewSupport` container). Moved calendar math into `CalendarMonthLayout` and the create/edit/delete/clear rules (with rollback) into `JoyEntryStore` / `RecordInputRules` [#27](https://github.com/ekomarova/Lummi-iOS/pull/27)
+- **Code quality:** Extracted the duplicated circular icon buttons, Edit/Delete buttons and page headers and Settings/Insights capsule rows into reusable `NavigationIconButton`, `RecordActionButton`, `ScreenHeader` and `CapsuleRow` components [#28](https://github.com/ekomarova/Lummi-iOS/pull/28)
 
 ### Fixed
 - **Editing:** A failed edit save now restores the entry's original text in memory instead of leaving the unsaved change on the model [#27](https://github.com/ekomarova/Lummi-iOS/pull/27)

@@ -178,42 +178,14 @@ private extension SelectedDayDetailView {
 
     func noteCellActionButtons(entry: JoyEntry, proxy: ScrollViewProxy) -> some View {
         HStack(spacing: 12) {
-            Button(
-                action: {
-                    editingText = entry.text
-                    isEditing = true
-                },
-                label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: "pencil")
-                            .font(.lummiFont(size: 14))
-                        Text("Edit")
-                            .font(.lummiFont(size: 14))
-                    }
-                    .foregroundColor(themeManager.currentTheme.textColor)
-                    .padding(.horizontal, 16)
-                    .frame(height: 44)
-                    .adaptiveGlass(in: Capsule())
-                }
-            )
-            .accessibilityIdentifier("EditRecordButton")
+            RecordActionButton(systemImage: "pencil", title: "Edit", accessibilityID: "EditRecordButton") {
+                editingText = entry.text
+                isEditing = true
+            }
 
-            Button(
-                action: { deleteNote(entry) },
-                label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: "trash")
-                            .font(.lummiFont(size: 14))
-                        Text("Delete")
-                            .font(.lummiFont(size: 14))
-                    }
-                    .foregroundColor(themeManager.currentTheme.textColor)
-                    .padding(.horizontal, 16)
-                    .frame(height: 44)
-                    .adaptiveGlass(in: Capsule())
-                }
-            )
-            .accessibilityIdentifier("DeleteRecordButton")
+            RecordActionButton(systemImage: "trash", title: "Delete", accessibilityID: "DeleteRecordButton") {
+                deleteNote(entry)
+            }
         }
         .transition(.scale(scale: 0.8).combined(with: .opacity).combined(with: .move(edge: .bottom)))
     }

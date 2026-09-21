@@ -58,22 +58,13 @@ struct InsightsView: View {
 
                 // MARK: - Month Selector
                 HStack(spacing: 20) {
-                    Button(
-                        action: { changeMonth(by: -1) },
-                        label: {
-                            Circle()
-                                .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                                .adaptiveGlass(in: Circle())
-                                .frame(width: 36, height: 36)
-                                .overlay(
-                                    Image(systemName: "chevron.left")
-                                        .font(.lummiFont(size: 16, weight: .bold))
-                                        .foregroundColor(themeManager.currentTheme.textColor.opacity(isOldestMonth ? 0.2 : 0.8))
-                                )
-                        }
-                    )
+                    NavigationIconButton(
+                        systemImage: "chevron.left",
+                        size: 36,
+                        iconOpacity: isOldestMonth ? 0.2 : 0.8,
+                        accessibilityID: "PreviousMonthButton"
+                    ) { changeMonth(by: -1) }
                     .disabled(isOldestMonth)
-                    .accessibilityIdentifier("PreviousMonthButton")
 
                     Text(formatMonth(selectedMonth))
                         .font(.lummiFont(size: 20))
@@ -81,22 +72,13 @@ struct InsightsView: View {
                         .frame(minWidth: 160, alignment: .center)
                         .accessibilityIdentifier("CurrentMonthLabel")
 
-                    Button(
-                        action: { changeMonth(by: 1) },
-                        label: {
-                            Circle()
-                                .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                                .adaptiveGlass(in: Circle())
-                                .frame(width: 36, height: 36)
-                                .overlay(
-                                    Image(systemName: "chevron.right")
-                                        .font(.lummiFont(size: 16, weight: .bold))
-                                        .foregroundColor(themeManager.currentTheme.textColor.opacity(isCurrentMonth ? 0.2 : 0.8))
-                                )
-                        }
-                    )
+                    NavigationIconButton(
+                        systemImage: "chevron.right",
+                        size: 36,
+                        iconOpacity: isCurrentMonth ? 0.2 : 0.8,
+                        accessibilityID: "NextMonthButton"
+                    ) { changeMonth(by: 1) }
                     .disabled(isCurrentMonth)
-                    .accessibilityIdentifier("NextMonthButton")
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
 
@@ -208,10 +190,7 @@ struct InsightsView: View {
                                         }
                                     },
                                     label: {
-                                        ZStack {
-                                            RoundedRectangle(cornerRadius: 30)
-                                                .fill(themeManager.currentTheme.textColor.opacity(0.05))
-
+                                        CapsuleRow {
                                             HStack(spacing: 10) {
                                                 Image(systemName: "list.star")
                                                     .font(.system(size: 17, weight: .semibold))
@@ -227,15 +206,7 @@ struct InsightsView: View {
                                                     .font(.system(size: 14, weight: .bold))
                                                     .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
                                             }
-                                            .padding(.horizontal, 26)
                                         }
-                                        .frame(maxWidth: .infinity)
-                                        // Matches the Settings screen's row ovals (31pt content + 14pt vertical padding)
-                                        .frame(height: 59)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 30)
-                                                .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
-                                        )
                                     }
                                 )
                                 .buttonStyle(.plain)

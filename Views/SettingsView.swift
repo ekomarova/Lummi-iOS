@@ -140,28 +140,19 @@ struct SettingsView: View {
                         }
                     },
                     label: {
-                        HStack {
-                            Text(selectedLanguage.displayName)
-                                .font(.lummiFont(size: 17))
-                                .foregroundColor(themeManager.currentTheme.textColor)
+                        CapsuleRow {
+                            HStack {
+                                Text(selectedLanguage.displayName)
+                                    .font(.lummiFont(size: 17))
+                                    .foregroundColor(themeManager.currentTheme.textColor)
 
-                            Spacer()
+                                Spacer()
 
-                            Image(systemName: "chevron.right")
-                                .font(.system(size: 14, weight: .bold))
-                                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 14, weight: .bold))
+                                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
+                            }
                         }
-                        .frame(minHeight: 31)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 14)
-                        .background(
-                            Capsule()
-                                .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                        )
-                        .overlay(
-                            Capsule()
-                                .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
-                        )
                     }
                 )
                 .buttonStyle(.plain)
@@ -174,37 +165,29 @@ struct SettingsView: View {
                     .font(.lummiFont(size: 20, weight: .bold))
                     .foregroundColor(themeManager.currentTheme.textColor)
 
-                HStack {
-                    Text("iCloud")
-                        .font(.lummiFont(size: 17))
-                        .foregroundColor(themeManager.currentTheme.textColor)
+                CapsuleRow {
+                    HStack {
+                        Text("iCloud")
+                            .font(.lummiFont(size: 17))
+                            .foregroundColor(themeManager.currentTheme.textColor)
 
-                    Spacer()
+                        Spacer()
 
-                    Toggle(
-                        "iCloud",
-                        isOn: Binding(
-                            get: { isICloudSyncEnabled },
-                            set: { newValue in
-                                if newValue { syncBannerVisible = false }
-                                isICloudSyncEnabled = newValue
-                            }
+                        Toggle(
+                            "iCloud",
+                            isOn: Binding(
+                                get: { isICloudSyncEnabled },
+                                set: { newValue in
+                                    if newValue { syncBannerVisible = false }
+                                    isICloudSyncEnabled = newValue
+                                }
+                            )
                         )
-                    )
-                    .labelsHidden()
-                    .toggleStyle(.switch)
-                    .accessibilityIdentifier("iCloudSyncToggle")
+                        .labelsHidden()
+                        .toggleStyle(.switch)
+                        .accessibilityIdentifier("iCloudSyncToggle")
+                    }
                 }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 14)
-                .background(
-                    Capsule()
-                        .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                )
-                .overlay(
-                    Capsule()
-                        .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
-                )
 
                 // MARK: - iCloud Sync Banner
                 if isICloudSyncEnabled && syncBannerVisible, let syncMessage = syncMonitor.syncState.message {
@@ -241,20 +224,11 @@ struct SettingsView: View {
                         withAnimation { showClearDataAlert = true }
                     },
                     label: {
-                        Text("Delete")
-                            .font(.lummiFont(size: 17))
-                            .foregroundColor(Color(red: 0.95, green: 0.2, blue: 0.3))
-                            .frame(maxWidth: .infinity, minHeight: 31, alignment: .leading)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 14)
-                            .background(
-                                Capsule()
-                                    .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                            )
-                            .overlay(
-                                Capsule()
-                                    .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
-                            )
+                        CapsuleRow {
+                            Text("Delete")
+                                .font(.lummiFont(size: 17))
+                                .foregroundColor(Color(red: 0.95, green: 0.2, blue: 0.3))
+                        }
                     }
                 )
                 .buttonStyle(.plain)
@@ -282,39 +256,16 @@ struct LanguageSelectionView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ZStack {
-                Text("Language")
-                    .font(.lummiFont(size: 24, weight: .bold))
-                    .foregroundColor(themeManager.currentTheme.textColor)
-                    .frame(maxWidth: .infinity, alignment: .center)
-
-                HStack {
-                    Button(
-                        action: {
-                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                                isShowingLanguageSelection = false
-                            }
-                        },
-                        label: {
-                            Circle()
-                                .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                                .adaptiveGlass(in: Circle())
-                                .frame(width: 44, height: 44)
-                                .overlay(
-                                    Image(systemName: "arrow.left")
-                                        .font(.lummiFont(size: 16, weight: .bold))
-                                        .foregroundColor(themeManager.currentTheme.textColor)
-                                )
+            ScreenHeader(
+                title: "Language",
+                leftButton: {
+                    NavigationIconButton(systemImage: "arrow.left", accessibilityID: "LanguageSelectionBackButton") {
+                        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                            isShowingLanguageSelection = false
                         }
-                    )
-                    .buttonStyle(.plain)
-                    .accessibilityIdentifier("LanguageSelectionBackButton")
-
-                    Spacer()
+                    }
                 }
-            }
-            .padding(.horizontal, 20)
-            .padding(.top, 10)
+            )
 
             VStack(spacing: 12) {
                 ForEach(AppLanguage.allCases) { language in

@@ -29,68 +29,38 @@ struct RecordInput: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ZStack {
-                Text("New Joy")
-                    .font(.lummiFont(size: 20, weight: .bold))
-                    .foregroundColor(themeManager.currentTheme.textColor)
-                    .frame(maxWidth: .infinity, alignment: .center)
-
-                HStack {
-                    Button(
-                        action: {
-                            isTextEditorFocused = false
-                            onDismiss()
-                        },
-                        label: {
-                            Circle()
-                                .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                                .adaptiveGlass(in: Circle())
-                                .frame(width: 44, height: 44)
-                                .overlay(
-                                    Image(systemName: "chevron.left")
-                                        .font(.lummiFont(size: 16, weight: .bold))
-                                        .foregroundColor(themeManager.currentTheme.textColor)
-                                )
-                        }
-                    )
-                    .buttonStyle(.plain)
-                    .accessibilityLabel("Cancel")
-                    .accessibilityIdentifier("CancelRecordButton")
-
-                    Spacer()
-
-                    Button(
-                        action: {
-                            if let date = selectedDate, isSaveEnabled {
-                                do {
-                                    try JoyEntryStore(context: modelContext).add(text: text, date: date)
-                                    isTextEditorFocused = false
-                                    onDismiss()
-                                } catch {
-                                    withAnimation { showSaveAlert = true }
-                                }
+            ScreenHeader(
+                title: "New Joy",
+                leftButton: {
+                    NavigationIconButton(
+                        systemImage: "chevron.left",
+                        accessibilityLabel: "Cancel",
+                        accessibilityID: "CancelRecordButton"
+                    ) {
+                        isTextEditorFocused = false
+                        onDismiss()
+                    }
+                },
+                rightButton: {
+                    NavigationIconButton(
+                        systemImage: "checkmark",
+                        iconOpacity: isSaveEnabled ? 0.8 : 0.2,
+                        accessibilityLabel: "Save",
+                        accessibilityID: "SaveRecordButton"
+                    ) {
+                        if let date = selectedDate, isSaveEnabled {
+                            do {
+                                try JoyEntryStore(context: modelContext).add(text: text, date: date)
+                                isTextEditorFocused = false
+                                onDismiss()
+                            } catch {
+                                withAnimation { showSaveAlert = true }
                             }
-                        },
-                        label: {
-                            Circle()
-                                .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                                .adaptiveGlass(in: Circle())
-                                .frame(width: 44, height: 44)
-                                .overlay(
-                                    Image(systemName: "checkmark")
-                                        .font(.lummiFont(size: 16, weight: .bold))
-                                        .foregroundColor(themeManager.currentTheme.textColor.opacity(isSaveEnabled ? 0.8 : 0.2))
-                                )
                         }
-                    )
-                    .buttonStyle(.plain)
+                    }
                     .disabled(!isSaveEnabled)
-                    .accessibilityLabel("Save")
-                    .accessibilityIdentifier("SaveRecordButton")
                 }
-            }
-            .padding(.horizontal, 20)
-            .padding(.top, 10)
+            )
 
             VStack(spacing: 25) {
                 TextEditor(text: $text)

@@ -20,6 +20,10 @@
 		473B04222F9AB1AA00C482FA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04212F9AB1AA00C482FA /* ContentView.swift */; };
 		473B04482F9ABD8B00C482FA /* MainCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04472F9ABC2300C482FA /* MainCalendarView.swift */; };
 		473B044A2F9ABF1D00C482FA /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04492F9ABF1800C482FA /* HeaderView.swift */; };
+		A1B2C3D41000000000000003 /* ScreenHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000003 /* ScreenHeader.swift */; };
+		A1B2C3D41000000000000004 /* CapsuleRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000004 /* CapsuleRow.swift */; };
+		A1B2C3D41000000000000001 /* NavigationIconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000001 /* NavigationIconButton.swift */; };
+		A1B2C3D41000000000000002 /* RecordActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000002 /* RecordActionButton.swift */; };
 		473B044E2F9ACF9D00C482FA /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B044D2F9ACF9500C482FA /* RecordButton.swift */; };
 		473B04502F9AD05200C482FA /* DayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B044F2F9AD05100C482FA /* DayCell.swift */; };
 		473B04552F9BB2F400C482FA /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04542F9BB24E00C482FA /* ThemeManager.swift */; };
@@ -74,6 +78,10 @@
 		473B04332F9AB1AC00C482FA /* LummiUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LummiUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		473B04472F9ABC2300C482FA /* MainCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCalendarView.swift; sourceTree = "<group>"; };
 		473B04492F9ABF1800C482FA /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		A1B2C3D40000000000000003 /* ScreenHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenHeader.swift; sourceTree = "<group>"; };
+		A1B2C3D40000000000000004 /* CapsuleRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleRow.swift; sourceTree = "<group>"; };
+		A1B2C3D40000000000000001 /* NavigationIconButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationIconButton.swift; sourceTree = "<group>"; };
+		A1B2C3D40000000000000002 /* RecordActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordActionButton.swift; sourceTree = "<group>"; };
 		473B044D2F9ACF9500C482FA /* RecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
 		473B044F2F9AD05100C482FA /* DayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayCell.swift; sourceTree = "<group>"; };
 		473B04522F9BB22000C482FA /* ThemeProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeProtocol.swift; sourceTree = "<group>"; };
@@ -215,6 +223,10 @@
 				A75A501776D443E1961E0695 /* AllJoysView.swift */,
 				47BB00012FC0A5EA008B5D01 /* BottomToolbar.swift */,
 				473B044F2F9AD05100C482FA /* DayCell.swift */,
+				A1B2C3D40000000000000003 /* ScreenHeader.swift */,
+				A1B2C3D40000000000000004 /* CapsuleRow.swift */,
+				A1B2C3D40000000000000001 /* NavigationIconButton.swift */,
+				A1B2C3D40000000000000002 /* RecordActionButton.swift */,
 				473B044D2F9ACF9500C482FA /* RecordButton.swift */,
 				473B045A2F9BB79B00C482FA /* RecordInput.swift */,
 				E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */,
@@ -425,6 +437,10 @@
 				47981EAD2FA54745005ADAB1 /* InsightsCalculator.swift in Sources */,
 				473B04502F9AD05200C482FA /* DayCell.swift in Sources */,
 				473B04572F9BB2FD00C482FA /* ThemeProtocol.swift in Sources */,
+				A1B2C3D41000000000000003 /* ScreenHeader.swift in Sources */,
+				A1B2C3D41000000000000004 /* CapsuleRow.swift in Sources */,
+				A1B2C3D41000000000000001 /* NavigationIconButton.swift in Sources */,
+				A1B2C3D41000000000000002 /* RecordActionButton.swift in Sources */,
 				473B044E2F9ACF9D00C482FA /* RecordButton.swift in Sources */,
 				47289DCE2FAED17700E46B84 /* InsightsView.swift in Sources */,
 				4766220D303F8AB000041521 /* CloudKitSyncMonitor.swift in Sources */,
