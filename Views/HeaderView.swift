@@ -19,7 +19,7 @@ struct HeaderView: View {
 
     private var headerDateText: String {
         if isExpanded {
-            date.format("LLLL yyyy", locale: locale).capitalizedFirstLetter
+            date.monthYearTitle(locale: locale)
         } else {
             "\(date.format("d", locale: locale)) \(date.format("MMMM", locale: locale).capitalizedFirstLetter)"
         }

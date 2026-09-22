@@ -191,48 +191,37 @@ private extension SelectedDayDetailView {
     }
 
     var noteCellEditField: some View {
-        TextField("", text: $editingText, axis: .vertical)
-            .accessibilityLabel("Record text")
-            .accessibilityIdentifier("EditRecordTextField")
-            .focused($isTextFieldFocused)
-            .font(.lummiFont(size: 16))
-            .foregroundColor(themeManager.currentTheme.textColor)
-            .padding(20)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(Color.white.opacity(0.3), lineWidth: 1)
-            )
+        NoteBubble(strokeOpacity: 0.3) {
+            TextField("", text: $editingText, axis: .vertical)
+                .accessibilityLabel("Record text")
+                .accessibilityIdentifier("EditRecordTextField")
+                .focused($isTextFieldFocused)
+                .font(.lummiFont(size: 16))
+                .foregroundColor(themeManager.currentTheme.textColor)
+        }
     }
 
     func noteCellTextDisplay(entry: JoyEntry, index: Int, isActive: Bool, proxy: ScrollViewProxy) -> some View {
-        Text(entry.text)
-            .font(.lummiFont(size: 17))
-            .foregroundColor(themeManager.currentTheme.textColor)
-            .padding(20)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(
-                        Color.white.opacity(isActive ? 0.5 : 0.25),
-                        lineWidth: isActive ? 2 : 1
-                    )
-            )
-            .contentShape(RoundedRectangle(cornerRadius: 20))
-            .onTapGesture {
-                if activeEntryID != nil { saveAndDismiss() }
-            }
-            .onLongPressGesture {
-                if isSelectedToday && !isActive {
-                    saveAndDismiss()
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                        activeEntryID = entry.persistentModelID
-                        isEditing = false
-                    }
-                    withAnimation { proxy.scrollTo(entry.persistentModelID, anchor: .center) }
+        NoteBubble(strokeOpacity: isActive ? 0.5 : 0.25, lineWidth: isActive ? 2 : 1) {
+            Text(entry.text)
+                .font(.lummiFont(size: 17))
+                .foregroundColor(themeManager.currentTheme.textColor)
+        }
+        .contentShape(RoundedRectangle(cornerRadius: 20))
+        .onTapGesture {
+            if activeEntryID != nil { saveAndDismiss() }
+        }
+        .onLongPressGesture {
+            if isSelectedToday && !isActive {
+                saveAndDismiss()
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                    activeEntryID = entry.persistentModelID
+                    isEditing = false
                 }
+                withAnimation { proxy.scrollTo(entry.persistentModelID, anchor: .center) }
             }
-            .accessibilityIdentifier("RecordText_\(index)")
+        }
+        .accessibilityIdentifier("RecordText_\(index)")
     }
 }
 
