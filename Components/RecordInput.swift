@@ -68,14 +68,7 @@ struct RecordInput: View {
                     .frame(height: AdaptiveLayout.isPad ? 280 : 150)
                     .padding()
                     .scrollContentBackground(.hidden)
-                    .background(
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(themeManager.currentTheme.textColor.opacity(0.1))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .stroke(themeManager.currentTheme.textColor.opacity(0.2), lineWidth: 1)
-                            )
-                    )
+                    .cardBackground(RoundedRectangle(cornerRadius: 20), fillOpacity: 0.1, strokeOpacity: 0.2)
                     .foregroundColor(themeManager.currentTheme.textColor)
                     .font(.lummiFont(size: 18))
                     .accessibilityIdentifier("RecordInputTextEditor")

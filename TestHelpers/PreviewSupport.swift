@@ -2,7 +2,7 @@
 import SwiftUI
 import SwiftData
 
-/// In-memory data and environment for SwiftUI previews. Never touches real user data.
+// In-memory data and environment for SwiftUI previews. Never touches real user data.
 enum PreviewSupport {
     @MainActor
     static func makeContainer(withSampleEntries: Bool = true) -> ModelContainer {
@@ -29,7 +29,7 @@ enum PreviewSupport {
     }
 }
 
-/// Reads the theme from the environment, so the background follows theme switches made inside a preview.
+// Reads the theme from the environment, so the background follows theme switches made inside a preview.
 private struct PreviewThemeBackground: View {
     @Environment(ThemeManager.self) private var themeManager
 
@@ -39,15 +39,18 @@ private struct PreviewThemeBackground: View {
 }
 
 extension View {
-    /// Injects the theme manager, the theme background and an in-memory container with sample entries.
-    /// Views draw on top of the app background, so without it their light text would be invisible.
+    // Injects the theme manager, the theme background and an in-memory container with sample entries.
+    // Views draw on top of the app background, so without it their light text would be invisible.
+    // `isDark` forces the starting theme, useful for previews that compare light and dark side by side.
     @MainActor
-    func previewEnvironment(withSampleEntries: Bool = true) -> some View {
-        ZStack {
+    func previewEnvironment(withSampleEntries: Bool = true, isDark: Bool = true) -> some View {
+        let manager = ThemeManager()
+        manager.isDark = isDark
+        return ZStack {
             PreviewThemeBackground()
             self
         }
-        .environment(ThemeManager())
+        .environment(manager)
         .modelContainer(PreviewSupport.makeContainer(withSampleEntries: withSampleEntries))
     }
 }

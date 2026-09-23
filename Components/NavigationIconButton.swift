@@ -31,7 +31,7 @@ struct NavigationIconButton: View {
             action: action,
             label: {
                 Circle()
-                    .fill(themeManager.currentTheme.textColor.opacity(0.05))
+                    .fill(themeManager.currentTheme.textColor.opacity(CardOpacity.fill))
                     .adaptiveGlass(in: Circle())
                     .frame(width: size, height: size)
                     .overlay(

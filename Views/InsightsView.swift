@@ -271,7 +271,7 @@ struct GlowCard: View {
         .frame(height: height)
         .overlay(
             RoundedRectangle(cornerRadius: 30)
-                .stroke(themeManager.currentTheme.textColor.opacity(0.15), lineWidth: 1)
+                .stroke(themeManager.currentTheme.textColor.opacity(CardOpacity.prominentStroke), lineWidth: 1)
         )
     }
 }
