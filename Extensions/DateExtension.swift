@@ -34,7 +34,12 @@ extension Date {
         Date.formatterCache[cacheKey] = formatter
         return formatter.string(from: self)
     }
-    
+
+    // Full month and year, e.g. "March 2026", capitalized for locales that lowercase month names.
+    func monthYearTitle(locale: Locale = .current) -> String {
+        format("LLLL yyyy", locale: locale).capitalizedFirstLetter
+    }
+
     // Get the beginning of the month for a specific date
     var startOfMonth: Date {
         let calendar = Calendar.current

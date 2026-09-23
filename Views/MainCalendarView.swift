@@ -79,9 +79,7 @@ struct SingleMonthView: View {
     let columns = Array(repeating: GridItem(.flexible(), spacing: 7), count: 7)
 
     private var calendar: Calendar {
-        var cal = Calendar.current
-        cal.locale = locale
-        return cal
+        .lummiCalendar(locale: locale)
     }
 
     private var monthDates: [Date] {
@@ -134,8 +132,7 @@ struct WeekdayHeaderView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale
     private var weekdayLabels: [String] {
-        var calendar = Calendar.current
-        calendar.locale = locale
+        let calendar = Calendar.lummiCalendar(locale: locale)
         let symbols = calendar.veryShortWeekdaySymbols
         let firstDayIndex = calendar.firstWeekday - 1
         return Array(symbols[firstDayIndex...] + symbols[..<firstDayIndex])

@@ -66,7 +66,7 @@ struct InsightsView: View {
                     ) { changeMonth(by: -1) }
                     .disabled(isOldestMonth)
 
-                    Text(formatMonth(selectedMonth))
+                    Text(selectedMonth.monthYearTitle(locale: locale))
                         .font(.lummiFont(size: 20))
                         .foregroundColor(themeManager.currentTheme.textColor.opacity(0.7))
                         .frame(minWidth: 160, alignment: .center)
@@ -97,80 +97,29 @@ struct InsightsView: View {
                                 .padding(.leading, 10)
 
                             if AdaptiveLayout.isPad {
-                                // MARK: - Joys, Streak & Joyful Hours (iPad: one row of squares)
+                                // MARK: - Joys, Joyful Hours & Streak (iPad: one row of squares)
                                 let padCardSize = (geometry.size.width - 50) / 3
 
                                 HStack(spacing: 15) {
-                                    GlowCard(
-                                        value: "\(monthlyEntries.count)",
-                                        subtitle: "Joys",
-                                        systemImage: "star.fill",
-                                        iconColor: Color(red: 1.0, green: 0.55, blue: 0.1),
-                                        gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.2, green: 0.6, blue: 0.3)],
-                                        height: padCardSize,
-                                        valueFontSize: 28,
-                                        valuePadding: 12
-                                    )
-                                    .frame(width: padCardSize)
+                                    joysCard(height: padCardSize)
+                                        .frame(width: padCardSize)
 
-                                    GlowCard(
-                                        value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
-                                        subtitle: "Joyful Hours",
-                                        systemImage: "sun.max.fill",
-                                        gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)],
-                                        height: padCardSize,
-                                        valueFontSize: 28,
-                                        valuePadding: 12
-                                    )
-                                    .frame(width: padCardSize)
+                                    joyfulHoursCard(height: padCardSize, valuePadding: 12)
+                                        .frame(width: padCardSize)
 
-                                    GlowCard(
-                                        value: "\(monthStreak)",
-                                        subtitle: "Day Streak",
-                                        systemImage: "flame.fill",
-                                        iconColor: Color(red: 0.95, green: 0.2, blue: 0.2),
-                                        gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)],
-                                        height: padCardSize,
-                                        valueFontSize: 28,
-                                        valuePadding: 12
-                                    )
-                                    .frame(width: padCardSize)
+                                    streakCard(height: padCardSize)
+                                        .frame(width: padCardSize)
                                 }
                             } else {
                                 // MARK: - Joys & Streak
                                 HStack(spacing: 15) {
-                                    GlowCard(
-                                        value: "\(monthlyEntries.count)",
-                                        subtitle: "Joys",
-                                        systemImage: "star.fill",
-                                        iconColor: Color(red: 1.0, green: 0.55, blue: 0.1),
-                                        gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.2, green: 0.6, blue: 0.3)],
-                                        valueFontSize: 28,
-                                        valuePadding: 12
-                                    )
-
-                                    GlowCard(
-                                        value: "\(monthStreak)",
-                                        subtitle: "Day Streak",
-                                        systemImage: "flame.fill",
-                                        iconColor: Color(red: 0.95, green: 0.2, blue: 0.2),
-                                        gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)],
-                                        valueFontSize: 28,
-                                        valuePadding: 12
-                                    )
+                                    joysCard()
+                                    streakCard()
                                 }
                                 .frame(maxWidth: .infinity, minHeight: itemSize * 0.65)
 
                                 // MARK: - Joyful Hours
-                                GlowCard(
-                                    value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
-                                    subtitle: "Joyful Hours",
-                                    systemImage: "sun.max.fill",
-                                    gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)],
-                                    height: 130,
-                                    valueFontSize: 28,
-                                    valuePadding: 30
-                                )
+                                joyfulHoursCard(height: 130, valuePadding: 30)
                             }
                         }
 
@@ -234,9 +183,45 @@ struct InsightsView: View {
             }
         }
     }
-    
-    private func formatMonth(_ date: Date) -> String {
-        date.format("LLLL yyyy", locale: locale).capitalizedFirstLetter
+
+    // MARK: - Highlight Cards
+
+    private func joysCard(height: CGFloat = 170) -> some View {
+        GlowCard(
+            value: "\(monthlyEntries.count)",
+            subtitle: "Joys",
+            systemImage: "star.fill",
+            iconColor: Color(red: 1.0, green: 0.55, blue: 0.1),
+            gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.2, green: 0.6, blue: 0.3)],
+            height: height,
+            valueFontSize: 28,
+            valuePadding: 12
+        )
+    }
+
+    private func streakCard(height: CGFloat = 170) -> some View {
+        GlowCard(
+            value: "\(monthStreak)",
+            subtitle: "Day Streak",
+            systemImage: "flame.fill",
+            iconColor: Color(red: 0.95, green: 0.2, blue: 0.2),
+            gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)],
+            height: height,
+            valueFontSize: 28,
+            valuePadding: 12
+        )
+    }
+
+    private func joyfulHoursCard(height: CGFloat, valuePadding: CGFloat) -> some View {
+        GlowCard(
+            value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
+            subtitle: "Joyful Hours",
+            systemImage: "sun.max.fill",
+            gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)],
+            height: height,
+            valueFontSize: 28,
+            valuePadding: valuePadding
+        )
     }
 }
 
@@ -310,15 +295,11 @@ struct MonthlyMomentCell: View {
             .frame(width: 35)
             .padding(.top, 4)
 
-            Text(entry.text)
-                .font(.lummiFont(size: 17))
-                .foregroundColor(themeManager.currentTheme.textColor)
-                .padding(20)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color.white.opacity(0.25), lineWidth: 1)
-                )
+            NoteBubble {
+                Text(entry.text)
+                    .font(.lummiFont(size: 17))
+                    .foregroundColor(themeManager.currentTheme.textColor)
+            }
         }
         .padding(.leading, 4)
         .padding(.trailing, 15)
