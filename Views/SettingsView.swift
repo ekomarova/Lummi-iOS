@@ -116,14 +116,7 @@ struct SettingsView: View {
                     )
                 }
                 .padding(.vertical, 20)
-                .background(
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20)
-                        .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
-                )
+                .cardBackground(RoundedRectangle(cornerRadius: 20))
             }
 
             // MARK: - Language
@@ -292,14 +285,7 @@ struct LanguageSelectionView: View {
                             }
                             .padding(.horizontal, 20)
                             .padding(.vertical, 16)
-                            .background(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .fill(themeManager.currentTheme.textColor.opacity(0.05))
-                            )
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .stroke(themeManager.currentTheme.textColor.opacity(0.1), lineWidth: 1)
-                            )
+                            .cardBackground(RoundedRectangle(cornerRadius: 16))
                         }
                     )
                     .buttonStyle(.plain)
