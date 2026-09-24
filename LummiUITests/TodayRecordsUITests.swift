@@ -36,7 +36,7 @@ final class TodayRecordsUITests: XCTestCase {
     // Check text edition
     func test_EditRecord() throws {
         // iPhone SE (667 pt tall) keeps this element under the bottom toolbar, so the tap misses it
-        try XCTSkipIf(UIScreen.main.bounds.height <= 667, "Not supported on small screens (iPhone SE)")
+        try XCTSkipIf(app.isSmallScreen, "Not supported on small screens (iPhone SE)")
         let originalText = "Record #7"
         let addedText = "(edited)"
 
@@ -64,7 +64,7 @@ final class TodayRecordsUITests: XCTestCase {
     // Check record deleting
     func test_DeleteRecord() throws {
         // iPhone SE (667 pt tall) keeps this element under the bottom toolbar, so the tap misses it
-        try XCTSkipIf(UIScreen.main.bounds.height <= 667, "Not supported on small screens (iPhone SE)")
+        try XCTSkipIf(app.isSmallScreen, "Not supported on small screens (iPhone SE)")
         let recordToDelete = app.staticTexts["RecordText_7"]
         
         recordToDelete.press(forDuration: 1.0)
@@ -90,5 +90,16 @@ final class TodayRecordsUITests: XCTestCase {
         textEditor.typeText(text)
         
         app.buttons["SaveRecordButton"].tap()
+    }
+}
+
+extension XCUIApplication {
+
+    // True when the launched app runs on a small screen (iPhone SE, 667 pt tall or less).
+    // Measured from the app window, because `UIScreen.main` in the test runner process is not reliable.
+    // The app must already be launched.
+    var isSmallScreen: Bool {
+        let height = windows.firstMatch.frame.height
+        return height > 0 && height <= 667
     }
 }

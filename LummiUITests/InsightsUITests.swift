@@ -55,9 +55,9 @@ final class InsightsUITests: XCTestCase {
     
     // Check all data on the Insight tab
     func test_InsightsWithFourDaysFilled() throws {
-        // iPhone SE (667 pt tall) keeps this element under the bottom toolbar, so the tap misses it
-        try XCTSkipIf(UIScreen.main.bounds.height <= 667, "Not supported on small screens (iPhone SE)")
         launchApp(with: ["-UI_TESTING_4_DAYS_FILLED"])
+        // iPhone SE (667 pt tall) keeps this element under the bottom toolbar, so the tap misses it
+        try XCTSkipIf(app.isSmallScreen, "Not supported on small screens (iPhone SE)")
 
         let inactiveInsightsBtn = app.buttons["InsightsButton_Inactive"]
         XCTAssertTrue(inactiveInsightsBtn.waitForExistence(timeout: 2.0))

@@ -10,7 +10,7 @@
 import Foundation
 
 // Mutually exclusive top-level screens shown by `ContentView`.
-enum Screen: Equatable {
+enum Screen: nonisolated Equatable {
     case home
     case insights
     case settings
@@ -18,7 +18,7 @@ enum Screen: Equatable {
 }
 
 // Single source of truth for `ContentView` navigation, so impossible flag combinations cannot be represented.
-struct NavigationState: Equatable {
+struct NavigationState: nonisolated Equatable {
     private(set) var screen: Screen = .home
     private var screenBeforeRecord: Screen = .home
     var isCalendarExpanded = false
