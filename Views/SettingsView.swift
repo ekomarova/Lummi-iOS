@@ -10,6 +10,7 @@
 import SwiftUI
 import SwiftData
 
+// Settings screen (theme, language, iCloud sync, clearing data) and the supported app languages.
 enum AppLanguage: String, CaseIterable, Identifiable {
     case english = "en"
     case russian = "ru"

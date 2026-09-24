@@ -9,6 +9,7 @@
 
 import SwiftUI
 
+// Shared SwiftUI view modifiers: adaptive glass material and the themed card background.
 extension View {
     // Applies the native Liquid Glass material on iOS 26+, falling back to
     // `.ultraThinMaterial` on earlier versions.

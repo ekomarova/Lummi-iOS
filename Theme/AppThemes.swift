@@ -9,6 +9,7 @@
 
 import SwiftUI
 
+// Concrete dark and light themes implementing AppTheme.
 struct DarkTheme: AppTheme {
     private let topGradientColor = Color(red: 0.05, green: 0.11, blue: 0.22)
 

@@ -9,6 +9,7 @@
 
 import SwiftUI
 
+// Contract for a theme: the colors and opacities every theme must provide.
 protocol AppTheme {
     // App background
     var bgGradient: LinearGradient { get }

@@ -9,6 +9,7 @@
 
 import SwiftUI
 
+// Round "+" button that starts recording a new joy.
 struct RecordButton: View {
     @Environment(ThemeManager.self) private var themeManager
     @State private var didTap = false

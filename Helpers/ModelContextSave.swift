@@ -10,6 +10,7 @@
 import Foundation
 import SwiftData
 
+// Save wrapper that lets UI tests simulate a save failure in DEBUG builds.
 extension ModelContext {
     func saveOrSimulate() throws {
         #if DEBUG

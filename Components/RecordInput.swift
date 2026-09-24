@@ -10,6 +10,7 @@
 import SwiftUI
 import SwiftData
 
+// New-joy screen: text editor with a length limit, plus cancel and save buttons.
 struct RecordInput: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.modelContext) private var modelContext

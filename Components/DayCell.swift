@@ -9,6 +9,7 @@
 
 import SwiftUI
 
+// Single day in the calendar grid, with a star when the day has entries and highlights for today/selected.
 struct DayCell: View {
     @Environment(ThemeManager.self) private var themeManager
     let day: Int

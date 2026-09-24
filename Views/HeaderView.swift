@@ -9,6 +9,7 @@
 
 import SwiftUI
 
+// Tappable date capsule at the top of Home that expands and collapses the calendar.
 struct HeaderView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale

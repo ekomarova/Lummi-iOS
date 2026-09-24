@@ -9,6 +9,7 @@
 
 import SwiftUI
 
+// Labeled checkmark option used to choose between the light and dark theme in Settings.
 struct ThemeOptionButton: View {
     @Environment(ThemeManager.self) private var themeManager
 

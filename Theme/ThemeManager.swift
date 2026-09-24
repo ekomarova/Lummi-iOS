@@ -10,6 +10,7 @@
 import SwiftUI
 import Observation
 
+// Holds the current theme and persists the dark/light choice in UserDefaults.
 @Observable
 class ThemeManager {
     var isDark: Bool = UserDefaults.standard.object(forKey: "isDarkMode") as? Bool ?? true {

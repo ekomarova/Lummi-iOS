@@ -9,6 +9,7 @@
 
 import SwiftUI
 
+// Floating glass tab bar for switching between Home, Insights and Settings.
 struct BottomToolbar: View {
     @Environment(ThemeManager.self) private var themeManager
     @Namespace private var glassNamespace

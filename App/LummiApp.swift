@@ -10,6 +10,7 @@
 import SwiftUI
 import SwiftData
 
+// App entry point: builds the SwiftData container (with opt-in iCloud sync) and shows the root ContentView.
 @main
 struct LummiApp: App {
     

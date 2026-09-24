@@ -10,6 +10,7 @@
 import SwiftUI
 import SwiftData
 
+// Root view: switches between the top-level screens and owns the theme, navigation and bottom toolbar.
 struct ContentView: View {
     var syncError: Binding<(any Error)?> = .constant(nil)
 

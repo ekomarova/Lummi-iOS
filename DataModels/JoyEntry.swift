@@ -10,6 +10,7 @@
 import Foundation
 import SwiftData
 
+// SwiftData model for a single joy record: its text and the date it was created.
 @Model
 final class JoyEntry {
     // Unique ID for each record

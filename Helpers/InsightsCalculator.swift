@@ -9,6 +9,7 @@
 
 import Foundation
 
+// Pure calculations behind the Insights screen: monthly stats, streaks and the report threshold.
 struct InsightsCalculator {
 
     private static let minimumDaysForReport = 4

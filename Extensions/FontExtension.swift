@@ -9,6 +9,7 @@
 
 import SwiftUI
 
+// Device-idiom check and the app's shared font builder.
 enum AdaptiveLayout {
     static var isPad: Bool {
         UIDevice.current.userInterfaceIdiom == .pad

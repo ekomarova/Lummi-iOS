@@ -9,6 +9,7 @@
 
 import SwiftUI
 
+// Screen listing every saved joy, newest first, opened from the Insights screen.
 struct AllJoysView: View {
     @Environment(ThemeManager.self) private var themeManager
     let entries: [JoyEntry]

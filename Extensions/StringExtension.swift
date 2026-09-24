@@ -9,6 +9,7 @@
 
 import Foundation
 
+// String helper for capitalizing only the first letter (e.g. month names in locales that lowercase them).
 extension String {
     var capitalizedFirstLetter: String {
         guard let first else { return self }

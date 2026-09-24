@@ -10,6 +10,7 @@
 import SwiftUI
 import SwiftData
 
+// Insights screen: monthly stats and a report for the selected month.
 struct InsightsView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale

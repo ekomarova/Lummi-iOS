@@ -10,6 +10,7 @@
 import SwiftUI
 import SwiftData
 
+// Shows the joys recorded on the selected day and lets the user edit or delete them.
 struct SelectedDayDetailView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.modelContext) private var modelContext

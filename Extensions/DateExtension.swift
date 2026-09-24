@@ -9,6 +9,7 @@
 
 import Foundation
 
+// Date helpers: day keys, cached formatting, month boundaries and month comparisons.
 extension Date {
     private static let keyFormatter: DateFormatter = {
         let fmt = DateFormatter()

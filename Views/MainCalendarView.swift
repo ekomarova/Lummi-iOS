@@ -10,6 +10,7 @@
 import SwiftUI
 import SwiftData
 
+// Scrollable month-by-month calendar for picking a day.
 struct MainCalendarView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Binding var selectedDate: Date
