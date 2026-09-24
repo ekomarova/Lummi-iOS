@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		24DEA4823F27415591ADBA5F /* AllJoysView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A75A501776D443E1961E0695 /* AllJoysView.swift */; };
+		2EAF024321A84B0DA72034CB /* CardOpacity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33595B21D97D40CAAE9F5BE2 /* CardOpacity.swift */; };
 		3994D6B50DC44AD6A11FE59F /* ThemeOptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */; };
 		43EC30172F8B381CFABEA13E /* NoteBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = A974D4023557EF74B1627FA8 /* NoteBubble.swift */; };
 		470FC4E7304A309F00F50A7A /* ModelContextSave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470FC4E6304A309F00F50A7A /* ModelContextSave.swift */; };
@@ -23,7 +24,6 @@
 		473B044A2F9ABF1D00C482FA /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04492F9ABF1800C482FA /* HeaderView.swift */; };
 		473B044E2F9ACF9D00C482FA /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B044D2F9ACF9500C482FA /* RecordButton.swift */; };
 		473B04502F9AD05200C482FA /* DayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B044F2F9AD05100C482FA /* DayCell.swift */; };
-		2EAF024321A84B0DA72034CB /* CardOpacity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33595B21D97D40CAAE9F5BE2 /* CardOpacity.swift */; };
 		473B04552F9BB2F400C482FA /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04542F9BB24E00C482FA /* ThemeManager.swift */; };
 		473B04562F9BB2F800C482FA /* AppThemes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04532F9BB22F00C482FA /* AppThemes.swift */; };
 		473B04572F9BB2FD00C482FA /* ThemeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04522F9BB22000C482FA /* ThemeProtocol.swift */; };
@@ -45,6 +45,7 @@
 		A1B2C3D41000000000000003 /* ScreenHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000003 /* ScreenHeader.swift */; };
 		A1B2C3D41000000000000004 /* CapsuleRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000004 /* CapsuleRow.swift */; };
 		E4FDF21B7DE4405C342C1EA7 /* CalendarExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FFB5A141452B3CDBF374BE /* CalendarExtension.swift */; };
+		4A11C0DE00000000000000A2 /* NavigationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11C0DE00000000000000A1 /* NavigationState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		33595B21D97D40CAAE9F5BE2 /* CardOpacity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardOpacity.swift; sourceTree = "<group>"; };
 		470FC4E6304A309F00F50A7A /* ModelContextSave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContextSave.swift; sourceTree = "<group>"; };
 		4714236E2F9CFAA000C1D681 /* SelectedDayDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedDayDetailView.swift; sourceTree = "<group>"; };
 		4726FFA72F9DA1FF008B5D3C /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
@@ -86,7 +88,6 @@
 		473B04522F9BB22000C482FA /* ThemeProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeProtocol.swift; sourceTree = "<group>"; };
 		473B04532F9BB22F00C482FA /* AppThemes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppThemes.swift; sourceTree = "<group>"; };
 		473B04542F9BB24E00C482FA /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
-		33595B21D97D40CAAE9F5BE2 /* CardOpacity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardOpacity.swift; sourceTree = "<group>"; };
 		473B045A2F9BB79B00C482FA /* RecordInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordInput.swift; sourceTree = "<group>"; };
 		4766220C303F8AAC00041521 /* CloudKitSyncMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitSyncMonitor.swift; sourceTree = "<group>"; };
 		47882A56305742F9007E5DB5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -110,6 +111,7 @@
 		A974D4023557EF74B1627FA8 /* NoteBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteBubble.swift; sourceTree = "<group>"; };
 		C4FFB5A141452B3CDBF374BE /* CalendarExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarExtension.swift; sourceTree = "<group>"; };
 		E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeOptionButton.swift; sourceTree = "<group>"; };
+		4A11C0DE00000000000000A1 /* NavigationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -270,6 +272,7 @@
 				47981EAC2FA5473E005ADAB1 /* InsightsCalculator.swift */,
 				4A11C0DE0000000000000002 /* JoyEntryStore.swift */,
 				470FC4E6304A309F00F50A7A /* ModelContextSave.swift */,
+				4A11C0DE00000000000000A1 /* NavigationState.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -457,6 +460,7 @@
 				470FC4E7304A309F00F50A7A /* ModelContextSave.swift in Sources */,
 				4A11C0DE0000000000000012 /* JoyEntryStore.swift in Sources */,
 				4A11C0DE0000000000000011 /* CalendarMonthLayout.swift in Sources */,
+				4A11C0DE00000000000000A2 /* NavigationState.swift in Sources */,
 				473B04552F9BB2F400C482FA /* ThemeManager.swift in Sources */,
 				2EAF024321A84B0DA72034CB /* CardOpacity.swift in Sources */,
 				47BB00022FC0A5EA008B5D02 /* BottomToolbar.swift in Sources */,

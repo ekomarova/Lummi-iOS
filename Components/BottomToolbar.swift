@@ -103,7 +103,7 @@ struct BottomToolbar: View {
                 onInsightsTap: { tab = 1 },
                 onSettingsTap: { tab = 2 }
             )
-            RecordButton(selectedDate: Date(), onTap: { })
+            RecordButton(onTap: { })
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 10)

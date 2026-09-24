@@ -14,7 +14,7 @@ struct RecordInput: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.modelContext) private var modelContext
 
-    let selectedDate: Date?
+    let recordDate: Date
     let onDismiss: () -> Void
 
     private let maxLength = RecordInputRules.maxLength
@@ -48,9 +48,9 @@ struct RecordInput: View {
                         accessibilityLabel: "Save",
                         accessibilityID: "SaveRecordButton"
                     ) {
-                        if let date = selectedDate, isSaveEnabled {
+                        if isSaveEnabled {
                             do {
-                                try JoyEntryStore(context: modelContext).add(text: text, date: date)
+                                try JoyEntryStore(context: modelContext).add(text: text, date: recordDate)
                                 isTextEditorFocused = false
                                 onDismiss()
                             } catch {
@@ -103,7 +103,7 @@ struct RecordInput: View {
 
 #if DEBUG
 #Preview {
-    RecordInput(selectedDate: Date(), onDismiss: { })
+    RecordInput(recordDate: Date(), onDismiss: { })
         .previewEnvironment(withSampleEntries: false)
 }
 #endif
