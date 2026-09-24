@@ -14,7 +14,7 @@ struct SelectedDayDetailView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.modelContext) private var modelContext
 
-    let selectedDate: Date?
+    let selectedDate: Date
 
     @Query(sort: \JoyEntry.date) private var allEntries: [JoyEntry]
 
@@ -46,12 +46,11 @@ struct SelectedDayDetailView: View {
     private var today: Date { Date() }
 
     private var isSelectedToday: Bool {
-        guard let selected = selectedDate else { return false }
-        return Calendar.current.isDate(selected, inSameDayAs: today)
+        Calendar.current.isDate(selectedDate, inSameDayAs: today)
     }
 
     private var todaysEntries: [JoyEntry] {
-        guard let key = selectedDate?.stringKey else { return [] }
+        let key = selectedDate.stringKey
         return allEntries.filter { $0.dateKey == key }
     }
 
@@ -66,21 +65,19 @@ struct SelectedDayDetailView: View {
                 ScrollView(.vertical, showsIndicators: false) {
                     ScrollViewReader { proxy in
                         VStack(spacing: 15) {
-                            if let selected = selectedDate {
-                                if Calendar.current.startOfDay(for: selected) > Calendar.current.startOfDay(for: today) {
-                                    futureDayView
-                                        .blur(radius: activeEntryID != nil ? 6 : 0)
-                                        .opacity(activeEntryID != nil ? 0.5 : 1.0)
-                                        .padding(.top, 40)
-                                } else if !todaysEntries.isEmpty {
-                                    notesListView(entries: todaysEntries, proxy: proxy)
-                                        .padding(.top, 10)
-                                } else {
-                                    noRecordsView
-                                        .blur(radius: activeEntryID != nil ? 6 : 0)
-                                        .opacity(activeEntryID != nil ? 0.5 : 1.0)
-                                        .padding(.top, 40)
-                                }
+                            if Calendar.current.startOfDay(for: selectedDate) > Calendar.current.startOfDay(for: today) {
+                                futureDayView
+                                    .blur(radius: activeEntryID != nil ? 6 : 0)
+                                    .opacity(activeEntryID != nil ? 0.5 : 1.0)
+                                    .padding(.top, 40)
+                            } else if !todaysEntries.isEmpty {
+                                notesListView(entries: todaysEntries, proxy: proxy)
+                                    .padding(.top, 10)
+                            } else {
+                                noRecordsView
+                                    .blur(radius: activeEntryID != nil ? 6 : 0)
+                                    .opacity(activeEntryID != nil ? 0.5 : 1.0)
+                                    .padding(.top, 40)
                             }
                         }
                         .padding(.horizontal)

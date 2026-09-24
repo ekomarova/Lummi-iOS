@@ -17,75 +17,65 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var allEntries: [JoyEntry]
 
-    @State private var visibleMonth: Date = Date().startOfMonth
-    @State private var selectedDate: Date? = Date()
-    @State private var isShowingSheet = false
-    @State private var isCalendarExpanded = false
+    @State private var navigation = NavigationState()
     @State private var isKeyboardVisible = false
-    @State private var isShowingSettings = false
-    @State private var isShowingInsights = false
-    @State private var isShowingAllJoys = false
 
     var body: some View {
         GeometryReader { _ in
             ZStack(alignment: .top) {
                 themeManager.currentTheme.bgGradient.ignoresSafeArea()
                 
-                if isCalendarExpanded {
+                if navigation.isCalendarExpanded {
                     Color.black.opacity(0.001)
                         .ignoresSafeArea()
                         .onTapGesture {
                             withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                                isCalendarExpanded = false
-                                selectedDate = Date()
-                                visibleMonth = Date().startOfMonth
+                                navigation.dismissCalendar()
                             }
                         }
                 }
 
                 VStack(spacing: 15) {
                     // MARK: - Header View
-                    if !isShowingSettings && !isShowingInsights && !isShowingSheet {
+                    if navigation.showsHeader {
                         HeaderView(
-                            date: isCalendarExpanded ? visibleMonth : (selectedDate ?? Date()),
-                            isExpanded: isCalendarExpanded,
+                            date: navigation.isCalendarExpanded ? navigation.visibleMonth : navigation.selectedDate,
+                            isExpanded: navigation.isCalendarExpanded,
                             onTap: {
                                 withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                                    isCalendarExpanded.toggle()
-                                    if !isCalendarExpanded {
-                                        visibleMonth = (selectedDate ?? Date()).startOfMonth
-                                    }
+                                    navigation.toggleCalendar()
                                 }
                             }
                         )
                         .transition(.move(edge: .top).combined(with: .opacity))
                     }
                         
-                    if isShowingSheet {
+                    switch navigation.screen {
+                    case .record:
                         // MARK: - Record Input
                         RecordInput(
-                            selectedDate: Date(),
+                            recordDate: navigation.recordDate(),
                             onDismiss: {
                                 withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                                    isShowingSheet = false
+                                    navigation.closeRecord()
                                 }
                             }
                         )
                         .environment(themeManager)
-                    } else if isShowingSettings {
+                    case .settings:
                         // MARK: - Settings View
                         SettingsView()
                             .transition(.move(edge: .trailing).combined(with: .opacity))
-                    } else if isShowingInsights {
+                    case .insights:
                         // MARK: - Insights View
-                        InsightsView(isShowingAllJoys: $isShowingAllJoys)
+                        InsightsView(isShowingAllJoys: $navigation.isShowingAllJoys)
                             .transition(.move(edge: .leading).combined(with: .opacity))
-                    } else if isCalendarExpanded {
-                        // MARK: - Calenadar View
+                    case .home where navigation.isCalendarExpanded:
+                        // MARK: - Calendar View
                         MainCalendarView(
-                            selectedDate: $selectedDate,
-                            isCalendarExpanded: $isCalendarExpanded,
-                            visibleMonth: $visibleMonth
+                            selectedDate: $navigation.selectedDate,
+                            isCalendarExpanded: $navigation.isCalendarExpanded,
+                            visibleMonth: $navigation.visibleMonth
                         )
                         .padding(.horizontal, 8)
                         .padding(.vertical, 18)
@@ -96,10 +86,10 @@ struct ContentView: View {
                         .padding(.top, 28)
                         .padding(.horizontal, 20)
                         .onTapGesture { }
-                    } else {
+                    case .home:
                         // MARK: - Selected Day View
                         SelectedDayDetailView(
-                            selectedDate: selectedDate
+                            selectedDate: navigation.selectedDate
                         )
                         .transition(.move(edge: .top).combined(with: .opacity))
                     }
@@ -138,56 +128,21 @@ struct ContentView: View {
             }
         }
         .overlay(alignment: .bottom) {
-            if !isKeyboardVisible && !isShowingSheet {
+            if !isKeyboardVisible && navigation.showsToolbar {
                 HStack(spacing: 16) {
                     // MARK: - Bottom toolbar
                     BottomToolbar(
-                        isHomeActive: !isCalendarExpanded && !isShowingSettings && !isShowingInsights && !isShowingSheet &&
-                            Calendar.current.isDateInToday(selectedDate ?? Date()),
-                        isInsightsActive: isShowingInsights && !isShowingAllJoys,
-                        isSettingsActive: isShowingSettings,
-                        onHomeTap: {
-                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                                isShowingSheet = false
-                                isShowingSettings = false
-                                isShowingInsights = false
-                                isShowingAllJoys = false
-                                isCalendarExpanded = false
-                                selectedDate = Date()
-                                visibleMonth = Date().startOfMonth
-                            }
-                        },
-                        onInsightsTap: {
-                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                                isShowingSheet = false
-                                isShowingSettings = false
-                                isCalendarExpanded = false
-                                isShowingInsights = true
-                                isShowingAllJoys = false
-                            }
-                        },
-                        onSettingsTap: {
-                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                                isShowingSheet = false
-                                isShowingInsights = false
-                                isShowingAllJoys = false
-                                isCalendarExpanded = false
-                                isShowingSettings = true
-                            }
-                        }
+                        isHomeActive: navigation.isHomeActive(),
+                        isInsightsActive: navigation.isInsightsActive,
+                        isSettingsActive: navigation.isSettingsActive,
+                        onHomeTap: { navigate(to: .home) },
+                        onInsightsTap: { navigate(to: .insights) },
+                        onSettingsTap: { navigate(to: .settings) }
                     )
                     .frame(maxWidth: .infinity)
 
                     // MARK: - Record button
-                    RecordButton(
-                        selectedDate: selectedDate,
-                        onTap: {
-                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                                isCalendarExpanded = false
-                                isShowingSheet = true
-                            }
-                        }
-                    )
+                    RecordButton(onTap: { navigate(to: .record) })
                 }
                 .frame(maxWidth: AdaptiveLayout.isPad ? 420 : .infinity)
                 .padding(.horizontal, 16)
@@ -202,6 +157,14 @@ struct ContentView: View {
 #if DEBUG
             MockDataManager.injectIfNeeded(modelContext: modelContext, allEntries: allEntries)
 #endif
+        }
+    }
+}
+
+private extension ContentView {
+    func navigate(to screen: Screen) {
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+            navigation.navigate(to: screen)
         }
     }
 }

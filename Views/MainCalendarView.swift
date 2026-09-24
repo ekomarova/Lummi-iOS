@@ -12,7 +12,7 @@ import SwiftData
 
 struct MainCalendarView: View {
     @Environment(ThemeManager.self) private var themeManager
-    @Binding var selectedDate: Date?
+    @Binding var selectedDate: Date
     @Binding var isCalendarExpanded: Bool
     @Binding var visibleMonth: Date
     
@@ -71,7 +71,7 @@ struct SingleMonthView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale
     let monthDate: Date
-    @Binding var selectedDate: Date?
+    @Binding var selectedDate: Date
     @Binding var isCalendarExpanded: Bool
     
     let filledDates: Set<String>
@@ -102,7 +102,7 @@ struct SingleMonthView: View {
                     let day = calendar.component(.day, from: exactDate)
                     let dateKey = exactDate.stringKey
                     let isToday = calendar.isDateInToday(exactDate)
-                    let isSelected = selectedDate?.stringKey == dateKey
+                    let isSelected = selectedDate.stringKey == dateKey
                     
                     DayCell(
                         day: day,
