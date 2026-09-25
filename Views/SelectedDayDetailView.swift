@@ -17,13 +17,19 @@ struct SelectedDayDetailView: View {
 
     let selectedDate: Date
 
-    @Query(sort: \JoyEntry.date) private var allEntries: [JoyEntry]
+    // Only the selected day's entries are fetched, not the whole journal.
+    @Query private var dayEntries: [JoyEntry]
 
     @State private var activeEntryID: PersistentIdentifier?
     @State private var editingText: String = ""
     @State private var isEditing: Bool = false
     @State private var saveAlert: SaveAlertKind?
     @FocusState private var isTextFieldFocused: Bool
+
+    init(selectedDate: Date) {
+        self.selectedDate = selectedDate
+        _dayEntries = Query(filter: JoyEntry.dayPredicate(for: selectedDate), sort: \JoyEntry.date)
+    }
 
     enum SaveAlertKind: Equatable {
         case editFailed
@@ -50,11 +56,6 @@ struct SelectedDayDetailView: View {
         Calendar.current.isDate(selectedDate, inSameDayAs: today)
     }
 
-    private var todaysEntries: [JoyEntry] {
-        let key = selectedDate.stringKey
-        return allEntries.filter { $0.dateKey == key }
-    }
-
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -71,8 +72,8 @@ struct SelectedDayDetailView: View {
                                     .blur(radius: activeEntryID != nil ? 6 : 0)
                                     .opacity(activeEntryID != nil ? 0.5 : 1.0)
                                     .padding(.top, 40)
-                            } else if !todaysEntries.isEmpty {
-                                notesListView(entries: todaysEntries, proxy: proxy)
+                            } else if !dayEntries.isEmpty {
+                                notesListView(entries: dayEntries, proxy: proxy)
                                     .padding(.top, 10)
                             } else {
                                 noRecordsView
@@ -242,7 +243,7 @@ private extension SelectedDayDetailView {
         guard let id = activeEntryID else { return }
 
         if isEditing {
-            if let entry = todaysEntries.first(where: { $0.persistentModelID == id }) {
+            if let entry = dayEntries.first(where: { $0.persistentModelID == id }) {
                 let originalText = entry.text
                 do {
                     try JoyEntryStore(context: modelContext).applyEdit(to: entry, newText: editingText)

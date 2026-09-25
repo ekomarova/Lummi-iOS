@@ -78,37 +78,22 @@ struct DateExtensionTests {
 
     // MARK: - isOldestMonth
 
-    @Test func isOldestMonth_emptyEntries_returnsTrue() {
-        #expect(Date.isOldestMonth(selectedMonth: Date(), allEntries: []))
+    @Test func isOldestMonth_noOldestEntry_returnsTrue() {
+        #expect(Date.isOldestMonth(selectedMonth: Date(), oldestEntryDate: nil))
     }
 
     @Test func isOldestMonth_selectedBeforeOldestEntry_returnsTrue() {
         let selected = makeDate(year: 2026, month: 1, day: 1)
-        let entry = JoyEntry(text: "x", date: makeDate(year: 2026, month: 3, day: 10))
-        #expect(Date.isOldestMonth(selectedMonth: selected, allEntries: [entry]))
+        #expect(Date.isOldestMonth(selectedMonth: selected, oldestEntryDate: makeDate(year: 2026, month: 3, day: 10)))
     }
 
     @Test func isOldestMonth_selectedAtSameMonthAsOldest_returnsTrue() {
         let selected = makeDate(year: 2026, month: 3, day: 1)
-        let entry = JoyEntry(text: "x", date: makeDate(year: 2026, month: 3, day: 10))
-        #expect(Date.isOldestMonth(selectedMonth: selected, allEntries: [entry]))
+        #expect(Date.isOldestMonth(selectedMonth: selected, oldestEntryDate: makeDate(year: 2026, month: 3, day: 10)))
     }
 
     @Test func isOldestMonth_selectedAfterOldestEntry_returnsFalse() {
         let selected = makeDate(year: 2026, month: 6, day: 1)
-        let entry = JoyEntry(text: "x", date: makeDate(year: 2026, month: 3, day: 10))
-        #expect(!Date.isOldestMonth(selectedMonth: selected, allEntries: [entry]))
-    }
-
-    @Test func isOldestMonth_multipleEntries_picksActualOldest() {
-        let entries = [
-            JoyEntry(text: "", date: makeDate(year: 2026, month: 5, day: 1)),
-            JoyEntry(text: "", date: makeDate(year: 2026, month: 2, day: 1)), // oldest
-            JoyEntry(text: "", date: makeDate(year: 2026, month: 8, day: 1))
-        ]
-        // Feb 2026 is the oldest month → selected Feb = true
-        #expect(Date.isOldestMonth(selectedMonth: makeDate(year: 2026, month: 2, day: 1), allEntries: entries))
-        // Mar 2026 is after the oldest (Feb) → false
-        #expect(!Date.isOldestMonth(selectedMonth: makeDate(year: 2026, month: 3, day: 1), allEntries: entries))
+        #expect(!Date.isOldestMonth(selectedMonth: selected, oldestEntryDate: makeDate(year: 2026, month: 3, day: 10)))
     }
 }

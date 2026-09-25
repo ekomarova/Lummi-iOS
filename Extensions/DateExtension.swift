@@ -57,10 +57,9 @@ extension Date {
         Calendar.current.isDate(date, equalTo: Date(), toGranularity: .month)
     }
     
-    static func isOldestMonth(selectedMonth: Date, allEntries: [JoyEntry]) -> Bool {
-        guard let oldestEntry = allEntries.min(by: { $0.date < $1.date }) else { return true }
-        let oldestMonth = oldestEntry.date.startOfMonth
-        return selectedMonth <= oldestMonth
+    static func isOldestMonth(selectedMonth: Date, oldestEntryDate: Date?) -> Bool {
+        guard let oldestEntryDate else { return true }
+        return selectedMonth <= oldestEntryDate.startOfMonth
     }
     
 }

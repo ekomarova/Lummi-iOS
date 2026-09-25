@@ -12,15 +12,18 @@ struct MockDataManager {
         ProcessInfo.processInfo.arguments.contains(screenshotsFlag)
     }
 
-    static func injectIfNeeded(modelContext: ModelContext, allEntries: [JoyEntry]) {
+    static func injectIfNeeded(modelContext: ModelContext) {
         let arguments = ProcessInfo.processInfo.arguments
 
         if isScreenshotsMode {
-            injectScreenshotData(modelContext: modelContext, allEntries: allEntries)
+            injectScreenshotData(modelContext: modelContext)
             return
         }
 
         guard arguments.contains(where: { $0.hasPrefix("-UI_TESTING") }) else { return }
+
+        // Read from the store on demand, so the root view does not keep a live query over every entry.
+        let isStoreEmpty = ((try? modelContext.fetchCount(FetchDescriptor<JoyEntry>())) ?? 0) == 0
         
         if arguments.contains("-UI_TESTING_CALENDAR") {
             let today = Date()
@@ -33,9 +36,9 @@ struct MockDataManager {
         
         if arguments.contains("-UI_TESTING_10_RECORDS") {
             let baseDate = Date()
-            let dateString = baseDate.stringKey
-            
-            let todaysEntriesCount = allEntries.filter { $0.dateKey == dateString }.count
+            let todaysEntriesCount = (try? modelContext.fetchCount(
+                FetchDescriptor<JoyEntry>(predicate: JoyEntry.dayPredicate(for: baseDate))
+            )) ?? 0
             if todaysEntriesCount == 0 {
                 for i in 0..<10 {
                     let recordDate = Calendar.current.date(byAdding: .second, value: i, to: baseDate)!
@@ -53,7 +56,7 @@ struct MockDataManager {
         }
         
         if arguments.contains("-UI_TESTING_PAST_MONTH_ONE_JOY") {
-            if allEntries.isEmpty {
+            if isStoreEmpty {
                 let pastDate = Calendar.current.date(byAdding: .month, value: -1, to: Date())!
                 let recordDate = Calendar.current.date(byAdding: .day, value: 0, to: pastDate)!
                 modelContext.insert(JoyEntry(text: "Past test record", date: recordDate))
@@ -61,7 +64,7 @@ struct MockDataManager {
         }
         
         if arguments.contains("-UI_TESTING_PAST_MONTH_MANY_JOYS") {
-            if allEntries.isEmpty {
+            if isStoreEmpty {
                 let pastDateBase = Calendar.current.date(byAdding: .month, value: -1, to: Date())!
                 for dayOffset in 0..<5 {
                     let date = Calendar.current.date(byAdding: .day, value: -dayOffset, to: pastDateBase)!
@@ -75,7 +78,7 @@ struct MockDataManager {
         }
         
         if arguments.contains("-UI_TESTING_4_DAYS_FILLED") {
-            if allEntries.isEmpty {
+            if isStoreEmpty {
                 let today = Date()
                 let calendar = Calendar.current
                 
@@ -105,8 +108,8 @@ struct MockDataManager {
     // MARK: - App Store screenshots
 
     // Demo entries: several days of the current month, 4 entries today, several days of the previous month.
-    private static func injectScreenshotData(modelContext: ModelContext, allEntries: [JoyEntry]) {
-        guard allEntries.isEmpty else { return }
+    private static func injectScreenshotData(modelContext: ModelContext) {
+        guard ((try? modelContext.fetchCount(FetchDescriptor<JoyEntry>())) ?? 0) == 0 else { return }
 
         let calendar = Calendar.current
         let now = Date()

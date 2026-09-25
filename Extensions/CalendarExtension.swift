@@ -18,4 +18,17 @@ extension Calendar {
         calendar.locale = locale
         return calendar
     }
+
+    // Start of the day up to (excluding) the start of the next day; nil if the calendar cannot resolve it.
+    func dayRange(for date: Date) -> Range<Date>? {
+        let start = startOfDay(for: date)
+        guard let end = self.date(byAdding: .day, value: 1, to: start) else { return nil }
+        return start..<end
+    }
+
+    // Start of the month up to (excluding) the start of the next month; nil if the calendar cannot resolve it.
+    func monthRange(for date: Date) -> Range<Date>? {
+        guard let interval = dateInterval(of: .month, for: date) else { return nil }
+        return interval.start..<interval.end
+    }
 }
