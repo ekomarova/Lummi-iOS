@@ -8,6 +8,7 @@
 //
 
 import Foundation
+import os
 
 // Date helpers: day keys, cached formatting, month boundaries and month comparisons.
 extension Date {
@@ -18,7 +19,8 @@ extension Date {
         return fmt
     }()
 
-    private static var formatterCache: [String: DateFormatter] = [:]
+    // Shared by every caller, so access goes through a lock instead of relying on being called from the main thread.
+    private static let formatterCache = OSAllocatedUnfairLock<[String: DateFormatter]>(initialState: [:])
 
     var stringKey: String {
         Date.keyFormatter.string(from: self)
@@ -26,13 +28,14 @@ extension Date {
 
     func format(_ format: String, locale: Locale = .current) -> String {
         let cacheKey = "\(format)|\(locale.identifier)"
-        if let cached = Date.formatterCache[cacheKey] {
-            return cached.string(from: self)
+        let formatter = Date.formatterCache.withLock { cache -> DateFormatter in
+            if let cached = cache[cacheKey] { return cached }
+            let created = DateFormatter()
+            created.dateFormat = format
+            created.locale = locale
+            cache[cacheKey] = created
+            return created
         }
-        let formatter = DateFormatter()
-        formatter.dateFormat = format
-        formatter.locale = locale
-        Date.formatterCache[cacheKey] = formatter
         return formatter.string(from: self)
     }
 
@@ -57,10 +60,9 @@ extension Date {
         Calendar.current.isDate(date, equalTo: Date(), toGranularity: .month)
     }
     
-    static func isOldestMonth(selectedMonth: Date, allEntries: [JoyEntry]) -> Bool {
-        guard let oldestEntry = allEntries.min(by: { $0.date < $1.date }) else { return true }
-        let oldestMonth = oldestEntry.date.startOfMonth
-        return selectedMonth <= oldestMonth
+    static func isOldestMonth(selectedMonth: Date, oldestEntryDate: Date?) -> Bool {
+        guard let oldestEntryDate else { return true }
+        return selectedMonth <= oldestEntryDate.startOfMonth
     }
     
 }

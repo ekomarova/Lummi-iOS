@@ -1,5 +1,6 @@
 import Testing
 import Foundation
+import os
 @testable import Lummi
 
 struct DateExtensionTests {
@@ -76,39 +77,43 @@ struct DateExtensionTests {
         #expect(!Date.isCurrentMonth(makeDate(year: 2000, month: 1, day: 1)))
     }
 
+    // MARK: - format (shared formatter cache)
+
+    @Test func format_concurrentCalls_returnCorrectResultsWithoutRacing() {
+        let date = makeDate(year: 2026, month: 3, day: 5)
+        let formats = ["yyyy", "MM", "dd", "yyyy-MM-dd", "LLLL yyyy", "MMM"]
+        let locales = [Locale(identifier: "en"), Locale(identifier: "ru"), Locale(identifier: "de")]
+        let expectedYear = date.format("yyyy", locale: Locale(identifier: "en"))
+        let failures = OSAllocatedUnfairLock(initialState: 0)
+
+        DispatchQueue.concurrentPerform(iterations: 400) { index in
+            let text = date.format(formats[index % formats.count], locale: locales[index % locales.count])
+            if text.isEmpty { failures.withLock { $0 += 1 } }
+            if date.format("yyyy", locale: Locale(identifier: "en")) != expectedYear { failures.withLock { $0 += 1 } }
+        }
+
+        #expect(failures.withLock { $0 } == 0)
+        #expect(expectedYear == "2026")
+    }
+
     // MARK: - isOldestMonth
 
-    @Test func isOldestMonth_emptyEntries_returnsTrue() {
-        #expect(Date.isOldestMonth(selectedMonth: Date(), allEntries: []))
+    @Test func isOldestMonth_noOldestEntry_returnsTrue() {
+        #expect(Date.isOldestMonth(selectedMonth: Date(), oldestEntryDate: nil))
     }
 
     @Test func isOldestMonth_selectedBeforeOldestEntry_returnsTrue() {
         let selected = makeDate(year: 2026, month: 1, day: 1)
-        let entry = JoyEntry(text: "x", date: makeDate(year: 2026, month: 3, day: 10))
-        #expect(Date.isOldestMonth(selectedMonth: selected, allEntries: [entry]))
+        #expect(Date.isOldestMonth(selectedMonth: selected, oldestEntryDate: makeDate(year: 2026, month: 3, day: 10)))
     }
 
     @Test func isOldestMonth_selectedAtSameMonthAsOldest_returnsTrue() {
         let selected = makeDate(year: 2026, month: 3, day: 1)
-        let entry = JoyEntry(text: "x", date: makeDate(year: 2026, month: 3, day: 10))
-        #expect(Date.isOldestMonth(selectedMonth: selected, allEntries: [entry]))
+        #expect(Date.isOldestMonth(selectedMonth: selected, oldestEntryDate: makeDate(year: 2026, month: 3, day: 10)))
     }
 
     @Test func isOldestMonth_selectedAfterOldestEntry_returnsFalse() {
         let selected = makeDate(year: 2026, month: 6, day: 1)
-        let entry = JoyEntry(text: "x", date: makeDate(year: 2026, month: 3, day: 10))
-        #expect(!Date.isOldestMonth(selectedMonth: selected, allEntries: [entry]))
-    }
-
-    @Test func isOldestMonth_multipleEntries_picksActualOldest() {
-        let entries = [
-            JoyEntry(text: "", date: makeDate(year: 2026, month: 5, day: 1)),
-            JoyEntry(text: "", date: makeDate(year: 2026, month: 2, day: 1)), // oldest
-            JoyEntry(text: "", date: makeDate(year: 2026, month: 8, day: 1))
-        ]
-        // Feb 2026 is the oldest month → selected Feb = true
-        #expect(Date.isOldestMonth(selectedMonth: makeDate(year: 2026, month: 2, day: 1), allEntries: entries))
-        // Mar 2026 is after the oldest (Feb) → false
-        #expect(!Date.isOldestMonth(selectedMonth: makeDate(year: 2026, month: 3, day: 1), allEntries: entries))
+        #expect(!Date.isOldestMonth(selectedMonth: selected, oldestEntryDate: makeDate(year: 2026, month: 3, day: 10)))
     }
 }

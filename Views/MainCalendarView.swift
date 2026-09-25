@@ -17,17 +17,13 @@ struct MainCalendarView: View {
     @Binding var isCalendarExpanded: Bool
     @Binding var visibleMonth: Date
     
-    @Query(sort: \JoyEntry.date, order: .forward) private var allEntries: [JoyEntry]
+    // Only the oldest entry is needed here (it sets the first month); each month fetches its own entries.
+    @Query(JoyEntry.oldestEntryDescriptor) private var oldestEntries: [JoyEntry]
     
     @State private var scrollID: Date?
     
-    // Search for days with stars
-    private var filledDateKeys: Set<String> {
-        Set(allEntries.map { $0.dateKey })
-    }
-    
     private var months: [Date] {
-        CalendarMonthLayout.monthStarts(firstEntryDate: allEntries.first?.date, now: Date())
+        CalendarMonthLayout.monthStarts(firstEntryDate: oldestEntries.first?.date, now: Date())
     }
 
     var body: some View {
@@ -43,8 +39,7 @@ struct MainCalendarView: View {
                         SingleMonthView(
                             monthDate: monthDate,
                             selectedDate: $selectedDate,
-                            isCalendarExpanded: $isCalendarExpanded,
-                            filledDates: filledDateKeys
+                            isCalendarExpanded: $isCalendarExpanded
                         )
                         .containerRelativeFrame(.vertical, alignment: .top)
                         .id(monthDate)
@@ -74,10 +69,18 @@ struct SingleMonthView: View {
     let monthDate: Date
     @Binding var selectedDate: Date
     @Binding var isCalendarExpanded: Bool
-    
-    let filledDates: Set<String>
+
+    // Entries of this month only; the lazy stack builds just the months near the viewport.
+    @Query private var monthEntries: [JoyEntry]
     
     let columns = Array(repeating: GridItem(.flexible(), spacing: 7), count: 7)
+
+    init(monthDate: Date, selectedDate: Binding<Date>, isCalendarExpanded: Binding<Bool>) {
+        self.monthDate = monthDate
+        _selectedDate = selectedDate
+        _isCalendarExpanded = isCalendarExpanded
+        _monthEntries = Query(filter: JoyEntry.monthPredicate(for: monthDate))
+    }
 
     private var calendar: Calendar {
         .lummiCalendar(locale: locale)
@@ -92,6 +95,10 @@ struct SingleMonthView: View {
     }
 
     var body: some View {
+        // Computed once per render instead of once per day cell
+        let filledDates = Set(monthEntries.map(\.dateKey))
+        let selectedKey = selectedDate.stringKey
+
         VStack(spacing: 0) {
             Spacer()
             LazyVGrid(columns: columns, spacing: 4) {
@@ -103,7 +110,7 @@ struct SingleMonthView: View {
                     let day = calendar.component(.day, from: exactDate)
                     let dateKey = exactDate.stringKey
                     let isToday = calendar.isDateInToday(exactDate)
-                    let isSelected = selectedDate.stringKey == dateKey
+                    let isSelected = selectedKey == dateKey
                     
                     DayCell(
                         day: day,

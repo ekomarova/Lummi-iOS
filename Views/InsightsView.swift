@@ -11,19 +11,30 @@ import SwiftUI
 import SwiftData
 
 // Insights screen: monthly stats and a report for the selected month.
+// Owns the selected month; the child view below fetches only that month's entries.
 struct InsightsView: View {
-    @Environment(ThemeManager.self) private var themeManager
-    @Environment(\.locale) var locale
-    @Query private var allEntries: [JoyEntry]
     @Binding var isShowingAllJoys: Bool
     @State private var selectedMonth: Date = Date().startOfMonth
 
-    private var monthlyEntries: [JoyEntry] {
-        InsightsCalculator.filterEntries(allEntries, for: selectedMonth)
+    var body: some View {
+        InsightsMonthView(selectedMonth: $selectedMonth, isShowingAllJoys: $isShowingAllJoys)
     }
-    
-    private var daysNeededForReport: Int {
-        InsightsCalculator.daysNeededForReport(in: monthlyEntries)
+}
+
+// Stats and entries of the selected month. The query is rebuilt whenever the parent passes a new month.
+private struct InsightsMonthView: View {
+    @Environment(ThemeManager.self) private var themeManager
+    @Environment(\.locale) var locale
+    @Binding var selectedMonth: Date
+    @Binding var isShowingAllJoys: Bool
+
+    @Query private var monthlyEntries: [JoyEntry]
+    @Query(JoyEntry.oldestEntryDescriptor) private var oldestEntries: [JoyEntry]
+
+    init(selectedMonth: Binding<Date>, isShowingAllJoys: Binding<Bool>) {
+        _selectedMonth = selectedMonth
+        _isShowingAllJoys = isShowingAllJoys
+        _monthlyEntries = Query(filter: JoyEntry.monthPredicate(for: selectedMonth.wrappedValue), sort: \JoyEntry.date)
     }
 
     private var monthStreak: Int {
@@ -35,7 +46,7 @@ struct InsightsView: View {
     }
     
     private var isOldestMonth: Bool {
-        Date.isOldestMonth(selectedMonth: selectedMonth, allEntries: allEntries)
+        Date.isOldestMonth(selectedMonth: selectedMonth, oldestEntryDate: oldestEntries.first?.date)
     }
 
     // MARK: - Body

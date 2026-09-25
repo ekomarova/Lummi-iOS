@@ -5,8 +5,8 @@ final class CalendarUITests: XCTestCase {
     var app: XCUIApplication!
     
     let today = Date()
-    var past32Date: Date { Calendar.current.date(byAdding: .day, value: -32, to: today)! }
-    var future1Date: Date { Calendar.current.date(byAdding: .day, value: 1, to: today)! }
+    var past32Date: Date { Calendar.current.date(byAdding: .day, value: -32, to: today) ?? today }
+    var future1Date: Date { Calendar.current.date(byAdding: .day, value: 1, to: today) ?? today }
 
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -105,10 +105,28 @@ final class CalendarUITests: XCTestCase {
         XCTAssertFalse(todayCell.exists, "The calendar is not collapsed")
     }
 
+    // Each selected day must show its own records, not the ones of the previously selected day
+    func test_SwitchingBetweenDaysShowsEachDaysRecords() throws {
+        let yesterdayText = app.staticTexts["I ate a lot of chips and it was amazing!"]
+        let pastText = app.staticTexts["Watched a beautiful sunset"]
+        let yesterday = try XCTUnwrap(Calendar.current.date(byAdding: .day, value: -1, to: today))
+
+        selectDay(yesterday)
+        XCTAssertTrue(yesterdayText.waitForExistence(timeout: 2.0), "Yesterday's record is missing")
+        XCTAssertFalse(pastText.exists, "A record of another day is shown")
+
+        selectDay(past32Date)
+        XCTAssertTrue(pastText.waitForExistence(timeout: 2.0), "The record of the newly selected day is missing")
+        XCTAssertFalse(yesterdayText.exists, "The previous day's record is still shown after switching days")
+
+        selectDay(yesterday)
+        XCTAssertTrue(yesterdayText.waitForExistence(timeout: 2.0), "Yesterday's record did not come back")
+        XCTAssertFalse(pastText.exists, "The other day's record is still shown after switching back")
+    }
+
     // Check empty date
     func test_EmptyDayShowsNoRecords() throws {
         app.buttons["HeaderToggleButton"].tap()
-                
 
         let emptyDayCell = app.buttons["DayCell_\(dateKey(for: today))"]
         
@@ -143,6 +161,29 @@ final class CalendarUITests: XCTestCase {
     }
     
     // MARK: - Helpers
+
+    // Opens the calendar (it opens on the month of the selected day), looks for the cell of `date` in the
+    // current month, then scrolls toward the present and finally into the past, and taps it
+    private func selectDay(_ date: Date) {
+        app.buttons["HeaderToggleButton"].tap()
+        let cell = app.buttons["DayCell_\(dateKey(for: date))"]
+        let calendarScroll = app.scrollViews.firstMatch
+        var found = cell.waitForExistence(timeout: 3.0)
+        var swipes = 0
+        while !found && swipes < 2 {
+            calendarScroll.swipeUp()
+            found = cell.waitForExistence(timeout: 1.5)
+            swipes += 1
+        }
+        swipes = 0
+        while !found && swipes < 6 {
+            calendarScroll.swipeDown()
+            found = cell.waitForExistence(timeout: 1.5)
+            swipes += 1
+        }
+        XCTAssertTrue(found, "Day cell for \(dateKey(for: date)) was not found")
+        cell.tap()
+    }
 
     private func dateKey(for date: Date) -> String {
         let formatter = DateFormatter()

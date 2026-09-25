@@ -16,7 +16,6 @@ struct ContentView: View {
 
     @State private var themeManager = ThemeManager()
     @Environment(\.modelContext) private var modelContext
-    @Query private var allEntries: [JoyEntry]
 
     @State private var navigation = NavigationState()
     @State private var isKeyboardVisible = false
@@ -156,7 +155,7 @@ struct ContentView: View {
         // MARK: For tests only
         .onAppear {
 #if DEBUG
-            MockDataManager.injectIfNeeded(modelContext: modelContext, allEntries: allEntries)
+            MockDataManager.injectIfNeeded(modelContext: modelContext)
 #endif
         }
     }
