@@ -5,8 +5,8 @@ final class RecordButtonUITests: XCTestCase {
     var app: XCUIApplication!
     
     let today = Date()
-    var past32Date: Date { Calendar.current.date(byAdding: .day, value: -32, to: today)! }
-    var future1Date: Date { Calendar.current.date(byAdding: .day, value: 1, to: today)! }
+    var past32Date: Date { Calendar.current.date(byAdding: .day, value: -32, to: today) ?? today }
+    var future1Date: Date { Calendar.current.date(byAdding: .day, value: 1, to: today) ?? today }
 
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -95,7 +95,6 @@ final class RecordButtonUITests: XCTestCase {
 
         let saveBtn = app.buttons["SaveRecordButton"]
         saveBtn.tap()
-
 
         XCTAssertTrue(textEditor.waitForNonExistence(timeout: 5.0), "The text input field did not close after saving")
     }

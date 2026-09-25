@@ -287,6 +287,9 @@ final class SettingsUITests: XCTestCase {
         
         // Verify the empty state is shown
         let noRecordsLabel = app.staticTexts["No records for this day"]
-        XCTAssertTrue(noRecordsLabel.waitForExistence(timeout: 3.0), "Expected 'No records for this day' to appear, meaning data was successfully deleted.")
+        XCTAssertTrue(
+            noRecordsLabel.waitForExistence(timeout: 3.0),
+            "Expected 'No records for this day' to appear, meaning data was successfully deleted."
+        )
     }
 }

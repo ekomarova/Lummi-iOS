@@ -11,10 +11,6 @@ opt_in_rules:
   - explicit_init
   - closure_end_indentation
 
-excluded:
-  - TestHelpers
-  - LummiUITests
-
 line_length:
   warning: 150
   error: 200

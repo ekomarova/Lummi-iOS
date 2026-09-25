@@ -5,8 +5,8 @@ final class CalendarUITests: XCTestCase {
     var app: XCUIApplication!
     
     let today = Date()
-    var past32Date: Date { Calendar.current.date(byAdding: .day, value: -32, to: today)! }
-    var future1Date: Date { Calendar.current.date(byAdding: .day, value: 1, to: today)! }
+    var past32Date: Date { Calendar.current.date(byAdding: .day, value: -32, to: today) ?? today }
+    var future1Date: Date { Calendar.current.date(byAdding: .day, value: 1, to: today) ?? today }
 
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -127,7 +127,6 @@ final class CalendarUITests: XCTestCase {
     // Check empty date
     func test_EmptyDayShowsNoRecords() throws {
         app.buttons["HeaderToggleButton"].tap()
-                
 
         let emptyDayCell = app.buttons["DayCell_\(dateKey(for: today))"]
         

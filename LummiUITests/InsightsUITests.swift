@@ -74,9 +74,9 @@ final class InsightsUITests: XCTestCase {
         XCTAssertTrue(expandButtonText.waitForExistence(timeout: 2.0))
         expandButtonText.tap()
 
-        for i in 1...4 {
-            let momentText = app.staticTexts["Evening mock moment \(i)"]
-            XCTAssertTrue(momentText.waitForExistence(timeout: 2.0), "Recording 'Evening mock moment \(i)' did not appear on the list")
+        for index in 1...4 {
+            let momentText = app.staticTexts["Evening mock moment \(index)"]
+            XCTAssertTrue(momentText.waitForExistence(timeout: 2.0), "Recording 'Evening mock moment \(index)' did not appear on the list")
         }
     }
 
