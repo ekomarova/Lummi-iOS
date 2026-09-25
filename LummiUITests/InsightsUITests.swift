@@ -79,4 +79,47 @@ final class InsightsUITests: XCTestCase {
             XCTAssertTrue(momentText.waitForExistence(timeout: 2.0), "Recording 'Evening mock moment \(i)' did not appear on the list")
         }
     }
+
+    // Each month must show its own Joys count and its own entries, in both directions of switching
+    func test_InsightsMonthSwitchingShowsEachMonthsData() throws {
+        launchApp(with: ["-UI_TESTING_INSIGHTS_TWO_MONTHS"])
+        try XCTSkipIf(app.isSmallScreen, "Not supported on small screens (iPhone SE)")
+
+        let inactiveInsightsBtn = app.buttons["InsightsButton_Inactive"]
+        XCTAssertTrue(inactiveInsightsBtn.waitForExistence(timeout: 2.0))
+        inactiveInsightsBtn.tap()
+
+        let monthLabel = app.staticTexts["CurrentMonthLabel"]
+        XCTAssertTrue(monthLabel.waitForExistence(timeout: 2.0))
+        let currentMonthTitle = monthLabel.label
+
+        XCTAssertTrue(app.staticTexts["2"].waitForExistence(timeout: 2.0), "Current month should show 2 joys")
+        assertAllJoys(prefix: "Current month joy", shown: 2, hidden: "Previous month joy")
+
+        app.buttons["PreviousMonthButton"].tap()
+        XCTAssertTrue(app.staticTexts["5"].waitForExistence(timeout: 2.0), "Previous month should show 5 joys")
+        XCTAssertNotEqual(monthLabel.label, currentMonthTitle, "The month label did not change")
+        assertAllJoys(prefix: "Previous month joy", shown: 5, hidden: "Current month joy")
+
+        app.buttons["NextMonthButton"].tap()
+        XCTAssertTrue(app.staticTexts["2"].waitForExistence(timeout: 2.0), "Switching back should show 2 joys again")
+        XCTAssertEqual(monthLabel.label, currentMonthTitle)
+        assertAllJoys(prefix: "Current month joy", shown: 2, hidden: "Previous month joy")
+    }
+
+    // Opens "All Joys" for the visible month, checks its entries, and returns to the Insights screen
+    private func assertAllJoys(prefix: String, shown: Int, hidden hiddenPrefix: String) {
+        let showAll = app.staticTexts["Show All Joys"]
+        XCTAssertTrue(showAll.waitForExistence(timeout: 2.0))
+        showAll.tap()
+
+        for index in 1...shown {
+            XCTAssertTrue(app.staticTexts["\(prefix) \(index)"].waitForExistence(timeout: 2.0), "\(prefix) \(index) is missing")
+        }
+        XCTAssertFalse(app.staticTexts["\(prefix) \(shown + 1)"].exists, "More entries than expected are listed")
+        XCTAssertFalse(app.staticTexts["\(hiddenPrefix) 1"].exists, "An entry of another month is listed")
+
+        app.buttons["AllJoysBackButton"].tap()
+        XCTAssertTrue(app.staticTexts["Show All Joys"].waitForExistence(timeout: 2.0))
+    }
 }

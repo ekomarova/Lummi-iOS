@@ -77,6 +77,47 @@ struct MockDataManager {
             }
         }
         
+        // Insights month switching: 2 entries today and 5 entries on the 10th of the previous month.
+        // Fixed day-of-month for the past ones keeps them in one month whatever today's date is.
+        if arguments.contains("-UI_TESTING_INSIGHTS_TWO_MONTHS") {
+            if isStoreEmpty {
+                let calendar = Calendar.current
+                let now = Date()
+                for index in 1...2 {
+                    guard let date = calendar.date(bySettingHour: 8 + index, minute: 0, second: 0, of: now) else { continue }
+                    modelContext.insert(JoyEntry(text: "Current month joy \(index)", date: date))
+                }
+                if let previous = calendar.date(byAdding: .month, value: -1, to: now) {
+                    var components = calendar.dateComponents([.year, .month], from: previous)
+                    components.day = 10
+                    for index in 1...5 {
+                        components.hour = 8 + index
+                        if let date = calendar.date(from: components) {
+                            modelContext.insert(JoyEntry(text: "Previous month joy \(index)", date: date))
+                        }
+                    }
+                }
+                try? modelContext.save()
+            }
+        }
+
+        // Performance runs: 5,000 entries spread over five years (about 2.7 per day, ending today)
+        if arguments.contains("-UI_TESTING_5K_ENTRIES") {
+            if isStoreEmpty {
+                let calendar = Calendar.current
+                let startOfToday = calendar.startOfDay(for: Date())
+                let entryCount = 5_000
+                let dayCount = 1_825
+                for index in 0..<entryCount {
+                    let dayOffset = index * dayCount / entryCount
+                    guard let day = calendar.date(byAdding: .day, value: -dayOffset, to: startOfToday),
+                          let recordDate = calendar.date(byAdding: .hour, value: 8 + index % 12, to: day) else { continue }
+                    modelContext.insert(JoyEntry(text: "Perf record #\(index): a small joy worth remembering", date: recordDate))
+                }
+                try? modelContext.save()
+            }
+        }
+
         if arguments.contains("-UI_TESTING_4_DAYS_FILLED") {
             if isStoreEmpty {
                 let today = Date()

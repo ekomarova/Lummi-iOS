@@ -170,6 +170,38 @@ struct JoyEntryQueriesTests {
         #expect(try context.fetch(JoyEntry.oldestEntryDescriptor).isEmpty)
     }
 
+    // MARK: - Changes from another context (what a CloudKit import does)
+
+    @Test func predicates_seeChangesSavedByAnotherContext() throws {
+        let configuration = ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+        let container = try ModelContainer(for: JoyEntry.self, configurations: configuration)
+        let viewContext = ModelContext(container)
+        let syncContext = ModelContext(container)
+        let day = makeDate(year: 2026, month: 3, day: 5, hour: 12)
+        let otherDay = makeDate(year: 2026, month: 3, day: 9, hour: 12)
+
+        #expect(try texts(JoyEntry.dayPredicate(for: day), in: viewContext).isEmpty)
+
+        // An entry arrives from another device
+        let incoming = JoyEntry(text: "from another device", date: day)
+        syncContext.insert(incoming)
+        try syncContext.save()
+        #expect(try texts(JoyEntry.dayPredicate(for: day), in: viewContext) == ["from another device"])
+        #expect(try texts(JoyEntry.monthPredicate(for: day), in: viewContext).count == 1)
+
+        // The other device moves it to another day
+        incoming.date = otherDay
+        try syncContext.save()
+        #expect(try texts(JoyEntry.dayPredicate(for: day), in: viewContext).isEmpty)
+        #expect(try texts(JoyEntry.dayPredicate(for: otherDay), in: viewContext) == ["from another device"])
+
+        // And deletes it
+        syncContext.delete(incoming)
+        try syncContext.save()
+        #expect(try texts(JoyEntry.monthPredicate(for: day), in: viewContext).isEmpty)
+        #expect(try viewContext.fetch(JoyEntry.oldestEntryDescriptor).isEmpty)
+    }
+
     // MARK: - Large dataset
 
     @Test func predicates_largeDataset_returnExactlyTheRequestedRange() throws {
