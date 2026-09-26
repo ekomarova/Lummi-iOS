@@ -17,6 +17,66 @@ struct InsightsCalculatorTests {
         JoyEntry(text: text, date: makeDate(year: year, month: month, day: day, hour: hour))
     }
 
+    // MARK: - isOldestMonth
+
+    @Test func isOldestMonth_noOldestEntry_returnsTrue() {
+        #expect(InsightsCalculator.isOldestMonth(selectedMonth: Date(), oldestEntryDate: nil))
+    }
+
+    @Test func isOldestMonth_selectedBeforeOldestEntry_returnsTrue() {
+        let selected = makeDate(year: 2026, month: 1, day: 1)
+        let oldest = makeDate(year: 2026, month: 3, day: 10)
+        #expect(InsightsCalculator.isOldestMonth(selectedMonth: selected, oldestEntryDate: oldest))
+    }
+
+    @Test func isOldestMonth_selectedAtSameMonthAsOldest_returnsTrue() {
+        let selected = makeDate(year: 2026, month: 3, day: 1)
+        let oldest = makeDate(year: 2026, month: 3, day: 10)
+        #expect(InsightsCalculator.isOldestMonth(selectedMonth: selected, oldestEntryDate: oldest))
+    }
+
+    @Test func isOldestMonth_selectedAfterOldestEntry_returnsFalse() {
+        let selected = makeDate(year: 2026, month: 6, day: 1)
+        let oldest = makeDate(year: 2026, month: 3, day: 10)
+        #expect(!InsightsCalculator.isOldestMonth(selectedMonth: selected, oldestEntryDate: oldest))
+    }
+
+    @Test func isOldestMonth_selectedIsMonthRightAfterOldest_returnsFalse() {
+        let selected = makeDate(year: 2026, month: 4, day: 1)
+        let oldest = makeDate(year: 2026, month: 3, day: 31, hour: 23)
+        #expect(!InsightsCalculator.isOldestMonth(selectedMonth: selected, oldestEntryDate: oldest))
+    }
+
+    @Test func isOldestMonth_oldestEntryOnFirstDayAtMidnight_sameMonthReturnsTrue() {
+        let selected = makeDate(year: 2026, month: 3, day: 1, hour: 0)
+        let oldest = makeDate(year: 2026, month: 3, day: 1, hour: 0)
+        #expect(InsightsCalculator.isOldestMonth(selectedMonth: selected, oldestEntryDate: oldest))
+    }
+
+    @Test func isOldestMonth_oldestEntryOnLastDayOfMonth_sameMonthReturnsTrue() {
+        let selected = makeDate(year: 2026, month: 3, day: 1)
+        let oldest = makeDate(year: 2026, month: 3, day: 31, hour: 23)
+        #expect(InsightsCalculator.isOldestMonth(selectedMonth: selected, oldestEntryDate: oldest))
+    }
+
+    @Test func isOldestMonth_selectedMidMonthLateInDay_sameMonthAsOldestReturnsTrue() {
+        let selected = makeDate(year: 2026, month: 3, day: 20, hour: 23)
+        let oldest = makeDate(year: 2026, month: 3, day: 1, hour: 0)
+        #expect(InsightsCalculator.isOldestMonth(selectedMonth: selected, oldestEntryDate: oldest))
+    }
+
+    @Test func isOldestMonth_selectedMidMonth_laterMonthThanOldestReturnsFalse() {
+        let selected = makeDate(year: 2026, month: 4, day: 15, hour: 8)
+        let oldest = makeDate(year: 2026, month: 3, day: 31, hour: 23)
+        #expect(!InsightsCalculator.isOldestMonth(selectedMonth: selected, oldestEntryDate: oldest))
+    }
+
+    @Test func isOldestMonth_acrossYearBoundary_comparesYearFirst() {
+        let oldest = makeDate(year: 2025, month: 12, day: 20)
+        #expect(!InsightsCalculator.isOldestMonth(selectedMonth: makeDate(year: 2026, month: 1, day: 1), oldestEntryDate: oldest))
+        #expect(InsightsCalculator.isOldestMonth(selectedMonth: makeDate(year: 2025, month: 11, day: 1), oldestEntryDate: oldest))
+    }
+
     // MARK: - filterEntries
 
     @Test func filterEntries_emptyList_returnsEmpty() {

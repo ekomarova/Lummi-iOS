@@ -32,6 +32,13 @@ struct InsightsCalculator {
         return max(0, minimumDaysForReport - uniqueCount)
     }
     
+    // True when the selected month is the earliest one that can hold entries, so navigating further back is pointless.
+    // Both sides are normalised to the start of their month, so the time of day of `selectedMonth` does not matter.
+    static func isOldestMonth(selectedMonth: Date, oldestEntryDate: Date?) -> Bool {
+        guard let oldestEntryDate else { return true }
+        return selectedMonth.startOfMonth <= oldestEntryDate.startOfMonth
+    }
+    
     static func longestStreak(in entries: [JoyEntry]) -> Int {
         guard !entries.isEmpty else { return 0 }
         
