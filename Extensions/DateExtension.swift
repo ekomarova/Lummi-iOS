@@ -10,7 +10,7 @@
 import Foundation
 import os
 
-// Date helpers: day keys, cached formatting, month boundaries and month comparisons.
+// Date helpers: day keys, cached formatting, month boundaries and the current-month check.
 extension Date {
     private static let keyFormatter: DateFormatter = {
         let fmt = DateFormatter()
@@ -51,18 +51,7 @@ extension Date {
         return calendar.date(from: components) ?? self
     }
     
-    //  Get the previous month
-    func previousMonth() -> Date {
-        return Calendar.current.date(byAdding: .month, value: -1, to: self) ?? self
-    }
-    
     static func isCurrentMonth(_ date: Date) -> Bool {
         Calendar.current.isDate(date, equalTo: Date(), toGranularity: .month)
     }
-    
-    static func isOldestMonth(selectedMonth: Date, oldestEntryDate: Date?) -> Bool {
-        guard let oldestEntryDate else { return true }
-        return selectedMonth <= oldestEntryDate.startOfMonth
-    }
-    
 }

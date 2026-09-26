@@ -51,22 +51,6 @@ struct DateExtensionTests {
         #expect(components.minute == 0)
     }
 
-    // MARK: - previousMonth
-
-    @Test func previousMonth_january_returnsDecemberOfPreviousYear() {
-        let prev = makeDate(year: 2026, month: 1, day: 15).previousMonth()
-        let components = Calendar.current.dateComponents([.year, .month], from: prev)
-        #expect(components.year == 2025)
-        #expect(components.month == 12)
-    }
-
-    @Test func previousMonth_march_returnsFebruary() {
-        let prev = makeDate(year: 2026, month: 3, day: 31).previousMonth()
-        let components = Calendar.current.dateComponents([.year, .month], from: prev)
-        #expect(components.year == 2026)
-        #expect(components.month == 2)
-    }
-
     // MARK: - isCurrentMonth
 
     @Test func isCurrentMonth_today_returnsTrue() {
@@ -96,24 +80,34 @@ struct DateExtensionTests {
         #expect(expectedYear == "2026")
     }
 
-    // MARK: - isOldestMonth
+    // MARK: - format (cache keying)
 
-    @Test func isOldestMonth_noOldestEntry_returnsTrue() {
-        #expect(Date.isOldestMonth(selectedMonth: Date(), oldestEntryDate: nil))
+    @Test func format_sameFormatDifferentLocales_doesNotReuseFormatterAcrossLocales() {
+        let date = makeDate(year: 2026, month: 3, day: 5)
+        #expect(date.format("LLLL", locale: Locale(identifier: "en")) == "March")
+        #expect(date.format("LLLL", locale: Locale(identifier: "de")) == "März")
+        #expect(date.format("LLLL", locale: Locale(identifier: "en")) == "March")
     }
 
-    @Test func isOldestMonth_selectedBeforeOldestEntry_returnsTrue() {
-        let selected = makeDate(year: 2026, month: 1, day: 1)
-        #expect(Date.isOldestMonth(selectedMonth: selected, oldestEntryDate: makeDate(year: 2026, month: 3, day: 10)))
+    @Test func format_differentFormatsSameLocale_doesNotReuseFormatterAcrossFormats() {
+        let date = makeDate(year: 2026, month: 3, day: 5)
+        let locale = Locale(identifier: "en_US_POSIX")
+        #expect(date.format("yyyy", locale: locale) == "2026")
+        #expect(date.format("MM", locale: locale) == "03")
+        #expect(date.format("yyyy", locale: locale) == "2026")
     }
 
-    @Test func isOldestMonth_selectedAtSameMonthAsOldest_returnsTrue() {
-        let selected = makeDate(year: 2026, month: 3, day: 1)
-        #expect(Date.isOldestMonth(selectedMonth: selected, oldestEntryDate: makeDate(year: 2026, month: 3, day: 10)))
-    }
+    @Test func format_concurrentCallsWithManyDistinctFormats_stayCorrect() {
+        let date = makeDate(year: 2026, month: 3, day: 5)
+        let locale = Locale(identifier: "en_US_POSIX")
+        let failures = OSAllocatedUnfairLock(initialState: 0)
 
-    @Test func isOldestMonth_selectedAfterOldestEntry_returnsFalse() {
-        let selected = makeDate(year: 2026, month: 6, day: 1)
-        #expect(!Date.isOldestMonth(selectedMonth: selected, oldestEntryDate: makeDate(year: 2026, month: 3, day: 10)))
+        // Distinct patterns force concurrent inserts into the cache, not just reads of existing entries.
+        DispatchQueue.concurrentPerform(iterations: 200) { index in
+            let text = date.format("yyyy'-\(index)'", locale: locale)
+            if text != "2026-\(index)" { failures.withLock { $0 += 1 } }
+        }
+
+        #expect(failures.withLock { $0 } == 0)
     }
 }

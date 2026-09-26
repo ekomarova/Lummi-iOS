@@ -46,7 +46,7 @@ private struct InsightsMonthView: View {
     }
     
     private var isOldestMonth: Bool {
-        Date.isOldestMonth(selectedMonth: selectedMonth, oldestEntryDate: oldestEntries.first?.date)
+        InsightsCalculator.isOldestMonth(selectedMonth: selectedMonth, oldestEntryDate: oldestEntries.first?.date)
     }
 
     // MARK: - Body
