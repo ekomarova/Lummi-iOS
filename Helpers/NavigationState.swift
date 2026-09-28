@@ -23,6 +23,7 @@ struct NavigationState: nonisolated Equatable {
     private var screenBeforeRecord: Screen = .home
     var isCalendarExpanded = false
     var isShowingAllJoys = false
+    var isShowingTrends = false
     var selectedDate: Date
     var visibleMonth: Date
 
@@ -34,13 +35,14 @@ struct NavigationState: nonisolated Equatable {
     // MARK: - Transitions
 
     // The one code path for switching screens. Switching always collapses the calendar; going home also
-    // resets the selection to today, and switching between the tabs closes Insights' "all joys" list.
-    // Opening the record screen remembers where it came from so `closeRecord()` can return there.
+    // resets the selection to today, and switching between the tabs closes Insights' nested "all joys" and
+    // "trends" pages. Opening the record screen remembers where it came from so `closeRecord()` can return there.
     mutating func navigate(to target: Screen, now: Date = Date(), calendar: Calendar = .current) {
         if target == .record {
             if screen != .record { screenBeforeRecord = screen }
         } else {
             isShowingAllJoys = false
+            isShowingTrends = false
         }
         screen = target
         isCalendarExpanded = false
@@ -72,13 +74,15 @@ struct NavigationState: nonisolated Equatable {
 
     var showsHeader: Bool { screen == .home }
 
-    var showsToolbar: Bool { screen != .record }
+    // Hidden on the record screen and on Insights' nested "all joys" / "trends" pages, which use the
+    // full-bleed space the toolbar would otherwise float over.
+    var showsToolbar: Bool { screen != .record && !isShowingAllJoys && !isShowingTrends }
 
     func isHomeActive(now: Date = Date(), calendar: Calendar = .current) -> Bool {
         screen == .home && !isCalendarExpanded && calendar.isDate(selectedDate, inSameDayAs: now)
     }
 
-    var isInsightsActive: Bool { screen == .insights && !isShowingAllJoys }
+    var isInsightsActive: Bool { screen == .insights && !isShowingAllJoys && !isShowingTrends }
 
     var isSettingsActive: Bool { screen == .settings }
 

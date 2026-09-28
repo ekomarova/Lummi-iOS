@@ -68,7 +68,7 @@ struct ContentView: View {
                             .transition(.move(edge: .trailing).combined(with: .opacity))
                     case .insights:
                         // MARK: - Insights View
-                        InsightsView(isShowingAllJoys: $navigation.isShowingAllJoys)
+                        InsightsView(isShowingAllJoys: $navigation.isShowingAllJoys, isShowingTrends: $navigation.isShowingTrends)
                             .transition(.move(edge: .leading).combined(with: .opacity))
                     case .home where navigation.isCalendarExpanded:
                         // MARK: - Calendar View

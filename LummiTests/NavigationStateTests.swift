@@ -26,6 +26,7 @@ struct NavigationStateTests {
         #expect(state.visibleMonth == makeDate(month: 9, day: 1))
         #expect(!state.isCalendarExpanded)
         #expect(!state.isShowingAllJoys)
+        #expect(!state.isShowingTrends)
     }
 
     // MARK: - navigate(to:)
@@ -50,6 +51,16 @@ struct NavigationStateTests {
         #expect(!state.isShowingAllJoys)
         #expect(state.isSettingsActive)
         #expect(!state.isInsightsActive)
+    }
+
+    @Test func navigate_toSettings_closesTrendsAndActivatesOnlySettings() {
+        var state = makeState()
+        state.navigate(to: .insights, now: now, calendar: calendar)
+        state.isShowingTrends = true
+        state.navigate(to: .settings, now: now, calendar: calendar)
+        #expect(state.screen == .settings)
+        #expect(!state.isShowingTrends)
+        #expect(state.isSettingsActive)
     }
 
     @Test func navigate_toHome_resetsSelectionToToday() {
@@ -183,6 +194,27 @@ struct NavigationStateTests {
         state.navigate(to: .insights, now: now, calendar: calendar)
         state.isShowingAllJoys = true
         #expect(!state.isInsightsActive)
+    }
+
+    @Test func isInsightsActive_falseWhileShowingTrends() {
+        var state = makeState()
+        state.navigate(to: .insights, now: now, calendar: calendar)
+        state.isShowingTrends = true
+        #expect(!state.isInsightsActive)
+    }
+
+    @Test func showsToolbar_falseWhileShowingAllJoys() {
+        var state = makeState()
+        state.navigate(to: .insights, now: now, calendar: calendar)
+        state.isShowingAllJoys = true
+        #expect(!state.showsToolbar)
+    }
+
+    @Test func showsToolbar_falseWhileShowingTrends() {
+        var state = makeState()
+        state.navigate(to: .insights, now: now, calendar: calendar)
+        state.isShowingTrends = true
+        #expect(!state.showsToolbar)
     }
 
     // MARK: - recordDate
