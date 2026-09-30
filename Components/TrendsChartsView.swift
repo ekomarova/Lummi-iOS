@@ -40,10 +40,18 @@ struct TrendsChartsView: View {
 
     private var daysJournaled: Int { InsightsCalculator.uniqueDaysCount(in: rangedEntries) }
     private var bestStreak: Int { InsightsCalculator.longestStreak(in: rangedEntries) }
+    private var joyfulHours: String { InsightsCalculator.calculateGoldenHours(entries: rangedEntries, locale: locale) }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 30) {
-            summaryCards
+            VStack(spacing: 15) {
+                summaryCards
+                // Only on a year's page, not Trends' own Month tab: the main Insights screen already
+                // shows this same card for the current month, so repeating it there would be redundant.
+                if range == .year {
+                    joyfulHoursCard
+                }
+            }
 
             TrendsSection(title: volumeChartTitle) {
                 volumeChart
@@ -95,6 +103,20 @@ struct TrendsChartsView: View {
                 valuePadding: 8
             )
         }
+    }
+
+    // Full-width, since the "HH:mm - HH:mm" value is wider than a short number and doesn't fit the
+    // three-across row above. `valueFontSize` still matches those three cards for a consistent look.
+    private var joyfulHoursCard: some View {
+        GlowCard(
+            value: joyfulHours,
+            subtitle: "Joyful Hours",
+            systemImage: "sun.max.fill",
+            gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)],
+            height: 130,
+            valueFontSize: 26,
+            valuePadding: 30
+        )
     }
 
     // MARK: - Charts
