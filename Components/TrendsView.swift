@@ -155,10 +155,14 @@ struct TrendsView: View {
             // `.stride` places one tick per actual bar (each calendar day or month), unlike `.automatic`,
             // which interpolates evenly spaced ticks across the continuous date range and can land more
             // than one tick inside the same bar, duplicating its label (e.g. two ticks reading "Aug").
-            AxisMarks(values: .stride(by: selectedRange.component, count: selectedRange == .month ? 5 : 1)) {
-                AxisValueLabel(format: selectedRange == .month ? .dateTime.day() : .dateTime.month(.abbreviated))
-                    .font(.lummiFont(size: 10))
-                    .foregroundStyle(themeManager.currentTheme.textColor.opacity(0.5))
+            AxisMarks(values: .stride(by: selectedRange.component, count: selectedRange == .month ? 5 : 1)) { value in
+                AxisValueLabel {
+                    if let date = value.as(Date.self) {
+                        Text(volumeAxisLabel(for: date))
+                            .font(.lummiFont(size: 10))
+                            .foregroundColor(themeManager.currentTheme.textColor.opacity(0.5))
+                    }
+                }
             }
         }
         .chartYAxis { yAxisMarks }
@@ -197,6 +201,18 @@ struct TrendsView: View {
         .frame(height: 140)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("By Weekday"))
+    }
+
+    // "Joys Over Time"'s x-axis label: a bare day number within `.month`, or an explicitly localized,
+    // capitalized month abbreviation otherwise. Built by hand rather than via `AxisValueLabel(format:)`
+    // because Swift Charts' axis formatting does not reliably follow the app's in-app language selection
+    // from the environment, and because Foundation lowercases standalone month names in locales like
+    // Russian ("сент."), unlike English ("Sep") — `capitalizedFirstLetter` matches `Date.monthYearTitle`.
+    private func volumeAxisLabel(for date: Date) -> String {
+        if selectedRange == .month {
+            return date.formatted(Date.FormatStyle(locale: locale).day())
+        }
+        return date.formatted(Date.FormatStyle(locale: locale).month(.abbreviated)).capitalizedFirstLetter
     }
 
     // A few faint gridlines with integer counts, so a bar's height reads as a number of joys rather than
