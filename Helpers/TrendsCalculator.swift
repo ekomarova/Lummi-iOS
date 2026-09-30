@@ -134,7 +134,8 @@ struct TrendsCalculator {
         case .month:
             return currentMonthStart
         case .year:
-            let naiveStart = calendar.date(byAdding: .month, value: -11, to: currentMonthStart) ?? currentMonthStart
+            // The calendar year `now` falls in (January 1st), not a rolling 12 months back from today.
+            let naiveStart = calendar.dateInterval(of: .year, for: now)?.start ?? currentMonthStart
             return clampToOldestMonth(naiveStart, oldestMonthStart: oldestMonthStart)
         case .allTime:
             return oldestMonthStart ?? currentMonthStart

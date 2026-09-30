@@ -33,10 +33,10 @@ struct TrendsCalculatorTests {
         #expect(result.count == 2)
     }
 
-    @Test func entriesInRange_year_keepsLastTwelveCalendarMonths() {
+    @Test func entriesInRange_year_keepsCurrentCalendarYearOnly() {
         let entries = [
-            entry(year: 2025, month: 9, day: 15), // just before the 12-month window
-            entry(year: 2025, month: 10, day: 1), // first day of the window
+            entry(year: 2025, month: 12, day: 31), // last day of the previous calendar year
+            entry(year: 2026, month: 1, day: 1),   // first day of this calendar year
             entry(year: 2026, month: 9, day: 24)
         ]
         let result = TrendsCalculator.entries(entries, in: .year, now: now, oldestEntryDate: nil, calendar: calendar)
@@ -86,10 +86,10 @@ struct TrendsCalculatorTests {
         #expect(points.first { calendar.component(.day, from: $0.periodStart) == 10 }?.count == 2)
     }
 
-    @Test func dataPoints_year_oneBarPerMonth() {
-        let entries = [entry(year: 2025, month: 10, day: 1), entry(year: 2026, month: 9, day: 24)]
+    @Test func dataPoints_year_oneBarPerMonthFromJanuaryToCurrentMonth() {
+        let entries = [entry(year: 2026, month: 1, day: 5), entry(year: 2026, month: 9, day: 24)]
         let points = TrendsCalculator.dataPoints(for: entries, range: .year, now: now, oldestEntryDate: nil, calendar: calendar)
-        #expect(points.count == 12)
+        #expect(points.count == 9) // Jan through Sep: the calendar year so far, not 12 months back
         #expect(points.first?.count == 1)
         #expect(points.last?.count == 1)
     }
