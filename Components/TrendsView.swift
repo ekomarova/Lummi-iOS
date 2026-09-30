@@ -26,6 +26,14 @@ struct TrendsView: View {
         TrendsCalculator.availableYears(oldestEntryDate: oldestEntryDate)
     }
 
+    // Month's own empty check is scoped to the current month, not the whole journal: an otherwise
+    // active journal with a quiet month still has nothing to chart for "Joys By Date"/"Joys By Weekday".
+    private var hasEntriesThisMonth: Bool {
+        !TrendsCalculator.entries(
+            allEntries, in: .month, year: Calendar.current.component(.year, from: Date()), oldestEntryDate: oldestEntryDate
+        ).isEmpty
+    }
+
     var body: some View {
         if let openYear {
             YearTrendsView(year: openYear, onBack: { closeYear() })
@@ -53,10 +61,18 @@ struct TrendsView: View {
 
                     switch selectedTab {
                     case .month:
-                        // `year` is unused by `.month`, which always covers the current calendar month.
-                        TrendsChartsView(range: .month, year: Calendar.current.component(.year, from: Date()))
+                        if hasEntriesThisMonth {
+                            // `year` is unused by `.month`, which always covers the current calendar month.
+                            TrendsChartsView(range: .month, year: Calendar.current.component(.year, from: Date()))
+                        } else {
+                            noEntriesView
+                        }
                     case .allTime:
-                        yearsList
+                        if allEntries.isEmpty {
+                            noEntriesView
+                        } else {
+                            yearsList
+                        }
                     }
                 }
                 .padding(.horizontal, 20)
@@ -92,6 +108,16 @@ struct TrendsView: View {
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(isSelected ? [.isSelected] : [])
+    }
+
+    // Shown in place of either tab's content when the journal has no entries at all yet, matching
+    // `SelectedDayDetailView`'s "No records for this day" placeholder.
+    private var noEntriesView: some View {
+        Text("Add at least one joy to see trends")
+            .font(.lummiFont(size: 16))
+            .foregroundColor(themeManager.currentTheme.textColor.opacity(0.3))
+            .frame(maxWidth: .infinity)
+            .padding(.top, 40)
     }
 
     // MARK: - Year List
