@@ -11,8 +11,8 @@ import SwiftUI
 import SwiftData
 import Charts
 
-// Summary cards plus the "Joys Over Time" and "By Weekday" charts for one range/year. Shared by
-// `TrendsView`'s "Month" mode and `YearTrendsView`'s single-year page, so both stay pixel-identical.
+// Summary cards plus the "Joys By Date"/"Joys By Month" and "Joys By Weekday" charts for one range/year.
+// Shared by `TrendsView`'s "Month" mode and `YearTrendsView`'s single-year page, so both stay pixel-identical.
 struct TrendsChartsView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale
@@ -45,14 +45,19 @@ struct TrendsChartsView: View {
         VStack(alignment: .leading, spacing: 30) {
             summaryCards
 
-            TrendsSection(title: "Joys Over Time") {
+            TrendsSection(title: volumeChartTitle) {
                 volumeChart
             }
 
-            TrendsSection(title: "By Weekday") {
+            TrendsSection(title: "Joys By Weekday") {
                 weekdayChart
             }
         }
+    }
+
+    // "Joys By Date" (day granularity) for `.month`, "Joys By Month" (month granularity) for `.year`.
+    private var volumeChartTitle: LocalizedStringResource {
+        range == .month ? "Joys By Date" : "Joys By Month"
     }
 
     // MARK: - Summary
@@ -120,7 +125,7 @@ struct TrendsChartsView: View {
         .chartYAxis { yAxisMarks }
         .frame(height: 160)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("Joys Over Time"))
+        .accessibilityLabel(Text(volumeChartTitle))
         .accessibilityValue(Text("\(rangedEntries.count)"))
     }
 
@@ -152,10 +157,10 @@ struct TrendsChartsView: View {
         .chartYAxis { yAxisMarks }
         .frame(height: 140)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("By Weekday"))
+        .accessibilityLabel(Text("Joys By Weekday"))
     }
 
-    // "Joys Over Time"'s x-axis label: a bare day number within `.month`, or an explicitly localized,
+    // The volume chart's x-axis label: a bare day number within `.month`, or an explicitly localized,
     // capitalized month abbreviation otherwise. Built by hand rather than via `AxisValueLabel(format:)`
     // because Swift Charts' axis formatting does not reliably follow the app's in-app language selection
     // from the environment, and because Foundation lowercases standalone month names in locales like
@@ -191,7 +196,7 @@ struct TrendsChartsView: View {
         )
     }
 
-    // A distinct color for the weekday chart, so it doesn't read as a continuation of "Joys Over Time" above it.
+    // A distinct color for the weekday chart, so it doesn't read as a continuation of the volume chart above it.
     private var weekdayGradient: LinearGradient {
         LinearGradient(
             colors: [Color(red: 0.55, green: 0.85, blue: 0.55), Color(red: 0.15, green: 0.55, blue: 0.35)],
