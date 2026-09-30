@@ -19,7 +19,7 @@ struct TrendsView: View {
     @Binding var isShowingTrends: Bool
 
     @Query(sort: \JoyEntry.date) private var allEntries: [JoyEntry]
-    @State private var selectedRange: TrendsRange = .year
+    @State private var selectedRange: TrendsRange = .month
 
     private var oldestEntryDate: Date? { allEntries.first?.date }
 
