@@ -48,6 +48,8 @@
 		E4FDF21B7DE4405C342C1EA7 /* CalendarExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FFB5A141452B3CDBF374BE /* CalendarExtension.swift */; };
 		53C153FCE78D3225B6E08E12 /* TrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAFE68702064D16D0CCEE2C8 /* TrendsView.swift */; };
 		987BD99D3540D75ECB4D3CB5 /* TrendsCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D085C748510EC29FCEA60BA0 /* TrendsCalculator.swift */; };
+		D36364C8F0E64D14A72E81A9 /* TrendsChartsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29704F30C920BE4BA981743 /* TrendsChartsView.swift */; };
+		5898100AD50D595B6311DD1E /* YearTrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E6B030D5CB8FB51A8D0675 /* YearTrendsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,6 +118,8 @@
 		E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeOptionButton.swift; sourceTree = "<group>"; };
 		DAFE68702064D16D0CCEE2C8 /* TrendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsView.swift; sourceTree = "<group>"; };
 		D085C748510EC29FCEA60BA0 /* TrendsCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsCalculator.swift; sourceTree = "<group>"; };
+		A29704F30C920BE4BA981743 /* TrendsChartsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsChartsView.swift; sourceTree = "<group>"; };
+		B1E6B030D5CB8FB51A8D0675 /* YearTrendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearTrendsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -245,6 +249,8 @@
 				E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */,
 				A974D4023557EF74B1627FA8 /* NoteBubble.swift */,
 				DAFE68702064D16D0CCEE2C8 /* TrendsView.swift */,
+				A29704F30C920BE4BA981743 /* TrendsChartsView.swift */,
+				B1E6B030D5CB8FB51A8D0675 /* YearTrendsView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -476,6 +482,8 @@
 				43EC30172F8B381CFABEA13E /* NoteBubble.swift in Sources */,
 				53C153FCE78D3225B6E08E12 /* TrendsView.swift in Sources */,
 				987BD99D3540D75ECB4D3CB5 /* TrendsCalculator.swift in Sources */,
+				D36364C8F0E64D14A72E81A9 /* TrendsChartsView.swift in Sources */,
+				5898100AD50D595B6311DD1E /* YearTrendsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
