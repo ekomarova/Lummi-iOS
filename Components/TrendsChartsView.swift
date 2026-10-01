@@ -72,51 +72,25 @@ struct TrendsChartsView: View {
 
     private var summaryCards: some View {
         HStack(spacing: 12) {
-            GlowCard(
-                value: "\(rangedEntries.count)",
-                subtitle: "Joys",
-                systemImage: "star.fill",
-                iconColor: Color(red: 1.0, green: 0.55, blue: 0.1),
-                gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.2, green: 0.6, blue: 0.3)],
-                height: 130,
-                valueFontSize: 26,
-                valuePadding: 8
-            )
+            GlowCard.joys(value: "\(rangedEntries.count)", height: 130, valueFontSize: 26, valuePadding: 8)
             GlowCard(
                 value: "\(daysJournaled)",
                 subtitle: "Active Days",
                 systemImage: "calendar",
-                iconColor: Color(red: 0.3, green: 0.6, blue: 0.95),
-                gradientColors: [Color(red: 0.5, green: 0.75, blue: 1.0), Color(red: 0.3, green: 0.4, blue: 0.85)],
+                iconColor: AccentColors.activeDays,
+                gradientColors: AccentColors.activeDaysGradient,
                 height: 130,
                 valueFontSize: 26,
                 valuePadding: 8
             )
-            GlowCard(
-                value: "\(bestStreak)",
-                subtitle: "Day Streak",
-                systemImage: "flame.fill",
-                iconColor: Color(red: 0.95, green: 0.2, blue: 0.2),
-                gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)],
-                height: 130,
-                valueFontSize: 26,
-                valuePadding: 8
-            )
+            GlowCard.streak(value: "\(bestStreak)", height: 130, valueFontSize: 26, valuePadding: 8)
         }
     }
 
     // Full-width, since the "HH:mm - HH:mm" value is wider than a short number and doesn't fit the
     // three-across row above. `valueFontSize` still matches those three cards for a consistent look.
     private var joyfulHoursCard: some View {
-        GlowCard(
-            value: joyfulHours,
-            subtitle: "Joyful Hours",
-            systemImage: "sun.max.fill",
-            gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)],
-            height: 130,
-            valueFontSize: 26,
-            valuePadding: 30
-        )
+        GlowCard.joyfulHours(value: joyfulHours, height: 130, valueFontSize: 26, valuePadding: 30)
     }
 
     // MARK: - Charts
@@ -212,18 +186,12 @@ struct TrendsChartsView: View {
     }
 
     private var trendsGradient: LinearGradient {
-        LinearGradient(
-            colors: [Color(red: 0.75, green: 0.6, blue: 0.95), Color(red: 0.45, green: 0.25, blue: 0.75)],
-            startPoint: .top, endPoint: .bottom
-        )
+        LinearGradient(colors: AccentColors.trendsVolumeGradient, startPoint: .top, endPoint: .bottom)
     }
 
     // A distinct color for the weekday chart, so it doesn't read as a continuation of the volume chart above it.
     private var weekdayGradient: LinearGradient {
-        LinearGradient(
-            colors: [Color(red: 0.55, green: 0.85, blue: 0.55), Color(red: 0.15, green: 0.55, blue: 0.35)],
-            startPoint: .top, endPoint: .bottom
-        )
+        LinearGradient(colors: AccentColors.weekdayGradient, startPoint: .top, endPoint: .bottom)
     }
 }
 

@@ -72,10 +72,11 @@ final class TodayRecordsUITests: XCTestCase {
         let deleteButton = app.buttons["DeleteRecordButton"]
         XCTAssertTrue(deleteButton.waitForExistence(timeout: 2.0))
         deleteButton.tap()
-        
-        sleep(1)
-        
-        XCTAssertFalse(app.staticTexts["Record #7"].exists, "The entry was not deleted from the list")
+
+        XCTAssertTrue(
+            app.staticTexts["Record #7"].waitForNonExistence(timeout: 3.0),
+            "The entry was not deleted from the list"
+        )
     }
 
     // MARK: - Helpers

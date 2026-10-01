@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		33502091645F3A86DF1E3C9B /* DateUITestingExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8659B4745303AC80F59A96E /* DateUITestingExtension.swift */; };
 		24DEA4823F27415591ADBA5F /* AllJoysView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A75A501776D443E1961E0695 /* AllJoysView.swift */; };
 		2EAF024321A84B0DA72034CB /* CardOpacity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33595B21D97D40CAAE9F5BE2 /* CardOpacity.swift */; };
 		3994D6B50DC44AD6A11FE59F /* ThemeOptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */; };
@@ -41,8 +42,10 @@
 		4A11C0DE0000000000000012 /* JoyEntryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11C0DE0000000000000002 /* JoyEntryStore.swift */; };
 		4A11C0DE0000000000000013 /* PreviewSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11C0DE0000000000000003 /* PreviewSupport.swift */; };
 		4A11C0DE00000000000000A2 /* NavigationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11C0DE00000000000000A1 /* NavigationState.swift */; };
+		4AE9FF0B99FA051D6C5D607A /* AccentColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFF479DE52BF9FBBE26AAF9 /* AccentColors.swift */; };
 		53C153FCE78D3225B6E08E12 /* TrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAFE68702064D16D0CCEE2C8 /* TrendsView.swift */; };
 		5898100AD50D595B6311DD1E /* YearTrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E6B030D5CB8FB51A8D0675 /* YearTrendsView.swift */; };
+		649AF115F3264D01730EF068 /* AnimationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ECC769E0A0AE871A7A1D999 /* AnimationExtension.swift */; };
 		987BD99D3540D75ECB4D3CB5 /* TrendsCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D085C748510EC29FCEA60BA0 /* TrendsCalculator.swift */; };
 		A1B2C3D41000000000000001 /* NavigationIconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000001 /* NavigationIconButton.swift */; };
 		A1B2C3D41000000000000002 /* RecordActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000002 /* RecordActionButton.swift */; };
@@ -100,6 +103,7 @@
 		47981E9A2FA4440C005ADAB1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		47981EAC2FA5473E005ADAB1 /* InsightsCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsCalculator.swift; sourceTree = "<group>"; };
 		47981EB32FA59262005ADAB1 /* MockDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataManager.swift; sourceTree = "<group>"; };
+		D8659B4745303AC80F59A96E /* DateUITestingExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUITestingExtension.swift; sourceTree = "<group>"; };
 		47981EBF2FA7E5EC005ADAB1 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		47BB00012FC0A5EA008B5D01 /* BottomToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomToolbar.swift; sourceTree = "<group>"; };
 		47BB00042FC0A5EA008B5D04 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
@@ -108,6 +112,8 @@
 		4A11C0DE0000000000000002 /* JoyEntryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoyEntryStore.swift; sourceTree = "<group>"; };
 		4A11C0DE0000000000000003 /* PreviewSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewSupport.swift; sourceTree = "<group>"; };
 		4A11C0DE00000000000000A1 /* NavigationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationState.swift; sourceTree = "<group>"; };
+		4ECC769E0A0AE871A7A1D999 /* AnimationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationExtension.swift; sourceTree = "<group>"; };
+		6AFF479DE52BF9FBBE26AAF9 /* AccentColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccentColors.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000001 /* NavigationIconButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationIconButton.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000002 /* RecordActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordActionButton.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000003 /* ScreenHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenHeader.swift; sourceTree = "<group>"; };
@@ -163,6 +169,7 @@
 		4726FFA62F9DA1F1008B5D3C /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				4ECC769E0A0AE871A7A1D999 /* AnimationExtension.swift */,
 				C4FFB5A141452B3CDBF374BE /* CalendarExtension.swift */,
 				4726FFA72F9DA1FF008B5D3C /* DateExtension.swift */,
 				4726FFBC2FA033F1008B5D3C /* FontExtension.swift */,
@@ -259,6 +266,7 @@
 			isa = PBXGroup;
 			children = (
 				473B04532F9BB22F00C482FA /* AppThemes.swift */,
+				6AFF479DE52BF9FBBE26AAF9 /* AccentColors.swift */,
 				33595B21D97D40CAAE9F5BE2 /* CardOpacity.swift */,
 				473B04542F9BB24E00C482FA /* ThemeManager.swift */,
 				473B04522F9BB22000C482FA /* ThemeProtocol.swift */,
@@ -269,6 +277,7 @@
 		47981EBA2FA59334005ADAB1 /* TestHelpers */ = {
 			isa = PBXGroup;
 			children = (
+				D8659B4745303AC80F59A96E /* DateUITestingExtension.swift */,
 				47981EB32FA59262005ADAB1 /* MockDataManager.swift */,
 				4A11C0DE0000000000000003 /* PreviewSupport.swift */,
 			);
@@ -449,6 +458,8 @@
 				47BB00032FC0A5EA008B5D03 /* StringExtension.swift in Sources */,
 				47BB00052FC0A5EA008B5D05 /* ViewExtension.swift in Sources */,
 				4726FFBD2FA033FB008B5D3C /* FontExtension.swift in Sources */,
+				649AF115F3264D01730EF068 /* AnimationExtension.swift in Sources */,
+				4AE9FF0B99FA051D6C5D607A /* AccentColors.swift in Sources */,
 				473B04562F9BB2F800C482FA /* AppThemes.swift in Sources */,
 				473B045B2F9BB79C00C482FA /* RecordInput.swift in Sources */,
 				4726FFCA2FA3DA0F008B5D3C /* SettingsView.swift in Sources */,
@@ -498,6 +509,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33502091645F3A86DF1E3C9B /* DateUITestingExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

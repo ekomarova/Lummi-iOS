@@ -29,7 +29,7 @@ struct NavigationState: nonisolated Equatable {
 
     init(now: Date = Date(), calendar: Calendar = .current) {
         selectedDate = now
-        visibleMonth = calendar.startOfMonth(for: now)
+        visibleMonth = calendar.monthStart(for: now) ?? now
     }
 
     // MARK: - Transitions
@@ -66,7 +66,7 @@ struct NavigationState: nonisolated Equatable {
     mutating func toggleCalendar(calendar: Calendar = .current) {
         isCalendarExpanded.toggle()
         if !isCalendarExpanded {
-            visibleMonth = calendar.startOfMonth(for: selectedDate)
+            visibleMonth = calendar.monthStart(for: selectedDate) ?? selectedDate
         }
     }
 
@@ -95,12 +95,6 @@ struct NavigationState: nonisolated Equatable {
 
     private mutating func resetToToday(now: Date, calendar: Calendar) {
         selectedDate = now
-        visibleMonth = calendar.startOfMonth(for: now)
-    }
-}
-
-private extension Calendar {
-    func startOfMonth(for date: Date) -> Date {
-        self.date(from: dateComponents([.year, .month], from: date)) ?? date
+        visibleMonth = calendar.monthStart(for: now) ?? now
     }
 }

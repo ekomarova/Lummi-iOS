@@ -110,8 +110,6 @@ final class PerformanceUITests: XCTestCase {
 
     private func dateKey(daysAgo: Int) -> String {
         let date = Calendar.current.date(byAdding: .day, value: -daysAgo, to: Date()) ?? Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: date)
+        return date.uiTestDateKey
     }
 }

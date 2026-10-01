@@ -20,8 +20,8 @@ struct AllJoysView: View {
             ScreenHeader(
                 title: "All joys",
                 leftButton: {
-                    NavigationIconButton(systemImage: "arrow.left", accessibilityID: "AllJoysBackButton") {
-                        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                    NavigationIconButton(systemImage: "arrow.left", accessibilityLabel: "Back", accessibilityID: "AllJoysBackButton") {
+                        withAnimation(.lummiSpring) {
                             isShowingAllJoys = false
                         }
                     }

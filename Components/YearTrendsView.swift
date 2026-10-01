@@ -19,7 +19,12 @@ struct YearTrendsView: View {
             ScreenHeader(
                 title: LocalizedStringKey(String(year)),
                 leftButton: {
-                    NavigationIconButton(systemImage: "arrow.left", accessibilityID: "YearTrendsBackButton", action: onBack)
+                    NavigationIconButton(
+                        systemImage: "arrow.left",
+                        accessibilityLabel: "Back",
+                        accessibilityID: "YearTrendsBackButton",
+                        action: onBack
+                    )
                 }
             )
 

@@ -79,6 +79,7 @@ private struct InsightsMonthView: View {
                         systemImage: "chevron.left",
                         size: 36,
                         iconOpacity: isOldestMonth ? 0.2 : 0.8,
+                        accessibilityLabel: "Previous month",
                         accessibilityID: "PreviousMonthButton"
                     ) { changeMonth(by: -1) }
                     .disabled(isOldestMonth)
@@ -93,6 +94,7 @@ private struct InsightsMonthView: View {
                         systemImage: "chevron.right",
                         size: 36,
                         iconOpacity: isCurrentMonth ? 0.2 : 0.8,
+                        accessibilityLabel: "Next month",
                         accessibilityID: "NextMonthButton"
                     ) { changeMonth(by: 1) }
                     .disabled(isCurrentMonth)
@@ -149,34 +151,16 @@ private struct InsightsMonthView: View {
                                     // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
                                     .padding(.leading, 10)
 
-                                Button(
-                                    action: {
-                                        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                                            isShowingAllJoys = true
-                                        }
-                                    },
-                                    label: {
-                                        CapsuleRow {
-                                            HStack(spacing: 10) {
-                                                Image(systemName: "list.star")
-                                                    .font(.system(size: 17, weight: .semibold))
-                                                    .foregroundColor(Color(red: 0.3, green: 0.6, blue: 0.95))
-
-                                                Text("Show All Joys")
-                                                    .font(.lummiFont(size: 17))
-                                                    .foregroundColor(themeManager.currentTheme.textColor)
-
-                                                Spacer()
-
-                                                Image(systemName: "chevron.right")
-                                                    .font(.system(size: 14, weight: .bold))
-                                                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
-                                            }
-                                        }
+                                DisclosureRow(
+                                    systemImage: "list.star",
+                                    iconColor: AccentColors.activeDays,
+                                    title: "Show All Joys",
+                                    accessibilityID: "SeeAllJoysButton"
+                                ) {
+                                    withAnimation(.lummiSpring) {
+                                        isShowingAllJoys = true
                                     }
-                                )
-                                .buttonStyle(.plain)
-                                .accessibilityIdentifier("SeeAllJoysButton")
+                                }
                             }
                         }
 
@@ -188,34 +172,16 @@ private struct InsightsMonthView: View {
                                 // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
                                 .padding(.leading, 10)
 
-                            Button(
-                                action: {
-                                    withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                                        isShowingTrends = true
-                                    }
-                                },
-                                label: {
-                                    CapsuleRow {
-                                        HStack(spacing: 10) {
-                                            Image(systemName: "chart.bar.fill")
-                                                .font(.system(size: 17, weight: .semibold))
-                                                .foregroundColor(Color(red: 0.3, green: 0.6, blue: 0.95))
-
-                                            Text("View Trends")
-                                                .font(.lummiFont(size: 17))
-                                                .foregroundColor(themeManager.currentTheme.textColor)
-
-                                            Spacer()
-
-                                            Image(systemName: "chevron.right")
-                                                .font(.system(size: 14, weight: .bold))
-                                                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
-                                        }
-                                    }
+                            DisclosureRow(
+                                systemImage: "chart.bar.fill",
+                                iconColor: AccentColors.activeDays,
+                                title: "View Trends",
+                                accessibilityID: "ShowTrendsButton"
+                            ) {
+                                withAnimation(.lummiSpring) {
+                                    isShowingTrends = true
                                 }
-                            )
-                            .buttonStyle(.plain)
-                            .accessibilityIdentifier("ShowTrendsButton")
+                            }
                         }
                     }
                     .padding(.horizontal, 10)
@@ -233,7 +199,7 @@ private struct InsightsMonthView: View {
 
     private func changeMonth(by value: Int) {
         if let newMonth = Calendar.current.date(byAdding: .month, value: value, to: selectedMonth) {
-            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+            withAnimation(.lummiSpring) {
                 selectedMonth = newMonth
             }
         }
@@ -242,37 +208,16 @@ private struct InsightsMonthView: View {
     // MARK: - Highlight Cards
 
     private func joysCard(height: CGFloat = 170) -> some View {
-        GlowCard(
-            value: "\(monthlyEntries.count)",
-            subtitle: "Joys",
-            systemImage: "star.fill",
-            iconColor: Color(red: 1.0, green: 0.55, blue: 0.1),
-            gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.2, green: 0.6, blue: 0.3)],
-            height: height,
-            valueFontSize: 28,
-            valuePadding: 12
-        )
+        GlowCard.joys(value: "\(monthlyEntries.count)", height: height, valueFontSize: 28, valuePadding: 12)
     }
 
     private func streakCard(height: CGFloat = 170) -> some View {
-        GlowCard(
-            value: "\(monthStreak)",
-            subtitle: "Day Streak",
-            systemImage: "flame.fill",
-            iconColor: Color(red: 0.95, green: 0.2, blue: 0.2),
-            gradientColors: [Color(red: 1.0, green: 0.8, blue: 0.3), Color(red: 0.95, green: 0.4, blue: 0.1)],
-            height: height,
-            valueFontSize: 28,
-            valuePadding: 12
-        )
+        GlowCard.streak(value: "\(monthStreak)", height: height, valueFontSize: 28, valuePadding: 12)
     }
 
     private func joyfulHoursCard(height: CGFloat, valuePadding: CGFloat) -> some View {
-        GlowCard(
+        GlowCard.joyfulHours(
             value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
-            subtitle: "Joyful Hours",
-            systemImage: "sun.max.fill",
-            gradientColors: [Color(red: 0.6, green: 0.3, blue: 0.8), Color(red: 1.0, green: 0.8, blue: 0.3)],
             height: height,
             valueFontSize: 28,
             valuePadding: valuePadding
@@ -327,6 +272,47 @@ struct GlowCard: View {
         .overlay(
             RoundedRectangle(cornerRadius: 30)
                 .stroke(themeManager.currentTheme.textColor.opacity(CardOpacity.prominentStroke), lineWidth: 1)
+        )
+    }
+}
+
+// Shared presets for the "Joys"/"Day Streak"/"Joyful Hours" cards shown by both Insights and Trends.
+extension GlowCard {
+    static func joys(value: String, height: CGFloat, valueFontSize: CGFloat, valuePadding: CGFloat) -> GlowCard {
+        GlowCard(
+            value: value,
+            subtitle: "Joys",
+            systemImage: "star.fill",
+            iconColor: AccentColors.joys,
+            gradientColors: AccentColors.joysGradient,
+            height: height,
+            valueFontSize: valueFontSize,
+            valuePadding: valuePadding
+        )
+    }
+
+    static func streak(value: String, height: CGFloat, valueFontSize: CGFloat, valuePadding: CGFloat) -> GlowCard {
+        GlowCard(
+            value: value,
+            subtitle: "Day Streak",
+            systemImage: "flame.fill",
+            iconColor: AccentColors.streak,
+            gradientColors: AccentColors.streakGradient,
+            height: height,
+            valueFontSize: valueFontSize,
+            valuePadding: valuePadding
+        )
+    }
+
+    static func joyfulHours(value: String, height: CGFloat, valueFontSize: CGFloat, valuePadding: CGFloat) -> GlowCard {
+        GlowCard(
+            value: value,
+            subtitle: "Joyful Hours",
+            systemImage: "sun.max.fill",
+            gradientColors: AccentColors.joyfulHoursGradient,
+            height: height,
+            valueFontSize: valueFontSize,
+            valuePadding: valuePadding
         )
     }
 }
