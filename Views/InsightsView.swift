@@ -28,6 +28,9 @@ private struct InsightsMonthView: View {
     @Binding var isShowingAllJoys: Bool
     @Binding var isShowingTrends: Bool
 
+    // Joys, Day Streak and Joyful Hours share one card height on iPhone
+    private static let phoneCardHeight: CGFloat = 130
+
     @Query private var monthlyEntries: [JoyEntry]
 
     init(month: Date, isShowingAllJoys: Binding<Bool>, isShowingTrends: Binding<Bool>) {
@@ -65,8 +68,6 @@ private struct InsightsMonthView: View {
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 35) {
 
-                        let itemSize = geometry.size.width * 0.09
-
                         // MARK: - Highlights
                         VStack(alignment: .leading, spacing: 15) {
                             Text("Highlights")
@@ -92,13 +93,12 @@ private struct InsightsMonthView: View {
                             } else {
                                 // MARK: - Joys & Streak
                                 HStack(spacing: 15) {
-                                    joysCard()
-                                    streakCard()
+                                    joysCard(height: Self.phoneCardHeight)
+                                    streakCard(height: Self.phoneCardHeight)
                                 }
-                                .frame(maxWidth: .infinity, minHeight: itemSize * 0.65)
 
                                 // MARK: - Joyful Hours
-                                joyfulHoursCard(height: 130, valuePadding: 30)
+                                joyfulHoursCard(height: Self.phoneCardHeight, valuePadding: 30)
                             }
                         }
 
@@ -152,11 +152,11 @@ private struct InsightsMonthView: View {
 
     // MARK: - Highlight Cards
 
-    private func joysCard(height: CGFloat = 170) -> some View {
+    private func joysCard(height: CGFloat) -> some View {
         GlowCard.joys(value: "\(monthlyEntries.count)", height: height, valueFontSize: 28, valuePadding: 12)
     }
 
-    private func streakCard(height: CGFloat = 170) -> some View {
+    private func streakCard(height: CGFloat) -> some View {
         GlowCard.streak(value: "\(monthStreak)", height: height, valueFontSize: 28, valuePadding: 12)
     }
 
