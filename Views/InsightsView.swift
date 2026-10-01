@@ -181,43 +181,41 @@ private struct InsightsMonthView: View {
                         }
 
                         // MARK: - Trends
-                        if !oldestEntries.isEmpty {
-                            VStack(alignment: .leading, spacing: 15) {
-                                Text("Trends")
-                                    .font(.lummiFont(size: 20, weight: .bold))
-                                    .foregroundColor(themeManager.currentTheme.textColor)
-                                    // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
-                                    .padding(.leading, 10)
+                        VStack(alignment: .leading, spacing: 15) {
+                            Text("Trends")
+                                .font(.lummiFont(size: 20, weight: .bold))
+                                .foregroundColor(themeManager.currentTheme.textColor)
+                                // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
+                                .padding(.leading, 10)
 
-                                Button(
-                                    action: {
-                                        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                                            isShowingTrends = true
-                                        }
-                                    },
-                                    label: {
-                                        CapsuleRow {
-                                            HStack(spacing: 10) {
-                                                Image(systemName: "chart.bar.fill")
-                                                    .font(.system(size: 17, weight: .semibold))
-                                                    .foregroundColor(Color(red: 0.3, green: 0.6, blue: 0.95))
+                            Button(
+                                action: {
+                                    withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                        isShowingTrends = true
+                                    }
+                                },
+                                label: {
+                                    CapsuleRow {
+                                        HStack(spacing: 10) {
+                                            Image(systemName: "chart.bar.fill")
+                                                .font(.system(size: 17, weight: .semibold))
+                                                .foregroundColor(Color(red: 0.3, green: 0.6, blue: 0.95))
 
-                                                Text("View Trends")
-                                                    .font(.lummiFont(size: 17))
-                                                    .foregroundColor(themeManager.currentTheme.textColor)
+                                            Text("View Trends")
+                                                .font(.lummiFont(size: 17))
+                                                .foregroundColor(themeManager.currentTheme.textColor)
 
-                                                Spacer()
+                                            Spacer()
 
-                                                Image(systemName: "chevron.right")
-                                                    .font(.system(size: 14, weight: .bold))
-                                                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
-                                            }
+                                            Image(systemName: "chevron.right")
+                                                .font(.system(size: 14, weight: .bold))
+                                                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
                                         }
                                     }
-                                )
-                                .buttonStyle(.plain)
-                                .accessibilityIdentifier("ShowTrendsButton")
-                            }
+                                }
+                            )
+                            .buttonStyle(.plain)
+                            .accessibilityIdentifier("ShowTrendsButton")
                         }
                     }
                     .padding(.horizontal, 10)

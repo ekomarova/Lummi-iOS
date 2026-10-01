@@ -41,15 +41,15 @@
 		4A11C0DE0000000000000012 /* JoyEntryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11C0DE0000000000000002 /* JoyEntryStore.swift */; };
 		4A11C0DE0000000000000013 /* PreviewSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11C0DE0000000000000003 /* PreviewSupport.swift */; };
 		4A11C0DE00000000000000A2 /* NavigationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11C0DE00000000000000A1 /* NavigationState.swift */; };
+		53C153FCE78D3225B6E08E12 /* TrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAFE68702064D16D0CCEE2C8 /* TrendsView.swift */; };
+		5898100AD50D595B6311DD1E /* YearTrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E6B030D5CB8FB51A8D0675 /* YearTrendsView.swift */; };
+		987BD99D3540D75ECB4D3CB5 /* TrendsCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D085C748510EC29FCEA60BA0 /* TrendsCalculator.swift */; };
 		A1B2C3D41000000000000001 /* NavigationIconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000001 /* NavigationIconButton.swift */; };
 		A1B2C3D41000000000000002 /* RecordActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000002 /* RecordActionButton.swift */; };
 		A1B2C3D41000000000000003 /* ScreenHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000003 /* ScreenHeader.swift */; };
 		A1B2C3D41000000000000004 /* CapsuleRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000004 /* CapsuleRow.swift */; };
-		E4FDF21B7DE4405C342C1EA7 /* CalendarExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FFB5A141452B3CDBF374BE /* CalendarExtension.swift */; };
-		53C153FCE78D3225B6E08E12 /* TrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAFE68702064D16D0CCEE2C8 /* TrendsView.swift */; };
-		987BD99D3540D75ECB4D3CB5 /* TrendsCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D085C748510EC29FCEA60BA0 /* TrendsCalculator.swift */; };
 		D36364C8F0E64D14A72E81A9 /* TrendsChartsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29704F30C920BE4BA981743 /* TrendsChartsView.swift */; };
-		5898100AD50D595B6311DD1E /* YearTrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E6B030D5CB8FB51A8D0675 /* YearTrendsView.swift */; };
+		E4FDF21B7DE4405C342C1EA7 /* CalendarExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FFB5A141452B3CDBF374BE /* CalendarExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,14 +112,14 @@
 		A1B2C3D40000000000000002 /* RecordActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordActionButton.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000003 /* ScreenHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenHeader.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000004 /* CapsuleRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleRow.swift; sourceTree = "<group>"; };
+		A29704F30C920BE4BA981743 /* TrendsChartsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsChartsView.swift; sourceTree = "<group>"; };
 		A75A501776D443E1961E0695 /* AllJoysView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllJoysView.swift; sourceTree = "<group>"; };
 		A974D4023557EF74B1627FA8 /* NoteBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteBubble.swift; sourceTree = "<group>"; };
-		C4FFB5A141452B3CDBF374BE /* CalendarExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarExtension.swift; sourceTree = "<group>"; };
-		E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeOptionButton.swift; sourceTree = "<group>"; };
-		DAFE68702064D16D0CCEE2C8 /* TrendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsView.swift; sourceTree = "<group>"; };
-		D085C748510EC29FCEA60BA0 /* TrendsCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsCalculator.swift; sourceTree = "<group>"; };
-		A29704F30C920BE4BA981743 /* TrendsChartsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsChartsView.swift; sourceTree = "<group>"; };
 		B1E6B030D5CB8FB51A8D0675 /* YearTrendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearTrendsView.swift; sourceTree = "<group>"; };
+		C4FFB5A141452B3CDBF374BE /* CalendarExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarExtension.swift; sourceTree = "<group>"; };
+		D085C748510EC29FCEA60BA0 /* TrendsCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsCalculator.swift; sourceTree = "<group>"; };
+		DAFE68702064D16D0CCEE2C8 /* TrendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsView.swift; sourceTree = "<group>"; };
+		E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeOptionButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
