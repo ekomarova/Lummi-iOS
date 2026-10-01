@@ -50,7 +50,23 @@ final class InsightsUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Day Streak"].waitForExistence(timeout: 2.0))
         XCTAssertTrue(app.staticTexts["Joyful Hours"].waitForExistence(timeout: 2.0))
     }
-    
+
+    // Recall / Show All Joys stay available even when the month has no joys
+    func test_InsightsRecallIsShownForEmptyMonth() throws {
+        launchApp(with: [""])
+        app.buttons["InsightsButton_Inactive"].tap()
+
+        XCTAssertTrue(app.staticTexts["Recall"].waitForExistence(timeout: 2.0))
+        let showAll = app.staticTexts["Show All Joys"]
+        XCTAssertTrue(showAll.waitForExistence(timeout: 2.0))
+        showAll.tap()
+
+        let backButton = app.buttons["AllJoysBackButton"]
+        XCTAssertTrue(backButton.waitForExistence(timeout: 2.0))
+        backButton.tap()
+        XCTAssertTrue(app.staticTexts["Show All Joys"].waitForExistence(timeout: 2.0))
+    }
+
     // MARK: - Other tests
     
     // Check all data on the Insight tab
@@ -80,8 +96,8 @@ final class InsightsUITests: XCTestCase {
         }
     }
 
-    // Each month must show its own Joys count and its own entries, in both directions of switching
-    func test_InsightsMonthSwitchingShowsEachMonthsData() throws {
+    // Insights has no month switcher: it shows the current month's Joys count and entries only
+    func test_InsightsShowsOnlyCurrentMonthData() throws {
         launchApp(with: ["-UI_TESTING_INSIGHTS_TWO_MONTHS"])
         try XCTSkipIf(app.isSmallScreen, "Not supported on small screens (iPhone SE)")
 
@@ -89,25 +105,13 @@ final class InsightsUITests: XCTestCase {
         XCTAssertTrue(inactiveInsightsBtn.waitForExistence(timeout: 2.0))
         inactiveInsightsBtn.tap()
 
-        let monthLabel = app.staticTexts["CurrentMonthLabel"]
-        XCTAssertTrue(monthLabel.waitForExistence(timeout: 2.0))
-        let currentMonthTitle = monthLabel.label
-
         XCTAssertTrue(app.staticTexts["2"].waitForExistence(timeout: 2.0), "Current month should show 2 joys")
-        assertAllJoys(prefix: "Current month joy", shown: 2, hidden: "Previous month joy")
-
-        app.buttons["PreviousMonthButton"].tap()
-        XCTAssertTrue(app.staticTexts["5"].waitForExistence(timeout: 2.0), "Previous month should show 5 joys")
-        XCTAssertNotEqual(monthLabel.label, currentMonthTitle, "The month label did not change")
-        assertAllJoys(prefix: "Previous month joy", shown: 5, hidden: "Current month joy")
-
-        app.buttons["NextMonthButton"].tap()
-        XCTAssertTrue(app.staticTexts["2"].waitForExistence(timeout: 2.0), "Switching back should show 2 joys again")
-        XCTAssertEqual(monthLabel.label, currentMonthTitle)
+        XCTAssertFalse(app.buttons["PreviousMonthButton"].exists, "The month switcher should be gone")
+        XCTAssertFalse(app.buttons["NextMonthButton"].exists, "The month switcher should be gone")
         assertAllJoys(prefix: "Current month joy", shown: 2, hidden: "Previous month joy")
     }
 
-    // Opens "All Joys" for the visible month, checks its entries, and returns to the Insights screen
+    // Opens "All Joys" for the current month, checks its entries, and returns to the Insights screen
     private func assertAllJoys(prefix: String, shown: Int, hidden hiddenPrefix: String) {
         let showAll = app.staticTexts["Show All Joys"]
         XCTAssertTrue(showAll.waitForExistence(timeout: 2.0))

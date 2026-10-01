@@ -53,7 +53,7 @@ extension JoyEntry {
         predicate(in: calendar.monthRange(for: date))
     }
 
-    // The single oldest entry, enough to know where the calendar and the Insights month picker start.
+    // The single oldest entry, enough to know where the calendar starts.
     static var oldestEntryDescriptor: FetchDescriptor<JoyEntry> {
         var descriptor = FetchDescriptor<JoyEntry>(sortBy: [SortDescriptor(\.date)])
         descriptor.fetchLimit = 1

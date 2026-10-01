@@ -91,7 +91,7 @@ struct MockDataManager {
         try? context.save()
     }
 
-    // Insights month switching: 2 entries today and 5 entries on the 10th of the previous month.
+    // Two months of data: 2 entries today and 5 entries on the 10th of the previous month.
     // Fixed day-of-month for the past ones keeps them in one month whatever today's date is.
     private static func insertTwoMonthsOfEntries(_ context: ModelContext) {
         let calendar = Calendar.current

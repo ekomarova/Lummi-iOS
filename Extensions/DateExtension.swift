@@ -48,8 +48,4 @@ extension Date {
     var startOfMonth: Date {
         Calendar.current.monthStart(for: self) ?? self
     }
-    
-    static func isCurrentMonth(_ date: Date) -> Bool {
-        Calendar.current.isDate(date, equalTo: Date(), toGranularity: .month)
-    }
 }

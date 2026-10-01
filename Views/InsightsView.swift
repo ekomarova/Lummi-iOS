@@ -10,46 +10,34 @@
 import SwiftUI
 import SwiftData
 
-// Insights screen: monthly stats and a report for the selected month.
-// Owns the selected month; the child view below fetches only that month's entries.
+// Insights screen: stats and a report for the current month.
+// The child view below fetches only that month's entries.
 struct InsightsView: View {
     @Binding var isShowingAllJoys: Bool
     @Binding var isShowingTrends: Bool
-    @State private var selectedMonth: Date = Date().startOfMonth
 
     var body: some View {
-        InsightsMonthView(selectedMonth: $selectedMonth, isShowingAllJoys: $isShowingAllJoys, isShowingTrends: $isShowingTrends)
+        InsightsMonthView(month: Date().startOfMonth, isShowingAllJoys: $isShowingAllJoys, isShowingTrends: $isShowingTrends)
     }
 }
 
-// Stats and entries of the selected month. The query is rebuilt whenever the parent passes a new month.
+// Stats and entries of the given month. The query is rebuilt whenever the parent passes a new month.
 private struct InsightsMonthView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale
-    @Binding var selectedMonth: Date
     @Binding var isShowingAllJoys: Bool
     @Binding var isShowingTrends: Bool
 
     @Query private var monthlyEntries: [JoyEntry]
-    @Query(JoyEntry.oldestEntryDescriptor) private var oldestEntries: [JoyEntry]
 
-    init(selectedMonth: Binding<Date>, isShowingAllJoys: Binding<Bool>, isShowingTrends: Binding<Bool>) {
-        _selectedMonth = selectedMonth
+    init(month: Date, isShowingAllJoys: Binding<Bool>, isShowingTrends: Binding<Bool>) {
         _isShowingAllJoys = isShowingAllJoys
         _isShowingTrends = isShowingTrends
-        _monthlyEntries = Query(filter: JoyEntry.monthPredicate(for: selectedMonth.wrappedValue), sort: \JoyEntry.date)
+        _monthlyEntries = Query(filter: JoyEntry.monthPredicate(for: month), sort: \JoyEntry.date)
     }
 
     private var monthStreak: Int {
         InsightsCalculator.longestStreak(in: monthlyEntries)
-    }
-
-    private var isCurrentMonth: Bool {
-        Date.isCurrentMonth(selectedMonth)
-    }
-    
-    private var isOldestMonth: Bool {
-        InsightsCalculator.isOldestMonth(selectedMonth: selectedMonth, oldestEntryDate: oldestEntries.first?.date)
     }
 
     // MARK: - Body
@@ -72,34 +60,6 @@ private struct InsightsMonthView: View {
                     .foregroundColor(themeManager.currentTheme.textColor)
                     .padding(.top, 10)
                     .padding(.horizontal, 20)
-
-                // MARK: - Month Selector
-                HStack(spacing: 20) {
-                    NavigationIconButton(
-                        systemImage: "chevron.left",
-                        size: 36,
-                        iconOpacity: isOldestMonth ? 0.2 : 0.8,
-                        accessibilityLabel: "Previous month",
-                        accessibilityID: "PreviousMonthButton"
-                    ) { changeMonth(by: -1) }
-                    .disabled(isOldestMonth)
-
-                    Text(selectedMonth.monthYearTitle(locale: locale))
-                        .font(.lummiFont(size: 20))
-                        .foregroundColor(themeManager.currentTheme.textColor.opacity(0.7))
-                        .frame(minWidth: 160, alignment: .center)
-                        .accessibilityIdentifier("CurrentMonthLabel")
-
-                    NavigationIconButton(
-                        systemImage: "chevron.right",
-                        size: 36,
-                        iconOpacity: isCurrentMonth ? 0.2 : 0.8,
-                        accessibilityLabel: "Next month",
-                        accessibilityID: "NextMonthButton"
-                    ) { changeMonth(by: 1) }
-                    .disabled(isCurrentMonth)
-                }
-                .frame(maxWidth: .infinity, alignment: .center)
 
                 // MARK: - Main Content Area
                 ScrollView(showsIndicators: false) {
@@ -143,23 +103,21 @@ private struct InsightsMonthView: View {
                         }
 
                         // MARK: - Recall
-                        if !monthlyEntries.isEmpty {
-                            VStack(alignment: .leading, spacing: 15) {
-                                Text("Recall")
-                                    .font(.lummiFont(size: 20, weight: .bold))
-                                    .foregroundColor(themeManager.currentTheme.textColor)
-                                    // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
-                                    .padding(.leading, 10)
+                        VStack(alignment: .leading, spacing: 15) {
+                            Text("Recall")
+                                .font(.lummiFont(size: 20, weight: .bold))
+                                .foregroundColor(themeManager.currentTheme.textColor)
+                                // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
+                                .padding(.leading, 10)
 
-                                DisclosureRow(
-                                    systemImage: "list.star",
-                                    iconColor: AccentColors.activeDays,
-                                    title: "Show All Joys",
-                                    accessibilityID: "SeeAllJoysButton"
-                                ) {
-                                    withAnimation(.lummiSpring) {
-                                        isShowingAllJoys = true
-                                    }
+                            DisclosureRow(
+                                systemImage: "list.star",
+                                iconColor: AccentColors.activeDays,
+                                title: "Show All Joys",
+                                accessibilityID: "SeeAllJoysButton"
+                            ) {
+                                withAnimation(.lummiSpring) {
+                                    isShowingAllJoys = true
                                 }
                             }
                         }
@@ -188,19 +146,6 @@ private struct InsightsMonthView: View {
                     .padding(.bottom, 100)
                 }
                 .ignoresSafeArea(.container, edges: .bottom)
-            }
-        }
-        .onAppear {
-            selectedMonth = Date().startOfMonth
-        }
-    }
-    
-    // MARK: - UI Helpers
-
-    private func changeMonth(by value: Int) {
-        if let newMonth = Calendar.current.date(byAdding: .month, value: value, to: selectedMonth) {
-            withAnimation(.lummiSpring) {
-                selectedMonth = newMonth
             }
         }
     }
