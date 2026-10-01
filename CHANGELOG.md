@@ -3,7 +3,7 @@
 All notable changes to the project will be documented in this file.
 ## [1.2.0] - 2026-MM-DD
 ### Added
-- **Insights:** Added a "Trends" section opening a new full-screen page with a Month/All Time range picker, summary cards (joys, active days, best streak) and native Swift Charts bar charts for joys over time and by weekday
+- **Insights:** Added a "Trends" section opening a new full-screen page with a Month/All Time range picker, summary cards (joys, active days, best streak) and native Swift Charts bar charts for joys over time and by weekday [#36](https://github.com/ekomarova/Lummi-iOS/pull/36)
 
 ### Changed
 - **Internal:** Raised the minimum deployment target from iOS 17.6 to iOS 18.0 across every target
