@@ -23,15 +23,12 @@ struct TrendsChartsView: View {
     // Ignored for `.month`, which always covers the current calendar month.
     let year: Int
 
-    // Entries are sorted oldest-first, so the first one is the journal's very first entry.
-    private var oldestEntryDate: Date? { allEntries.first?.date }
-
     private var rangedEntries: [JoyEntry] {
-        TrendsCalculator.entries(allEntries, in: range, year: year, oldestEntryDate: oldestEntryDate)
+        TrendsCalculator.entries(allEntries, in: range, year: year)
     }
 
     private var dataPoints: [TrendsDataPoint] {
-        TrendsCalculator.dataPoints(for: rangedEntries, range: range, year: year, oldestEntryDate: oldestEntryDate)
+        TrendsCalculator.dataPoints(for: rangedEntries, range: range, year: year)
     }
 
     private var weekdayCounts: [WeekdayCount] {
@@ -108,7 +105,7 @@ struct TrendsChartsView: View {
             // `.stride` places one tick per actual bar (each calendar day or month), unlike `.automatic`,
             // which interpolates evenly spaced ticks across the continuous date range and can land more
             // than one tick inside the same bar, duplicating its label (e.g. two ticks reading "Aug").
-            AxisMarks(values: .stride(by: range.component, count: range == .month ? 5 : 1)) { value in
+            AxisMarks(values: .stride(by: range.component, count: range == .month ? 4 : 1)) { value in
                 AxisValueLabel {
                     if let date = value.as(Date.self) {
                         Text(volumeAxisLabel(for: date))
@@ -157,15 +154,19 @@ struct TrendsChartsView: View {
     }
 
     // The volume chart's x-axis label: a bare day number within `.month`, or an explicitly localized,
-    // capitalized month abbreviation otherwise. Built by hand rather than via `AxisValueLabel(format:)`
-    // because Swift Charts' axis formatting does not reliably follow the app's in-app language selection
-    // from the environment, and because Foundation lowercases standalone month names in locales like
-    // Russian ("сент."), unlike English ("Sep") — `capitalizedFirstLetter` matches `Date.monthYearTitle`.
+    // capitalized three-letter month abbreviation otherwise. Built by hand rather than via
+    // `AxisValueLabel(format:)` because Swift Charts' axis formatting does not reliably follow the app's
+    // in-app language selection from the environment, and because Foundation lowercases standalone month
+    // names in locales like Russian ("сент."), unlike English ("Sep") — `capitalizedFirstLetter` matches
+    // `Date.monthYearTitle`. Some locales' abbreviated forms also carry a trailing period and run longer
+    // than three letters (Russian's "нояб." vs. English's "Nov"); dropping the period and clipping to
+    // three letters keeps every month label the same width so none crowd or overlap their neighbors.
     private func volumeAxisLabel(for date: Date) -> String {
         if range == .month {
             return date.formatted(Date.FormatStyle(locale: locale).day())
         }
-        return date.formatted(Date.FormatStyle(locale: locale).month(.abbreviated)).capitalizedFirstLetter
+        let month = date.formatted(Date.FormatStyle(locale: locale).month(.abbreviated))
+        return String(month.replacingOccurrences(of: ".", with: "").prefix(3)).capitalizedFirstLetter
     }
 
     // A few faint gridlines with integer counts, so a bar's height reads as a number of joys rather than
