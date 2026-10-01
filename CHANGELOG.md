@@ -14,8 +14,8 @@ All notable changes to the project will be documented in this file.
 - **Code quality:** Replaced the `ContentView` navigation booleans with a single `Screen` enum inside a testable `NavigationState`, with one `navigate(to:)` code path for the tab handlers [#31](https://github.com/ekomarova/Lummi-iOS/pull/31)
 - **Performance:** The calendar, the selected day and Insights now fetch only the entries they show (day, month, oldest entry) through range predicates on the stored `date`, instead of four screens each loading and filtering every entry in memory. On 5,000 entries (iPhone 17 simulator, Debug build) opening and scrolling the calendar takes about 47% fewer CPU instructions and 23% less peak memory, and switching days about 27% fewer instructions and 31% less memory; launch and Insights are roughly unchanged, and gains are small for typical journals [#32](https://github.com/ekomarova/Lummi-iOS/pull/32)
 - **Code quality:** Deduplicated Insights/Trends/Settings further: a shared `Animation.lummiSpring`, a shared `AccentColors` enum replacing raw `Color(red:green:blue:)` literals, shared `GlowCard.joys`/`.streak`/`.joyfulHours` builders, a reusable `DisclosureRow` component for icon/title/chevron list rows, and one `Calendar.monthStart(for:)` replacing three separate "start of month" calculations [#37](https://github.com/ekomarova/Lummi-iOS/pull/37)
-- **Insights:** Refactored Insights screen [#38](https://github.com/ekomarova/Lummi-iOS/pull/38)
-- **Code quality:** Extracted the duplicated Insights/Settings section titles into a reusable component, and removed the unused helpers [#38](https://github.com/ekomarova/Lummi-iOS/pull/38)
+- **Insights:** Refactored Insights screen [#39](https://github.com/ekomarova/Lummi-iOS/pull/39)
+- **Code quality:** Extracted the duplicated Insights/Settings section titles into a reusable component, and removed the unused helpers [#39](https://github.com/ekomarova/Lummi-iOS/pull/39)
 
 ### Fixed
 - **Editing:** A failed edit save now restores the entry's original text in memory instead of leaving the unsaved change on the model [#27](https://github.com/ekomarova/Lummi-iOS/pull/27)
