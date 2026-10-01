@@ -71,11 +71,7 @@ private struct InsightsMonthView: View {
 
                         // MARK: - Highlights
                         VStack(alignment: .leading, spacing: 15) {
-                            Text("Highlights")
-                                .font(.lummiFont(size: 20, weight: .bold))
-                                .foregroundColor(themeManager.currentTheme.textColor)
-                                // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
-                                .padding(.leading, 10)
+                            SectionHeader(title: "Highlights", leadingInset: 10)
 
                             if AdaptiveLayout.isPad {
                                 // MARK: - Joys, Joyful Hours & Streak (iPad: one row of squares)
@@ -85,7 +81,7 @@ private struct InsightsMonthView: View {
                                     joysCard(height: padCardSize)
                                         .frame(width: padCardSize)
 
-                                    joyfulHoursCard(height: padCardSize, valuePadding: 12)
+                                    joyfulHoursCard(height: padCardSize)
                                         .frame(width: padCardSize)
 
                                     streakCard(height: padCardSize)
@@ -101,18 +97,14 @@ private struct InsightsMonthView: View {
                                         streakCard(height: compactHeight, isCompact: true)
                                     }
 
-                                    joyfulHoursCard(height: Self.phoneCardHeight, valuePadding: 12)
+                                    joyfulHoursCard(height: Self.phoneCardHeight)
                                 }
                             }
                         }
 
                         // MARK: - Recall
                         VStack(alignment: .leading, spacing: 15) {
-                            Text("Recall")
-                                .font(.lummiFont(size: 20, weight: .bold))
-                                .foregroundColor(themeManager.currentTheme.textColor)
-                                // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
-                                .padding(.leading, 10)
+                            SectionHeader(title: "Recall", leadingInset: 10)
 
                             DisclosureRow(
                                 systemImage: "list.star",
@@ -128,11 +120,7 @@ private struct InsightsMonthView: View {
 
                         // MARK: - Trends
                         VStack(alignment: .leading, spacing: 15) {
-                            Text("Trends")
-                                .font(.lummiFont(size: 20, weight: .bold))
-                                .foregroundColor(themeManager.currentTheme.textColor)
-                                // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
-                                .padding(.leading, 10)
+                            SectionHeader(title: "Trends", leadingInset: 10)
 
                             DisclosureRow(
                                 systemImage: "chart.bar.fill",
@@ -170,12 +158,12 @@ private struct InsightsMonthView: View {
         GlowCard.streak(value: "\(monthStreak)", height: height, valueFontSize: valueFontSize, valuePadding: 12, isCompact: isCompact)
     }
 
-    private func joyfulHoursCard(height: CGFloat, valuePadding: CGFloat) -> some View {
+    private func joyfulHoursCard(height: CGFloat) -> some View {
         GlowCard.joyfulHours(
             value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
             height: height,
             valueFontSize: valueFontSize,
-            valuePadding: valuePadding
+            valuePadding: 12
         )
     }
 }
@@ -189,9 +177,9 @@ struct GlowCard: View {
     var systemImage: String
     var iconColor: Color?
     var gradientColors: [Color]
-    var height: CGFloat = 170
-    var valueFontSize: CGFloat = 45
-    var valuePadding: CGFloat = 0
+    var height: CGFloat
+    var valueFontSize: CGFloat
+    var valuePadding: CGFloat
     // Low card: the subtitle and the value share one row instead of being stacked
     var isCompact = false
 

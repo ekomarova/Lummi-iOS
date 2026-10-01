@@ -134,7 +134,7 @@ struct JoyEntryQueriesTests {
         #expect(result == ["feb start", "feb mid", "feb end"])
     }
 
-    @Test func monthPredicate_agreesWithInsightsCalculatorFilter() throws {
+    @Test func monthPredicate_agreesWithCalendarMonthFilter() throws {
         let context = try makeContext()
         let month = makeDate(year: 2026, month: 5, day: 1)
         for day in stride(from: 1, through: 28, by: 3) {
@@ -143,7 +143,7 @@ struct JoyEntryQueriesTests {
             }
         }
         let all = try context.fetch(FetchDescriptor<JoyEntry>(sortBy: [SortDescriptor(\.date)]))
-        let expected = InsightsCalculator.filterEntries(all, for: month).map(\.text)
+        let expected = all.filter { Calendar.current.isDate($0.date, equalTo: month, toGranularity: .month) }.map(\.text)
         #expect(try texts(JoyEntry.monthPredicate(for: month), in: context) == expected)
     }
 

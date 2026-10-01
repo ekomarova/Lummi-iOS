@@ -9,27 +9,16 @@
 
 import Foundation
 
-// Pure calculations behind the Insights screen: monthly stats, streaks and the report threshold.
+// Pure calculations behind the Insights screen: streaks, unique days and joyful hours.
 struct InsightsCalculator {
 
-    private static let minimumDaysForReport = 4
     private static let goldenHourWindowSize = 3
 
     // MARK: - General Stats
     
-    static func filterEntries(_ entries: [JoyEntry], for month: Date) -> [JoyEntry] {
-        let calendar = Calendar.current
-        return entries.filter { calendar.isDate($0.date, equalTo: month, toGranularity: .month) }
-    }
-    
     static func uniqueDaysCount(in entries: [JoyEntry]) -> Int {
         let calendar = Calendar.current
         return Set(entries.map { calendar.startOfDay(for: $0.date) }).count
-    }
-    
-    static func daysNeededForReport(in entries: [JoyEntry]) -> Int {
-        let uniqueCount = uniqueDaysCount(in: entries)
-        return max(0, minimumDaysForReport - uniqueCount)
     }
     
     static func longestStreak(in entries: [JoyEntry]) -> Int {
