@@ -65,11 +65,7 @@ final class DefaultScreenUITests: XCTestCase {
     }
     
     private func verifyCalendarCollapsed() {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        let todayKey = formatter.string(from: Date())
-        
-        let todayCell = app.buttons["DayCell_\(todayKey)"]
+        let todayCell = app.buttons["DayCell_\(Date().uiTestDateKey)"]
         XCTAssertFalse(todayCell.exists, "The calendar is not collapsed")
     }
 }

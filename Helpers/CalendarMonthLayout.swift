@@ -15,8 +15,8 @@ enum CalendarMonthLayout {
     // First days of every month from the month of `firstEntryDate` (or `now` when nil)
     // up to and including the month of `now`.
     static func monthStarts(firstEntryDate: Date?, now: Date, calendar: Calendar = .current) -> [Date] {
-        guard let startMonth = monthStart(of: firstEntryDate ?? now, calendar: calendar),
-              let currentMonth = monthStart(of: now, calendar: calendar) else { return [] }
+        guard let startMonth = calendar.monthStart(for: firstEntryDate ?? now),
+              let currentMonth = calendar.monthStart(for: now) else { return [] }
 
         var result: [Date] = []
         var iterator = startMonth
@@ -34,7 +34,7 @@ enum CalendarMonthLayout {
 
     // Number of empty cells before the first day, given the calendar's first weekday.
     static func firstDayOffset(_ monthDate: Date, calendar: Calendar = .current) -> Int {
-        guard let first = monthStart(of: monthDate, calendar: calendar) else { return 0 }
+        guard let first = calendar.monthStart(for: monthDate) else { return 0 }
         let firstWeekday = calendar.component(.weekday, from: first)
         return (firstWeekday - calendar.firstWeekday + 7) % 7
     }
@@ -49,9 +49,5 @@ enum CalendarMonthLayout {
     static func dates(inMonth monthDate: Date, calendar: Calendar = .current) -> [Date] {
         guard let count = daysInMonth(monthDate, calendar: calendar) else { return [] }
         return (1...count).compactMap { date(forDay: $0, inMonth: monthDate, calendar: calendar) }
-    }
-
-    private static func monthStart(of date: Date, calendar: Calendar) -> Date? {
-        calendar.date(from: calendar.dateComponents([.year, .month], from: date))
     }
 }

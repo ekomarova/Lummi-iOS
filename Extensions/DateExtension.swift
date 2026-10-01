@@ -46,9 +46,7 @@ extension Date {
 
     // Get the beginning of the month for a specific date
     var startOfMonth: Date {
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month], from: self)
-        return calendar.date(from: components) ?? self
+        Calendar.current.monthStart(for: self) ?? self
     }
     
     static func isCurrentMonth(_ date: Date) -> Bool {

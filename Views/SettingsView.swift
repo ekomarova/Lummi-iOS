@@ -127,30 +127,14 @@ struct SettingsView: View {
                     .foregroundColor(themeManager.currentTheme.textColor)
                     .accessibilityIdentifier("LanguageLabel")
 
-                Button(
-                    action: {
-                        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                            isShowingLanguageSelection = true
-                        }
-                    },
-                    label: {
-                        CapsuleRow {
-                            HStack {
-                                Text(selectedLanguage.displayName)
-                                    .font(.lummiFont(size: 17))
-                                    .foregroundColor(themeManager.currentTheme.textColor)
-
-                                Spacer()
-
-                                Image(systemName: "chevron.right")
-                                    .font(.system(size: 14, weight: .bold))
-                                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
-                            }
-                        }
+                DisclosureRow(
+                    title: selectedLanguage.displayName,
+                    accessibilityID: "LanguageSelectorButton"
+                ) {
+                    withAnimation(.lummiSpring) {
+                        isShowingLanguageSelection = true
                     }
-                )
-                .buttonStyle(.plain)
-                .accessibilityIdentifier("LanguageSelectorButton")
+                }
             }
 
             // MARK: - Sync
@@ -200,7 +184,7 @@ struct SettingsView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(
                         RoundedRectangle(cornerRadius: 16)
-                            .fill(Color.red.opacity(0.8))
+                            .fill(AccentColors.syncBannerBackground)
                     )
                     .transition(.opacity.combined(with: .scale(scale: 0.95, anchor: .top)))
                     .animation(.spring(), value: syncMonitor.syncState)
@@ -221,7 +205,7 @@ struct SettingsView: View {
                         CapsuleRow {
                             Text("Delete")
                                 .font(.lummiFont(size: 17))
-                                .foregroundColor(Color(red: 0.95, green: 0.2, blue: 0.3))
+                                .foregroundColor(AccentColors.destructive)
                         }
                     }
                 )
@@ -237,7 +221,6 @@ struct SettingsView: View {
         do {
             try JoyEntryStore(context: modelContext).clearAll()
         } catch {
-            print("Failed to clear data: \(error)")
             withAnimation { showClearDataFailedAlert = true }
         }
     }
@@ -253,8 +236,12 @@ struct LanguageSelectionView: View {
             ScreenHeader(
                 title: "Language",
                 leftButton: {
-                    NavigationIconButton(systemImage: "arrow.left", accessibilityID: "LanguageSelectionBackButton") {
-                        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                    NavigationIconButton(
+                        systemImage: "arrow.left",
+                        accessibilityLabel: "Back",
+                        accessibilityID: "LanguageSelectionBackButton"
+                    ) {
+                        withAnimation(.lummiSpring) {
                             isShowingLanguageSelection = false
                         }
                     }
@@ -266,7 +253,7 @@ struct LanguageSelectionView: View {
                     Button(
                         action: {
                             selectedLanguage = language
-                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                            withAnimation(.lummiSpring) {
                                 isShowingLanguageSelection = false
                             }
                         },

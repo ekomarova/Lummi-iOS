@@ -29,7 +29,7 @@ struct ContentView: View {
                     Color.black.opacity(0.001)
                         .ignoresSafeArea()
                         .onTapGesture {
-                            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                            withAnimation(.lummiSpring) {
                                 navigation.dismissCalendar()
                             }
                         }
@@ -42,7 +42,7 @@ struct ContentView: View {
                             date: navigation.isCalendarExpanded ? navigation.visibleMonth : navigation.selectedDate,
                             isExpanded: navigation.isCalendarExpanded,
                             onTap: {
-                                withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                withAnimation(.lummiSpring) {
                                     navigation.toggleCalendar()
                                 }
                             }
@@ -56,7 +56,7 @@ struct ContentView: View {
                         RecordInput(
                             recordDate: navigation.recordDate(),
                             onDismiss: {
-                                withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                withAnimation(.lummiSpring) {
                                     navigation.closeRecord()
                                 }
                             }
@@ -163,7 +163,7 @@ struct ContentView: View {
 
 private extension ContentView {
     func navigate(to screen: Screen) {
-        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+        withAnimation(.lummiSpring) {
             navigation.navigate(to: screen)
         }
     }

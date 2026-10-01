@@ -19,6 +19,11 @@ extension Calendar {
         return calendar
     }
 
+    // Start of the month containing `date`; nil if the calendar cannot resolve it.
+    func monthStart(for date: Date) -> Date? {
+        self.date(from: dateComponents([.year, .month], from: date))
+    }
+
     // Start of the day up to (excluding) the start of the next day; nil if the calendar cannot resolve it.
     func dayRange(for date: Date) -> Range<Date>? {
         let start = startOfDay(for: date)

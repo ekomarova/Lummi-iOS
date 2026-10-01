@@ -47,8 +47,8 @@ struct TrendsView: View {
             ScreenHeader(
                 title: "Trends",
                 leftButton: {
-                    NavigationIconButton(systemImage: "arrow.left", accessibilityID: "TrendsBackButton") {
-                        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                    NavigationIconButton(systemImage: "arrow.left", accessibilityLabel: "Back", accessibilityID: "TrendsBackButton") {
+                        withAnimation(.lummiSpring) {
                             isShowingTrends = false
                         }
                     }
@@ -125,30 +125,14 @@ struct TrendsView: View {
     private var yearsList: some View {
         VStack(spacing: 12) {
             ForEach(availableYears, id: \.self) { year in
-                Button(
-                    action: { presentYear(year) },
-                    label: {
-                        CapsuleRow {
-                            HStack(spacing: 10) {
-                                Image(systemName: "calendar")
-                                    .font(.system(size: 17, weight: .semibold))
-                                    .foregroundColor(Color(red: 0.45, green: 0.25, blue: 0.75))
-
-                                Text(String(year))
-                                    .font(.lummiFont(size: 17))
-                                    .foregroundColor(themeManager.currentTheme.textColor)
-
-                                Spacer()
-
-                                Image(systemName: "chevron.right")
-                                    .font(.system(size: 14, weight: .bold))
-                                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
-                            }
-                        }
-                    }
-                )
-                .buttonStyle(.plain)
-                .accessibilityIdentifier("TrendsYearRow_\(year)")
+                DisclosureRow(
+                    systemImage: "calendar",
+                    iconColor: AccentColors.yearRow,
+                    title: LocalizedStringKey(String(year)),
+                    accessibilityID: "TrendsYearRow_\(year)"
+                ) {
+                    presentYear(year)
+                }
             }
         }
     }
@@ -156,13 +140,13 @@ struct TrendsView: View {
     // MARK: - Navigation
 
     private func presentYear(_ year: Int) {
-        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+        withAnimation(.lummiSpring) {
             openYear = year
         }
     }
 
     private func closeYear() {
-        withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+        withAnimation(.lummiSpring) {
             openYear = nil
         }
     }

@@ -38,9 +38,9 @@ struct BottomToolbar: View {
         }
         .frame(height: 64)
         .adaptiveGlass(in: Capsule())
-        .animation(.spring(response: 0.35, dampingFraction: 0.82), value: isHomeActive)
-        .animation(.spring(response: 0.35, dampingFraction: 0.82), value: isInsightsActive)
-        .animation(.spring(response: 0.35, dampingFraction: 0.82), value: isSettingsActive)
+        .animation(.lummiSpring, value: isHomeActive)
+        .animation(.lummiSpring, value: isInsightsActive)
+        .animation(.lummiSpring, value: isSettingsActive)
     }
 
     @ViewBuilder
