@@ -105,7 +105,7 @@ struct TrendsChartsView: View {
             // `.stride` places one tick per actual bar (each calendar day or month), unlike `.automatic`,
             // which interpolates evenly spaced ticks across the continuous date range and can land more
             // than one tick inside the same bar, duplicating its label (e.g. two ticks reading "Aug").
-            AxisMarks(values: .stride(by: range.component, count: range == .month ? 5 : 1)) { value in
+            AxisMarks(values: .stride(by: range.component, count: range == .month ? 4 : 1)) { value in
                 AxisValueLabel {
                     if let date = value.as(Date.self) {
                         Text(volumeAxisLabel(for: date))

@@ -33,8 +33,17 @@ struct TrendsCalculatorTests {
         #expect(result.count == 2)
     }
 
-    @Test func entriesInRange_excludesFutureEntries() {
+    @Test func entriesInRange_month_includesEntriesLaterInTheMonthThanToday() {
+        // A `.month` range always spans the whole calendar month, so an entry dated later in the same
+        // month than "now" is still included. In practice this never happens: `JoyEntry.date` is always
+        // stamped with the current moment at creation (see `JoyEntryStore`), never forward-dated.
         let entries = [entry(year: 2026, month: 9, day: 25)]
+        let result = TrendsCalculator.entries(entries, in: .month, year: 2026, now: now, calendar: calendar)
+        #expect(result.count == 1)
+    }
+
+    @Test func entriesInRange_month_excludesEntriesOutsideTheMonth() {
+        let entries = [entry(year: 2026, month: 8, day: 31), entry(year: 2026, month: 10, day: 1)]
         let result = TrendsCalculator.entries(entries, in: .month, year: 2026, now: now, calendar: calendar)
         #expect(result.isEmpty)
     }
@@ -77,12 +86,15 @@ struct TrendsCalculatorTests {
 
     // MARK: - dataPoints(for:range:)
 
-    @Test func dataPoints_month_oneBarPerDayUpToToday() {
+    @Test func dataPoints_month_spansFullMonthIncludingUnreachedDays() {
+        // September 2026 has 30 days; "now" is the 24th, so the 25th through the 30th haven't happened
+        // yet but still draw as empty bars rather than being left off the chart.
         let entries = [entry(year: 2026, month: 9, day: 1), entry(year: 2026, month: 9, day: 24)]
         let points = TrendsCalculator.dataPoints(for: entries, range: .month, year: 2026, now: now, calendar: calendar)
-        #expect(points.count == 24)
+        #expect(points.count == 30)
         #expect(points.first?.count == 1)
-        #expect(points.last?.count == 1)
+        let lastDayCount = points.last?.count
+        #expect(lastDayCount == 0)
         // Every other day is untouched, so the total mass across all bars should equal the two entries.
         #expect(points.map(\.count).reduce(0, +) == 2)
     }

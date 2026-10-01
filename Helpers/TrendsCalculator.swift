@@ -59,8 +59,9 @@ struct TrendsCalculator {
     // MARK: - Chart data
 
     // One data point per day (`.month`) or per month (`.year`), oldest first, with a zero count filled in
-    // for empty periods so the chart's axis has no gaps. A `.year` range always spans all twelve months
-    // of the chosen year, past or current, so the chart's month labels never shift as the year progresses.
+    // for empty periods so the chart's axis has no gaps. `.month` always spans the full calendar month,
+    // 1st through last day, and `.year` always spans all twelve months of the chosen year, past or
+    // current, so neither chart's axis labels shift as the day or year progresses.
     static func dataPoints(
         for entries: [JoyEntry],
         range: TrendsRange,
@@ -124,8 +125,7 @@ struct TrendsCalculator {
         switch range {
         case .month:
             guard let interval = calendar.dateInterval(of: .month, for: now) else { return nil }
-            let todayEnd = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: now)) ?? interval.end
-            return (interval.start, min(todayEnd, interval.end))
+            return (interval.start, interval.end) // always the full month, 1st through the last day
         case .year:
             guard let yearStart = calendar.date(from: DateComponents(year: year, month: 1, day: 1)),
                   let yearInterval = calendar.dateInterval(of: .year, for: yearStart) else { return nil }
