@@ -29,13 +29,13 @@ struct TrendsCalculatorTests {
             entry(year: 2026, month: 9, day: 1),
             entry(year: 2026, month: 9, day: 24)
         ]
-        let result = TrendsCalculator.entries(entries, in: .month, year: 2026, oldestEntryDate: nil, now: now, calendar: calendar)
+        let result = TrendsCalculator.entries(entries, in: .month, year: 2026, now: now, calendar: calendar)
         #expect(result.count == 2)
     }
 
     @Test func entriesInRange_excludesFutureEntries() {
         let entries = [entry(year: 2026, month: 9, day: 25)]
-        let result = TrendsCalculator.entries(entries, in: .month, year: 2026, oldestEntryDate: nil, now: now, calendar: calendar)
+        let result = TrendsCalculator.entries(entries, in: .month, year: 2026, now: now, calendar: calendar)
         #expect(result.isEmpty)
     }
 
@@ -45,15 +45,17 @@ struct TrendsCalculatorTests {
             entry(year: 2026, month: 1, day: 1),   // first day of this calendar year
             entry(year: 2026, month: 9, day: 24)
         ]
-        let oldest = makeDate(year: 2025, month: 12, day: 31)
-        let result = TrendsCalculator.entries(entries, in: .year, year: 2026, oldestEntryDate: oldest, now: now, calendar: calendar)
+        let result = TrendsCalculator.entries(entries, in: .year, year: 2026, now: now, calendar: calendar)
         #expect(result.count == 2)
     }
 
-    @Test func entriesInRange_year_currentYear_excludesEntriesAfterToday() {
-        let entries = [entry(year: 2026, month: 12, day: 25)] // this calendar year, but in the future
-        let result = TrendsCalculator.entries(entries, in: .year, year: 2026, oldestEntryDate: nil, now: now, calendar: calendar)
-        #expect(result.isEmpty)
+    @Test func entriesInRange_year_currentYear_includesEntriesLaterInTheYearThanToday() {
+        // A `.year` range always spans the whole calendar year, so an entry dated later in the same year
+        // than "now" is still included. In practice this never happens: `JoyEntry.date` is always stamped
+        // with the current moment at creation (see `JoyEntryStore`), never backdated or forward-dated.
+        let entries = [entry(year: 2026, month: 12, day: 25)]
+        let result = TrendsCalculator.entries(entries, in: .year, year: 2026, now: now, calendar: calendar)
+        #expect(result.count == 1)
     }
 
     @Test func entriesInRange_year_pastYear_keepsWholeCalendarYear() {
@@ -63,14 +65,13 @@ struct TrendsCalculatorTests {
             entry(year: 2025, month: 12, day: 31), // last day of the browsed year
             entry(year: 2026, month: 1, day: 1)    // first day of the year after
         ]
-        let oldest = makeDate(year: 2024, month: 12, day: 31)
-        let result = TrendsCalculator.entries(entries, in: .year, year: 2025, oldestEntryDate: oldest, now: now, calendar: calendar)
+        let result = TrendsCalculator.entries(entries, in: .year, year: 2025, now: now, calendar: calendar)
         #expect(result.count == 2)
     }
 
     @Test func entriesInRange_year_futureYear_isEmpty() {
         let entries = [entry(year: 2027, month: 1, day: 1)]
-        let result = TrendsCalculator.entries(entries, in: .year, year: 2027, oldestEntryDate: nil, now: now, calendar: calendar)
+        let result = TrendsCalculator.entries(entries, in: .year, year: 2027, now: now, calendar: calendar)
         #expect(result.isEmpty)
     }
 
@@ -78,9 +79,7 @@ struct TrendsCalculatorTests {
 
     @Test func dataPoints_month_oneBarPerDayUpToToday() {
         let entries = [entry(year: 2026, month: 9, day: 1), entry(year: 2026, month: 9, day: 24)]
-        let points = TrendsCalculator.dataPoints(
-            for: entries, range: .month, year: 2026, oldestEntryDate: nil, now: now, calendar: calendar
-        )
+        let points = TrendsCalculator.dataPoints(for: entries, range: .month, year: 2026, now: now, calendar: calendar)
         #expect(points.count == 24)
         #expect(points.first?.count == 1)
         #expect(points.last?.count == 1)
@@ -93,66 +92,38 @@ struct TrendsCalculatorTests {
             entry(year: 2026, month: 9, day: 10, hour: 9),
             entry(year: 2026, month: 9, day: 10, hour: 20)
         ]
-        let points = TrendsCalculator.dataPoints(
-            for: entries, range: .month, year: 2026, oldestEntryDate: nil, now: now, calendar: calendar
-        )
+        let points = TrendsCalculator.dataPoints(for: entries, range: .month, year: 2026, now: now, calendar: calendar)
         #expect(points.first { calendar.component(.day, from: $0.periodStart) == 10 }?.count == 2)
     }
 
-    @Test func dataPoints_year_currentYear_noOldestEntry_oneBarPerMonthFromJanuaryToToday() {
-        // No oldest entry to clamp against (e.g. `rangedEntries` only, not the journal's true first entry):
-        // falls back to showing the whole year-to-date, same as before there was a clamp to opt out of.
+    @Test func dataPoints_year_currentYear_spansAllTwelveMonthsIncludingUnreachedOnes() {
+        // The chart always draws January through December, even for months later than today (here,
+        // October through December), so the month labels never shift as the year progresses.
         let entries = [entry(year: 2026, month: 1, day: 5), entry(year: 2026, month: 9, day: 24)]
-        let points = TrendsCalculator.dataPoints(
-            for: entries, range: .year, year: 2026, oldestEntryDate: nil, now: now, calendar: calendar
-        )
-        #expect(points.count == 9) // Jan through Sep: the calendar year so far, never into the future
-        #expect(points.first?.count == 1)
-        #expect(points.last?.count == 1)
+        let points = TrendsCalculator.dataPoints(for: entries, range: .year, year: 2026, now: now, calendar: calendar)
+        #expect(points.count == 12)
+        #expect(points.first?.count == 1) // January
+        #expect(points[8].count == 1) // September
+        let decemberCount = points.last?.count // unreached, drawn as an empty bar
+        #expect(decemberCount == 0)
     }
 
     @Test func dataPoints_year_pastYear_spansAllTwelveMonths() {
         let entries = [entry(year: 2025, month: 1, day: 5), entry(year: 2025, month: 12, day: 20)]
-        let oldest = makeDate(year: 2025, month: 1, day: 5)
-        let points = TrendsCalculator.dataPoints(
-            for: entries, range: .year, year: 2025, oldestEntryDate: oldest, now: now, calendar: calendar
-        )
+        let points = TrendsCalculator.dataPoints(for: entries, range: .year, year: 2025, now: now, calendar: calendar)
         #expect(points.count == 12)
         #expect(points.first?.count == 1)
         #expect(points.last?.count == 1)
     }
 
-    @Test func dataPoints_year_currentYear_journalStartedMidYear_clampsToFirstEntrysMonth() {
+    @Test func dataPoints_year_currentYear_journalStartedMidYear_stillSpansAllTwelveMonths() {
         // The journal's very first entry ever was in August of this (current) year, so January through
-        // July never happened for it and should not be drawn as empty bars.
-        let oldest = makeDate(year: 2026, month: 8, day: 5)
+        // July are drawn as empty bars rather than being left off the chart entirely.
         let entries = [entry(year: 2026, month: 8, day: 5)]
-        let points = TrendsCalculator.dataPoints(
-            for: entries, range: .year, year: 2026, oldestEntryDate: oldest, now: now, calendar: calendar
-        )
-        #expect(points.count == 2) // Aug, Sep only
-        #expect(points.map(\.count).reduce(0, +) == 1)
-    }
-
-    @Test func dataPoints_year_pastYear_journalStartedMidThatYear_doesNotClamp() {
-        // The clamp only applies to the current, in-progress year: a past year is already fully over, so
-        // it always draws its complete twelve months regardless of when the journal's first entry landed.
-        let oldest = makeDate(year: 2025, month: 8, day: 5)
-        let entries = [entry(year: 2025, month: 8, day: 5)]
-        let points = TrendsCalculator.dataPoints(
-            for: entries, range: .year, year: 2025, oldestEntryDate: oldest, now: now, calendar: calendar
-        )
+        let points = TrendsCalculator.dataPoints(for: entries, range: .year, year: 2026, now: now, calendar: calendar)
         #expect(points.count == 12)
-    }
-
-    @Test func dataPoints_year_currentYear_oldestEntryFromAnEarlierYear_doesNotClamp() {
-        // The oldest entry predates this year entirely, so it never raises the start above January 1st.
-        let oldest = makeDate(year: 2024, month: 3, day: 1)
-        let entries = [entry(year: 2026, month: 9, day: 24)]
-        let points = TrendsCalculator.dataPoints(
-            for: entries, range: .year, year: 2026, oldestEntryDate: oldest, now: now, calendar: calendar
-        )
-        #expect(points.count == 9) // Jan through Sep
+        #expect(points.map(\.count).reduce(0, +) == 1)
+        #expect(points[7].count == 1) // August
     }
 
     // MARK: - weekdayCounts

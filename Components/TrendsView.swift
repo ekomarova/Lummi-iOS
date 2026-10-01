@@ -29,9 +29,7 @@ struct TrendsView: View {
     // Month's own empty check is scoped to the current month, not the whole journal: an otherwise
     // active journal with a quiet month still has nothing to chart for "Joys By Date"/"Joys By Weekday".
     private var hasEntriesThisMonth: Bool {
-        !TrendsCalculator.entries(
-            allEntries, in: .month, year: Calendar.current.component(.year, from: Date()), oldestEntryDate: oldestEntryDate
-        ).isEmpty
+        !TrendsCalculator.entries(allEntries, in: .month, year: Calendar.current.component(.year, from: Date())).isEmpty
     }
 
     var body: some View {

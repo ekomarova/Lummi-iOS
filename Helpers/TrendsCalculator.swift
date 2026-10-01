@@ -45,37 +45,30 @@ struct TrendsCalculator {
 
     // The entries that fall inside `range`. For `.year`, `year` is whichever calendar year the browser is
     // currently showing (not necessarily the current one); a `year` later than `now`'s returns nothing.
-    // `oldestEntryDate` only affects the current year (see `bounds`); pass `nil` if it is not known.
     static func entries(
         _ entries: [JoyEntry],
         in range: TrendsRange,
         year: Int,
-        oldestEntryDate: Date?,
         now: Date = Date(),
         calendar: Calendar = .current
     ) -> [JoyEntry] {
-        guard let bounds = bounds(for: range, year: year, oldestEntryDate: oldestEntryDate, now: now, calendar: calendar)
-        else { return [] }
+        guard let bounds = bounds(for: range, year: year, now: now, calendar: calendar) else { return [] }
         return entries.filter { $0.date >= bounds.start && $0.date < bounds.end }
     }
 
     // MARK: - Chart data
 
     // One data point per day (`.month`) or per month (`.year`), oldest first, with a zero count filled in
-    // for empty periods so the chart's axis has no gaps. A past year always spans its full twelve months,
-    // no clamping needed since it is over and done with; the current year stops at today so no bar
-    // represents a day that has not happened yet, and starts at the journal's first entry if that landed
-    // later in the year, so months before the journal existed are not drawn as empty.
+    // for empty periods so the chart's axis has no gaps. A `.year` range always spans all twelve months
+    // of the chosen year, past or current, so the chart's month labels never shift as the year progresses.
     static func dataPoints(
         for entries: [JoyEntry],
         range: TrendsRange,
         year: Int,
-        oldestEntryDate: Date?,
         now: Date = Date(),
         calendar: Calendar = .current
     ) -> [TrendsDataPoint] {
-        guard let bounds = bounds(for: range, year: year, oldestEntryDate: oldestEntryDate, now: now, calendar: calendar)
-        else { return [] }
+        guard let bounds = bounds(for: range, year: year, now: now, calendar: calendar) else { return [] }
         let component = range.component
 
         var counts = [Date: Int]()
@@ -125,7 +118,6 @@ struct TrendsCalculator {
     private static func bounds(
         for range: TrendsRange,
         year: Int,
-        oldestEntryDate: Date?,
         now: Date,
         calendar: Calendar
     ) -> (start: Date, end: Date)? {
@@ -139,17 +131,7 @@ struct TrendsCalculator {
                   let yearInterval = calendar.dateInterval(of: .year, for: yearStart) else { return nil }
             let currentYear = calendar.component(.year, from: now)
             guard year <= currentYear else { return nil } // the browser never reaches into the future
-            guard year == currentYear else { return (yearInterval.start, yearInterval.end) } // a past year: all 12 months, unclamped
-
-            // The current year only: never start before the journal's very first entry (if that landed
-            // later within this same year — an entry from an earlier year never clamps anything, since
-            // `yearInterval.start` is already later than it), and never draw past today.
-            let oldestMonthStart = oldestEntryDate.map { calendar.dateInterval(of: .month, for: $0)?.start ?? $0 }
-            let clampedStart = oldestMonthStart.map { max(yearInterval.start, $0) } ?? yearInterval.start
-            let monthCappedEnd = calendar.date(
-                byAdding: .month, value: 1, to: calendar.dateInterval(of: .month, for: now)?.start ?? now
-            ) ?? yearInterval.end
-            return (clampedStart, min(monthCappedEnd, yearInterval.end))
+            return (yearInterval.start, yearInterval.end) // always all 12 months, past or current year alike
         }
     }
 }
