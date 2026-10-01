@@ -28,8 +28,9 @@ private struct InsightsMonthView: View {
     @Binding var isShowingAllJoys: Bool
     @Binding var isShowingTrends: Bool
 
-    // Joys, Day Streak and Joyful Hours share one card height on iPhone
+    // On iPhone the Joys and Day Streak cards are stacked to take the height of the Joyful Hours card
     private static let phoneCardHeight: CGFloat = 130
+    private static let phoneStackSpacing: CGFloat = 10
 
     @Query private var monthlyEntries: [JoyEntry]
 
@@ -91,14 +92,17 @@ private struct InsightsMonthView: View {
                                         .frame(width: padCardSize)
                                 }
                             } else {
-                                // MARK: - Joys & Streak
-                                HStack(spacing: 15) {
-                                    joysCard(height: Self.phoneCardHeight)
-                                    streakCard(height: Self.phoneCardHeight)
-                                }
+                                // MARK: - Joys & Streak stacked, next to Joyful Hours
+                                let compactHeight = (Self.phoneCardHeight - Self.phoneStackSpacing) / 2
 
-                                // MARK: - Joyful Hours
-                                joyfulHoursCard(height: Self.phoneCardHeight, valuePadding: 30)
+                                HStack(spacing: 15) {
+                                    VStack(spacing: Self.phoneStackSpacing) {
+                                        joysCard(height: compactHeight, isCompact: true)
+                                        streakCard(height: compactHeight, isCompact: true)
+                                    }
+
+                                    joyfulHoursCard(height: Self.phoneCardHeight, valuePadding: 12)
+                                }
                             }
                         }
 
@@ -152,19 +156,25 @@ private struct InsightsMonthView: View {
 
     // MARK: - Highlight Cards
 
-    private func joysCard(height: CGFloat) -> some View {
-        GlowCard.joys(value: "\(monthlyEntries.count)", height: height, valueFontSize: 28, valuePadding: 12)
+    // One value size for all three cards. The Joyful Hours range is a long string, so on the narrow iPhone cards
+    // it needs a smaller size to fit without being scaled down further than the numbers next to it.
+    private var valueFontSize: CGFloat {
+        AdaptiveLayout.isPad ? 28 : 20
     }
 
-    private func streakCard(height: CGFloat) -> some View {
-        GlowCard.streak(value: "\(monthStreak)", height: height, valueFontSize: 28, valuePadding: 12)
+    private func joysCard(height: CGFloat, isCompact: Bool = false) -> some View {
+        GlowCard.joys(value: "\(monthlyEntries.count)", height: height, valueFontSize: valueFontSize, valuePadding: 12, isCompact: isCompact)
+    }
+
+    private func streakCard(height: CGFloat, isCompact: Bool = false) -> some View {
+        GlowCard.streak(value: "\(monthStreak)", height: height, valueFontSize: valueFontSize, valuePadding: 12, isCompact: isCompact)
     }
 
     private func joyfulHoursCard(height: CGFloat, valuePadding: CGFloat) -> some View {
         GlowCard.joyfulHours(
             value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
             height: height,
-            valueFontSize: 28,
+            valueFontSize: valueFontSize,
             valuePadding: valuePadding
         )
     }
@@ -182,6 +192,8 @@ struct GlowCard: View {
     var height: CGFloat = 170
     var valueFontSize: CGFloat = 45
     var valuePadding: CGFloat = 0
+    // Low card: the subtitle and the value share one row instead of being stacked
+    var isCompact = false
 
     var body: some View {
         ZStack {
@@ -190,26 +202,10 @@ struct GlowCard: View {
                 .opacity(0.35)
                 .adaptiveGlass(in: RoundedRectangle(cornerRadius: 30))
 
-            Text(value)
-                .font(.lummiFont(size: valueFontSize))
-                .foregroundColor(themeManager.currentTheme.textColor)
-                .minimumScaleFactor(0.3)
-                .lineLimit(1)
-                .padding(.horizontal, valuePadding)
-
-            VStack {
-                Spacer()
-                HStack(spacing: 4) {
-                    Image(systemName: systemImage)
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundColor(iconColor ?? gradientColors.first ?? themeManager.currentTheme.textColor)
-
-                    Text(subtitle)
-                        .font(.lummiFont(size: 12))
-                        .opacity(0.7)
-                        .foregroundColor(themeManager.currentTheme.textColor.opacity(0.85))
-                }
-                .padding(.bottom, 16)
+            if isCompact {
+                compactContent
+            } else {
+                content
             }
         }
         .frame(maxWidth: .infinity)
@@ -219,11 +215,58 @@ struct GlowCard: View {
                 .stroke(themeManager.currentTheme.textColor.opacity(CardOpacity.prominentStroke), lineWidth: 1)
         )
     }
+
+    private var subtitleLabel: some View {
+        HStack(spacing: 4) {
+            Image(systemName: systemImage)
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundColor(iconColor ?? gradientColors.first ?? themeManager.currentTheme.textColor)
+
+            Text(subtitle)
+                .font(.lummiFont(size: 12))
+                .opacity(0.7)
+                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.85))
+        }
+    }
+
+    private var valueLabel: some View {
+        Text(value)
+            .font(.lummiFont(size: valueFontSize))
+            .foregroundColor(themeManager.currentTheme.textColor)
+            .minimumScaleFactor(0.3)
+            .lineLimit(1)
+    }
+
+    // Value in the middle, subtitle at the bottom
+    private var content: some View {
+        ZStack {
+            valueLabel
+                .padding(.horizontal, valuePadding)
+
+            VStack {
+                Spacer()
+                subtitleLabel
+                    .padding(.bottom, 16)
+            }
+        }
+    }
+
+    // Subtitle on the leading edge, value on the trailing edge
+    private var compactContent: some View {
+        HStack(spacing: 8) {
+            subtitleLabel
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+            Spacer(minLength: 0)
+            valueLabel
+        }
+        .padding(.horizontal, 20)
+    }
 }
 
 // Shared presets for the "Joys"/"Day Streak"/"Joyful Hours" cards shown by both Insights and Trends.
 extension GlowCard {
-    static func joys(value: String, height: CGFloat, valueFontSize: CGFloat, valuePadding: CGFloat) -> GlowCard {
+    static func joys(value: String, height: CGFloat, valueFontSize: CGFloat, valuePadding: CGFloat, isCompact: Bool = false) -> GlowCard {
         GlowCard(
             value: value,
             subtitle: "Joys",
@@ -232,11 +275,12 @@ extension GlowCard {
             gradientColors: AccentColors.joysGradient,
             height: height,
             valueFontSize: valueFontSize,
-            valuePadding: valuePadding
+            valuePadding: valuePadding,
+            isCompact: isCompact
         )
     }
 
-    static func streak(value: String, height: CGFloat, valueFontSize: CGFloat, valuePadding: CGFloat) -> GlowCard {
+    static func streak(value: String, height: CGFloat, valueFontSize: CGFloat, valuePadding: CGFloat, isCompact: Bool = false) -> GlowCard {
         GlowCard(
             value: value,
             subtitle: "Day Streak",
@@ -245,7 +289,8 @@ extension GlowCard {
             gradientColors: AccentColors.streakGradient,
             height: height,
             valueFontSize: valueFontSize,
-            valuePadding: valuePadding
+            valuePadding: valuePadding,
+            isCompact: isCompact
         )
     }
 
