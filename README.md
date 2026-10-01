@@ -55,7 +55,7 @@ The repository ships with [Claude Code](https://claude.com/claude-code) configur
 
 ## 💻 Setup & Requirements
 
-* **iOS 17.6+** (native Liquid Glass on iOS 26+, with a graceful fallback below that)
+* **iOS 18.0+** (native Liquid Glass on iOS 26+, with a graceful fallback below that)
 * **Xcode 26.0+**
 * **Swift 5.x**
 

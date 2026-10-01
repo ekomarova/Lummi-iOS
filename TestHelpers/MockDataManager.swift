@@ -29,7 +29,8 @@ struct MockDataManager {
         ("-UI_TESTING_PAST_MONTH_MANY_JOYS", { context, isEmpty in if isEmpty { insertManyEntriesLastMonth(context) } }),
         ("-UI_TESTING_INSIGHTS_TWO_MONTHS", { context, isEmpty in if isEmpty { insertTwoMonthsOfEntries(context) } }),
         ("-UI_TESTING_5K_ENTRIES", { context, isEmpty in if isEmpty { insertFiveThousandEntries(context) } }),
-        ("-UI_TESTING_4_DAYS_FILLED", { context, isEmpty in if isEmpty { insertFourFilledDays(context) } })
+        ("-UI_TESTING_4_DAYS_FILLED", { context, isEmpty in if isEmpty { insertFourFilledDays(context) } }),
+        ("-UI_TESTING_TRENDS_MULTI_YEAR", { context, isEmpty in if isEmpty { insertTrendsMultiYearEntries(context) } })
     ]
 
     static func injectIfNeeded(modelContext: ModelContext) {
@@ -145,6 +146,20 @@ struct MockDataManager {
             if let recordDate = calendar.date(from: components) {
                 context.insert(JoyEntry(text: "Evening mock moment \(dayOffset + 1)", date: recordDate))
             }
+        }
+        try? context.save()
+    }
+
+    // Trends "All Time": 3 distinct days in the current year and 3 in the year before it, so the
+    // year list shows both years and each year's page has non-empty cards and charts.
+    private static func insertTrendsMultiYearEntries(_ context: ModelContext) {
+        let now = Date()
+        for dayOffset in 0..<3 {
+            context.insert(JoyEntry(text: "Current year joy \(dayOffset + 1)", date: shiftedDate(now, by: -dayOffset, .day)))
+        }
+        let lastYear = shiftedDate(now, by: -1, .year)
+        for dayOffset in 0..<3 {
+            context.insert(JoyEntry(text: "Previous year joy \(dayOffset + 1)", date: shiftedDate(lastYear, by: -dayOffset, .day)))
         }
         try? context.save()
     }

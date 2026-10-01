@@ -36,7 +36,7 @@ struct AllJoysView: View {
                 }
                 .padding(.top, 30)
                 .padding(.horizontal, 10)
-                .padding(.bottom, 100)
+                .padding(.bottom, 30)
             }
             .ignoresSafeArea(.container, edges: .bottom)
         }

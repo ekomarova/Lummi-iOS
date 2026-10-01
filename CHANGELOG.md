@@ -2,7 +2,11 @@
 
 All notable changes to the project will be documented in this file.
 ## [1.2.0] - 2026-MM-DD
+### Added
+- **Insights:** Added a "Trends" section opening a new full-screen page with a Month/All Time range picker, summary cards (joys, active days, best streak) and native Swift Charts bar charts for joys over time and by weekday [#36](https://github.com/ekomarova/Lummi-iOS/pull/36)
+
 ### Changed
+- **Internal:** Raised the minimum deployment target from iOS 17.6 to iOS 18.0 across every target
 - **Code quality:** Added `#Preview` to every view and component (backed by an in-memory `PreviewSupport` container). Moved calendar math into `CalendarMonthLayout` and the create/edit/delete/clear rules (with rollback) into `JoyEntryStore` / `RecordInputRules` [#27](https://github.com/ekomarova/Lummi-iOS/pull/27)
 - **Code quality:** Extracted the duplicated circular icon buttons, Edit/Delete buttons and page headers and Settings/Insights capsule rows into reusable `NavigationIconButton`, `RecordActionButton`, `ScreenHeader` and `CapsuleRow` components [#28](https://github.com/ekomarova/Lummi-iOS/pull/28)
 - **Code quality:** Extracted the duplicated Insights highlight cards, note text/edit bubble, and month-title formatting into reusable `GlowCard` builders, a `NoteBubble` component, `Date.monthYearTitle(locale:)`, and `Calendar.lummiCalendar(locale:)` [#29](https://github.com/ekomarova/Lummi-iOS/pull/29)

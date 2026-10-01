@@ -14,10 +14,11 @@ import SwiftData
 // Owns the selected month; the child view below fetches only that month's entries.
 struct InsightsView: View {
     @Binding var isShowingAllJoys: Bool
+    @Binding var isShowingTrends: Bool
     @State private var selectedMonth: Date = Date().startOfMonth
 
     var body: some View {
-        InsightsMonthView(selectedMonth: $selectedMonth, isShowingAllJoys: $isShowingAllJoys)
+        InsightsMonthView(selectedMonth: $selectedMonth, isShowingAllJoys: $isShowingAllJoys, isShowingTrends: $isShowingTrends)
     }
 }
 
@@ -27,13 +28,15 @@ private struct InsightsMonthView: View {
     @Environment(\.locale) var locale
     @Binding var selectedMonth: Date
     @Binding var isShowingAllJoys: Bool
+    @Binding var isShowingTrends: Bool
 
     @Query private var monthlyEntries: [JoyEntry]
     @Query(JoyEntry.oldestEntryDescriptor) private var oldestEntries: [JoyEntry]
 
-    init(selectedMonth: Binding<Date>, isShowingAllJoys: Binding<Bool>) {
+    init(selectedMonth: Binding<Date>, isShowingAllJoys: Binding<Bool>, isShowingTrends: Binding<Bool>) {
         _selectedMonth = selectedMonth
         _isShowingAllJoys = isShowingAllJoys
+        _isShowingTrends = isShowingTrends
         _monthlyEntries = Query(filter: JoyEntry.monthPredicate(for: selectedMonth.wrappedValue), sort: \JoyEntry.date)
     }
 
@@ -53,6 +56,8 @@ private struct InsightsMonthView: View {
     var body: some View {
         if isShowingAllJoys {
             AllJoysView(entries: monthlyEntries, isShowingAllJoys: $isShowingAllJoys)
+        } else if isShowingTrends {
+            TrendsView(isShowingTrends: $isShowingTrends)
         } else {
             insightsContent
         }
@@ -173,6 +178,44 @@ private struct InsightsMonthView: View {
                                 .buttonStyle(.plain)
                                 .accessibilityIdentifier("SeeAllJoysButton")
                             }
+                        }
+
+                        // MARK: - Trends
+                        VStack(alignment: .leading, spacing: 15) {
+                            Text("Trends")
+                                .font(.lummiFont(size: 20, weight: .bold))
+                                .foregroundColor(themeManager.currentTheme.textColor)
+                                // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
+                                .padding(.leading, 10)
+
+                            Button(
+                                action: {
+                                    withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+                                        isShowingTrends = true
+                                    }
+                                },
+                                label: {
+                                    CapsuleRow {
+                                        HStack(spacing: 10) {
+                                            Image(systemName: "chart.bar.fill")
+                                                .font(.system(size: 17, weight: .semibold))
+                                                .foregroundColor(Color(red: 0.3, green: 0.6, blue: 0.95))
+
+                                            Text("View Trends")
+                                                .font(.lummiFont(size: 17))
+                                                .foregroundColor(themeManager.currentTheme.textColor)
+
+                                            Spacer()
+
+                                            Image(systemName: "chevron.right")
+                                                .font(.system(size: 14, weight: .bold))
+                                                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
+                                        }
+                                    }
+                                }
+                            )
+                            .buttonStyle(.plain)
+                            .accessibilityIdentifier("ShowTrendsButton")
                         }
                     }
                     .padding(.horizontal, 10)
@@ -320,7 +363,7 @@ struct MonthlyMomentCell: View {
 
 #if DEBUG
 #Preview {
-    InsightsView(isShowingAllJoys: .constant(false))
+    InsightsView(isShowingAllJoys: .constant(false), isShowingTrends: .constant(false))
         .previewEnvironment()
 }
 #endif
