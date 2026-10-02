@@ -52,6 +52,7 @@ The repository ships with [Claude Code](https://claude.com/claude-code) configur
 | `.claude/settings.json` + `.claude/hooks/pre-commit.sh` | Hook that runs before every `git commit` made by Claude: blocks the commit if SwiftLint fails and restores `DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";` in `project.pbxproj` (Xcode overwrites it with automatic signing) |
 | `.claude/skills/refactor-analysis` | On-demand `/refactor-analysis [path]`: read-only search for duplicated code, hardcoded values and hacks, and design weaknesses, with a summary and a table of proposed improvements |
 | `.claude/skills/audit` | On-demand `/audit [path]`: read-only audit of bugs, security, code quality, licenses, git hygiene and release readiness, with a prioritized report |
+| `.claude/skills/performance-profile` | On-demand `/performance-profile [scenarios]`: read-only Time Profiler run of launch, calendar, day switching, Insights, All Joys and Trends on a simulator, with the cost per app function and fix options rated by complexity. Needs `defusedxml` (`python3 -m pip install defusedxml`) |
 
 ## 💻 Setup & Requirements
 

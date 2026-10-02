@@ -93,6 +93,73 @@ final class PerformanceUITests: XCTestCase {
         }
     }
 
+    // Open Insights: the month's highlights (joys, streak, joyful hours) are calculated before the screen appears.
+    func test_Perf_OpenInsights() throws {
+        measure(metrics: metrics, options: manualOptions) {
+            relaunch()
+            let insightsTab = app.buttons["InsightsButton_Inactive"]
+            XCTAssertTrue(insightsTab.waitForExistence(timeout: 30))
+            startMeasuring()
+            insightsTab.tap()
+            XCTAssertTrue(app.buttons["ShowTrendsButton"].waitForExistence(timeout: 30))
+            stopMeasuring()
+        }
+    }
+
+    // Open "All Joys" from Insights: the current month's entries are sorted and listed.
+    func test_Perf_OpenAllJoys() throws {
+        measure(metrics: metrics, options: manualOptions) {
+            relaunch()
+            let insightsTab = app.buttons["InsightsButton_Inactive"]
+            XCTAssertTrue(insightsTab.waitForExistence(timeout: 30))
+            insightsTab.tap()
+            let showAllJoys = app.buttons["SeeAllJoysButton"]
+            XCTAssertTrue(showAllJoys.waitForExistence(timeout: 30))
+            startMeasuring()
+            showAllJoys.tap()
+            XCTAssertTrue(app.buttons["AllJoysBackButton"].waitForExistence(timeout: 30))
+            stopMeasuring()
+        }
+    }
+
+    // Open Trends from Insights: the Month tab calculates its cards and charts.
+    func test_Perf_OpenTrendsMonth() throws {
+        measure(metrics: metrics, options: manualOptions) {
+            relaunch()
+            let insightsTab = app.buttons["InsightsButton_Inactive"]
+            XCTAssertTrue(insightsTab.waitForExistence(timeout: 30))
+            insightsTab.tap()
+            let showTrends = app.buttons["ShowTrendsButton"]
+            XCTAssertTrue(showTrends.waitForExistence(timeout: 30))
+            startMeasuring()
+            showTrends.tap()
+            XCTAssertTrue(app.staticTexts["Joys By Date"].waitForExistence(timeout: 30))
+            stopMeasuring()
+        }
+    }
+
+    // Open the current year from the All Time tab: the year's cards and charts are calculated over all of its entries.
+    func test_Perf_OpenTrendsYear() throws {
+        measure(metrics: metrics, options: manualOptions) {
+            relaunch()
+            let insightsTab = app.buttons["InsightsButton_Inactive"]
+            XCTAssertTrue(insightsTab.waitForExistence(timeout: 30))
+            insightsTab.tap()
+            let showTrends = app.buttons["ShowTrendsButton"]
+            XCTAssertTrue(showTrends.waitForExistence(timeout: 30))
+            showTrends.tap()
+            let allTime = app.buttons["All Time"]
+            XCTAssertTrue(allTime.waitForExistence(timeout: 30))
+            allTime.tap()
+            let yearRow = app.buttons["TrendsYearRow_\(Calendar.current.component(.year, from: Date()))"]
+            XCTAssertTrue(yearRow.waitForExistence(timeout: 30))
+            startMeasuring()
+            yearRow.tap()
+            XCTAssertTrue(app.staticTexts["Joys By Month"].waitForExistence(timeout: 30))
+            stopMeasuring()
+        }
+    }
+
     private func dateKey(daysAgo: Int) -> String {
         let date = Calendar.current.date(byAdding: .day, value: -daysAgo, to: Date()) ?? Date()
         return date.uiTestDateKey

@@ -16,11 +16,21 @@ struct TrendsView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Binding var isShowingTrends: Bool
 
-    @Query(sort: \JoyEntry.date) private var allEntries: [JoyEntry]
+    // Two single-entry fetches instead of every entry: the oldest one gives the year list (and tells whether
+    // the journal is empty), and any one entry of this month tells whether the Month tab has anything to chart.
+    @Query(JoyEntry.oldestEntryDescriptor) private var oldestEntries: [JoyEntry]
+    @Query private var entriesThisMonth: [JoyEntry]
     @State private var selectedTab: TrendsTab = .month
     @State private var openYear: Int?
 
-    private var oldestEntryDate: Date? { allEntries.first?.date }
+    init(isShowingTrends: Binding<Bool>) {
+        _isShowingTrends = isShowingTrends
+        var thisMonth = FetchDescriptor<JoyEntry>(predicate: JoyEntry.monthPredicate(for: Date()))
+        thisMonth.fetchLimit = 1
+        _entriesThisMonth = Query(thisMonth)
+    }
+
+    private var oldestEntryDate: Date? { oldestEntries.first?.date }
 
     private var availableYears: [Int] {
         TrendsCalculator.availableYears(oldestEntryDate: oldestEntryDate)
@@ -29,7 +39,7 @@ struct TrendsView: View {
     // Month's own empty check is scoped to the current month, not the whole journal: an otherwise
     // active journal with a quiet month still has nothing to chart for "Joys By Date"/"Joys By Weekday".
     private var hasEntriesThisMonth: Bool {
-        !TrendsCalculator.entries(allEntries, in: .month, year: Calendar.current.component(.year, from: Date())).isEmpty
+        !entriesThisMonth.isEmpty
     }
 
     var body: some View {
@@ -66,7 +76,7 @@ struct TrendsView: View {
                             noEntriesView
                         }
                     case .allTime:
-                        if allEntries.isEmpty {
+                        if oldestEntries.isEmpty {
                             noEntriesView
                         } else {
                             yearsList
