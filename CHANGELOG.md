@@ -3,25 +3,31 @@
 All notable changes to the project will be documented in this file.
 ## [1.2.0] - 2026-MM-DD
 ### Added
-- **Insights:** Added a "Trends" section opening a new full-screen page with a Month/All Time range picker, summary cards (joys, active days, best streak) and native Swift Charts bar charts for joys over time and by weekday [#36](https://github.com/ekomarova/Lummi-iOS/pull/36)
+- Added the new `Trends` page in `Insights` with a "Month"/"All Time" summary and bar charts [#36](https://github.com/ekomarova/Lummi-iOS/pull/36)
+- Added manual performance tests for `Insights`, `All Joys`, `Trends` (`RUN_PERFORMANCE_TESTS=1`), and a read-only `performance-profile` skill [#40](https://github.com/ekomarova/Lummi-iOS/pull/40)
+- Added `#Preview` for every view and component [#27](https://github.com/ekomarova/Lummi-iOS/pull/27)
 
 ### Changed
-- **Internal:** Raised the minimum deployment target from iOS 17.6 to iOS 18.0 across every target
-- **Code quality:** Added `#Preview` to every view and component (backed by an in-memory `PreviewSupport` container). Moved calendar math into `CalendarMonthLayout` and the create/edit/delete/clear rules (with rollback) into `JoyEntryStore` / `RecordInputRules` [#27](https://github.com/ekomarova/Lummi-iOS/pull/27)
-- **Code quality:** Extracted the duplicated circular icon buttons, Edit/Delete buttons and page headers and Settings/Insights capsule rows into reusable `NavigationIconButton`, `RecordActionButton`, `ScreenHeader` and `CapsuleRow` components [#28](https://github.com/ekomarova/Lummi-iOS/pull/28)
-- **Code quality:** Extracted the duplicated Insights highlight cards, note text/edit bubble, and month-title formatting into reusable `GlowCard` builders, a `NoteBubble` component, `Date.monthYearTitle(locale:)`, and `Calendar.lummiCalendar(locale:)` [#29](https://github.com/ekomarova/Lummi-iOS/pull/29)
-- **Code quality:** Extracted the duplicated fill + stroke card background in Settings, `CapsuleRow`, and `RecordInput` into a reusable `cardBackground` view modifier, replacing the hardcoded opacity literals with named `CardOpacity` constants [#30](https://github.com/ekomarova/Lummi-iOS/pull/30)
-- **Code quality:** Replaced the `ContentView` navigation booleans with a single `Screen` enum inside a testable `NavigationState`, with one `navigate(to:)` code path for the tab handlers [#31](https://github.com/ekomarova/Lummi-iOS/pull/31)
-- **Performance:** The calendar, the selected day and Insights now fetch only the entries they show (day, month, oldest entry) through range predicates on the stored `date`, instead of four screens each loading and filtering every entry in memory. On 5,000 entries (iPhone 17 simulator, Debug build) opening and scrolling the calendar takes about 47% fewer CPU instructions and 23% less peak memory, and switching days about 27% fewer instructions and 31% less memory; launch and Insights are roughly unchanged, and gains are small for typical journals [#32](https://github.com/ekomarova/Lummi-iOS/pull/32)
-- **Code quality:** Deduplicated Insights/Trends/Settings further: a shared `Animation.lummiSpring`, a shared `AccentColors` enum replacing raw `Color(red:green:blue:)` literals, shared `GlowCard.joys`/`.streak`/`.joyfulHours` builders, a reusable `DisclosureRow` component for icon/title/chevron list rows, and one `Calendar.monthStart(for:)` replacing three separate "start of month" calculations [#37](https://github.com/ekomarova/Lummi-iOS/pull/37)
-- **Insights:** Refactored Insights screen [#39](https://github.com/ekomarova/Lummi-iOS/pull/39)
-- **Code quality:** Extracted the duplicated Insights/Settings section titles into a reusable component, and removed the unused helpers [#39](https://github.com/ekomarova/Lummi-iOS/pull/39)
-- **Performance:** Trends now fetches only the entries of the month or year it shows and calculates its cards and charts in one pass instead of re-filtering the whole journal for each [#40](https://github.com/ekomarova/Lummi-iOS/pull/40)
-- **Internal:** Added manual performance tests for Insights, All Joys and Trends (set `RUN_PERFORMANCE_TESTS=1`) and a read-only `performance-profile` [#40](https://github.com/ekomarova/Lummi-iOS/pull/40)
+- Changed the minimum deployment target from iOS 17.6 to iOS 18.0
 
 ### Fixed
-- **Editing:** A failed edit save now restores the entry's original text in memory instead of leaving the unsaved change on the model [#27](https://github.com/ekomarova/Lummi-iOS/pull/27)
-- **Insights:** Fixed `Joyful Hours` being calculated from a single peak hour and simply extended three hours forward. `InsightsCalculator.calculateGoldenHours` now slides a three-hour window around the clock (wrapping past midnight) and picks the window that contains the most entries; ties are broken in favor of the window with the most recent entry [#18](https://github.com/ekomarova/Lummi-iOS/pull/18)
+- Restored the entry's original text when saving an edit fails [#27](https://github.com/ekomarova/Lummi-iOS/pull/27)
+- Fixed `Joyful Hours` to use a sliding three-hour window (wrapping past midnight) with the most entries; ties go to the window with the most recent entry [#18](https://github.com/ekomarova/Lummi-iOS/pull/18)
+
+### Performance
+- Fetched only the entries `Calendar`/`Day`/`Insights` show instead of loading every entry. With 5,000 entries: calendar ~47% fewer CPU instructions and 23% less memory, day switching ~27% fewer instructions and 31% less memory [#32](https://github.com/ekomarova/Lummi-iOS/pull/32)
+- Fetched only the month or year on screen and computes cards and charts in one pass [#40](https://github.com/ekomarova/Lummi-iOS/pull/40)
+
+### Refactored
+- Moved Calendar math to `CalendarMonthLayout` [#27](https://github.com/ekomarova/Lummi-iOS/pull/27)
+- Replaced duplicated buttons with `NavigationIconButton`, `RecordActionButton`, `ScreenHeader` and `CapsuleRow` [#28](https://github.com/ekomarova/Lummi-iOS/pull/28)
+- Extracted `GlowCard` builders and `NoteBubble`, and added `Date.monthYearTitle(locale:)` and `Calendar.lummiCalendar(locale:)` [#29](https://github.com/ekomarova/Lummi-iOS/pull/29)
+- Replaced duplicated card styling with the `cardBackground` modifier and `CardOpacity` constants [#30](https://github.com/ekomarova/Lummi-iOS/pull/30)
+- Replaced the `ContentView` navigation booleans with `NavigationState` and a `Screen` enum [#31](https://github.com/ekomarova/Lummi-iOS/pull/31)
+- Replaced raw animation and color literals with `Animation.lummiSpring` and `AccentColors` [#37](https://github.com/ekomarova/Lummi-iOS/pull/37)
+- Added `GlowCard.joys`/`.streak`/`.joyfulHours` and `DisclosureRow`, and replaced three copies of the month-start logic with `Calendar.monthStart(for:)` [#37](https://github.com/ekomarova/Lummi-iOS/pull/37)
+- Refactored the `Insights` screen [#39](https://github.com/ekomarova/Lummi-iOS/pull/39)
+- Extracted a reusable section title for `Insights` and `Settings` and removed unused helpers [#39](https://github.com/ekomarova/Lummi-iOS/pull/39)
 
 ## [1.1.0] - 2026-09-19
 ### Added
