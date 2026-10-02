@@ -4,7 +4,8 @@
 # Usage: profile.sh <workdir> [scenario ...]      (no scenario, or "all", runs every scenario)
 #   <workdir>  a scratch folder OUTSIDE the repository; the build, traces and reports go there.
 #   scenarios: launch calendar day-switch insights all-joys trends-month trends-year
-# Environment: SIM_UDID=<udid> picks the simulator, REBUILD=1 forces a fresh build.
+# Environment: SIM_UDID=<udid> picks the simulator, REBUILD=1 forces a fresh build,
+#   PYTHON=<python> picks the interpreter for the trace analysis (default python3; it needs the defusedxml package).
 #
 # Read-only for the project: it never edits sources. `xcodebuild` may reorder lines in
 # Lummi.xcodeproj/project.pbxproj; if that file was clean before the run it is restored afterwards.
@@ -18,6 +19,12 @@ if [ $# -lt 1 ]; then
     echo "usage: profile.sh <workdir> [scenario ...]" >&2
     exit 2
 fi
+
+PYTHON="${PYTHON:-python3}"
+"$PYTHON" -c 'import defusedxml' 2> /dev/null || {
+    echo "the trace analysis needs defusedxml: $PYTHON -m pip install defusedxml (a virtual environment is fine; then PYTHON=<venv>/bin/python)" >&2
+    exit 2
+}
 
 REPO="$(git rev-parse --show-toplevel)" || exit 2
 SKILL_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -97,7 +104,7 @@ export_and_analyze() {
     local scenario="$1" out="$2"
     xcrun xctrace export --input "$out.trace" \
         --xpath '/trace-toc/run[@number="1"]/data/table[@schema="time-profile"]' > "$out.xml" 2> "$out.export.log"
-    python3 "$SKILL_DIR/analyze_trace.py" "$out.xml" "$scenario" | tee "$out.txt"
+    "$PYTHON" "$SKILL_DIR/analyze_trace.py" "$out.xml" "$scenario" | tee "$out.txt"
     echo
 }
 

@@ -34,6 +34,8 @@ All run on the 5,000-entry in-memory store (`-UI_TESTING_5K_ENTRIES`), never on 
 ```
 bash .claude/skills/performance-profile/scripts/profile.sh <scratch-folder> [scenario ...]
 ```
+Prerequisite: Python with the `defusedxml` package (`python3 -m pip install defusedxml`, a virtual environment is fine: then pass `PYTHON=<venv>/bin/python`). The script checks this first and stops with the command to run if it is missing.
+
 The first call builds the app and takes a few minutes; each scenario then takes about a minute. `SIM_UDID=<udid>` picks a simulator, `REBUILD=1` forces a rebuild (needed when the sources changed since the last run into the same folder). For a long run use a generous command timeout (up to 10 minutes) or run scenarios one by one.
 
 The script prints one block per scenario (from `scripts/analyze_trace.py`):

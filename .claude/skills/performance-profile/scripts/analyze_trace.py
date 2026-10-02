@@ -11,7 +11,12 @@ import argparse
 import collections
 import re
 import sys
-import xml.etree.ElementTree as ET
+
+try:
+    # Hardened XML parser: the export is a local file, but the stdlib parser is flagged for XXE by Semgrep.
+    from defusedxml import ElementTree as ET
+except ImportError:
+    sys.exit("analyze_trace.py needs defusedxml: python3 -m pip install defusedxml (a virtual environment is fine)")
 
 # Debug builds keep the app's code in Lummi.debug.dylib, Release builds in Lummi.
 APP_BINARIES = {"Lummi", "Lummi.debug.dylib", "__preview.dylib"}
