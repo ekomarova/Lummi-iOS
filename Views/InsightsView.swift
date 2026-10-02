@@ -299,20 +299,16 @@ struct MonthlyMomentCell: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale
     let entry: JoyEntry
-    
+    // False for all but the latest entry of a day: the date column stays as empty space so the bubbles still align.
+    var showsDate = true
+
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
-            VStack(alignment: .center, spacing: 2) {
-                Text(entry.date.format("dd", locale: locale))
-                    .font(.lummiFont(size: 18))
-                    .foregroundColor(themeManager.currentTheme.textColor)
-                
-                Text(entry.date.format("MMM", locale: locale).capitalizedFirstLetter)
-                    .font(.lummiFont(size: 11))
-                    .foregroundColor(themeManager.currentTheme.textColor.opacity(0.5))
-            }
-            .frame(width: 35)
-            .padding(.top, 4)
+            dateLabel
+                .frame(width: 35)
+                .padding(.top, 4)
+                .opacity(showsDate ? 1 : 0)
+                .accessibilityHidden(!showsDate)
 
             NoteBubble {
                 Text(entry.text)
@@ -322,6 +318,18 @@ struct MonthlyMomentCell: View {
         }
         .padding(.leading, 4)
         .padding(.trailing, 15)
+    }
+
+    private var dateLabel: some View {
+        VStack(alignment: .center, spacing: 2) {
+            Text(entry.date.format("dd", locale: locale))
+                .font(.lummiFont(size: 18))
+                .foregroundColor(themeManager.currentTheme.textColor)
+
+            Text(entry.date.format("MMM", locale: locale).capitalizedFirstLetter)
+                .font(.lummiFont(size: 11))
+                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.5))
+        }
     }
 }
 

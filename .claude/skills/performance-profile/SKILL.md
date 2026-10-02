@@ -17,7 +17,9 @@ Optional argument: scenario names to profile (`$ARGUMENTS`), for example `trends
 | `calendar` | open the calendar and page back through a year | `test_Perf_OpenCalendarAndScrollBack` |
 | `day-switch` | pick past days from the open calendar | `test_Perf_SwitchingSelectedDay` |
 | `insights` | open the Insights tab | `test_Perf_OpenInsights` |
-| `all-joys` | open "All Joys" from Insights | `test_Perf_OpenAllJoys` |
+| `all-joys` | open "All Joys" from Insights (Month tab) | `test_Perf_OpenAllJoys` |
+| `all-joys-all-time` | switch "All Joys" to the All Time tab | `test_Perf_OpenAllJoysAllTime` |
+| `all-joys-year` | open a year's page from All Joys > All Time | `test_Perf_OpenAllJoysYear` |
 | `trends-month` | open Trends (Month tab) from Insights | `test_Perf_OpenTrendsMonth` |
 | `trends-year` | open a year's page from Trends > All Time | `test_Perf_OpenTrendsYear` |
 

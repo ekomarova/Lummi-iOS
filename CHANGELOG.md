@@ -10,6 +10,7 @@ All notable changes to the project will be documented in this file.
 ### Changed
 - Changed the minimum deployment target from iOS 17.6 to iOS 18.0
 - Updated `All Joys` page with a "Month"/"All Time" summary [#41](https://github.com/ekomarova/Lummi-iOS/pull/41)
+- Showed the date in `All Joys` only on the latest joy of each day; the other joys of that day appear without it [#42](https://github.com/ekomarova/Lummi-iOS/pull/42)
 
 ### Fixed
 - Restored the entry's original text when saving an edit fails [#27](https://github.com/ekomarova/Lummi-iOS/pull/27)
@@ -17,7 +18,7 @@ All notable changes to the project will be documented in this file.
 
 ### Performance
 - Fetched only the entries `Calendar`/`Day`/`Insights` show instead of loading every entry. With 5,000 entries: calendar ~47% fewer CPU instructions and 23% less memory, day switching ~27% fewer instructions and 31% less memory [#32](https://github.com/ekomarova/Lummi-iOS/pull/32)
-- Fetched only the month or year on screen and computes cards and charts in one pass [#40](https://github.com/ekomarova/Lummi-iOS/pull/40)
+- Fetched only the month/year on screen and computes cards/charts in one pass in `All Joys` and `Trends` [#40](https://github.com/ekomarova/Lummi-iOS/pull/40), [#42](https://github.com/ekomarova/Lummi-iOS/pull/42)
 
 ### Refactored
 - Moved Calendar math to `CalendarMonthLayout` [#27](https://github.com/ekomarova/Lummi-iOS/pull/27)
