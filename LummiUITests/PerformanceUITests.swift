@@ -122,6 +122,35 @@ final class PerformanceUITests: XCTestCase {
         }
     }
 
+    // Switch "All Joys" to the All Time tab: the list of calendar years on record.
+    func test_Perf_OpenAllJoysAllTime() throws {
+        measure(metrics: metrics, options: manualOptions) {
+            openAllJoys()
+            let allTime = app.buttons["All Time"]
+            XCTAssertTrue(allTime.waitForExistence(timeout: 30))
+            startMeasuring()
+            allTime.tap()
+            XCTAssertTrue(app.buttons["AllJoysYearRow_\(Calendar.current.component(.year, from: Date()))"].waitForExistence(timeout: 30))
+            stopMeasuring()
+        }
+    }
+
+    // Open the current year from "All Joys" > All Time: every entry of that year is fetched, sorted and listed.
+    func test_Perf_OpenAllJoysYear() throws {
+        measure(metrics: metrics, options: manualOptions) {
+            openAllJoys()
+            let allTime = app.buttons["All Time"]
+            XCTAssertTrue(allTime.waitForExistence(timeout: 30))
+            allTime.tap()
+            let yearRow = app.buttons["AllJoysYearRow_\(Calendar.current.component(.year, from: Date()))"]
+            XCTAssertTrue(yearRow.waitForExistence(timeout: 30))
+            startMeasuring()
+            yearRow.tap()
+            XCTAssertTrue(app.buttons["YearJoysBackButton"].waitForExistence(timeout: 30))
+            stopMeasuring()
+        }
+    }
+
     // Open Trends from Insights: the Month tab calculates its cards and charts.
     func test_Perf_OpenTrendsMonth() throws {
         measure(metrics: metrics, options: manualOptions) {
@@ -158,6 +187,18 @@ final class PerformanceUITests: XCTestCase {
             XCTAssertTrue(app.staticTexts["Joys By Month"].waitForExistence(timeout: 30))
             stopMeasuring()
         }
+    }
+
+    // Relaunches the app and opens "All Joys" from Insights, ready for the measured interaction.
+    private func openAllJoys() {
+        relaunch()
+        let insightsTab = app.buttons["InsightsButton_Inactive"]
+        XCTAssertTrue(insightsTab.waitForExistence(timeout: 30))
+        insightsTab.tap()
+        let showAllJoys = app.buttons["SeeAllJoysButton"]
+        XCTAssertTrue(showAllJoys.waitForExistence(timeout: 30))
+        showAllJoys.tap()
+        XCTAssertTrue(app.buttons["AllJoysBackButton"].waitForExistence(timeout: 30))
     }
 
     private func dateKey(daysAgo: Int) -> String {

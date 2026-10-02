@@ -29,7 +29,7 @@ struct YearJoysView: View {
             )
 
             ScrollView(showsIndicators: false) {
-                JoysListView(range: TrendsCalculator.dateRange(for: .year, year: year))
+                JoysListView(range: .year, year: year)
                     .padding(.top, 30)
                     .padding(.horizontal, 10)
                     .padding(.bottom, 30)
