@@ -178,4 +178,45 @@ struct TrendsCalculatorTests {
         let years = TrendsCalculator.availableYears(oldestEntryDate: oldest, now: now, calendar: calendar)
         #expect(years == [2026])
     }
+
+    // MARK: - dateRange
+
+    @Test func dateRange_month_spansTheWholeCurrentMonth() {
+        let range = TrendsCalculator.dateRange(for: .month, year: 2026, now: now, calendar: calendar)
+        #expect(range?.lowerBound == makeDate(year: 2026, month: 9, day: 1, hour: 0))
+        #expect(range?.upperBound == makeDate(year: 2026, month: 10, day: 1, hour: 0))
+    }
+
+    @Test func dateRange_month_ignoresTheYearArgument() {
+        let range = TrendsCalculator.dateRange(for: .month, year: 2019, now: now, calendar: calendar)
+        #expect(range?.lowerBound == makeDate(year: 2026, month: 9, day: 1, hour: 0))
+    }
+
+    @Test func dateRange_year_spansAllTwelveMonths() {
+        let range = TrendsCalculator.dateRange(for: .year, year: 2025, now: now, calendar: calendar)
+        #expect(range?.lowerBound == makeDate(year: 2025, month: 1, day: 1, hour: 0))
+        #expect(range?.upperBound == makeDate(year: 2026, month: 1, day: 1, hour: 0))
+    }
+
+    @Test func dateRange_currentYear_endsAtTheNextNewYear() {
+        let range = TrendsCalculator.dateRange(for: .year, year: 2026, now: now, calendar: calendar)
+        #expect(range?.upperBound == makeDate(year: 2027, month: 1, day: 1, hour: 0))
+    }
+
+    @Test func dateRange_futureYear_isNil() {
+        #expect(TrendsCalculator.dateRange(for: .year, year: 2027, now: now, calendar: calendar) == nil)
+    }
+
+    @Test func dateRange_matchesTheEntriesFilter() {
+        let entries = [
+            entry(year: 2025, month: 12, day: 31, hour: 23),
+            entry(year: 2026, month: 1, day: 1, hour: 0),
+            entry(year: 2026, month: 12, day: 31, hour: 23),
+            entry(year: 2027, month: 1, day: 1, hour: 0)
+        ]
+        let range = TrendsCalculator.dateRange(for: .year, year: 2026, now: now, calendar: calendar)
+        let inRange = entries.filter { range?.contains($0.date) == true }
+        #expect(inRange.count == TrendsCalculator.entries(entries, in: .year, year: 2026, now: now, calendar: calendar).count)
+        #expect(inRange.count == 2)
+    }
 }

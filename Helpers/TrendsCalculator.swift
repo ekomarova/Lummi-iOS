@@ -56,6 +56,17 @@ struct TrendsCalculator {
         return entries.filter { $0.date >= bounds.start && $0.date < bounds.end }
     }
 
+    // The date window `range` covers (start inclusive, end exclusive), so the store can return only those
+    // entries instead of the whole journal. Nil when the window cannot be resolved, or a `.year` lies in the future.
+    static func dateRange(
+        for range: TrendsRange,
+        year: Int,
+        now: Date = Date(),
+        calendar: Calendar = .current
+    ) -> Range<Date>? {
+        bounds(for: range, year: year, now: now, calendar: calendar).map { $0.start..<$0.end }
+    }
+
     // MARK: - Chart data
 
     // One data point per day (`.month`) or per month (`.year`), oldest first, with a zero count filled in

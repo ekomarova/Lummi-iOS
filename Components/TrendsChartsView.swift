@@ -17,45 +17,49 @@ struct TrendsChartsView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale
 
-    @Query(sort: \JoyEntry.date) private var allEntries: [JoyEntry]
+    // Only the entries of `range`, fetched by the store instead of filtered from the whole journal.
+    @Query private var rangedEntries: [JoyEntry]
 
     let range: TrendsRange
     // Ignored for `.month`, which always covers the current calendar month.
     let year: Int
+    // Taken once, so the fetched window and the calculation always agree on which month it is, even if the screen
+    // stays open across a month change (it then keeps showing the month it was opened for, like Insights).
+    private let now: Date
 
-    private var rangedEntries: [JoyEntry] {
-        TrendsCalculator.entries(allEntries, in: range, year: year)
+    init(range: TrendsRange, year: Int) {
+        let now = Date()
+        self.range = range
+        self.year = year
+        self.now = now
+        _rangedEntries = Query(
+            filter: JoyEntry.predicate(in: TrendsCalculator.dateRange(for: range, year: year, now: now)),
+            sort: \JoyEntry.date
+        )
     }
 
-    private var dataPoints: [TrendsDataPoint] {
-        TrendsCalculator.dataPoints(for: rangedEntries, range: range, year: year)
+    private var stats: TrendsPerformanceStats {
+        TrendsPerformanceStats.make(from: rangedEntries, range: range, year: year, locale: locale, now: now)
     }
-
-    private var weekdayCounts: [WeekdayCount] {
-        TrendsCalculator.weekdayCounts(in: rangedEntries, calendar: .lummiCalendar(locale: locale))
-    }
-
-    private var daysJournaled: Int { InsightsCalculator.uniqueDaysCount(in: rangedEntries) }
-    private var bestStreak: Int { InsightsCalculator.longestStreak(in: rangedEntries) }
-    private var joyfulHours: String { InsightsCalculator.calculateGoldenHours(entries: rangedEntries, locale: locale) }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 30) {
+        let stats = stats
+        return VStack(alignment: .leading, spacing: 30) {
             VStack(spacing: 15) {
-                summaryCards
+                summaryCards(stats)
                 // Only on a year's page, not Trends' own Month tab: the main Insights screen already
                 // shows this same card for the current month, so repeating it there would be redundant.
-                if range == .year {
-                    joyfulHoursCard
+                if let joyfulHours = stats.joyfulHours {
+                    joyfulHoursCard(value: joyfulHours)
                 }
             }
 
             TrendsSection(title: volumeChartTitle) {
-                volumeChart
+                volumeChart(stats)
             }
 
             TrendsSection(title: "Joys By Weekday") {
-                weekdayChart
+                weekdayChart(stats)
             }
         }
     }
@@ -67,11 +71,11 @@ struct TrendsChartsView: View {
 
     // MARK: - Summary
 
-    private var summaryCards: some View {
+    private func summaryCards(_ stats: TrendsPerformanceStats) -> some View {
         HStack(spacing: 12) {
-            GlowCard.joys(value: "\(rangedEntries.count)", height: 130, valueFontSize: 26, valuePadding: 8)
+            GlowCard.joys(value: "\(stats.entryCount)", height: 130, valueFontSize: 26, valuePadding: 8)
             GlowCard(
-                value: "\(daysJournaled)",
+                value: "\(stats.daysJournaled)",
                 subtitle: "Active Days",
                 systemImage: "calendar",
                 iconColor: AccentColors.activeDays,
@@ -80,20 +84,20 @@ struct TrendsChartsView: View {
                 valueFontSize: 26,
                 valuePadding: 8
             )
-            GlowCard.streak(value: "\(bestStreak)", height: 130, valueFontSize: 26, valuePadding: 8)
+            GlowCard.streak(value: "\(stats.bestStreak)", height: 130, valueFontSize: 26, valuePadding: 8)
         }
     }
 
     // Full-width, since the "HH:mm - HH:mm" value is wider than a short number and doesn't fit the
     // three-across row above. `valueFontSize` still matches those three cards for a consistent look.
-    private var joyfulHoursCard: some View {
-        GlowCard.joyfulHours(value: joyfulHours, height: 130, valueFontSize: 26, valuePadding: 30)
+    private func joyfulHoursCard(value: String) -> some View {
+        GlowCard.joyfulHours(value: value, height: 130, valueFontSize: 26, valuePadding: 30)
     }
 
     // MARK: - Charts
 
-    private var volumeChart: some View {
-        Chart(dataPoints) { point in
+    private func volumeChart(_ stats: TrendsPerformanceStats) -> some View {
+        Chart(stats.dataPoints) { point in
             BarMark(
                 x: .value("Period", point.periodStart, unit: range.component),
                 y: .value("Joys", point.count)
@@ -119,16 +123,16 @@ struct TrendsChartsView: View {
         .frame(height: 160)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(volumeChartTitle))
-        .accessibilityValue(Text("\(rangedEntries.count)"))
+        .accessibilityValue(Text("\(stats.entryCount)"))
     }
 
-    private var weekdayChart: some View {
+    private func weekdayChart(_ stats: TrendsPerformanceStats) -> some View {
         // `shortWeekdaySymbols` (e.g. "Tue", "Thu"), not `veryShortWeekdaySymbols`: the single-letter form
         // repeats a letter for two weekdays in English ("T" for Tuesday and Thursday, "S" for Saturday and
         // Sunday) and German, and a bar chart's x-axis is categorical by that string, so the second weekday
         // silently lands on top of the first bar instead of getting its own.
         let symbols = Calendar.lummiCalendar(locale: locale).shortWeekdaySymbols
-        return Chart(weekdayCounts) { item in
+        return Chart(stats.weekdayCounts) { item in
             BarMark(
                 x: .value("Weekday", symbols[item.weekday - 1]),
                 y: .value("Joys", item.count)
