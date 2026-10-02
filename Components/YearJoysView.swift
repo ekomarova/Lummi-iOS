@@ -1,0 +1,48 @@
+//
+//  Copyright (c) 2026, Evseniia Komarova.
+//  All rights reserved.
+//
+//  Licensed under the PolyForm Noncommercial License 1.0.0.
+//  See the LICENSE file in the repository root for full terms.
+//  <https://polyformproject.org/licenses/noncommercial/1.0.0>
+//
+
+import SwiftUI
+
+// Every joy of one calendar year, opened by tapping a year in All Joys' "All Time" list.
+struct YearJoysView: View {
+    let year: Int
+    let onBack: () -> Void
+
+    var body: some View {
+        VStack(spacing: 0) {
+            ScreenHeader(
+                title: LocalizedStringKey(String(year)),
+                leftButton: {
+                    NavigationIconButton(
+                        systemImage: "arrow.left",
+                        accessibilityLabel: "Back",
+                        accessibilityID: "YearJoysBackButton",
+                        action: onBack
+                    )
+                }
+            )
+
+            ScrollView(showsIndicators: false) {
+                JoysListView(range: TrendsCalculator.dateRange(for: .year, year: year))
+                    .padding(.top, 30)
+                    .padding(.horizontal, 10)
+                    .padding(.bottom, 30)
+            }
+            .ignoresSafeArea(.container, edges: .bottom)
+        }
+        .transition(.move(edge: .trailing).combined(with: .opacity))
+    }
+}
+
+#if DEBUG
+#Preview {
+    YearJoysView(year: Calendar.current.component(.year, from: Date()), onBack: {})
+        .previewEnvironment()
+}
+#endif

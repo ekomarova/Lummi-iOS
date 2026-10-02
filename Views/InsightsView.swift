@@ -47,7 +47,7 @@ private struct InsightsMonthView: View {
     // MARK: - Body
     var body: some View {
         if isShowingAllJoys {
-            AllJoysView(entries: monthlyEntries, isShowingAllJoys: $isShowingAllJoys)
+            AllJoysView(isShowingAllJoys: $isShowingAllJoys)
         } else if isShowingTrends {
             TrendsView(isShowingTrends: $isShowingTrends)
         } else {
