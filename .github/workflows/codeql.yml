@@ -1,10 +1,6 @@
 name: CodeQL
 
 on:
-  push:
-    branches: [ "main" ]
-    paths:
-      - '**/*.swift'
   pull_request:
     branches: [ "main" ]
     paths:
