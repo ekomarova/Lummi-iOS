@@ -10,46 +10,38 @@
 import SwiftUI
 import SwiftData
 
-// Insights screen: monthly stats and a report for the selected month.
-// Owns the selected month; the child view below fetches only that month's entries.
+// Insights screen: stats and a report for the current month.
+// The child view below fetches only that month's entries.
 struct InsightsView: View {
     @Binding var isShowingAllJoys: Bool
     @Binding var isShowingTrends: Bool
-    @State private var selectedMonth: Date = Date().startOfMonth
 
     var body: some View {
-        InsightsMonthView(selectedMonth: $selectedMonth, isShowingAllJoys: $isShowingAllJoys, isShowingTrends: $isShowingTrends)
+        InsightsMonthView(month: Date().startOfMonth, isShowingAllJoys: $isShowingAllJoys, isShowingTrends: $isShowingTrends)
     }
 }
 
-// Stats and entries of the selected month. The query is rebuilt whenever the parent passes a new month.
+// Stats and entries of the given month. The query is rebuilt whenever the parent passes a new month.
 private struct InsightsMonthView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale
-    @Binding var selectedMonth: Date
     @Binding var isShowingAllJoys: Bool
     @Binding var isShowingTrends: Bool
 
-    @Query private var monthlyEntries: [JoyEntry]
-    @Query(JoyEntry.oldestEntryDescriptor) private var oldestEntries: [JoyEntry]
+    // On iPhone the Joys and Day Streak cards are stacked to take the height of the Joyful Hours card
+    private static let phoneCardHeight: CGFloat = 130
+    private static let phoneStackSpacing: CGFloat = 10
 
-    init(selectedMonth: Binding<Date>, isShowingAllJoys: Binding<Bool>, isShowingTrends: Binding<Bool>) {
-        _selectedMonth = selectedMonth
+    @Query private var monthlyEntries: [JoyEntry]
+
+    init(month: Date, isShowingAllJoys: Binding<Bool>, isShowingTrends: Binding<Bool>) {
         _isShowingAllJoys = isShowingAllJoys
         _isShowingTrends = isShowingTrends
-        _monthlyEntries = Query(filter: JoyEntry.monthPredicate(for: selectedMonth.wrappedValue), sort: \JoyEntry.date)
+        _monthlyEntries = Query(filter: JoyEntry.monthPredicate(for: month), sort: \JoyEntry.date)
     }
 
     private var monthStreak: Int {
         InsightsCalculator.longestStreak(in: monthlyEntries)
-    }
-
-    private var isCurrentMonth: Bool {
-        Date.isCurrentMonth(selectedMonth)
-    }
-    
-    private var isOldestMonth: Bool {
-        InsightsCalculator.isOldestMonth(selectedMonth: selectedMonth, oldestEntryDate: oldestEntries.first?.date)
     }
 
     // MARK: - Body
@@ -73,47 +65,13 @@ private struct InsightsMonthView: View {
                     .padding(.top, 10)
                     .padding(.horizontal, 20)
 
-                // MARK: - Month Selector
-                HStack(spacing: 20) {
-                    NavigationIconButton(
-                        systemImage: "chevron.left",
-                        size: 36,
-                        iconOpacity: isOldestMonth ? 0.2 : 0.8,
-                        accessibilityLabel: "Previous month",
-                        accessibilityID: "PreviousMonthButton"
-                    ) { changeMonth(by: -1) }
-                    .disabled(isOldestMonth)
-
-                    Text(selectedMonth.monthYearTitle(locale: locale))
-                        .font(.lummiFont(size: 20))
-                        .foregroundColor(themeManager.currentTheme.textColor.opacity(0.7))
-                        .frame(minWidth: 160, alignment: .center)
-                        .accessibilityIdentifier("CurrentMonthLabel")
-
-                    NavigationIconButton(
-                        systemImage: "chevron.right",
-                        size: 36,
-                        iconOpacity: isCurrentMonth ? 0.2 : 0.8,
-                        accessibilityLabel: "Next month",
-                        accessibilityID: "NextMonthButton"
-                    ) { changeMonth(by: 1) }
-                    .disabled(isCurrentMonth)
-                }
-                .frame(maxWidth: .infinity, alignment: .center)
-
                 // MARK: - Main Content Area
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 35) {
 
-                        let itemSize = geometry.size.width * 0.09
-
                         // MARK: - Highlights
                         VStack(alignment: .leading, spacing: 15) {
-                            Text("Highlights")
-                                .font(.lummiFont(size: 20, weight: .bold))
-                                .foregroundColor(themeManager.currentTheme.textColor)
-                                // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
-                                .padding(.leading, 10)
+                            SectionHeader(title: "Highlights", leadingInset: 10)
 
                             if AdaptiveLayout.isPad {
                                 // MARK: - Joys, Joyful Hours & Streak (iPad: one row of squares)
@@ -123,54 +81,46 @@ private struct InsightsMonthView: View {
                                     joysCard(height: padCardSize)
                                         .frame(width: padCardSize)
 
-                                    joyfulHoursCard(height: padCardSize, valuePadding: 12)
+                                    joyfulHoursCard(height: padCardSize)
                                         .frame(width: padCardSize)
 
                                     streakCard(height: padCardSize)
                                         .frame(width: padCardSize)
                                 }
                             } else {
-                                // MARK: - Joys & Streak
-                                HStack(spacing: 15) {
-                                    joysCard()
-                                    streakCard()
-                                }
-                                .frame(maxWidth: .infinity, minHeight: itemSize * 0.65)
+                                // MARK: - Joys & Streak stacked, next to Joyful Hours
+                                let compactHeight = (Self.phoneCardHeight - Self.phoneStackSpacing) / 2
 
-                                // MARK: - Joyful Hours
-                                joyfulHoursCard(height: 130, valuePadding: 30)
+                                HStack(spacing: 15) {
+                                    VStack(spacing: Self.phoneStackSpacing) {
+                                        joysCard(height: compactHeight, isCompact: true)
+                                        streakCard(height: compactHeight, isCompact: true)
+                                    }
+
+                                    joyfulHoursCard(height: Self.phoneCardHeight)
+                                }
                             }
                         }
 
                         // MARK: - Recall
-                        if !monthlyEntries.isEmpty {
-                            VStack(alignment: .leading, spacing: 15) {
-                                Text("Recall")
-                                    .font(.lummiFont(size: 20, weight: .bold))
-                                    .foregroundColor(themeManager.currentTheme.textColor)
-                                    // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
-                                    .padding(.leading, 10)
+                        VStack(alignment: .leading, spacing: 15) {
+                            SectionHeader(title: "Recall", leadingInset: 10)
 
-                                DisclosureRow(
-                                    systemImage: "list.star",
-                                    iconColor: AccentColors.activeDays,
-                                    title: "Show All Joys",
-                                    accessibilityID: "SeeAllJoysButton"
-                                ) {
-                                    withAnimation(.lummiSpring) {
-                                        isShowingAllJoys = true
-                                    }
+                            DisclosureRow(
+                                systemImage: "list.star",
+                                iconColor: AccentColors.activeDays,
+                                title: "Show All Joys",
+                                accessibilityID: "SeeAllJoysButton"
+                            ) {
+                                withAnimation(.lummiSpring) {
+                                    isShowingAllJoys = true
                                 }
                             }
                         }
 
                         // MARK: - Trends
                         VStack(alignment: .leading, spacing: 15) {
-                            Text("Trends")
-                                .font(.lummiFont(size: 20, weight: .bold))
-                                .foregroundColor(themeManager.currentTheme.textColor)
-                                // Scroll content has 10pt horizontal padding; add 10 more to match Insights' 20pt inset
-                                .padding(.leading, 10)
+                            SectionHeader(title: "Trends", leadingInset: 10)
 
                             DisclosureRow(
                                 systemImage: "chart.bar.fill",
@@ -190,37 +140,30 @@ private struct InsightsMonthView: View {
                 .ignoresSafeArea(.container, edges: .bottom)
             }
         }
-        .onAppear {
-            selectedMonth = Date().startOfMonth
-        }
-    }
-    
-    // MARK: - UI Helpers
-
-    private func changeMonth(by value: Int) {
-        if let newMonth = Calendar.current.date(byAdding: .month, value: value, to: selectedMonth) {
-            withAnimation(.lummiSpring) {
-                selectedMonth = newMonth
-            }
-        }
     }
 
     // MARK: - Highlight Cards
 
-    private func joysCard(height: CGFloat = 170) -> some View {
-        GlowCard.joys(value: "\(monthlyEntries.count)", height: height, valueFontSize: 28, valuePadding: 12)
+    // One value size for all three cards. The Joyful Hours range is a long string, so on the narrow iPhone cards
+    // it needs a smaller size to fit without being scaled down further than the numbers next to it.
+    private var valueFontSize: CGFloat {
+        AdaptiveLayout.isPad ? 28 : 20
     }
 
-    private func streakCard(height: CGFloat = 170) -> some View {
-        GlowCard.streak(value: "\(monthStreak)", height: height, valueFontSize: 28, valuePadding: 12)
+    private func joysCard(height: CGFloat, isCompact: Bool = false) -> some View {
+        GlowCard.joys(value: "\(monthlyEntries.count)", height: height, valueFontSize: valueFontSize, valuePadding: 12, isCompact: isCompact)
     }
 
-    private func joyfulHoursCard(height: CGFloat, valuePadding: CGFloat) -> some View {
+    private func streakCard(height: CGFloat, isCompact: Bool = false) -> some View {
+        GlowCard.streak(value: "\(monthStreak)", height: height, valueFontSize: valueFontSize, valuePadding: 12, isCompact: isCompact)
+    }
+
+    private func joyfulHoursCard(height: CGFloat) -> some View {
         GlowCard.joyfulHours(
             value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
             height: height,
-            valueFontSize: 28,
-            valuePadding: valuePadding
+            valueFontSize: valueFontSize,
+            valuePadding: 12
         )
     }
 }
@@ -234,9 +177,11 @@ struct GlowCard: View {
     var systemImage: String
     var iconColor: Color?
     var gradientColors: [Color]
-    var height: CGFloat = 170
-    var valueFontSize: CGFloat = 45
-    var valuePadding: CGFloat = 0
+    var height: CGFloat
+    var valueFontSize: CGFloat
+    var valuePadding: CGFloat
+    // Low card: the subtitle and the value share one row instead of being stacked
+    var isCompact = false
 
     var body: some View {
         ZStack {
@@ -245,26 +190,10 @@ struct GlowCard: View {
                 .opacity(0.35)
                 .adaptiveGlass(in: RoundedRectangle(cornerRadius: 30))
 
-            Text(value)
-                .font(.lummiFont(size: valueFontSize))
-                .foregroundColor(themeManager.currentTheme.textColor)
-                .minimumScaleFactor(0.3)
-                .lineLimit(1)
-                .padding(.horizontal, valuePadding)
-
-            VStack {
-                Spacer()
-                HStack(spacing: 4) {
-                    Image(systemName: systemImage)
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundColor(iconColor ?? gradientColors.first ?? themeManager.currentTheme.textColor)
-
-                    Text(subtitle)
-                        .font(.lummiFont(size: 12))
-                        .opacity(0.7)
-                        .foregroundColor(themeManager.currentTheme.textColor.opacity(0.85))
-                }
-                .padding(.bottom, 16)
+            if isCompact {
+                compactContent
+            } else {
+                content
             }
         }
         .frame(maxWidth: .infinity)
@@ -274,11 +203,58 @@ struct GlowCard: View {
                 .stroke(themeManager.currentTheme.textColor.opacity(CardOpacity.prominentStroke), lineWidth: 1)
         )
     }
+
+    private var subtitleLabel: some View {
+        HStack(spacing: 4) {
+            Image(systemName: systemImage)
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundColor(iconColor ?? gradientColors.first ?? themeManager.currentTheme.textColor)
+
+            Text(subtitle)
+                .font(.lummiFont(size: 12))
+                .opacity(0.7)
+                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.85))
+        }
+    }
+
+    private var valueLabel: some View {
+        Text(value)
+            .font(.lummiFont(size: valueFontSize))
+            .foregroundColor(themeManager.currentTheme.textColor)
+            .minimumScaleFactor(0.3)
+            .lineLimit(1)
+    }
+
+    // Value in the middle, subtitle at the bottom
+    private var content: some View {
+        ZStack {
+            valueLabel
+                .padding(.horizontal, valuePadding)
+
+            VStack {
+                Spacer()
+                subtitleLabel
+                    .padding(.bottom, 16)
+            }
+        }
+    }
+
+    // Subtitle on the leading edge, value on the trailing edge
+    private var compactContent: some View {
+        HStack(spacing: 8) {
+            subtitleLabel
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+            Spacer(minLength: 0)
+            valueLabel
+        }
+        .padding(.horizontal, 20)
+    }
 }
 
 // Shared presets for the "Joys"/"Day Streak"/"Joyful Hours" cards shown by both Insights and Trends.
 extension GlowCard {
-    static func joys(value: String, height: CGFloat, valueFontSize: CGFloat, valuePadding: CGFloat) -> GlowCard {
+    static func joys(value: String, height: CGFloat, valueFontSize: CGFloat, valuePadding: CGFloat, isCompact: Bool = false) -> GlowCard {
         GlowCard(
             value: value,
             subtitle: "Joys",
@@ -287,11 +263,12 @@ extension GlowCard {
             gradientColors: AccentColors.joysGradient,
             height: height,
             valueFontSize: valueFontSize,
-            valuePadding: valuePadding
+            valuePadding: valuePadding,
+            isCompact: isCompact
         )
     }
 
-    static func streak(value: String, height: CGFloat, valueFontSize: CGFloat, valuePadding: CGFloat) -> GlowCard {
+    static func streak(value: String, height: CGFloat, valueFontSize: CGFloat, valuePadding: CGFloat, isCompact: Bool = false) -> GlowCard {
         GlowCard(
             value: value,
             subtitle: "Day Streak",
@@ -300,7 +277,8 @@ extension GlowCard {
             gradientColors: AccentColors.streakGradient,
             height: height,
             valueFontSize: valueFontSize,
-            valuePadding: valuePadding
+            valuePadding: valuePadding,
+            isCompact: isCompact
         )
     }
 

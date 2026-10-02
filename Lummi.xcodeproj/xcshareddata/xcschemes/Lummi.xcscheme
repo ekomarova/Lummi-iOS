@@ -85,6 +85,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-UI_TESTING_5K_ENTRIES"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-UI_TESTING_SIMULATE_SAVE_FAILURE"
             isEnabled = "NO">
          </CommandLineArgument>

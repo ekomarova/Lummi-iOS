@@ -9,12 +9,11 @@
 
 import SwiftUI
 
-// Circular button, used for back/save and left/right navigation
+// Circular button, used for back/save
 struct NavigationIconButton: View {
     @Environment(ThemeManager.self) private var themeManager
 
     let systemImage: String
-    var size: CGFloat = 44
     var iconOpacity: Double = 1
     var accessibilityLabel: LocalizedStringKey?
     let accessibilityID: String
@@ -33,7 +32,7 @@ struct NavigationIconButton: View {
                 Circle()
                     .fill(themeManager.currentTheme.textColor.opacity(CardOpacity.fill))
                     .adaptiveGlass(in: Circle())
-                    .frame(width: size, height: size)
+                    .frame(width: 44, height: 44)
                     .overlay(
                         Image(systemName: systemImage)
                             .font(.lummiFont(size: 16, weight: .bold))
@@ -55,8 +54,6 @@ struct NavigationIconButton: View {
     HStack(spacing: 20) {
         NavigationIconButton(systemImage: "chevron.left", accessibilityID: "PreviewBack", action: { })
         NavigationIconButton(systemImage: "checkmark", iconOpacity: 0.2, accessibilityID: "PreviewSave", action: { })
-        NavigationIconButton(systemImage: "chevron.left", size: 36, iconOpacity: 0.8, accessibilityID: "PreviewPrev", action: { })
-        NavigationIconButton(systemImage: "chevron.right", size: 36, iconOpacity: 0.8, accessibilityID: "PreviewNext", action: { })
     }
     .previewEnvironment()
 }

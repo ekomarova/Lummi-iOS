@@ -51,16 +51,6 @@ struct DateExtensionTests {
         #expect(components.minute == 0)
     }
 
-    // MARK: - isCurrentMonth
-
-    @Test func isCurrentMonth_today_returnsTrue() {
-        #expect(Date.isCurrentMonth(Date()))
-    }
-
-    @Test func isCurrentMonth_distantPastDate_returnsFalse() {
-        #expect(!Date.isCurrentMonth(makeDate(year: 2000, month: 1, day: 1)))
-    }
-
     // MARK: - format (shared formatter cache)
 
     @Test func format_concurrentCalls_returnCorrectResultsWithoutRacing() {

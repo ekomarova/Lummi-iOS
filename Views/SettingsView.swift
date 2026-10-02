@@ -97,9 +97,7 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 30) {
             // MARK: - Appearance
             VStack(alignment: .leading, spacing: 15) {
-                Text("Appearance")
-                    .font(.lummiFont(size: 20, weight: .bold))
-                    .foregroundColor(themeManager.currentTheme.textColor)
+                SectionHeader(title: "Appearance")
 
                 HStack(spacing: 0) {
                     ThemeOptionButton(
@@ -122,9 +120,7 @@ struct SettingsView: View {
 
             // MARK: - Language
             VStack(alignment: .leading, spacing: 15) {
-                Text("Language")
-                    .font(.lummiFont(size: 20, weight: .bold))
-                    .foregroundColor(themeManager.currentTheme.textColor)
+                SectionHeader(title: "Language")
                     .accessibilityIdentifier("LanguageLabel")
 
                 DisclosureRow(
@@ -139,9 +135,7 @@ struct SettingsView: View {
 
             // MARK: - Sync
             VStack(alignment: .leading, spacing: 15) {
-                Text("Sync")
-                    .font(.lummiFont(size: 20, weight: .bold))
-                    .foregroundColor(themeManager.currentTheme.textColor)
+                SectionHeader(title: "Sync")
 
                 CapsuleRow {
                     HStack {
@@ -193,9 +187,7 @@ struct SettingsView: View {
 
             // MARK: - Clear All Data
             VStack(alignment: .leading, spacing: 15) {
-                Text("Data")
-                    .font(.lummiFont(size: 20, weight: .bold))
-                    .foregroundColor(themeManager.currentTheme.textColor)
+                SectionHeader(title: "Data")
 
                 Button(
                     action: {

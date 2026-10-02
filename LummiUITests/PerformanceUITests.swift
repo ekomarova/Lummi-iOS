@@ -71,21 +71,6 @@ final class PerformanceUITests: XCTestCase {
         }
     }
 
-    // Open Insights and step back through six months.
-    func test_Perf_InsightsMonthSwitching() throws {
-        measure(metrics: metrics, options: manualOptions) {
-            relaunch()
-            let insightsButton = app.buttons["InsightsButton_Inactive"]
-            XCTAssertTrue(insightsButton.waitForExistence(timeout: 30))
-            startMeasuring()
-            insightsButton.tap()
-            XCTAssertTrue(app.staticTexts["Joys"].waitForExistence(timeout: 10))
-            let previous = app.buttons["PreviousMonthButton"]
-            for _ in 0..<6 { previous.tap() }
-            stopMeasuring()
-        }
-    }
-
     // Pick past days from the open calendar, so the selected day's list is re-fetched each time.
     func test_Perf_SwitchingSelectedDay() throws {
         measure(metrics: metrics, options: manualOptions) {
