@@ -17,6 +17,7 @@ All notable changes to the project will be documented in this file.
 - **Insights:** Refactored Insights screen [#39](https://github.com/ekomarova/Lummi-iOS/pull/39)
 - **Code quality:** Extracted the duplicated Insights/Settings section titles into a reusable component, and removed the unused helpers [#39](https://github.com/ekomarova/Lummi-iOS/pull/39)
 - **Performance:** Trends now fetches only the entries of the month or year it shows and calculates its cards and charts in one pass instead of re-filtering the whole journal for each [#40](https://github.com/ekomarova/Lummi-iOS/pull/40)
+- **Internal:** Added manual performance tests for Insights, All Joys and Trends (set `RUN_PERFORMANCE_TESTS=1`) and a read-only `performance-profile` [#40](https://github.com/ekomarova/Lummi-iOS/pull/40)
 
 ### Fixed
 - **Editing:** A failed edit save now restores the entry's original text in memory instead of leaving the unsaved change on the model [#27](https://github.com/ekomarova/Lummi-iOS/pull/27)
