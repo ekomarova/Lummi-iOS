@@ -44,6 +44,11 @@
 		4A11C0DE00000000000000A2 /* NavigationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11C0DE00000000000000A1 /* NavigationState.swift */; };
 		4AE9FF0B99FA051D6C5D607A /* AccentColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFF479DE52BF9FBBE26AAF9 /* AccentColors.swift */; };
 		53C153FCE78D3225B6E08E12 /* TrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAFE68702064D16D0CCEE2C8 /* TrendsView.swift */; };
+		C0DE01B1B2C3D4E5F6000000 /* PeriodTabPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE01A1B2C3D4E5F6000000 /* PeriodTabPicker.swift */; };
+		C0DE02B1B2C3D4E5F6000000 /* NoEntriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE02A1B2C3D4E5F6000000 /* NoEntriesView.swift */; };
+		C0DE03B1B2C3D4E5F6000000 /* YearsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE03A1B2C3D4E5F6000000 /* YearsListView.swift */; };
+		C0DE04B1B2C3D4E5F6000000 /* JoysListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE04A1B2C3D4E5F6000000 /* JoysListView.swift */; };
+		C0DE05B1B2C3D4E5F6000000 /* YearJoysView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE05A1B2C3D4E5F6000000 /* YearJoysView.swift */; };
 		5898100AD50D595B6311DD1E /* YearTrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E6B030D5CB8FB51A8D0675 /* YearTrendsView.swift */; };
 		649AF115F3264D01730EF068 /* AnimationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ECC769E0A0AE871A7A1D999 /* AnimationExtension.swift */; };
 		987BD99D3540D75ECB4D3CB5 /* TrendsCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D085C748510EC29FCEA60BA0 /* TrendsCalculator.swift */; };
@@ -124,6 +129,11 @@
 		A29704F30C920BE4BA981743 /* TrendsChartsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsChartsView.swift; sourceTree = "<group>"; };
 		A75A501776D443E1961E0695 /* AllJoysView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllJoysView.swift; sourceTree = "<group>"; };
 		A974D4023557EF74B1627FA8 /* NoteBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteBubble.swift; sourceTree = "<group>"; };
+		C0DE01A1B2C3D4E5F6000000 /* PeriodTabPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeriodTabPicker.swift; sourceTree = "<group>"; };
+		C0DE02A1B2C3D4E5F6000000 /* NoEntriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoEntriesView.swift; sourceTree = "<group>"; };
+		C0DE03A1B2C3D4E5F6000000 /* YearsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearsListView.swift; sourceTree = "<group>"; };
+		C0DE04A1B2C3D4E5F6000000 /* JoysListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoysListView.swift; sourceTree = "<group>"; };
+		C0DE05A1B2C3D4E5F6000000 /* YearJoysView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearJoysView.swift; sourceTree = "<group>"; };
 		B1E6B030D5CB8FB51A8D0675 /* YearTrendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearTrendsView.swift; sourceTree = "<group>"; };
 		C4FFB5A141452B3CDBF374BE /* CalendarExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarExtension.swift; sourceTree = "<group>"; };
 		D085C748510EC29FCEA60BA0 /* TrendsCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsCalculator.swift; sourceTree = "<group>"; };
@@ -263,6 +273,11 @@
 				DAFE68702064D16D0CCEE2C8 /* TrendsView.swift */,
 				A29704F30C920BE4BA981743 /* TrendsChartsView.swift */,
 				B1E6B030D5CB8FB51A8D0675 /* YearTrendsView.swift */,
+				C0DE05A1B2C3D4E5F6000000 /* YearJoysView.swift */,
+				C0DE04A1B2C3D4E5F6000000 /* JoysListView.swift */,
+				C0DE03A1B2C3D4E5F6000000 /* YearsListView.swift */,
+				C0DE02A1B2C3D4E5F6000000 /* NoEntriesView.swift */,
+				C0DE01A1B2C3D4E5F6000000 /* PeriodTabPicker.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -503,6 +518,11 @@
 				A1B2C3D41000000000000F10 /* TrendsPerformanceStats.swift in Sources */,
 				D36364C8F0E64D14A72E81A9 /* TrendsChartsView.swift in Sources */,
 				5898100AD50D595B6311DD1E /* YearTrendsView.swift in Sources */,
+				C0DE05B1B2C3D4E5F6000000 /* YearJoysView.swift in Sources */,
+				C0DE04B1B2C3D4E5F6000000 /* JoysListView.swift in Sources */,
+				C0DE03B1B2C3D4E5F6000000 /* YearsListView.swift in Sources */,
+				C0DE02B1B2C3D4E5F6000000 /* NoEntriesView.swift in Sources */,
+				C0DE01B1B2C3D4E5F6000000 /* PeriodTabPicker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

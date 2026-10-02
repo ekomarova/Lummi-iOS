@@ -58,7 +58,7 @@ final class TrendsUITests: XCTestCase {
         launchApp(with: ["-UI_TESTING"])
         openTrends()
 
-        let emptyStateText = "Add at least one joy to see trends"
+        let emptyStateText = "Add at least one joy"
         XCTAssertTrue(app.staticTexts[emptyStateText].waitForExistence(timeout: 2.0), "Month tab did not show the empty state")
 
         app.buttons["All Time"].tap()

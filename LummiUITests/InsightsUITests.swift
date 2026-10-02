@@ -111,6 +111,49 @@ final class InsightsUITests: XCTestCase {
         assertAllJoys(prefix: "Current month joy", shown: 2, hidden: "Previous month joy")
     }
 
+    // All Joys mirrors Trends: an empty journal shows the placeholder in both the Month and All Time tabs
+    func test_AllJoysEmptyStateInBothTabs() throws {
+        launchApp(with: ["-UI_TESTING"])
+        openAllJoys()
+
+        let emptyStateText = "Add at least one joy"
+        XCTAssertTrue(app.staticTexts[emptyStateText].waitForExistence(timeout: 2.0), "Month tab did not show the empty state")
+
+        app.buttons["All Time"].tap()
+        XCTAssertTrue(app.staticTexts[emptyStateText].waitForExistence(timeout: 2.0), "All Time tab did not show the empty state")
+    }
+
+    // All Time lists every year on record, and each year's page lists only that calendar year's joys
+    func test_AllJoysAllTimeListsEntriesPerYear() throws {
+        launchApp(with: ["-UI_TESTING_TRENDS_MULTI_YEAR"])
+        openAllJoys()
+        app.buttons["All Time"].tap()
+
+        let currentYear = Calendar.current.component(.year, from: Date())
+        let currentYearRow = app.buttons["AllJoysYearRow_\(currentYear)"]
+        let previousYearRow = app.buttons["AllJoysYearRow_\(currentYear - 1)"]
+        XCTAssertTrue(currentYearRow.waitForExistence(timeout: 2.0), "Current year row was not found in All Time")
+        XCTAssertTrue(previousYearRow.waitForExistence(timeout: 2.0), "Previous year row was not found in All Time")
+
+        previousYearRow.tap()
+        XCTAssertTrue(app.staticTexts["Previous year joy 1"].waitForExistence(timeout: 2.0), "Previous year's joy is missing")
+        XCTAssertFalse(app.staticTexts["Current year joy 1"].exists, "A joy of another year is listed")
+
+        app.buttons["YearJoysBackButton"].tap()
+        XCTAssertTrue(currentYearRow.waitForExistence(timeout: 2.0), "Current year row did not reappear in All Time")
+    }
+
+    // Opens Insights, then taps "Show All Joys" to reach the All Joys screen
+    private func openAllJoys() {
+        let inactiveInsightsBtn = app.buttons["InsightsButton_Inactive"]
+        XCTAssertTrue(inactiveInsightsBtn.waitForExistence(timeout: 2.0))
+        inactiveInsightsBtn.tap()
+
+        let showAll = app.buttons["SeeAllJoysButton"]
+        XCTAssertTrue(showAll.waitForExistence(timeout: 2.0), "Show All Joys button was not found on the Insights screen")
+        showAll.tap()
+    }
+
     // Opens "All Joys" for the current month, checks its entries, and returns to the Insights screen
     private func assertAllJoys(prefix: String, shown: Int, hidden hiddenPrefix: String) {
         let showAll = app.staticTexts["Show All Joys"]

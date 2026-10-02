@@ -9,6 +9,7 @@ All notable changes to the project will be documented in this file.
 
 ### Changed
 - Changed the minimum deployment target from iOS 17.6 to iOS 18.0
+- Updated `All Joys` page with a "Month"/"All Time" summary [#41](https://github.com/ekomarova/Lummi-iOS/pull/41)
 
 ### Fixed
 - Restored the entry's original text when saving an edit fails [#27](https://github.com/ekomarova/Lummi-iOS/pull/27)
