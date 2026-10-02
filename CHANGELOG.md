@@ -31,145 +31,147 @@ All notable changes to the project will be documented in this file.
 
 ## [1.1.0] - 2026-09-19
 ### Added
-- **Design:** Introduced a complete visual redesign of the app around Apple's native Liquid Glass material (`glassEffect`), covering the header date, calendar, record button, Insights, and Settings. On iOS 17.6-18, these fall back to `.ultraThinMaterial` via a new `adaptiveGlass(in:interactive:)` view modifier, so the app keeps its iOS 17.6 minimum deployment target instead of requiring iOS 26 [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
-- **Navigation:** Merged the bottom navigation into a single toolbar and added tab labels alongside the icons [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
-- **Insights:** Added Highlights/Recall sections and a full-screen "All Joys" page [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
-- **Insights (iPad):** Joys, Day Streak, and Joyful Hours are now shown as one square row on iPad [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
-- **Record Button:** Added selection haptic feedback when tapping the record button [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- Redesigned the app with Liquid Glass with a fallback on iOS 17.6-18 [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- Merged the bottom navigation into a single toolbar with tab labels [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- Added `Highlights`/`Recall` sections to `Insights` [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- Showed `Joys`, `Day Streak` and `Joyful Hours` as one square row on iPad [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- Added selection haptic feedback to the record button [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
 
 ### Changed
-- **Record Input:** The "New Joy" input is now a full in-flow page pushed onto the screen, matching the `See all joys` / `Language` pages, instead of a `.sheet` presentation [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
-- **Design:** Replaced the custom-styled alert overlays (iCloud sync error, `Clear All Data` confirmation, and save/delete failure dialogs) with native system `.alert()` dialogs, for a more consistent, platform-standard experience [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
-- **Design:** Switched the app font from SF Mono to SF Pro and dropped forced all-caps text app-wide [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
-- **Design:** Record cards are now transparent with a white border; edit/delete buttons redesigned as glass buttons with labels [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
-- **iPad:** Removed the iPad 1.5x scaling system entirely, in favor of native, unscaled sizing across the UI [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- Replaced the `New Joy` with a full in-flow page, matching `All joys` and `Language` [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- Replaced custom alert overlays with native `.alert()` dialogs [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- Switched the app font from SF Mono to SF Pro and dropped forced all-caps text [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- Made record cards transparent with a white border and redesigned edit/delete as labeled glass buttons [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- Removed the iPad 1.5x scaling in favor of native sizing [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
 
 ### Fixed
-- **iPad:** Fixed glass UI chrome, the calendar grid, and record cards being incorrectly scaled up on iPad [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
-- **Settings:** Fixed `Clear All Data` silently hiding a failed delete. When `save()` threw, `clearAllData()` only printed the error and never rolled back the `ModelContext`, so the deleted entries disappeared from the UI even though they were still in the store and could reappear after a relaunch. The context is now rolled back and a "Failed to Delete" alert is shown, consistent with the record delete and edit flows [#14](https://github.com/ekomarova/Lummi-iOS/pull/14)
-- **Settings (iOS 17):** Fixed `Clear All Data` leaving an empty list after a failed save on iOS 17.0. There `ModelContext.rollback()` did not restore the bulk-deleted entries, so they stayed hidden even though the store was unchanged. Entries are now deleted in a separate `ModelContext` with autosave off, which is simply discarded when `save()` fails, so the visible context is never touched; the "Failed to Delete" alert is unchanged [#17](https://github.com/ekomarova/Lummi-iOS/pull/17)
-- **Settings (iOS 17):** Removed the spring animation around the theme switch and the iCloud toggle. Animating the `preferredColorScheme` change across the whole view tree, with `.ultraThinMaterial` backgrounds, caused UI freezes on iOS 17 [#17](https://github.com/ekomarova/Lummi-iOS/pull/17)
+- Fixed glass chrome, the calendar grid and record cards being scaled up on iPad [#12](https://github.com/ekomarova/Lummi-iOS/pull/12)
+- Fixed `Clear All Data` hiding a failed delete: the `ModelContext` is now rolled back and a "Failed to Delete" alert is shown [#14](https://github.com/ekomarova/Lummi-iOS/pull/14)
+- Fixed `Clear All Data` leaving an empty list after a failed save on iOS 17.0 by deleting entries in a separate `ModelContext` that is discarded on failure [#17](https://github.com/ekomarova/Lummi-iOS/pull/17)
+- Removed the spring animation around the theme switch and iCloud toggle that froze the UI on iOS 17 [#17](https://github.com/ekomarova/Lummi-iOS/pull/17)
 
 ## [1.0.0] - 2026-09-17
 ### Added
-- **Testing:** Added unit tests using the Swift Testing framework, covering all testable business logic: `InsightsCalculator` (filter, streak, golden hours), `DateExtension` (formatting, month navigation, boundary checks), `ThemeManager` (persistence, theme switching), and `JoyEntry.dateKey`
-- **CI:** Added `unit-tests` CI job that runs unit tests on both `iPhone 17` and `iPad Pro 13-inch (M5)` simulators
-- **CI:** Added CodeQL static analysis (`security-extended` query suite) for Swift, running on every pull request and reporting findings to the repository's Security tab [#7](https://github.com/ekomarova/Lummi-iOS/pull/7)
-- **CI:** Added code coverage via Codecov [#10](https://github.com/ekomarova/Lummi-iOS/pull/10)
-- **CI:** Added a `ui-tests` job that runs the `LummiUITests` suite on `iPhone 17` on every pull request, separate from `unit-tests`. `.xcresult` test bundles are uploaded as a CI artifact whenever a test step fails, so failures can be inspected directly instead of reconstructing them from raw logs [#11](https://github.com/ekomarova/Lummi-iOS/pull/11)
+- Added unit tests (Swift Testing) for `InsightsCalculator`, `DateExtension`, `ThemeManager` and `JoyEntry.dateKey`
+- Added the `unit-tests` CI job for `iPhone 17` and `iPad Pro 13-inch (M5)` simulators
+- Added CodeQL static analysis (`security-extended`) for Swift on every pull request [#7](https://github.com/ekomarova/Lummi-iOS/pull/7)
+- Added code coverage via Codecov [#10](https://github.com/ekomarova/Lummi-iOS/pull/10)
+- Added the `ui-tests` CI job on `iPhone 17` [#11](https://github.com/ekomarova/Lummi-iOS/pull/11)
 
 ### Fixed
-- **Calendar:** Fixed a bug where the calendar grid was misaligned with the weekday header when the app language was set to English on a device with a Monday-first system region (e.g. Russia or Germany). `SingleMonthView` used `Calendar.current` — which reflects the device's region, not the in-app locale — to compute day offsets, while `WeekdayHeaderView` applied the SwiftUI environment locale. This caused a one-column shift: Monday dates appeared in the Sunday column and every subsequent day was off by one
-- **iPad:** Background content is now blurred when the "new record" sheet is open, consistent with other modal overlays in the app
-- **iOS 17 / iPhone SE:** Fixed a UI freeze that occurred on iOS 17.0 when navigating to Calendar or Insights after switching language in Settings. `WeekdayHeaderView` was evaluating `weekdayLabels` twice per `body` call — once for `ForEach` indices and once per `Text` — creating 8 `DateFormatter` instances per render frame; replaced with a single `Calendar.locale` lookup stored in a local variable
-- **iOS 17 / iPhone SE:** Fixed the same freeze root cause in `InsightsCalculator.calculateGoldenHours`: `setLocalizedDateFormatFromTemplate("jmm")` was called on every render, acquiring an ICU lock each time; replaced with `Date.FormatStyle`
-- **iCloud Sync:** Fixed a crash (`CKContainer.default()` throwing an uncaught exception in `CloudKitSyncMonitor.init()`) in builds without a signed iCloud entitlement, such as CI or local `CODE_SIGNING_ALLOWED=NO` builds. App Store builds are unaffected, since Apple validates entitlements at archive/upload time [#11](https://github.com/ekomarova/Lummi-iOS/pull/11)
-- **Testing:** Fixed several flaky `LummiUITests` cases across `SettingsUITests`, `DefaultScreenUITests`, `RecordButtonUITests`, `TodayRecordsUITests`, and `CalendarUITests` that intermittently failed in CI — either from timeouts too tight for CI load, assertions reading UI state before SwiftUI animations had settled, or `xcodebuild`'s default simulator-clone parallelization causing app launch/terminate hangs on GitHub's shared macOS runners [#11](https://github.com/ekomarova/Lummi-iOS/pull/11)
+- Fixed the calendar grid being misaligned with the weekday header for English on Monday-first regions: `SingleMonthView` now uses the in-app locale instead of `Calendar.current`
+- Blurred background content when the "new record" sheet is open on iPad
+- Fixed a UI freeze on iOS 17.0 when opening `Calendar` or `Insights` after switching language, caused by creating `DateFormatter` instances on every render of `WeekdayHeaderView`
+- Fixed the same freeze in `InsightsCalculator.calculateGoldenHours` by replacing `setLocalizedDateFormatFromTemplate("jmm")` with `Date.FormatStyle`
+- Fixed a crash in `CloudKitSyncMonitor.init()` in builds without a signed iCloud entitlement [#11](https://github.com/ekomarova/Lummi-iOS/pull/11)
+- Fixed flaky `LummiUITests` in CI with looser timeouts, waiting for animations and no simulator-clone parallelization [#11](https://github.com/ekomarova/Lummi-iOS/pull/11)
 
 ## [1.0.0rc3] - 2026-09-04
 ### Added
-- **Testing:** Added `SaveFailureUITests` — a new UI test suite covering save, edit, and delete failure paths. A new `-UI_TESTING_SIMULATE_SAVE_FAILURE` launch argument triggers a simulated save error so the failure UI can be exercised without reproducing real-world conditions (full disk, corrupted store, etc.)
-
-### Changed
-- **Internal:** Replaced a fragile `DispatchQueue.main.asyncAfter(+0.1s)` timer used to sequence keyboard focus and scroll-to-cell when entering edit mode in `SelectedDayDetailView` with a `.onChange(of: isEditing)` modifier, which fires after SwiftUI has committed the state change. No user-facing changes
-- **Internal:** Eliminated per-call `DateFormatter` allocations across the codebase. `Date.stringKey` now uses a single static formatter (fixed `en_US_POSIX` locale). A new `Date.format(_:locale:)` helper caches one `DateFormatter` per format-string/locale pair, so `HeaderView`, `InsightsView` month label, and `MonthlyMomentCell` all reuse already-created instances on every render. No user-facing changes
-- **Internal:** Merged `InsightGlowCard` and `RhythmGlowCard` into a single `GlowCard` component parameterised by `height`, `valueFontSize`, and `valuePadding`. No user-facing changes
+- Added `SaveFailureUITests` and the `-UI_TESTING_SIMULATE_SAVE_FAILURE` launch argument to test save, edit and delete failures
 
 ### Fixed
-- **Data Safety:** Fixed a silent data-loss risk where `try? modelContext.save()` in three places (`RecordInput` on new-entry save, and `deleteNote` / `saveAndDismiss` in `SelectedDayDetailView`) would silently discard save failures. The app now rolls back the context, keeps the UI open, and shows a themed error alert consistent with the existing modal style. Users are never left believing an entry was saved when it wasn't
-- **Localisation:** Added missing Russian and German translations for three new error-alert strings
-- **Localisation:** Fixed a bug where the `"Sync issue: %@"` banner message in `Settings` was missing the `%@` placeholder in all three language translations, causing the actual error description to be silently dropped from the UI
+- Fixed silent data loss when `try? modelContext.save()` failed in `RecordInput` and `SelectedDayDetailView`: the context is now rolled back and an error alert is shown
+- Added missing Russian and German translations for three error-alert strings
+- Fixed the `Sync issue: %@` banner in `Settings` missing the `%@` placeholder in all languages
 
+### Performance
+- Replaced per-call `DateFormatter` allocations with a static formatter in `Date.stringKey` and a cached `Date.format(_:locale:)`
+
+### Refactored
+- Replaced the `asyncAfter(+0.1s)` timer in `SelectedDayDetailView` with `.onChange(of: isEditing)`
+- Merged `InsightGlowCard` and `RhythmGlowCard` into a single `GlowCard`
 
 ## [1.0.0rc2] - 2026-09-02
 ### Added
-- **Record Input:** Joy entry text is now capped at 280 characters. A live character counter below the text field shows how many characters you've used and highlights as you approach the limit
+- Capped joy entry text at 280 characters with a live character counter
 
 ### Changed
--  **Internal:** Migrated `ThemeManager` from `Combine` (`ObservableObject/@Published`) to the `Observation` framework (`@Observable`), matching the pattern used throughout the rest of the codebase. No user-facing changes
-- **Internal:** `JoyEntry.dateKey` is now a computed property derived from `date`, eliminating a redundant stored field and removing the risk of calendar grouping silently breaking if a call site forgot to recalculate the key. No user-facing changes
-- **Internal:** Aligned `IPHONEOS_DEPLOYMENT_TARGET` across all targets — `LummiTests` and `LummiUITests` were inheriting the project-level iOS 26.4 default instead of the app's iOS 17 minimum, preventing tests from running on iOS 17–25 simulators
-- **Internal:** Pinned `SWIFT_VERSION = 5.0` at the project level; updated README requirements to reflect iOS 17.6+ and Swift 5.0+
-- **Settings:** The `Clear All Data` confirmation dialog now blurs the background content while it is visible, consistent with other modal overlays in the app
+- Aligned `IPHONEOS_DEPLOYMENT_TARGET` across all targets (tests inherited iOS 26.4 instead of iOS 17)
+- Pinned `SWIFT_VERSION = 5.0` and updated README requirements to iOS 17.6+ and Swift 5.0+
+- Blurred the background behind the `Clear All Data` confirmation dialog
 
 ### Fixed
-- **Release:** Fixed an issue where the app would fail to compile in the `Release` configuration due to test-only mock data code (`MockDataManager`) leaking into the main target
-- **Day Detail:** Fixed a bug where editing or deleting a joy entry could silently target the wrong record if two entries shared the same date (e.g. after a CloudKit merge). The active selection is now tracked by stable `PersistentIdentifier` instead of a positional array index
-- **iCloud Sync:** Fixed a crash (`fatalError`) that could occur when toggling iCloud sync if `ModelContainer` failed to reinitialize at runtime (e.g. due to a corrupted store or filesystem issue). The app now reverts the toggle and shows an error dialog instead of terminating
-- **iCloud Sync:** Fixed a visual glitch where the iCloud error banner would briefly flash when a container initialization failure caused the sync toggle to revert
-- **iCloud Sync:** Fixed a bug where the "iCloud storage is full" warning banner could remain visible in `Settings` for the entire session after the user freed up iCloud storage. The banner now disappears automatically once CloudKit successfully resumes syncing
+- Fixed the `Release` build failing because `MockDataManager` leaked into the main target
+- Fixed editing or deleting the wrong entry when two entries shared a date by tracking the selection by `PersistentIdentifier`
+- Fixed a `fatalError` when toggling iCloud sync if `ModelContainer` failed to reinitialize; the toggle now reverts with an error dialog
+- Fixed the iCloud error banner flashing when the sync toggle reverted
+- Fixed the "iCloud storage is full" banner staying visible after storage was freed
 
+### Refactored
+- Migrated `ThemeManager` from `Combine` to `Observation` (`@Observable`)
+- Made `JoyEntry.dateKey` a computed property derived from `date`
 
 ## [1.0.0rc1] - 2026-09-01
 ### Added
-- **Enhanced Privacy:** Journal entry text is now encrypted when synced via iCloud, ensuring your personal moments remain private and secure
-- **Settings:** `Clear All Data` option in the `Settings` screen to permanently delete all entries locally and from iCloud
-- **iCloud Sync:** You can now seamlessly sync your joy entries across all your Apple devices! This feature is strictly opt-in and can be enabled in `Settings`
-- **iCloud Sync Warning**: If iCloud synchronization is enabled but cannot complete (e.g., your device is not logged into an Apple ID, your iCloud storage is full, or sync is restricted by corporate/parental policies), a helpful warning banner will now appear in the `Settings` screen
-- **iCloud Sync:** Toggling iCloud synchronization in `Settings` now applies instantly and no requires you to restart the application
-- **CI:** Automated GitHub Actions CI workflow that builds, analyzes, and compiles app/tests for the Xcode project on pull requests to master
-
+- Encrypted journal entry text when synced via iCloud
+- Added `Clear All Data` in `Settings` to delete all entries locally and from iCloud
+- Added opt-in iCloud sync across Apple devices in `Settings`
+- Added a warning banner in `Settings` when iCloud sync cannot complete (no Apple ID, full storage, restrictions)
+- Added a GitHub Actions CI workflow that builds, analyzes and compiles the app and tests on pull requests to master
 
 ### Changed
-- **Architecture:** Improved `ModelContainer` initialization
-- **Settings:** Redesigned the settings switches with a new segment control for both Appearance and iCloud Sync
-- **System Requirements:** Lummi now requires iOS 17.0 or newer to provide the best performance and take full advantage of native `SwiftData` architecture
-- **Insights:** Improved the `Joyful Hours` insights calculation to predictably highlight your most recent active hour when multiple hours have the same number of entries
+- Made iCloud sync toggling apply instantly without an app restart
+- Redesigned the `Settings` switches as segmented controls for Appearance and iCloud Sync
+- Raised the minimum iOS version to 17.0 for native `SwiftData`
+- Changed `Joyful Hours` to prefer the most recent active hour when hours tie
 
 ### Fixed
-- **Testing:** Fixed UI tests related to `ModelContainer` initialization
-- **Settings:** Fixed an issue on iPad where the language selection text was too small compared to other menu items. The picker now correctly uses an adaptive font size while maintaining native system behavior
-- **Settings UI:** Resolved a visual glitch where the layout would bounce awkwardly when an iCloud sync error banner appeared
-- **iCloud Sync:** Fixed an iCloud synchronization issue where the app would get temporarily blocked (rate-limited) by Apple's servers. Changes to entries are now grouped and saved efficiently when you finish typing or close the screen, rather than on every keystroke
+- Fixed UI tests related to `ModelContainer` initialization
+- Fixed the language picker text being too small on iPad
+- Fixed the layout bouncing when the iCloud sync error banner appeared
+- Fixed iCloud rate-limiting by saving changes when typing finishes or the screen closes instead of on every keystroke
 
+### Refactored
+- Improved `ModelContainer` initialization
 
 ## [0.3.0] - 2026-05-11
 ### Added
-- **Joyful Hours Field**: A new analytical metric that identifies the time of day when you capture the most joy
-- **Interactive All Moments**: Added a `Tap here` guide to the monthly list card to make it more intuitive
+- Added the `Joyful Hours` metric showing the time of day with the most joy
+- Added a `Tap here` hint to the monthly list card
 
 ### Changed
-- **Architecture**: Migrated analytics logic to a dedicated `InsightsCalculator` for better performance
-- **Insights Redesign**: Completely updated the visual language of the `Insights` screen for a more cohesive and balanced look
+- Redesigned the visual language of the `Insights` screen
 
 ### Fixed
-- **Smooth Animations**: Fixed a UI glitch where the moments list would fly through the entire Insights screen when expanded
+- Fixed the moments list flying across the `Insights` screen when expanded
+
+### Refactored
+- Moved analytics logic to `InsightsCalculator`
 
 ## [0.2.1] - 2026-05-08
 ### Added
-- **New App Icon**: Introduced the App branding
-- **Interactive Monthly Archive**: A new expandable section in `Insights` that lets you revisit all joys from a specific month
+- Added the new app icon
+- Added an expandable monthly archive in `Insights` to revisit joys from a specific month
 
 ### Changed
-- **Metric Cards**: Simplified `Joys` and `Day streak` cards for better readability
+- Simplified the `Joys` and `Day streak` cards
 
 ### Fixed
-- **Grid Consistency**: Standardized the width and spacing of all insight cards to ensure a perfect vertical flow
-
+- Fixed inconsistent width and spacing of insight cards
 
 ## [0.2.0] - 2026-05-06
-
 ### Added
-- **Monthly Comparison Insight**: A new analytical block that compares current month performance with the previous one
-- **Multi-language Support**: Full manual translation for Russian and German languages using **String Catalogs**
-- **In-App Language Picker**: Users can manually switch between English, Russian, and German directly in Settings
-- **Dynamic Test IDs**: UI tests now use language-agnostic identifiers, ensuring stability across all supported locales
+- Added the `Monthly Comparison` insight comparing the current month with the previous one
+- Added Russian and German translations with String Catalogs
+- Added an in-app language picker in `Settings` (English, Russian, German)
 
 ### Changed
-- **Insights Layout**: Improved visual hierarchy by alternating between circular badges and wide rectangular blocks
+- Improved the `Insights` layout by alternating circular badges and wide rectangular blocks
 
 ### Fixed
-- **Date Localization**: Fixed a bug where dates didn't update their language
-- **Insights View**: Fixed a bug where the month comparison message would overflow its background container on iPad and larger screens
+- Fixed dates not updating their language
+- Fixed the month comparison message overflowing its container on iPad and larger screens
 
+### Refactored
+- Switched UI tests to language-agnostic identifiers
 
 ## [0.1.0] - 2026-05-02
-
 ### Added
-- **Smart Calendar**: Built an expandable calendar with seamless month-to-month navigation and "oldest record" detection
-- **Joy Journaling**: Developed full functionality (Create, Read, Update, Delete) for recording and managing daily `Joy Entries`
-- **Core Persistence**: Integrated **SwiftData** with support for persistent disk storage and an in-memory mode specifically for automated testing
-- **Theming**: Integrated a `ThemeManager` supporting dynamic Light and Dark mode switching with custom color palettes
-- **Monthly Insights**: Created a dedicated dashboard that calculates total joys per month and identifies the longest daily streaks
-- **Dynamic Messaging**: Implemented a system of adaptive messages for insights based on the number of entries and current streak status
-- **UI Automation Suite**: Established a comprehensive suite of **XCUITest** scenarios covering Insights navigation, record management, and settings
+- Added an expandable calendar with month navigation and "oldest record" detection
+- Added creating, reading, updating and deleting `Joy Entries`
+- Integrated SwiftData with disk storage and an in-memory mode for tests
+- Added `ThemeManager` with Light/Dark mode and custom color palettes
+- Added a monthly `Insights` dashboard with total joys and longest daily streak
+- Added adaptive `Insights` messages based on entry count and streak
+- Added an XCUITest suite covering `Insights` navigation, record management and `Settings`
