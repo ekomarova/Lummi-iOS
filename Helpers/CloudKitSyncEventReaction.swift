@@ -12,7 +12,7 @@ import CoreData
 
 // How the sync monitor reacts to one CloudKit sync event. It takes plain values instead of the event itself
 // because NSPersistentCloudKitContainer.Event cannot be created in tests.
-nonisolated enum CloudKitSyncEventReaction: Equatable {
+enum CloudKitSyncEventReaction: Equatable {
     case setState(CloudKitSyncState)
     // Re-reads the iCloud account. `preservingStorageFull` keeps a "storage full" state through that check.
     case recheckAccount(preservingStorageFull: Bool)

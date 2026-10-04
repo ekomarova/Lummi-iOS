@@ -14,7 +14,7 @@ import Observation
 import SwiftUI
 
 // Observes the iCloud account and CloudKit sync events and exposes a user-facing sync state.
-nonisolated enum CloudKitSyncState: Equatable {
+enum CloudKitSyncState: Equatable {
     case available
     case loggedOut
     case restricted
