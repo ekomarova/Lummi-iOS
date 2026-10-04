@@ -11,7 +11,6 @@ import Foundation
 import CloudKit
 import CoreData
 import Observation
-import os
 import SwiftUI
 
 // Observes the iCloud account and CloudKit sync events and exposes a user-facing sync state.
@@ -45,7 +44,6 @@ final class CloudKitSyncMonitor {
     private var container: CKContainer?
     private var isCloudKitDisabled = false
     private(set) var hasStarted = false
-    private nonisolated static let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "Lummi", category: "CloudKitSync")
 
     // Cheap on purpose: SwiftUI may run a `@State` initializer on every view re-creation,
     // so nothing here may touch CloudKit. Call `start()` once the monitor is actually needed.
@@ -114,18 +112,7 @@ final class CloudKitSyncMonitor {
         guard let userInfo = notification.userInfo,
               let event = userInfo[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event else { return }
 
-        if let error = event.error {
-            // Most CloudKit errors are transient and retried by SwiftData, so they only get logged, not shown.
-            let nsError = error as NSError
-            let codes = CloudKitSyncEventReaction.ckErrorCodes(in: error).map(\.rawValue)
-            Self.logger.error(
-                """
-                CloudKit event \(event.type.rawValue) failed: \(nsError.domain, privacy: .public) \
-                \(nsError.code, privacy: .public), CKError codes \(codes, privacy: .public)
-                """
-            )
-        }
-
+        // Most CloudKit errors are transient and retried by SwiftData, so only the ones the user can act on are shown.
         let reaction = CloudKitSyncEventReaction.make(type: event.type, succeeded: event.succeeded, error: event.error)
         Task { @MainActor in
             switch reaction {
