@@ -47,7 +47,7 @@ struct DayCell: View {
         .accessibilityLabel("\(day)")
         .accessibilityIdentifier("DayCell_\(dateKey)")
         .accessibilityAddTraits(.isButton)
-        .accessibilityValue(isFilled ? "Filled" : "Empty")
+        .accessibilityValue(isFilled ? Text("Filled") : Text("Empty"))
     }
 }
 

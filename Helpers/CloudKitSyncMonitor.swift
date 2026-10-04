@@ -19,6 +19,9 @@ enum CloudKitSyncState: Equatable {
     case loggedOut
     case restricted
     case storageFull
+    case unavailableInThisBuild
+    case statusUndetermined
+    case statusUnrecognized
     case unknownError(String)
 
     var message: LocalizedStringKey? {
@@ -31,6 +34,12 @@ enum CloudKitSyncState: Equatable {
             return "iCloud is restricted by security policies."
         case .storageFull:
             return "iCloud storage is full. Please free up space to continue syncing."
+        case .unavailableInThisBuild:
+            return "Sync issue: iCloud is not available in this build."
+        case .statusUndetermined:
+            return "Sync issue: Status could not be determined."
+        case .statusUnrecognized:
+            return "Sync issue: Unknown status."
         case .unknownError(let msg):
             return "Sync issue: \(msg)"
         }
@@ -70,7 +79,7 @@ final class CloudKitSyncMonitor {
         }
         if arguments.contains(where: { $0.hasPrefix("-UI_TESTING") }) {
             self.isCloudKitDisabled = true
-            syncState = .unknownError("iCloud is not available in this build.")
+            syncState = .unavailableInThisBuild
         }
         #endif
     }
@@ -145,9 +154,9 @@ final class CloudKitSyncMonitor {
                 // Do nothing, SwiftData seamlessly works offline locally
                 break
             case .couldNotDetermine:
-                self.syncState = .unknownError("Status could not be determined.")
+                self.syncState = .statusUndetermined
             @unknown default:
-                self.syncState = .unknownError("Unknown status.")
+                self.syncState = .statusUnrecognized
             }
         } catch {
             self.syncState = .unknownError(error.localizedDescription)
