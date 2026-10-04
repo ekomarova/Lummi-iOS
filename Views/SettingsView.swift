@@ -34,7 +34,6 @@ struct SettingsView: View {
     @AppStorage("appLanguage") private var selectedLanguage: AppLanguage = .english
     @AppStorage("isICloudSyncEnabled") private var isICloudSyncEnabled: Bool = false
     
-    @State private var syncMonitor = CloudKitSyncMonitor()
     @State private var syncBannerVisible = false
 
     @State private var showClearDataAlert: Bool = false
@@ -162,26 +161,8 @@ struct SettingsView: View {
                 }
 
                 // MARK: - iCloud Sync Banner
-                if isICloudSyncEnabled && syncBannerVisible, let syncMessage = syncMonitor.syncState.message {
-                    HStack(alignment: .top, spacing: 12) {
-                        Image(systemName: "exclamationmark.icloud.fill")
-                            .font(.system(size: 20))
-                            .foregroundColor(.white)
-
-                        Text(syncMessage)
-                            .font(.lummiFont(size: 14))
-                            .foregroundColor(.white)
-                            .multilineTextAlignment(.leading)
-                            .accessibilityIdentifier("SyncBannerMessage")
-                    }
-                    .padding(15)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(AccentColors.syncBannerBackground)
-                    )
-                    .transition(.opacity.combined(with: .scale(scale: 0.95, anchor: .top)))
-                    .animation(.spring(), value: syncMonitor.syncState)
+                if isICloudSyncEnabled && syncBannerVisible {
+                    SyncStatusBanner()
                 }
             }
 
@@ -279,6 +260,38 @@ struct LanguageSelectionView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .transition(.move(edge: .trailing).combined(with: .opacity))
+    }
+}
+
+// Owns the sync monitor, so CloudKit is only touched while the banner is on screen (i.e. iCloud sync is enabled).
+private struct SyncStatusBanner: View {
+    @State private var monitor = CloudKitSyncMonitor()
+
+    var body: some View {
+        Group {
+            if let syncMessage = monitor.syncState.message {
+                HStack(alignment: .top, spacing: 12) {
+                    Image(systemName: "exclamationmark.icloud.fill")
+                        .font(.system(size: 20))
+                        .foregroundColor(.white)
+
+                    Text(syncMessage)
+                        .font(.lummiFont(size: 14))
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.leading)
+                        .accessibilityIdentifier("SyncBannerMessage")
+                }
+                .padding(15)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(AccentColors.syncBannerBackground)
+                )
+                .transition(.opacity.combined(with: .scale(scale: 0.95, anchor: .top)))
+            }
+        }
+        .animation(.spring(), value: monitor.syncState)
+        .task { monitor.start() }
     }
 }
 
