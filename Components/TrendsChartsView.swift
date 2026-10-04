@@ -44,22 +44,21 @@ struct TrendsChartsView: View {
 
     var body: some View {
         let stats = stats
+        // Side by side on iPad, where two full-width charts would be needlessly wide and tall.
+        let chartsLayout = AdaptiveLayout.isPad
+            ? AnyLayout(HStackLayout(alignment: .top, spacing: 20))
+            : AnyLayout(VStackLayout(alignment: .leading, spacing: 30))
         return VStack(alignment: .leading, spacing: 30) {
-            VStack(spacing: 15) {
-                summaryCards(stats)
-                // Only on a year's page, not Trends' own Month tab: the main Insights screen already
-                // shows this same card for the current month, so repeating it there would be redundant.
-                if let joyfulHours = stats.joyfulHours {
-                    joyfulHoursCard(value: joyfulHours)
+            summarySection(stats)
+
+            chartsLayout {
+                TrendsSection(title: volumeChartTitle) {
+                    volumeChart(stats)
                 }
-            }
 
-            TrendsSection(title: volumeChartTitle) {
-                volumeChart(stats)
-            }
-
-            TrendsSection(title: "Joys By Weekday") {
-                weekdayChart(stats)
+                TrendsSection(title: "Joys By Weekday") {
+                    weekdayChart(stats)
+                }
             }
         }
     }
@@ -71,27 +70,55 @@ struct TrendsChartsView: View {
 
     // MARK: - Summary
 
-    private func summaryCards(_ stats: TrendsPerformanceStats) -> some View {
-        HStack(spacing: 12) {
-            GlowCard.joys(value: "\(stats.entryCount)", height: 130, valueFontSize: 26, valuePadding: 8)
-            GlowCard(
-                value: "\(stats.daysJournaled)",
-                subtitle: "Active Days",
-                systemImage: "calendar",
-                iconColor: AccentColors.activeDays,
-                gradientColors: AccentColors.activeDaysGradient,
-                height: 130,
-                valueFontSize: 26,
-                valuePadding: 8
-            )
-            GlowCard.streak(value: "\(stats.bestStreak)", height: 130, valueFontSize: 26, valuePadding: 8)
+    // iPad is wide enough for all four cards in one row; on iPhone the Joyful Hours card gets a row of its own.
+    // It is only present on a year's page, not Trends' own Month tab: the main Insights screen already shows
+    // this same card for the current month, so repeating it there would be redundant.
+    @ViewBuilder
+    private func summarySection(_ stats: TrendsPerformanceStats) -> some View {
+        if AdaptiveLayout.isPad {
+            HStack(spacing: 12) {
+                countCards(stats)
+                joyfulHoursCard(stats)
+            }
+        } else {
+            VStack(spacing: 15) {
+                HStack(spacing: 12) {
+                    countCards(stats)
+                }
+                joyfulHoursCard(stats)
+            }
         }
     }
 
-    // Full-width, since the "HH:mm - HH:mm" value is wider than a short number and doesn't fit the
-    // three-across row above. `valueFontSize` still matches those three cards for a consistent look.
-    private func joyfulHoursCard(value: String) -> some View {
-        GlowCard.joyfulHours(value: value, height: 130, valueFontSize: 26, valuePadding: 30)
+    @ViewBuilder
+    private func countCards(_ stats: TrendsPerformanceStats) -> some View {
+        GlowCard.joys(value: "\(stats.entryCount)", height: 130, valueFontSize: 26, valuePadding: 8)
+        GlowCard(
+            value: "\(stats.daysJournaled)",
+            subtitle: "Active Days",
+            systemImage: "calendar",
+            iconColor: AccentColors.activeDays,
+            gradientColors: AccentColors.activeDaysGradient,
+            height: 130,
+            valueFontSize: 26,
+            valuePadding: 8
+        )
+        GlowCard.streak(value: "\(stats.bestStreak)", height: 130, valueFontSize: 26, valuePadding: 8)
+    }
+
+    // Full-width on iPhone, since the "HH:mm - HH:mm" value is wider than a short number and doesn't fit the
+    // three-across row above; a quarter of the row on iPad, hence the smaller padding. `valueFontSize` still
+    // matches the other cards for a consistent look.
+    @ViewBuilder
+    private func joyfulHoursCard(_ stats: TrendsPerformanceStats) -> some View {
+        if let joyfulHours = stats.joyfulHours {
+            GlowCard.joyfulHours(
+                value: joyfulHours,
+                height: 130,
+                valueFontSize: 26,
+                valuePadding: AdaptiveLayout.isPad ? 12 : 30
+            )
+        }
     }
 
     // MARK: - Charts
@@ -152,7 +179,8 @@ struct TrendsChartsView: View {
             }
         }
         .chartYAxis { yAxisMarks }
-        .frame(height: 140)
+        // Matches the volume chart's height on iPad, so the two side-by-side cards line up.
+        .frame(height: AdaptiveLayout.isPad ? 160 : 140)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Joys By Weekday"))
     }
