@@ -112,33 +112,31 @@ final class CloudKitSyncMonitor {
         guard let userInfo = notification.userInfo,
               let event = userInfo[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event else { return }
 
-        if let error = event.error {
-            let nsError = error as NSError
-            let underlyingError = nsError.userInfo[NSUnderlyingErrorKey] as? Error ?? error
-
-            if let ckError = underlyingError as? CKError {
-                Task { @MainActor in
-                    if ckError.code == .quotaExceeded {
-                        self.syncState = .storageFull
-                    } else if ckError.code == .notAuthenticated {
-                        self.syncState = .loggedOut
-                    }
-                }
-            }
-        } else if event.succeeded {
-            Task { @MainActor in
-                await checkAccountStatus()
+        // Most CloudKit errors are transient and retried by SwiftData, so only the ones the user can act on are shown.
+        let reaction = CloudKitSyncEventReaction.make(type: event.type, succeeded: event.succeeded, error: event.error)
+        Task { @MainActor in
+            switch reaction {
+            case .setState(let state):
+                self.syncState = state
+            case .recheckAccount(let preservingStorageFull):
+                await checkAccountStatus(preservingStorageFull: preservingStorageFull)
+            case .none:
+                break
             }
         }
     }
 
-    func checkAccountStatus() async {
+    // `preservingStorageFull` keeps `.storageFull` when the account itself is fine: the account being available
+    // says nothing about free iCloud space, which only a successful upload proves.
+    func checkAccountStatus(preservingStorageFull: Bool = false) async {
         guard let container else { return }
         do {
             let status = try await container.accountStatus()
             switch status {
             case .available:
-                self.syncState = .available
+                if !(preservingStorageFull && self.syncState == .storageFull) {
+                    self.syncState = .available
+                }
             case .noAccount:
                 self.syncState = .loggedOut
             case .restricted:
