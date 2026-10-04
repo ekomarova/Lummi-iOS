@@ -11,7 +11,6 @@ All notable changes to the project will be documented in this file.
 - Changed the minimum deployment target from iOS 17.6 to iOS 18.0
 - Updated `All Joys` page with a "Month"/"All Time" summary [#41](https://github.com/ekomarova/Lummi-iOS/pull/41)
 - Showed the date in `All Joys` only on the latest joy of each day; the other joys of that day appear without it [#42](https://github.com/ekomarova/Lummi-iOS/pull/42)
-- Locked the app to portrait orientation on iPhone and iPad (landscape is no longer supported)
 - Adapted `Trends` to iPad [#43](https://github.com/ekomarova/Lummi-iOS/pull/43)
 
 ### Fixed
