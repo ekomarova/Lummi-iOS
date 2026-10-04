@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A1B2C3D42FB0000302 /* StorageErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D42FB0000301 /* StorageErrorView.swift */; };
+		A1B2C3D42FB0000202 /* ContainerBootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D42FB0000201 /* ContainerBootstrap.swift */; };
+		A1B2C3D42FB0000102 /* LummiSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D42FB0000101 /* LummiSchema.swift */; };
 		33502091645F3A86DF1E3C9B /* DateUITestingExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8659B4745303AC80F59A96E /* DateUITestingExtension.swift */; };
 		24DEA4823F27415591ADBA5F /* AllJoysView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A75A501776D443E1961E0695 /* AllJoysView.swift */; };
 		2EAF024321A84B0DA72034CB /* CardOpacity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33595B21D97D40CAAE9F5BE2 /* CardOpacity.swift */; };
@@ -80,6 +83,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A1B2C3D42FB0000301 /* StorageErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageErrorView.swift; sourceTree = "<group>"; };
+		A1B2C3D42FB0000201 /* ContainerBootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerBootstrap.swift; sourceTree = "<group>"; };
+		A1B2C3D42FB0000101 /* LummiSchema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LummiSchema.swift; sourceTree = "<group>"; };
 		33595B21D97D40CAAE9F5BE2 /* CardOpacity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardOpacity.swift; sourceTree = "<group>"; };
 		470FC4E6304A309F00F50A7A /* ModelContextSave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContextSave.swift; sourceTree = "<group>"; };
 		4714236E2F9CFAA000C1D681 /* SelectedDayDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedDayDetailView.swift; sourceTree = "<group>"; };
@@ -197,6 +203,7 @@
 			isa = PBXGroup;
 			children = (
 				4726FFC52FA2B414008B5D3C /* JoyEntry.swift */,
+				A1B2C3D42FB0000101 /* LummiSchema.swift */,
 			);
 			path = DataModels;
 			sourceTree = "<group>";
@@ -243,6 +250,7 @@
 				473B04472F9ABC2300C482FA /* MainCalendarView.swift */,
 				4714236E2F9CFAA000C1D681 /* SelectedDayDetailView.swift */,
 				4726FFC92FA3DA0D008B5D3C /* SettingsView.swift */,
+				A1B2C3D42FB0000301 /* StorageErrorView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -312,6 +320,7 @@
 				47981EAC2FA5473E005ADAB1 /* InsightsCalculator.swift */,
 				4A11C0DE0000000000000002 /* JoyEntryStore.swift */,
 				470FC4E6304A309F00F50A7A /* ModelContextSave.swift */,
+				A1B2C3D42FB0000201 /* ContainerBootstrap.swift */,
 				4A11C0DE00000000000000A1 /* NavigationState.swift */,
 				D085C748510EC29FCEA60BA0 /* TrendsCalculator.swift */,
 				A1B2C3D40000000000000F10 /* TrendsPerformanceStats.swift */,
@@ -484,9 +493,11 @@
 				473B04562F9BB2F800C482FA /* AppThemes.swift in Sources */,
 				473B045B2F9BB79C00C482FA /* RecordInput.swift in Sources */,
 				4726FFCA2FA3DA0F008B5D3C /* SettingsView.swift in Sources */,
+				A1B2C3D42FB0000302 /* StorageErrorView.swift in Sources */,
 				473B04202F9AB1AA00C482FA /* LummiApp.swift in Sources */,
 				473B04482F9ABD8B00C482FA /* MainCalendarView.swift in Sources */,
 				4726FFC62FA2B41F008B5D3C /* JoyEntry.swift in Sources */,
+				A1B2C3D42FB0000102 /* LummiSchema.swift in Sources */,
 				473B044A2F9ABF1D00C482FA /* HeaderView.swift in Sources */,
 				47981EB82FA5928F005ADAB1 /* MockDataManager.swift in Sources */,
 				4A11C0DE0000000000000013 /* PreviewSupport.swift in Sources */,
@@ -503,6 +514,7 @@
 				4766220D303F8AB000041521 /* CloudKitSyncMonitor.swift in Sources */,
 				4714236F2F9CFAA000C1D681 /* SelectedDayDetailView.swift in Sources */,
 				470FC4E7304A309F00F50A7A /* ModelContextSave.swift in Sources */,
+				A1B2C3D42FB0000202 /* ContainerBootstrap.swift in Sources */,
 				4A11C0DE0000000000000012 /* JoyEntryStore.swift in Sources */,
 				4A11C0DE0000000000000011 /* CalendarMonthLayout.swift in Sources */,
 				4A11C0DE00000000000000A2 /* NavigationState.swift in Sources */,

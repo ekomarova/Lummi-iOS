@@ -14,6 +14,7 @@ All notable changes to the project will be documented in this file.
 - Adapted `Trends` to iPad [#43](https://github.com/ekomarova/Lummi-iOS/pull/43)
 
 ### Fixed
+- Stopped the app from crashing on launch when its storage cannot be opened [#44](https://github.com/ekomarova/Lummi-iOS/pull/44)
 - Restored the entry's original text when saving an edit fails [#27](https://github.com/ekomarova/Lummi-iOS/pull/27)
 - Fixed `Joyful Hours` to use a sliding three-hour window (wrapping past midnight) with the most entries; ties go to the window with the most recent entry [#18](https://github.com/ekomarova/Lummi-iOS/pull/18)
 
