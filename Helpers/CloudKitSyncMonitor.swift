@@ -41,9 +41,14 @@ enum CloudKitSyncState: Equatable {
 @MainActor
 final class CloudKitSyncMonitor {
     var syncState: CloudKitSyncState = .available
-    private let container: CKContainer?
+    private var container: CKContainer?
+    private var isCloudKitDisabled = false
+    private(set) var hasStarted = false
 
-    init() {
+    // Cheap on purpose: SwiftUI may run a `@State` initializer on every view re-creation,
+    // so nothing here may touch CloudKit. Call `start()` once the monitor is actually needed.
+    init(isCloudKitDisabled: Bool = false) {
+        self.isCloudKitDisabled = isCloudKitDisabled
         // CKContainer.default() raises an uncaught NSException (crashing the process)
         // on builds without a signed iCloud entitlement, e.g. CI builds made with
         // CODE_SIGNING_ALLOWED=NO. UI test runs always fall into that category, so skip
@@ -55,20 +60,25 @@ final class CloudKitSyncMonitor {
         let arguments = ProcessInfo.processInfo.arguments
         // Xcode Previews run without the iCloud entitlement too, so they must not touch CloudKit either.
         if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
-            container = nil
+            self.isCloudKitDisabled = true
             return
         }
         if arguments.contains("-UI_TESTING_ICLOUD_LOGGED_OUT") {
-            container = nil
+            self.isCloudKitDisabled = true
             syncState = .loggedOut
             return
         }
-        guard !arguments.contains(where: { $0.hasPrefix("-UI_TESTING") }) else {
-            container = nil
+        if arguments.contains(where: { $0.hasPrefix("-UI_TESTING") }) {
+            self.isCloudKitDisabled = true
             syncState = .unknownError("iCloud is not available in this build.")
-            return
         }
         #endif
+    }
+
+    // Connects to CloudKit, starts observing and checks the account. Safe to call more than once.
+    func start() {
+        guard !isCloudKitDisabled, !hasStarted else { return }
+        hasStarted = true
         container = CKContainer.default()
 
         // Listen for Apple ID Account changes
