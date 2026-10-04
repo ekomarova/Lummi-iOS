@@ -11,6 +11,7 @@ import Foundation
 import CloudKit
 import CoreData
 import Observation
+import os
 import SwiftUI
 
 // Observes the iCloud account and CloudKit sync events and exposes a user-facing sync state.
@@ -44,6 +45,7 @@ final class CloudKitSyncMonitor {
     private var container: CKContainer?
     private var isCloudKitDisabled = false
     private(set) var hasStarted = false
+    private nonisolated static let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "Lummi", category: "CloudKitSync")
 
     // Cheap on purpose: SwiftUI may run a `@State` initializer on every view re-creation,
     // so nothing here may touch CloudKit. Call `start()` once the monitor is actually needed.
@@ -113,32 +115,41 @@ final class CloudKitSyncMonitor {
               let event = userInfo[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event else { return }
 
         if let error = event.error {
+            // Most CloudKit errors are transient and retried by SwiftData, so they only get logged, not shown.
             let nsError = error as NSError
-            let underlyingError = nsError.userInfo[NSUnderlyingErrorKey] as? Error ?? error
+            let codes = CloudKitSyncEventReaction.ckErrorCodes(in: error).map(\.rawValue)
+            Self.logger.error(
+                """
+                CloudKit event \(event.type.rawValue) failed: \(nsError.domain, privacy: .public) \
+                \(nsError.code, privacy: .public), CKError codes \(codes, privacy: .public)
+                """
+            )
+        }
 
-            if let ckError = underlyingError as? CKError {
-                Task { @MainActor in
-                    if ckError.code == .quotaExceeded {
-                        self.syncState = .storageFull
-                    } else if ckError.code == .notAuthenticated {
-                        self.syncState = .loggedOut
-                    }
-                }
-            }
-        } else if event.succeeded {
-            Task { @MainActor in
-                await checkAccountStatus()
+        let reaction = CloudKitSyncEventReaction.make(type: event.type, succeeded: event.succeeded, error: event.error)
+        Task { @MainActor in
+            switch reaction {
+            case .setState(let state):
+                self.syncState = state
+            case .recheckAccount(let preservingStorageFull):
+                await checkAccountStatus(preservingStorageFull: preservingStorageFull)
+            case .none:
+                break
             }
         }
     }
 
-    func checkAccountStatus() async {
+    // `preservingStorageFull` keeps `.storageFull` when the account itself is fine: the account being available
+    // says nothing about free iCloud space, which only a successful upload proves.
+    func checkAccountStatus(preservingStorageFull: Bool = false) async {
         guard let container else { return }
         do {
             let status = try await container.accountStatus()
             switch status {
             case .available:
-                self.syncState = .available
+                if !(preservingStorageFull && self.syncState == .storageFull) {
+                    self.syncState = .available
+                }
             case .noAccount:
                 self.syncState = .loggedOut
             case .restricted:

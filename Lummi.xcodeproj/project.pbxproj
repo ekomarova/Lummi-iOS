@@ -33,6 +33,7 @@
 		473B04572F9BB2FD00C482FA /* ThemeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B04522F9BB22000C482FA /* ThemeProtocol.swift */; };
 		473B045B2F9BB79C00C482FA /* RecordInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473B045A2F9BB79B00C482FA /* RecordInput.swift */; };
 		4766220D303F8AB000041521 /* CloudKitSyncMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4766220C303F8AAC00041521 /* CloudKitSyncMonitor.swift */; };
+		5E7A1C0D9B3F4A6E8D2C1B07 /* CloudKitSyncEventReaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E7A1C0D9B3F4A6E8D2C1B06 /* CloudKitSyncEventReaction.swift */; };
 		47882A58305742F9007E5DB5 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 47882A56305742F9007E5DB5 /* PrivacyInfo.xcprivacy */; };
 		47981E9B2FA4440C005ADAB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 47981E9A2FA4440C005ADAB1 /* Assets.xcassets */; };
 		47981EAD2FA54745005ADAB1 /* InsightsCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47981EAC2FA5473E005ADAB1 /* InsightsCalculator.swift */; };
@@ -110,6 +111,7 @@
 		473B04542F9BB24E00C482FA /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		473B045A2F9BB79B00C482FA /* RecordInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordInput.swift; sourceTree = "<group>"; };
 		4766220C303F8AAC00041521 /* CloudKitSyncMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitSyncMonitor.swift; sourceTree = "<group>"; };
+		5E7A1C0D9B3F4A6E8D2C1B06 /* CloudKitSyncEventReaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitSyncEventReaction.swift; sourceTree = "<group>"; };
 		47882A56305742F9007E5DB5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		478C01383058A0C8003B0E06 /* Local.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Local.xcconfig; sourceTree = "<group>"; };
 		478C013A3058A102003B0E06 /* Local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text; path = Local.xcconfig.example; sourceTree = "<group>"; };
@@ -316,6 +318,7 @@
 			isa = PBXGroup;
 			children = (
 				4A11C0DE0000000000000001 /* CalendarMonthLayout.swift */,
+				5E7A1C0D9B3F4A6E8D2C1B06 /* CloudKitSyncEventReaction.swift */,
 				4766220C303F8AAC00041521 /* CloudKitSyncMonitor.swift */,
 				47981EAC2FA5473E005ADAB1 /* InsightsCalculator.swift */,
 				4A11C0DE0000000000000002 /* JoyEntryStore.swift */,
@@ -511,6 +514,7 @@
 				A1B2C3D41000000000000002 /* RecordActionButton.swift in Sources */,
 				473B044E2F9ACF9D00C482FA /* RecordButton.swift in Sources */,
 				47289DCE2FAED17700E46B84 /* InsightsView.swift in Sources */,
+				5E7A1C0D9B3F4A6E8D2C1B07 /* CloudKitSyncEventReaction.swift in Sources */,
 				4766220D303F8AB000041521 /* CloudKitSyncMonitor.swift in Sources */,
 				4714236F2F9CFAA000C1D681 /* SelectedDayDetailView.swift in Sources */,
 				470FC4E7304A309F00F50A7A /* ModelContextSave.swift in Sources */,

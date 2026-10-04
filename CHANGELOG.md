@@ -14,6 +14,7 @@ All notable changes to the project will be documented in this file.
 - Adapted `Trends` to iPad [#43](https://github.com/ekomarova/Lummi-iOS/pull/43)
 
 ### Fixed
+- Kept the "iCloud storage is full" message while uploads still fail, and recognized a full iCloud storage reported inside a partial failure [#47](https://github.com/ekomarova/Lummi-iOS/pull/47)
 - Stopped the app from crashing on launch when its storage cannot be opened [#44](https://github.com/ekomarova/Lummi-iOS/pull/44)
 - Stopped `Settings` from contacting iCloud while sync is turned off [#45](https://github.com/ekomarova/Lummi-iOS/pull/45)
 - Restored the entry's original text when saving an edit fails [#27](https://github.com/ekomarova/Lummi-iOS/pull/27)
