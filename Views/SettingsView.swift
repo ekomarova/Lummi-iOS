@@ -18,7 +18,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     
     var id: String { self.rawValue }
     
-    var displayName: LocalizedStringKey {
+    var displayName: LocalizedStringResource {
         switch self {
         case .english: return "English"
         case .russian: return "Русский"

@@ -13,7 +13,7 @@ import SwiftUI
 struct ScreenHeader<Left: View, Right: View>: View {
     @Environment(ThemeManager.self) private var themeManager
 
-    let title: LocalizedStringKey
+    let title: LocalizedStringResource
     @ViewBuilder var leftButton: () -> Left
     @ViewBuilder var rightButton: () -> Right
 
@@ -36,7 +36,7 @@ struct ScreenHeader<Left: View, Right: View>: View {
 }
 
 extension ScreenHeader where Right == EmptyView {
-    init(title: LocalizedStringKey, @ViewBuilder leftButton: @escaping () -> Left) {
+    init(title: LocalizedStringResource, @ViewBuilder leftButton: @escaping () -> Left) {
         self.init(title: title, leftButton: leftButton, rightButton: { EmptyView() })
     }
 }

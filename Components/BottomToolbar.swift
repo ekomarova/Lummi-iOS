@@ -46,7 +46,7 @@ struct BottomToolbar: View {
     @ViewBuilder
     private func tab(
         systemImage: String,
-        label: LocalizedStringKey,
+        label: LocalizedStringResource,
         isActive: Bool,
         accessibilityBase: String,
         onTap: @escaping () -> Void

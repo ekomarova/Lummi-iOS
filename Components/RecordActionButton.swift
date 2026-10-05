@@ -14,7 +14,7 @@ struct RecordActionButton: View {
     @Environment(ThemeManager.self) private var themeManager
 
     let systemImage: String
-    let title: LocalizedStringKey
+    let title: LocalizedStringResource
     let accessibilityID: String
     let action: () -> Void
 

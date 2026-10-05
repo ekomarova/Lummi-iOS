@@ -30,7 +30,7 @@ struct DisclosureRow: View {
 
     var systemImage: String?
     var iconColor: Color = .clear
-    let title: LocalizedStringKey
+    let title: LocalizedStringResource
     let accessibilityID: String
     let action: () -> Void
 

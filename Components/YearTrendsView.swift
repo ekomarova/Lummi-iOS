@@ -17,7 +17,7 @@ struct YearTrendsView: View {
     var body: some View {
         VStack(spacing: 0) {
             ScreenHeader(
-                title: LocalizedStringKey(String(year)),
+                title: LocalizedStringResource(stringLiteral: String(year)),
                 leftButton: {
                     NavigationIconButton(
                         systemImage: "arrow.left",
