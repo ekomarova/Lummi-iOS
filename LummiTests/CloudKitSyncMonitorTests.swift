@@ -44,6 +44,9 @@ struct CloudKitSyncMonitorTests {
         CloudKitSyncState.loggedOut,
         .restricted,
         .storageFull,
+        .unavailableInThisBuild,
+        .statusUndetermined,
+        .statusUnrecognized,
         .unknownError("boom")
     ])
     func problemStatesHaveMessage(state: CloudKitSyncState) {
