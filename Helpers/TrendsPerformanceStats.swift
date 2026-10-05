@@ -1,6 +1,5 @@
 //
-//  Copyright (c) 2026, Evseniia Komarova.
-//  All rights reserved.
+//  Required Notice: Copyright Evseniia Komarova (https://github.com/ekomarova)
 //
 //  Licensed under the PolyForm Noncommercial License 1.0.0.
 //  See the LICENSE file in the repository root for full terms.
