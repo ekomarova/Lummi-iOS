@@ -12,7 +12,7 @@ import SwiftUI
 struct ThemeOptionButton: View {
     @Environment(ThemeManager.self) private var themeManager
 
-    let title: LocalizedStringKey
+    let title: LocalizedStringResource
     let isSelected: Bool
     let accessibilityID: String
     let action: () -> Void

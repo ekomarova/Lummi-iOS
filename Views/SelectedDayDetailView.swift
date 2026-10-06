@@ -34,14 +34,14 @@ struct SelectedDayDetailView: View {
         case editFailed
         case deleteFailed
 
-        var title: LocalizedStringKey {
+        var title: LocalizedStringResource {
             switch self {
             case .editFailed: return "Failed to Save"
             case .deleteFailed: return "Failed to Delete"
             }
         }
 
-        var message: LocalizedStringKey {
+        var message: LocalizedStringResource {
             switch self {
             case .editFailed: return "Your changes could not be saved. Please try again."
             case .deleteFailed: return "Your record could not be deleted. Please try again."
@@ -100,7 +100,7 @@ struct SelectedDayDetailView: View {
         .onChange(of: selectedDate) { _, _ in saveAndDismiss() }
         .onDisappear { saveAndDismiss() }
         .alert(
-            saveAlert?.title ?? "",
+            Text(saveAlert?.title ?? ""),
             isPresented: Binding(
                 get: { saveAlert != nil },
                 set: { isPresented in

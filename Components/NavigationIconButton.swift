@@ -14,7 +14,7 @@ struct NavigationIconButton: View {
 
     let systemImage: String
     var iconOpacity: Double = 1
-    var accessibilityLabel: LocalizedStringKey?
+    var accessibilityLabel: LocalizedStringResource?
     let accessibilityID: String
     let action: () -> Void
 
@@ -41,7 +41,7 @@ struct NavigationIconButton: View {
         )
         .buttonStyle(.plain)
         if let accessibilityLabel {
-            base.accessibilityLabel(accessibilityLabel)
+            base.accessibilityLabel(Text(accessibilityLabel))
         } else {
             base
         }

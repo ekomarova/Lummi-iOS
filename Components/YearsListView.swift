@@ -21,7 +21,7 @@ struct YearsListView: View {
                 DisclosureRow(
                     systemImage: "calendar",
                     iconColor: AccentColors.yearRow,
-                    title: LocalizedStringKey(String(year)),
+                    title: LocalizedStringResource(stringLiteral: String(year)),
                     accessibilityID: "\(accessibilityIDPrefix)_\(year)"
                 ) {
                     onSelect(year)

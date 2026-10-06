@@ -23,7 +23,7 @@ enum CloudKitSyncState: Equatable {
     case statusUnrecognized
     case unknownError(String)
 
-    var message: LocalizedStringKey? {
+    var message: LocalizedStringResource? {
         switch self {
         case .available:
             return nil
