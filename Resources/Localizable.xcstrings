@@ -29,7 +29,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fügen Sie mindestens eine Freude hinzu"
+            "value" : "Füge mindestens eine Freude hinzu"
           }
         },
         "ru" : {
@@ -450,7 +450,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Der iCloud-Speicher ist voll. Bitte geben Sie Speicherplatz frei, um die Synchronisierung fortzusetzen."
+            "value" : "Der iCloud-Speicher ist voll. Bitte gib Speicherplatz frei, um die Synchronisierung fortzusetzen."
           }
         },
         "ru" : {
@@ -942,7 +942,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die Synchronisierung ist ausgesetzt. Bitte melden Sie sich in den Einstellungen bei iCloud an."
+            "value" : "Die Synchronisierung ist ausgesetzt. Bitte melde dich in den Einstellungen bei iCloud an."
           }
         },
         "ru" : {
@@ -958,7 +958,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dadurch werden alle Ihre Einträge lokal und in iCloud dauerhaft gelöscht!"
+            "value" : "Dadurch werden alle deine Einträge lokal und in iCloud dauerhaft gelöscht!"
           }
         },
         "ru" : {
@@ -1111,7 +1111,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dein Moment konnte nicht gerettet werden. Bitte versuchen Sie es erneut."
+            "value" : "Dein Moment konnte nicht gerettet werden. Bitte versuche es erneut."
           }
         },
         "ru" : {
