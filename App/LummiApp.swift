@@ -83,10 +83,10 @@ struct LummiApp: App {
 
     static func makeModelContainer(isICloudSyncEnabled: Bool) throws -> ModelContainer {
         let schema = Schema(versionedSchema: LummiSchemaV1.self)
-        let args = ProcessInfo.processInfo.arguments
-        let isUITesting = args.contains(where: { $0.hasPrefix("-UI_TESTING") })
 
         #if DEBUG
+        let args = ProcessInfo.processInfo.arguments
+        let isUITesting = args.contains(where: { $0.hasPrefix("-UI_TESTING") })
         // `-UI_TESTING_FORCE_STORE_ERROR` makes every attempt fail; the `_ONCE` variant fails only the first one,
         // so a test can tap "Try Again" and see the app recover.
         if args.contains("-UI_TESTING_FORCE_STORE_ERROR")
@@ -108,15 +108,12 @@ struct LummiApp: App {
         #endif
 
         #if DEBUG
-        // Screenshots mode also uses a throwaway in-memory store, so real data is never touched.
-        let usesInMemoryStore = isUITesting || MockDataManager.isScreenshotsMode
-        #else
-        let usesInMemoryStore = isUITesting
-        #endif
-
-        if usesInMemoryStore {
+        // UI tests and screenshots mode use a throwaway in-memory store, so real data is never touched.
+        // Release builds ignore these launch arguments.
+        if isUITesting || MockDataManager.isScreenshotsMode {
             return try makeInMemoryContainer()
         }
+        #endif
 
         let modelConfiguration = ModelConfiguration(
             schema: schema,
