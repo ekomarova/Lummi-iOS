@@ -1,7 +1,9 @@
 # Changelog
 
 All notable changes to the project will be documented in this file.
-## [1.2.0] - 2026-MM-DD
+## [1.3.0] - 2026-MM-DD
+
+## [1.2.0] - 2026-10-08
 ### Added
 - Added the new `Trends` page in `Insights` with a "Month"/"All Time" summary and bar charts [#36](https://github.com/ekomarova/Lummi-iOS/pull/36)
 - Added manual performance tests for `Insights`, `All Joys`, `Trends` (`RUN_PERFORMANCE_TESTS=1`), and a read-only `performance-profile` skill [#40](https://github.com/ekomarova/Lummi-iOS/pull/40)
