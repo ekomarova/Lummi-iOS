@@ -34,6 +34,8 @@ struct SettingsView: View {
     @AppStorage("isICloudSyncEnabled") private var isICloudSyncEnabled: Bool = false
     
     @State private var syncBannerVisible = false
+    // Does not touch CloudKit until `start()`, which only runs while iCloud sync is enabled.
+    @State private var syncMonitor = CloudKitSyncMonitor()
 
     @State private var showClearDataAlert: Bool = false
     @State private var showClearDataFailedAlert: Bool = false
@@ -75,6 +77,9 @@ struct SettingsView: View {
             // allowing the banner to appear, so a failed toggle never flashes the banner.
             try? await Task.sleep(for: .milliseconds(300))
             syncBannerVisible = isICloudSyncEnabled
+            // Started here and not from the banner: the banner is an empty view while the state is fine, and
+            // SwiftUI does not run `.task` on an empty view, so the monitor would never learn the account state.
+            if isICloudSyncEnabled { syncMonitor.start() }
         }
         .alert("Clear All Data?", isPresented: $showClearDataAlert) {
             Button("Cancel", role: .cancel) { }
@@ -155,13 +160,14 @@ struct SettingsView: View {
                         )
                         .labelsHidden()
                         .toggleStyle(.switch)
+                        .tint(AccentColors.toggleOn)
                         .accessibilityIdentifier("iCloudSyncToggle")
                     }
                 }
 
                 // MARK: - iCloud Sync Banner
                 if isICloudSyncEnabled && syncBannerVisible {
-                    SyncStatusBanner()
+                    SyncStatusBanner(monitor: syncMonitor)
                 }
             }
 
@@ -262,9 +268,8 @@ struct LanguageSelectionView: View {
     }
 }
 
-// Owns the sync monitor, so CloudKit is only touched while the banner is on screen (i.e. iCloud sync is enabled).
 private struct SyncStatusBanner: View {
-    @State private var monitor = CloudKitSyncMonitor()
+    let monitor: CloudKitSyncMonitor
 
     var body: some View {
         Group {
@@ -290,7 +295,6 @@ private struct SyncStatusBanner: View {
             }
         }
         .animation(.spring(), value: monitor.syncState)
-        .task { monitor.start() }
     }
 }
 
