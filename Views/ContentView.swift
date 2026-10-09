@@ -99,9 +99,9 @@ private extension ContentView {
             }
             .accessibilityIdentifier(navigation.isSettingsActive ? "SettingsButton_Active" : "SettingsButton_Inactive")
 
-            // The search role detaches the tab into its own round button, the place the record button used to have.
+            // A detached tab becomes its own round button, the place the record button used to have.
             // It is an action rather than a page, so it never stays selected (see `tabSelection`).
-            Tab(value: Screen.record, role: .search) {
+            Tab(value: Screen.record, role: recordTabRole) {
                 Color.clear
             } label: {
                 Label(LocalizedStringResource("New Joy"), systemImage: "plus")
@@ -110,6 +110,15 @@ private extension ContentView {
         }
         .tint(themeManager.currentTheme.textColor)
         .toolbar(isTabBarVisible ? .visible : .hidden, for: .tabBar)
+    }
+
+    // The role that detaches the record tab from the bar. Up to iOS 26 that is `.search`; on iOS 27 `.search` stays
+    // inline in the bar and the detached button belongs to `.prominent`. The compiler check keeps Xcode 26 building.
+    var recordTabRole: TabRole {
+#if compiler(>=6.4)
+        if #available(iOS 27, *) { return .prominent }
+#endif
+        return .search
     }
 
     // A tab's `set` runs on every tap, including a tap on the tab that is already selected, so tapping Home again
