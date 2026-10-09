@@ -108,6 +108,8 @@ private extension ContentView {
             }
             .accessibilityIdentifier("MainRecordButton")
         }
+        // On iPad the tabs can be shown in a sidebar, as in Apple's own apps; on iPhone this is the usual tab bar.
+        .tabViewStyle(.sidebarAdaptable)
         .tint(themeManager.currentTheme.textColor)
         .toolbar(isTabBarVisible ? .visible : .hidden, for: .tabBar)
     }
