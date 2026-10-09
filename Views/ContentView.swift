@@ -200,6 +200,8 @@ private extension ContentView {
 
                 Spacer()
             }
+            // Lets the day's entries scroll under the tab bar, as Insights and All Joys do.
+            .ignoresSafeArea(.container, edges: .bottom)
         }
     }
 }
