@@ -10,41 +10,24 @@ import SwiftUI
 
 // The two top-level tabs shared by Trends and All Joys. Kept separate from `TrendsRange` (the chart calculator's
 // own month-vs-year granularity), since picking "All Time" opens a year list rather than a chart directly.
-enum PeriodTab: Equatable {
+enum PeriodTab: Hashable {
     case month
     case allTime
 }
 
-// "Month"/"All Time" capsule switcher used at the top of Trends and All Joys.
+// "Month"/"All Time" switcher used at the top of Trends and All Joys. It is the system segmented control, which gets
+// the Liquid Glass look on iOS 26.
 struct PeriodTabPicker: View {
-    @Environment(ThemeManager.self) private var themeManager
     @Binding var selection: PeriodTab
 
     var body: some View {
-        HStack(spacing: 4) {
-            tabPill(title: "Month", tab: .month)
-            tabPill(title: "All Time", tab: .allTime)
-        }
-        .padding(4)
-        .cardBackground(Capsule())
-    }
-
-    private func tabPill(title: LocalizedStringResource, tab: PeriodTab) -> some View {
-        let isSelected = selection == tab
-        return Button {
-            selection = tab
+        Picker(selection: $selection) {
+            Text(LocalizedStringResource("Month")).tag(PeriodTab.month)
+            Text(LocalizedStringResource("All Time")).tag(PeriodTab.allTime)
         } label: {
-            Text(title)
-                .font(.lummiFont(size: 13, weight: isSelected ? .bold : .regular))
-                .foregroundColor(themeManager.currentTheme.textColor.opacity(isSelected ? 1 : 0.5))
-                .minimumScaleFactor(0.8)
-                .lineLimit(1)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 10)
-                .background(Capsule().fill(themeManager.currentTheme.textColor.opacity(isSelected ? CardOpacity.fill * 3 : 0)))
+            EmptyView()
         }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(isSelected ? [.isSelected] : [])
+        .pickerStyle(.segmented)
     }
 }
 
