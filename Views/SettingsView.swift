@@ -34,6 +34,8 @@ struct SettingsView: View {
     @AppStorage("isICloudSyncEnabled") private var isICloudSyncEnabled: Bool = false
     
     @State private var syncBannerVisible = false
+    // Exists only while iCloud sync is enabled, so Settings never contacts iCloud with sync off, and every enable checks the account afresh.
+    @State private var syncMonitor: CloudKitSyncMonitor?
 
     @State private var showClearDataAlert: Bool = false
     @State private var showClearDataFailedAlert: Bool = false
@@ -69,12 +71,24 @@ struct SettingsView: View {
         .task(id: isICloudSyncEnabled) {
             guard isICloudSyncEnabled else {
                 syncBannerVisible = false
+                syncMonitor = nil
                 return
             }
             // Wait long enough for a container-error revert to complete before
             // allowing the banner to appear, so a failed toggle never flashes the banner.
-            try? await Task.sleep(for: .milliseconds(300))
+            // A cancelled wait means the toggle changed again, and the task that replaced this one takes over.
+            do {
+                try await Task.sleep(for: .milliseconds(300))
+            } catch {
+                return
+            }
             syncBannerVisible = isICloudSyncEnabled
+            guard isICloudSyncEnabled else { return }
+            // Started here and not from the banner: the banner is an empty view while the state is fine, and
+            // SwiftUI does not run `.task` on an empty view, so the monitor would never learn the account state.
+            let monitor = CloudKitSyncMonitor()
+            monitor.start()
+            syncMonitor = monitor
         }
         .alert("Clear All Data?", isPresented: $showClearDataAlert) {
             Button("Cancel", role: .cancel) { }
@@ -160,8 +174,8 @@ struct SettingsView: View {
                 }
 
                 // MARK: - iCloud Sync Banner
-                if isICloudSyncEnabled && syncBannerVisible {
-                    SyncStatusBanner()
+                if isICloudSyncEnabled && syncBannerVisible, let syncMonitor {
+                    SyncStatusBanner(monitor: syncMonitor)
                 }
             }
 
@@ -262,9 +276,8 @@ struct LanguageSelectionView: View {
     }
 }
 
-// Owns the sync monitor, so CloudKit is only touched while the banner is on screen (i.e. iCloud sync is enabled).
 private struct SyncStatusBanner: View {
-    @State private var monitor = CloudKitSyncMonitor()
+    let monitor: CloudKitSyncMonitor
 
     var body: some View {
         Group {
@@ -290,7 +303,6 @@ private struct SyncStatusBanner: View {
             }
         }
         .animation(.spring(), value: monitor.syncState)
-        .task { monitor.start() }
     }
 }
 
