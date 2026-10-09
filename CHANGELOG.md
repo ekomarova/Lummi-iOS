@@ -5,6 +5,10 @@ All notable changes to the project will be documented in this file.
 ### Changed
 - Replaced the custom bottom toolbar with the native tab bar [#52](https://github.com/ekomarova/Lummi-iOS/pull/52)
 
+## [1.2.1] - 2026-10-09
+### Fixed
+- Showed the iCloud sync banner in `Settings`: the sync monitor never started, so a signed-out account or full iCloud storage went unnoticed [#53](https://github.com/ekomarova/Lummi-iOS/pull/53)
+
 ## [1.2.0] - 2026-10-08
 ### Added
 - Added the new `Trends` page in `Insights` with a "Month"/"All Time" summary and bar charts [#36](https://github.com/ekomarova/Lummi-iOS/pull/36)
