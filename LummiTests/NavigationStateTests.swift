@@ -217,6 +217,41 @@ struct NavigationStateTests {
         #expect(!state.showsToolbar)
     }
 
+    // MARK: - selectedTab
+
+    @Test func selectedTab_followsTheCurrentScreen() {
+        var state = makeState()
+        #expect(state.selectedTab == .home)
+        state.navigate(to: .insights, now: now, calendar: calendar)
+        #expect(state.selectedTab == .insights)
+        state.navigate(to: .settings, now: now, calendar: calendar)
+        #expect(state.selectedTab == .settings)
+    }
+
+    @Test func selectedTab_keepsTheOriginTabWhileRecording() {
+        var state = makeState()
+        state.navigate(to: .settings, now: now, calendar: calendar)
+        state.navigate(to: .record, now: now, calendar: calendar)
+        #expect(state.screen == .record)
+        #expect(state.selectedTab == .settings)
+    }
+
+    @Test func selectedTab_staysOnOriginAfterClosingRecord() {
+        var state = makeState()
+        state.navigate(to: .insights, now: now, calendar: calendar)
+        state.navigate(to: .record, now: now, calendar: calendar)
+        state.closeRecord()
+        #expect(state.selectedTab == .insights)
+    }
+
+    @Test func selectedTab_staysOnOriginWhenRecordIsOpenedTwice() {
+        var state = makeState()
+        state.navigate(to: .insights, now: now, calendar: calendar)
+        state.navigate(to: .record, now: now, calendar: calendar)
+        state.navigate(to: .record, now: now, calendar: calendar)
+        #expect(state.selectedTab == .insights)
+    }
+
     // MARK: - recordDate
 
     @Test func recordDate_isAlwaysNow_regardlessOfSelectedDay() {
