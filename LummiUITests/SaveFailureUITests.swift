@@ -21,7 +21,7 @@ final class SaveFailureUITests: XCTestCase {
         app.launchArguments = ["-UI_TESTING_SIMULATE_SAVE_FAILURE"]
         app.launch()
 
-        app.buttons["MainRecordButton"].tap()
+        app.tabBars.buttons["New Joy"].tap()
 
         let textEditor = app.textViews["RecordInputTextEditor"]
         XCTAssertTrue(textEditor.waitForExistence(timeout: 2.0), "Input sheet did not open")
@@ -79,7 +79,7 @@ final class SaveFailureUITests: XCTestCase {
 
         XCTAssertTrue(app.staticTexts["RecordText_0"].waitForExistence(timeout: 2.0), "Pre-populated records not found")
 
-        app.buttons["SettingsButton_Inactive"].tap()
+        app.tabBars.buttons["Settings"].tap()
 
         let clearDataButton = app.buttons["ClearAllDataButton"]
         XCTAssertTrue(clearDataButton.waitForExistence(timeout: 2.0), "Clear All Data button is missing")
@@ -94,7 +94,7 @@ final class SaveFailureUITests: XCTestCase {
         failureAlert.buttons["OK"].tap()
 
         // Records must be restored after rollback, not silently lost
-        let homeButton = app.buttons["HomeButton_Inactive"]
+        let homeButton = app.tabBars.buttons["Home"]
         if homeButton.waitForExistence(timeout: 2.0) {
             homeButton.tap()
         }

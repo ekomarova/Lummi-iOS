@@ -24,19 +24,19 @@ final class SettingsUITests: XCTestCase {
     func test_SettingsButtonChangesState() throws {
         launchApp(with: ["-UI_TESTING_CALENDAR"])
         
-        let inactiveSettingsBtn = app.buttons["SettingsButton_Inactive"]
-        XCTAssertTrue(inactiveSettingsBtn.waitForExistence(timeout: 2.0), "Settings button was not found")
+        let settingsTabButton = app.tabBars.buttons["Settings"]
+        XCTAssertTrue(settingsTabButton.waitForExistence(timeout: 2.0), "Settings button was not found")
         
-        inactiveSettingsBtn.tap()
+        settingsTabButton.tap()
         
-        let activeSettingsBtn = app.buttons["SettingsButton_Active"]
-        XCTAssertTrue(activeSettingsBtn.waitForExistence(timeout: 2.0), "Settings button did not become active after pressing")
+        expectation(for: NSPredicate(format: "isSelected == true"), evaluatedWith: app.tabBars.buttons["Settings"])
+        waitForExpectations(timeout: 2.0)
     }
 
     // Check Settings header existence
     func test_SettingsTitleExists() throws {
         launchApp(with: ["-UI_TESTING_CALENDAR"])
-        app.buttons["SettingsButton_Inactive"].tap()
+        app.tabBars.buttons["Settings"].tap()
         
         let title = app.staticTexts["Settings"]
         XCTAssertTrue(title.waitForExistence(timeout: 2.0), "Settings header did not appear on the screen.")
@@ -47,7 +47,7 @@ final class SettingsUITests: XCTestCase {
     // Check Appearance section and options
     func test_AppearanceSectionExists() throws {
         launchApp(with: ["-UI_TESTING_CALENDAR"])
-        app.buttons["SettingsButton_Inactive"].tap()
+        app.tabBars.buttons["Settings"].tap()
         
         let appearanceLabel = app.staticTexts["Appearance"]
         XCTAssertTrue(appearanceLabel.waitForExistence(timeout: 2.0), "Appearance label is missing")
@@ -62,7 +62,7 @@ final class SettingsUITests: XCTestCase {
     // Check theme change
     func test_ThemeSelectionSwitchesState() throws {
         launchApp(with: ["-UI_TESTING_CALENDAR"])
-        app.buttons["SettingsButton_Inactive"].tap()
+        app.tabBars.buttons["Settings"].tap()
         
         let lightBtn = app.buttons["LightThemeButton"]
         let darkBtn = app.buttons["DarkThemeButton"]
@@ -84,7 +84,7 @@ final class SettingsUITests: XCTestCase {
     // Check language button
     func test_LanguageSectionExists() throws {
         launchApp(with: ["-UI_TESTING_CALENDAR"])
-        app.buttons["SettingsButton_Inactive"].tap()
+        app.tabBars.buttons["Settings"].tap()
 
         let languageLabel = app.staticTexts["LanguageLabel"]
         XCTAssertTrue(languageLabel.waitForExistence(timeout: 2.0), "Language label is missing")
@@ -96,7 +96,7 @@ final class SettingsUITests: XCTestCase {
     // Check language changing
     func test_LanguageSelectionChangesAppLanguage() throws {
         launchApp(with: ["-UI_TESTING_CALENDAR"])
-        app.buttons["SettingsButton_Inactive"].tap()
+        app.tabBars.buttons["Settings"].tap()
 
         let languageLabel = app.staticTexts["LanguageLabel"]
         let languageSelector = app.buttons["LanguageSelectorButton"]
@@ -126,7 +126,7 @@ final class SettingsUITests: XCTestCase {
     // Check iCloud Sync section and options
     func test_iCloudSyncSectionExists() throws {
         launchApp(with: ["-UI_TESTING_CALENDAR"])
-        app.buttons["SettingsButton_Inactive"].tap()
+        app.tabBars.buttons["Settings"].tap()
 
         let syncLabel = app.staticTexts["Sync"]
         XCTAssertTrue(syncLabel.waitForExistence(timeout: 2.0), "Sync label is missing")
@@ -141,7 +141,7 @@ final class SettingsUITests: XCTestCase {
     // Check iCloud sync state change
     func test_iCloudSyncSelectionSwitchesState() throws {
         launchApp(with: ["-UI_TESTING_CALENDAR"])
-        app.buttons["SettingsButton_Inactive"].tap()
+        app.tabBars.buttons["Settings"].tap()
 
         let syncToggle = app.switches["iCloudSyncToggle"]
         XCTAssertTrue(syncToggle.waitForExistence(timeout: 2.0))
@@ -160,7 +160,7 @@ final class SettingsUITests: XCTestCase {
     func test_iCloudSyncErrorOverlayAppearsAndReverts() throws {
         launchApp(with: ["-UI_TESTING_FORCE_SYNC_ERROR"])
 
-        app.buttons["SettingsButton_Inactive"].tap()
+        app.tabBars.buttons["Settings"].tap()
 
         let syncToggle = app.switches["iCloudSyncToggle"]
         XCTAssertTrue(syncToggle.waitForExistence(timeout: 5.0))
@@ -191,7 +191,7 @@ final class SettingsUITests: XCTestCase {
         launchApp(with: ["-UI_TESTING_CALENDAR"])
 
         // Navigate to settings
-        app.buttons["SettingsButton_Inactive"].tap()
+        app.tabBars.buttons["Settings"].tap()
 
         // The banner should NOT be visible initially because Sync is off by default
         let bannerMessage = app.staticTexts["SyncBannerMessage"]
@@ -211,7 +211,7 @@ final class SettingsUITests: XCTestCase {
     func test_iCloudSyncErrorBannerDisplays_WhenLoggedOut() throws {
         launchApp(with: ["-UI_TESTING_CALENDAR", "-UI_TESTING_ICLOUD_LOGGED_OUT"])
 
-        app.buttons["SettingsButton_Inactive"].tap()
+        app.tabBars.buttons["Settings"].tap()
         let syncToggle = app.switches["iCloudSyncToggle"]
         XCTAssertTrue(syncToggle.waitForExistence(timeout: 5.0))
         syncToggle.tap()
@@ -224,7 +224,7 @@ final class SettingsUITests: XCTestCase {
     
     func test_ClearAllDataSectionExistsAndDeletes() throws {
         launchApp(with: ["-UI_TESTING_CALENDAR"])
-        app.buttons["SettingsButton_Inactive"].tap()
+        app.tabBars.buttons["Settings"].tap()
         
         let clearDataBtn = app.buttons["ClearAllDataButton"]
         XCTAssertTrue(clearDataBtn.waitForExistence(timeout: 2.0), "Clear All Data button is missing")
@@ -263,7 +263,7 @@ final class SettingsUITests: XCTestCase {
         launchApp(with: ["-UI_TESTING_10_RECORDS"])
         
         // Go to Settings
-        app.buttons["SettingsButton_Inactive"].tap()
+        app.tabBars.buttons["Settings"].tap()
 
         // Trigger data deletion
         let clearDataBtn = app.buttons["ClearAllDataButton"]
@@ -280,7 +280,7 @@ final class SettingsUITests: XCTestCase {
         wait(for: [confirmExpectation], timeout: 2.0)
         
         // Navigate back to the Home Screen
-        let homeBtn = app.buttons["HomeButton_Inactive"]
+        let homeBtn = app.tabBars.buttons["Home"]
         if homeBtn.waitForExistence(timeout: 2.0) {
             homeBtn.tap()
         }
