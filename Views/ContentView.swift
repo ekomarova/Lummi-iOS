@@ -186,7 +186,7 @@ private extension ContentView {
                     .frame(maxWidth: AdaptiveLayout.isPad ? 420 : .infinity)
                     .frame(height: 340)
                     .adaptiveGlass(in: RoundedRectangle(cornerRadius: 24))
-                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .transition(.opacity)
                     .padding(.top, 28)
                     .padding(.horizontal, 20)
                     .onTapGesture { }
@@ -195,7 +195,7 @@ private extension ContentView {
                     SelectedDayDetailView(
                         selectedDate: navigation.selectedDate
                     )
-                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .transition(.opacity)
                 }
 
                 Spacer()
