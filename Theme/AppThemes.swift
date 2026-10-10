@@ -23,7 +23,7 @@ struct DarkTheme: AppTheme {
 }
 
 struct LightTheme: AppTheme {
-    var backgroundColor: Color = Color(red: 0.88, green: 0.88, blue: 0.89)
+    var backgroundColor: Color = Color(red: 0.95, green: 0.95, blue: 0.96)
     var cardColor: Color = .white
 
     var textColor: Color = .black
