@@ -16,7 +16,7 @@ enum AdaptiveLayout {
 }
 
 extension Font {
-    static func lummiFont(size: CGFloat, weight: Font.Weight = .light) -> Font {
+    static func lummiFont(size: CGFloat, weight: Font.Weight = .regular) -> Font {
         return .system(size: size, weight: weight, design: .default)
     }
 }
