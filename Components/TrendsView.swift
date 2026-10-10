@@ -53,7 +53,7 @@ struct TrendsView: View {
             ScreenHeader(
                 title: "Trends",
                 leftButton: {
-                    NavigationIconButton(systemImage: "arrow.left", accessibilityLabel: "Back", accessibilityID: "TrendsBackButton") {
+                    NavigationIconButton(systemImage: "chevron.left", accessibilityLabel: "Back", accessibilityID: "TrendsBackButton") {
                         withAnimation(.lummiSpring) {
                             isShowingTrends = false
                         }

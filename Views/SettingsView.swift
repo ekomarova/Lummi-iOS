@@ -224,7 +224,7 @@ struct LanguageSelectionView: View {
                 title: "Language",
                 leftButton: {
                     NavigationIconButton(
-                        systemImage: "arrow.left",
+                        systemImage: "chevron.left",
                         accessibilityLabel: "Back",
                         accessibilityID: "LanguageSelectionBackButton"
                     ) {

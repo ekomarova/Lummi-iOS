@@ -19,7 +19,7 @@ struct YearJoysView: View {
                 title: LocalizedStringResource(stringLiteral: String(year)),
                 leftButton: {
                     NavigationIconButton(
-                        systemImage: "arrow.left",
+                        systemImage: "chevron.left",
                         accessibilityLabel: "Back",
                         accessibilityID: "YearJoysBackButton",
                         action: onBack

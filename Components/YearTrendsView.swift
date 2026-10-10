@@ -19,7 +19,7 @@ struct YearTrendsView: View {
                 title: LocalizedStringResource(stringLiteral: String(year)),
                 leftButton: {
                     NavigationIconButton(
-                        systemImage: "arrow.left",
+                        systemImage: "chevron.left",
                         accessibilityLabel: "Back",
                         accessibilityID: "YearTrendsBackButton",
                         action: onBack

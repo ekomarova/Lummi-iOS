@@ -36,7 +36,7 @@ struct AllJoysView: View {
             ScreenHeader(
                 title: "All joys",
                 leftButton: {
-                    NavigationIconButton(systemImage: "arrow.left", accessibilityLabel: "Back", accessibilityID: "AllJoysBackButton") {
+                    NavigationIconButton(systemImage: "chevron.left", accessibilityLabel: "Back", accessibilityID: "AllJoysBackButton") {
                         withAnimation(.lummiSpring) {
                             isShowingAllJoys = false
                         }
