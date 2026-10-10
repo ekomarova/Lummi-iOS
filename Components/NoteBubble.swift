@@ -10,18 +10,13 @@ import SwiftUI
 
 // Styled bubble for displaying and editing an already saved note; not used for the new-note input screen
 struct NoteBubble<Content: View>: View {
-    var strokeOpacity: Double = 0.25
-    var lineWidth: CGFloat = 1
     @ViewBuilder var content: () -> Content
 
     var body: some View {
         content()
             .padding(20)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(Color.white.opacity(strokeOpacity), lineWidth: lineWidth)
-            )
+            .solidCard(RoundedRectangle(cornerRadius: 20))
     }
 }
 
@@ -36,7 +31,7 @@ private struct NoteBubblePreview: View {
                     .font(.lummiFont(size: 17))
                     .foregroundColor(themeManager.currentTheme.textColor)
             }
-            NoteBubble(strokeOpacity: 0.5, lineWidth: 2) {
+            NoteBubble {
                 Text("Highlighted while active.")
                     .font(.lummiFont(size: 17))
                     .foregroundColor(themeManager.currentTheme.textColor)

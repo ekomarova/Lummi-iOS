@@ -110,7 +110,7 @@ private extension ContentView {
         }
         // On iPad the tabs can be shown in a sidebar, as in Apple's own apps; on iPhone this is the usual tab bar.
         .tabViewStyle(.sidebarAdaptable)
-        .tint(themeManager.currentTheme.textColor)
+        .tint(themeManager.currentTheme.selectedTabColor)
         .toolbar(isTabBarVisible ? .visible : .hidden, for: .tabBar)
     }
 
@@ -140,9 +140,10 @@ private extension ContentView {
     // Each tab paints its own background: the TabView would otherwise put its opaque system backdrop behind it.
     func tabPage<Content: View>(@ViewBuilder content: () -> Content) -> some View {
         content()
-            .padding(.top, 8)
+            // The tab bar's tint would cascade into the page, which keeps the theme's text color.
+            .tint(themeManager.currentTheme.textColor)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .background(themeManager.currentTheme.bgGradient.ignoresSafeArea())
+            .background(themeManager.currentTheme.backgroundColor.ignoresSafeArea())
     }
 
     var recordPage: some View {
@@ -156,7 +157,7 @@ private extension ContentView {
         )
         .padding(.top, 8)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .background(themeManager.currentTheme.bgGradient.ignoresSafeArea())
+        .background(themeManager.currentTheme.backgroundColor.ignoresSafeArea())
     }
 
     // MARK: - Home tab
@@ -173,7 +174,8 @@ private extension ContentView {
                     }
             }
 
-            VStack(spacing: 15) {
+            // The date capsule's protected zone takes 12pt of the old 15pt gap (see `scrollHeaderBackground`).
+            VStack(spacing: 3) {
                 // MARK: - Header View
                 HeaderView(
                     date: navigation.isCalendarExpanded ? navigation.visibleMonth : navigation.selectedDate,
@@ -184,6 +186,7 @@ private extension ContentView {
                         }
                     }
                 )
+                .scrollHeaderBackground()
 
                 if navigation.isCalendarExpanded {
                     // MARK: - Calendar View

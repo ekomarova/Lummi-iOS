@@ -18,7 +18,7 @@ struct StorageErrorView: View {
 
     var body: some View {
         ZStack {
-            themeManager.currentTheme.bgGradient.ignoresSafeArea()
+            themeManager.currentTheme.backgroundColor.ignoresSafeArea()
 
             VStack(spacing: 16) {
                 Image(systemName: "exclamationmark.triangle")

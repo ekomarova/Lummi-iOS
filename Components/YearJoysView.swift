@@ -19,20 +19,22 @@ struct YearJoysView: View {
                 title: LocalizedStringResource(stringLiteral: String(year)),
                 leftButton: {
                     NavigationIconButton(
-                        systemImage: "arrow.left",
+                        systemImage: "chevron.left",
                         accessibilityLabel: "Back",
                         accessibilityID: "YearJoysBackButton",
                         action: onBack
                     )
                 }
             )
+            .scrollHeaderBackground()
 
             ScrollView(showsIndicators: false) {
                 JoysListView(range: .year, year: year)
-                    .padding(.top, 30)
+                    .padding(.top, 18)
                     .padding(.horizontal, 10)
                     .padding(.bottom, 30)
             }
+            .scrollsUnderHeader()
             .ignoresSafeArea(.container, edges: .bottom)
         }
         .transition(.move(edge: .trailing).combined(with: .opacity))

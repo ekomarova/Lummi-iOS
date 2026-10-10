@@ -56,13 +56,15 @@ private struct InsightsMonthView: View {
 
     private var insightsContent: some View {
         GeometryReader { geometry in
-            VStack(alignment: .leading, spacing: 20) {
+            // The title's protected zone takes 12pt of the old 20pt gap (see `scrollHeaderBackground`).
+            VStack(alignment: .leading, spacing: 8) {
 
                 Text("Insights")
-                    .font(.lummiFont(size: 24, weight: .bold))
+                    .font(.lummiFont(size: 32, weight: .bold))
                     .foregroundColor(themeManager.currentTheme.textColor)
                     .padding(.top, 10)
                     .padding(.horizontal, 20)
+                    .scrollHeaderBackground(alignment: .leading)
 
                 // MARK: - Main Content Area
                 ScrollView(showsIndicators: false) {
@@ -136,6 +138,7 @@ private struct InsightsMonthView: View {
                     .padding(.horizontal, 10)
                     .padding(.bottom, 100)
                 }
+                .scrollClipDisabled()
                 .ignoresSafeArea(.container, edges: .bottom)
             }
         }

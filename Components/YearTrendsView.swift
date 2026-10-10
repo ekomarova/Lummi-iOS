@@ -19,20 +19,22 @@ struct YearTrendsView: View {
                 title: LocalizedStringResource(stringLiteral: String(year)),
                 leftButton: {
                     NavigationIconButton(
-                        systemImage: "arrow.left",
+                        systemImage: "chevron.left",
                         accessibilityLabel: "Back",
                         accessibilityID: "YearTrendsBackButton",
                         action: onBack
                     )
                 }
             )
+            .scrollHeaderBackground()
 
             ScrollView(showsIndicators: false) {
                 TrendsChartsView(range: .year, year: year)
                     .padding(.horizontal, 20)
-                    .padding(.top, 25)
+                    .padding(.top, 13)
                     .padding(.bottom, 30)
             }
+            .scrollClipDisabled()
             .ignoresSafeArea(.container, edges: .bottom)
         }
         .transition(.move(edge: .trailing).combined(with: .opacity))

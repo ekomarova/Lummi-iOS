@@ -244,7 +244,7 @@ struct TrendsSection<Content: View>: View {
             content()
                 .padding(.vertical, 10)
                 .padding(.horizontal, 12)
-                .cardBackground(RoundedRectangle(cornerRadius: 20))
+                .solidCard(RoundedRectangle(cornerRadius: 20))
         }
     }
 }

@@ -4,6 +4,7 @@ All notable changes to the project will be documented in this file.
 ## [1.3.0] - 2026-MM-DD
 ### Changed
 - Replaced the custom bottom toolbar with the native tab bar [#52](https://github.com/ekomarova/Lummi-iOS/pull/52)
+- Updated the app theme [#54](https://github.com/ekomarova/Lummi-iOS/pull/54)
 
 ## [1.2.1] - 2026-10-09
 ### Fixed

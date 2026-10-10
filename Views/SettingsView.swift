@@ -53,18 +53,21 @@ struct SettingsView: View {
     }
 
     private var settingsContent: some View {
-        VStack(alignment: .leading, spacing: 15) {
+        // The title's protected zone takes 12pt of the old 15pt gap (see `scrollHeaderBackground`).
+        VStack(alignment: .leading, spacing: 3) {
             Text("Settings")
-                .font(.lummiFont(size: 24, weight: .bold))
+                .font(.lummiFont(size: 32, weight: .bold))
                 .foregroundColor(themeManager.currentTheme.textColor)
                 .padding(.top, 10)
                 .padding(.horizontal, 20)
+                .scrollHeaderBackground(alignment: .leading)
 
             ScrollView(showsIndicators: false) {
                 settingsSections
                     .padding(.horizontal, 20)
                     .padding(.bottom, 100)
             }
+            .scrollClipDisabled()
             .ignoresSafeArea(.container, edges: .bottom)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -127,7 +130,7 @@ struct SettingsView: View {
                     )
                 }
                 .padding(.vertical, 20)
-                .cardBackground(RoundedRectangle(cornerRadius: 20))
+                .solidCard(RoundedRectangle(cornerRadius: 20))
             }
 
             // MARK: - Language
@@ -224,7 +227,7 @@ struct LanguageSelectionView: View {
                 title: "Language",
                 leftButton: {
                     NavigationIconButton(
-                        systemImage: "arrow.left",
+                        systemImage: "chevron.left",
                         accessibilityLabel: "Back",
                         accessibilityID: "LanguageSelectionBackButton"
                     ) {
@@ -234,6 +237,7 @@ struct LanguageSelectionView: View {
                     }
                 }
             )
+            .scrollHeaderBackground()
 
             VStack(spacing: 12) {
                 ForEach(AppLanguage.allCases) { language in
@@ -260,14 +264,14 @@ struct LanguageSelectionView: View {
                             }
                             .padding(.horizontal, 20)
                             .padding(.vertical, 16)
-                            .cardBackground(RoundedRectangle(cornerRadius: 16))
+                            .solidCard(RoundedRectangle(cornerRadius: 16))
                         }
                     )
                     .buttonStyle(.plain)
                     .accessibilityIdentifier("LanguageOption_\(language.rawValue)")
                 }
             }
-            .padding(.top, 30)
+            .padding(.top, 18)
             .padding(.horizontal, 20)
 
             Spacer()

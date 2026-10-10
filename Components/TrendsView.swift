@@ -53,13 +53,14 @@ struct TrendsView: View {
             ScreenHeader(
                 title: "Trends",
                 leftButton: {
-                    NavigationIconButton(systemImage: "arrow.left", accessibilityLabel: "Back", accessibilityID: "TrendsBackButton") {
+                    NavigationIconButton(systemImage: "chevron.left", accessibilityLabel: "Back", accessibilityID: "TrendsBackButton") {
                         withAnimation(.lummiSpring) {
                             isShowingTrends = false
                         }
                     }
                 }
             )
+            .scrollHeaderBackground()
 
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 30) {
@@ -82,9 +83,10 @@ struct TrendsView: View {
                     }
                 }
                 .padding(.horizontal, 20)
-                .padding(.top, 25)
+                .padding(.top, 13)
                 .padding(.bottom, 30)
             }
+            .scrollClipDisabled()
             .ignoresSafeArea(.container, edges: .bottom)
         }
         .transition(.move(edge: .trailing).combined(with: .opacity))

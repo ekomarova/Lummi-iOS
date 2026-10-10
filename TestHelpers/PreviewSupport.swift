@@ -34,7 +34,7 @@ private struct PreviewThemeBackground: View {
     @Environment(ThemeManager.self) private var themeManager
 
     var body: some View {
-        themeManager.currentTheme.bgGradient.ignoresSafeArea()
+        themeManager.currentTheme.backgroundColor.ignoresSafeArea()
     }
 }
 

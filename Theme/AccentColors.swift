@@ -31,6 +31,6 @@ enum AccentColors {
     static let destructive = Color(red: 0.95, green: 0.2, blue: 0.3)
     static let syncBannerBackground = Color.red.opacity(0.8)
 
-    // The tab bar tint is the theme's text color and cascades into the page, so switches set their own on color.
+    // Each tab page sets its own tint (the theme's text color), so switches set their own on color.
     static let toggleOn = Color.green
 }
