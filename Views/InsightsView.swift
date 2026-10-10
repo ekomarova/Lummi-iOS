@@ -59,7 +59,7 @@ private struct InsightsMonthView: View {
             VStack(alignment: .leading, spacing: 20) {
 
                 Text("Insights")
-                    .font(.lummiFont(size: 24, weight: .bold))
+                    .font(.lummiFont(size: 32, weight: .bold))
                     .foregroundColor(themeManager.currentTheme.textColor)
                     .padding(.top, 10)
                     .padding(.horizontal, 20)

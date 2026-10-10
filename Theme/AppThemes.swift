@@ -10,11 +10,6 @@ import SwiftUI
 
 // Concrete dark and light themes implementing AppTheme.
 struct DarkTheme: AppTheme {
-    private let topGradientColor = Color(red: 0.05, green: 0.11, blue: 0.22)
-
-    var bgGradient: LinearGradient {
-        LinearGradient(colors: [topGradientColor, .black], startPoint: .top, endPoint: .bottom)
-    }
     var backgroundColor: Color = .black
 
     var textColor: Color = .white
@@ -22,24 +17,18 @@ struct DarkTheme: AppTheme {
 
     var dayFilledColor: Color = Color(red: 0.6, green: 0.85, blue: 1.0)
 
-    var recordButtonColor: Color { topGradientColor }
+    var recordButtonColor: Color = Color(red: 0.15, green: 0.5, blue: 0.75)
+    var selectedTabColor: Color = Color(red: 0.35, green: 0.65, blue: 1.0)
 }
 
 struct LightTheme: AppTheme {
-    private let topGradientColor = Color(red: 0.93, green: 0.55, blue: 0.68)
-
-    var bgGradient: LinearGradient {
-        LinearGradient(
-            colors: [topGradientColor, Color(red: 1.0, green: 0.99, blue: 0.995)],
-            startPoint: .top, endPoint: .bottom
-        )
-    }
-    var backgroundColor: Color = .white
+    var backgroundColor: Color = Color(red: 0.88, green: 0.88, blue: 0.89)
 
     var textColor: Color = .black
     var inactiveOpacity: Double = 0.35
 
-    var dayFilledColor: Color = Color(red: 0.75, green: 0.15, blue: 0.4)
+    var dayFilledColor: Color = Color(red: 0.10, green: 0.40, blue: 0.80)
 
-    var recordButtonColor: Color = Color(red: 0.92, green: 0.65, blue: 0.75)
+    var recordButtonColor: Color = Color(red: 0.65, green: 0.82, blue: 0.98)
+    var selectedTabColor: Color = Color(red: 0.10, green: 0.40, blue: 0.80)
 }

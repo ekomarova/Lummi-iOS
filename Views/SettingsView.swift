@@ -55,7 +55,7 @@ struct SettingsView: View {
     private var settingsContent: some View {
         VStack(alignment: .leading, spacing: 15) {
             Text("Settings")
-                .font(.lummiFont(size: 24, weight: .bold))
+                .font(.lummiFont(size: 32, weight: .bold))
                 .foregroundColor(themeManager.currentTheme.textColor)
                 .padding(.top, 10)
                 .padding(.horizontal, 20)

@@ -17,7 +17,7 @@ struct SectionHeader: View {
 
     var body: some View {
         Text(title)
-            .font(.lummiFont(size: 20, weight: .bold))
+            .font(.lummiFont(size: 22, weight: .bold))
             .foregroundColor(themeManager.currentTheme.textColor)
             .padding(.leading, leadingInset)
     }
