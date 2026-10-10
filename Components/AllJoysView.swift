@@ -43,6 +43,7 @@ struct AllJoysView: View {
                     }
                 }
             )
+            .scrollHeaderBackground()
 
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 30) {
@@ -62,9 +63,10 @@ struct AllJoysView: View {
                         }
                     }
                 }
-                .padding(.top, 25)
+                .padding(.top, 13)
                 .padding(.bottom, 30)
             }
+            .scrollsUnderHeader()
             .ignoresSafeArea(.container, edges: .bottom)
         }
         .transition(.move(edge: .trailing).combined(with: .opacity))

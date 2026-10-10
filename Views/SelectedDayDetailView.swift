@@ -91,6 +91,7 @@ struct SelectedDayDetailView: View {
                         )
                     }
                 }
+                .scrollClipDisabled()
                 .ignoresSafeArea(.container, edges: .bottom)
             }
         }

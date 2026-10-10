@@ -142,7 +142,6 @@ private extension ContentView {
         content()
             // The tab bar's tint would cascade into the page, which keeps the theme's text color.
             .tint(themeManager.currentTheme.textColor)
-            .padding(.top, 8)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .background(themeManager.currentTheme.backgroundColor.ignoresSafeArea())
     }
@@ -175,7 +174,8 @@ private extension ContentView {
                     }
             }
 
-            VStack(spacing: 15) {
+            // The date capsule's protected zone takes 12pt of the old 15pt gap (see `scrollHeaderBackground`).
+            VStack(spacing: 3) {
                 // MARK: - Header View
                 HeaderView(
                     date: navigation.isCalendarExpanded ? navigation.visibleMonth : navigation.selectedDate,
@@ -186,6 +186,7 @@ private extension ContentView {
                         }
                     }
                 )
+                .scrollHeaderBackground()
 
                 if navigation.isCalendarExpanded {
                     // MARK: - Calendar View
