@@ -11,6 +11,7 @@ import SwiftUI
 // Concrete dark and light themes implementing AppTheme.
 struct DarkTheme: AppTheme {
     var backgroundColor: Color = .black
+    var cardColor: Color = Color(red: 0.11, green: 0.11, blue: 0.12)
 
     var textColor: Color = .white
     var inactiveOpacity: Double = 0.35
@@ -23,6 +24,7 @@ struct DarkTheme: AppTheme {
 
 struct LightTheme: AppTheme {
     var backgroundColor: Color = Color(red: 0.88, green: 0.88, blue: 0.89)
+    var cardColor: Color = .white
 
     var textColor: Color = .black
     var inactiveOpacity: Double = 0.35

@@ -23,6 +23,11 @@ extension View {
         }
     }
 
+    // Applies the solid card look: an opaque fill in the theme's card color, with no stroke and no glass.
+    func solidCard<S: Shape>(_ shape: S) -> some View {
+        modifier(SolidCardModifier(shape: shape))
+    }
+
     // Applies the shared "card" look: a subtle themed fill plus a matching stroke,
     // used for settings rows and capsule rows across the app.
     func cardBackground<S: Shape>(
@@ -32,6 +37,17 @@ extension View {
         lineWidth: CGFloat = 1
     ) -> some View {
         modifier(CardBackgroundModifier(shape: shape, fillOpacity: fillOpacity, strokeOpacity: strokeOpacity, lineWidth: lineWidth))
+    }
+}
+
+// Backs `solidCard`.
+private struct SolidCardModifier<S: Shape>: ViewModifier {
+    @Environment(ThemeManager.self) private var themeManager
+
+    let shape: S
+
+    func body(content: Content) -> some View {
+        content.background(shape.fill(themeManager.currentTheme.cardColor))
     }
 }
 

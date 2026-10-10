@@ -127,7 +127,7 @@ struct SettingsView: View {
                     )
                 }
                 .padding(.vertical, 20)
-                .cardBackground(RoundedRectangle(cornerRadius: 20))
+                .solidCard(RoundedRectangle(cornerRadius: 20))
             }
 
             // MARK: - Language
@@ -260,7 +260,7 @@ struct LanguageSelectionView: View {
                             }
                             .padding(.horizontal, 20)
                             .padding(.vertical, 16)
-                            .cardBackground(RoundedRectangle(cornerRadius: 16))
+                            .solidCard(RoundedRectangle(cornerRadius: 16))
                         }
                     )
                     .buttonStyle(.plain)

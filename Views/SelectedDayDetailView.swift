@@ -189,7 +189,7 @@ private extension SelectedDayDetailView {
     }
 
     var noteCellEditField: some View {
-        NoteBubble(strokeOpacity: 0.3) {
+        NoteBubble {
             TextField("", text: $editingText, axis: .vertical)
                 .accessibilityLabel("Record text")
                 .accessibilityIdentifier("EditRecordTextField")
@@ -200,7 +200,7 @@ private extension SelectedDayDetailView {
     }
 
     func noteCellTextDisplay(entry: JoyEntry, index: Int, isActive: Bool, proxy: ScrollViewProxy) -> some View {
-        NoteBubble(strokeOpacity: isActive ? 0.5 : 0.25, lineWidth: isActive ? 2 : 1) {
+        NoteBubble {
             Text(entry.text)
                 .font(.lummiFont(size: 17))
                 .foregroundColor(themeManager.currentTheme.textColor)

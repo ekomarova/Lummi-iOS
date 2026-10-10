@@ -13,6 +13,9 @@ protocol AppTheme {
     // App background
     var backgroundColor: Color { get }
 
+    // Cards: settings blocks, list rows, joys
+    var cardColor: Color { get }
+
     // Text
     var textColor: Color { get }
     var inactiveOpacity: Double { get }

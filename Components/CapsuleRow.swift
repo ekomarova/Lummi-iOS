@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-// Full-width capsule row with a subtle fill and border, used for Settings rows and the "Show All Joys" button
+// Full-width capsule row with a solid card fill, used for Settings rows and the "Show All Joys" button
 struct CapsuleRow<Content: View>: View {
     @ViewBuilder var content: () -> Content
 
@@ -17,7 +17,7 @@ struct CapsuleRow<Content: View>: View {
             .frame(maxWidth: .infinity, minHeight: 31, alignment: .leading)
             .padding(.horizontal, 20)
             .padding(.vertical, 14)
-            .cardBackground(Capsule())
+            .solidCard(Capsule())
     }
 }
 
