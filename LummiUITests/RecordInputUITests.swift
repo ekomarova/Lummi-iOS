@@ -19,7 +19,7 @@ final class RecordInputUITests: XCTestCase {
     
     // Check default input state
     func test_DefaultStateAndCancel() throws {
-        app.buttons["MainRecordButton"].tap()
+        app.tabBars.buttons["New Joy"].tap()
         
         let textEditor = app.textViews["RecordInputTextEditor"]
         XCTAssertTrue(textEditor.waitForExistence(timeout: 2.0), "The input window didn't open")
@@ -33,14 +33,14 @@ final class RecordInputUITests: XCTestCase {
         
         cancelButton.tap()
         
-        XCTAssertTrue(app.buttons["MainRecordButton"].waitForExistence(timeout: 2.0), "The default screen did not open")
+        XCTAssertTrue(app.tabBars.buttons["New Joy"].waitForExistence(timeout: 2.0), "The default screen did not open")
         
         XCTAssertFalse(textEditor.exists, "The input window did not close")
     }
 
     // Chech input state after text field editing
     func test_TypingTextEnablesSaveAndCreatesRecord() throws {
-        app.buttons["MainRecordButton"].tap()
+        app.tabBars.buttons["New Joy"].tap()
         
         let textEditor = app.textViews["RecordInputTextEditor"]
         XCTAssertTrue(textEditor.waitForExistence(timeout: 2.0))

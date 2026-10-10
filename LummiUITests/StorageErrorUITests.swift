@@ -20,7 +20,7 @@ final class StorageErrorUITests: XCTestCase {
 
     private var errorTitle: XCUIElement { app.staticTexts["StorageErrorTitle"] }
     private var retryButton: XCUIElement { app.buttons["StorageErrorRetryButton"] }
-    private var recordButton: XCUIElement { app.buttons["MainRecordButton"] }
+    private var recordButton: XCUIElement { app.tabBars.buttons["New Joy"] }
 
     private func waitForDisappearance(of element: XCUIElement, timeout: TimeInterval = 5.0) {
         let expectation = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: element, handler: nil)
@@ -38,7 +38,7 @@ final class StorageErrorUITests: XCTestCase {
 
         // The user must not be able to add joys to the throwaway store.
         XCTAssertFalse(recordButton.exists, "App content must not be reachable while the store is unavailable")
-        XCTAssertFalse(app.buttons["SettingsButton_Inactive"].exists, "Toolbar must not be reachable while the store is unavailable")
+        XCTAssertFalse(app.tabBars.buttons["Settings"].exists, "Toolbar must not be reachable while the store is unavailable")
     }
 
     func test_StorageError_ScreenStaysAfterRetry_WhenStoreStillFails() throws {
@@ -83,7 +83,7 @@ final class StorageErrorUITests: XCTestCase {
         XCTAssertTrue(alert.waitForExistence(timeout: 5.0))
         alert.buttons["OK"].tap()
 
-        app.buttons["SettingsButton_Inactive"].tap()
+        app.tabBars.buttons["Settings"].tap()
         let syncToggle = app.switches["iCloudSyncToggle"]
         XCTAssertTrue(syncToggle.waitForExistence(timeout: 5.0))
         XCTAssertEqual(syncToggle.value as? String, "0", "The switch must show iCloud as off, matching the local store that opened")

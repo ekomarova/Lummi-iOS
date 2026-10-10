@@ -97,7 +97,7 @@ final class PerformanceUITests: XCTestCase {
     func test_Perf_OpenInsights() throws {
         measure(metrics: metrics, options: manualOptions) {
             relaunch()
-            let insightsTab = app.buttons["InsightsButton_Inactive"]
+            let insightsTab = app.tabBars.buttons["Insights"]
             XCTAssertTrue(insightsTab.waitForExistence(timeout: 30))
             startMeasuring()
             insightsTab.tap()
@@ -110,7 +110,7 @@ final class PerformanceUITests: XCTestCase {
     func test_Perf_OpenAllJoys() throws {
         measure(metrics: metrics, options: manualOptions) {
             relaunch()
-            let insightsTab = app.buttons["InsightsButton_Inactive"]
+            let insightsTab = app.tabBars.buttons["Insights"]
             XCTAssertTrue(insightsTab.waitForExistence(timeout: 30))
             insightsTab.tap()
             let showAllJoys = app.buttons["SeeAllJoysButton"]
@@ -155,7 +155,7 @@ final class PerformanceUITests: XCTestCase {
     func test_Perf_OpenTrendsMonth() throws {
         measure(metrics: metrics, options: manualOptions) {
             relaunch()
-            let insightsTab = app.buttons["InsightsButton_Inactive"]
+            let insightsTab = app.tabBars.buttons["Insights"]
             XCTAssertTrue(insightsTab.waitForExistence(timeout: 30))
             insightsTab.tap()
             let showTrends = app.buttons["ShowTrendsButton"]
@@ -171,7 +171,7 @@ final class PerformanceUITests: XCTestCase {
     func test_Perf_OpenTrendsYear() throws {
         measure(metrics: metrics, options: manualOptions) {
             relaunch()
-            let insightsTab = app.buttons["InsightsButton_Inactive"]
+            let insightsTab = app.tabBars.buttons["Insights"]
             XCTAssertTrue(insightsTab.waitForExistence(timeout: 30))
             insightsTab.tap()
             let showTrends = app.buttons["ShowTrendsButton"]
@@ -192,7 +192,7 @@ final class PerformanceUITests: XCTestCase {
     // Relaunches the app and opens "All Joys" from Insights, ready for the measured interaction.
     private func openAllJoys() {
         relaunch()
-        let insightsTab = app.buttons["InsightsButton_Inactive"]
+        let insightsTab = app.tabBars.buttons["Insights"]
         XCTAssertTrue(insightsTab.waitForExistence(timeout: 30))
         insightsTab.tap()
         let showAllJoys = app.buttons["SeeAllJoysButton"]

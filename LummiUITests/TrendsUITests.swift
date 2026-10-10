@@ -20,9 +20,9 @@ final class TrendsUITests: XCTestCase {
 
     // Opens Insights, then taps "View Trends" to reach the Trends screen.
     private func openTrends() {
-        let inactiveInsightsBtn = app.buttons["InsightsButton_Inactive"]
-        XCTAssertTrue(inactiveInsightsBtn.waitForExistence(timeout: 2.0))
-        inactiveInsightsBtn.tap()
+        let insightsTabButton = app.tabBars.buttons["Insights"]
+        XCTAssertTrue(insightsTabButton.waitForExistence(timeout: 2.0))
+        insightsTabButton.tap()
 
         let showTrends = app.buttons["ShowTrendsButton"]
         XCTAssertTrue(showTrends.waitForExistence(timeout: 2.0), "View Trends button was not found on the Insights screen")
@@ -38,7 +38,7 @@ final class TrendsUITests: XCTestCase {
     // 1. The Trends entry point exists on the Insights screen.
     func test_TrendsEntryPointExists() throws {
         launchApp(with: [""])
-        app.buttons["InsightsButton_Inactive"].tap()
+        app.tabBars.buttons["Insights"].tap()
 
         let showTrends = app.buttons["ShowTrendsButton"]
         XCTAssertTrue(showTrends.waitForExistence(timeout: 2.0), "View Trends button did not appear on the Insights screen")

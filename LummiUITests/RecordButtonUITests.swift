@@ -26,7 +26,8 @@ final class RecordButtonUITests: XCTestCase {
         let recordText = "Hello from default screen!"
         createRecord(withText: recordText)
 
-        XCTAssertTrue(app.buttons["HomeButton_Active"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.tabBars.buttons["Home"].waitForExistence(timeout: 5.0))
+        XCTAssertTrue(app.tabBars.buttons["Home"].isSelected, "Home tab is not selected after saving the record")
         XCTAssertTrue(app.staticTexts[recordText].waitForExistence(timeout: 5.0), "There is no record on the default screen")
 
         verifyStarOnTodayInCalendar()
@@ -49,7 +50,7 @@ final class RecordButtonUITests: XCTestCase {
 
         XCTAssertFalse(app.staticTexts[recordText].exists, "The record of the current day is displayed on the past day screen")
         
-        app.buttons["HomeButton_Inactive"].tap()
+        app.tabBars.buttons["Home"].tap()
         
         XCTAssertTrue(app.staticTexts[recordText].exists, "There is no record on the default screen")
         
@@ -73,7 +74,7 @@ final class RecordButtonUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Oops! This day has not started yet"].exists)
         XCTAssertFalse(app.staticTexts[recordText].exists)
         
-        app.buttons["HomeButton_Inactive"].tap()
+        app.tabBars.buttons["Home"].tap()
         
         XCTAssertTrue(app.staticTexts[recordText].exists, "There is no record on the default screen")
         
@@ -83,7 +84,7 @@ final class RecordButtonUITests: XCTestCase {
     // MARK: - Helpers
     
     private func createRecord(withText text: String) {
-        let mainRecordBtn = app.buttons["MainRecordButton"]
+        let mainRecordBtn = app.tabBars.buttons["New Joy"]
         XCTAssertTrue(mainRecordBtn.waitForExistence(timeout: 5.0))
         mainRecordBtn.tap()
 

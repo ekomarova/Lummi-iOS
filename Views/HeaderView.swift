@@ -40,7 +40,8 @@ struct HeaderView: View {
         .buttonStyle(.plain)
         .accessibilityIdentifier("HeaderToggleButton")
         .frame(maxWidth: .infinity, alignment: .center)
-        .animation(.spring(response: 0.3, dampingFraction: 0.8), value: isExpanded)
+        // The date text and capsule width switch instantly; the calendar below still animates in and out.
+        .transaction { $0.animation = nil }
         .sensoryFeedback(.selection, trigger: isExpanded)
     }
 }

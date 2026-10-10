@@ -82,7 +82,7 @@ final class TodayRecordsUITests: XCTestCase {
     // MARK: - Helpers
     
     private func createRecord(withText text: String) {
-        app.buttons["MainRecordButton"].tap()
+        app.tabBars.buttons["New Joy"].tap()
         
         let textEditor = app.textViews["RecordInputTextEditor"]
         XCTAssertTrue(textEditor.waitForExistence(timeout: 2.0))

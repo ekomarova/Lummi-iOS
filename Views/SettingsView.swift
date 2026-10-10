@@ -169,6 +169,7 @@ struct SettingsView: View {
                         )
                         .labelsHidden()
                         .toggleStyle(.switch)
+                        .tint(AccentColors.toggleOn)
                         .accessibilityIdentifier("iCloudSyncToggle")
                     }
                 }

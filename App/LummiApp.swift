@@ -25,6 +25,7 @@ struct LummiApp: App {
     @State private var isSyncActive: Bool
 
     init() {
+        TabBarAppearance.configure()
         // Read the initial state from UserDefaults before AppStorage is fully available.
         // AppStorage persists in the simulator across app relaunches, so without this
         // reset a UI test that enables sync would leak that state into whichever test

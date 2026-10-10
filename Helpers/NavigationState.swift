@@ -73,6 +73,10 @@ struct NavigationState: nonisolated Equatable {
 
     var showsHeader: Bool { screen == .home }
 
+    // Tab highlighted in the tab bar. The record screen is a one-shot action, so while it is open the tab it was
+    // opened from stays selected and the tab bar returns to it afterwards.
+    var selectedTab: Screen { screen == .record ? screenBeforeRecord : screen }
+
     // Hidden on the record screen and on Insights' nested "all joys" / "trends" pages, which use the
     // full-bleed space the toolbar would otherwise float over.
     var showsToolbar: Bool { screen != .record && !isShowingAllJoys && !isShowingTrends }

@@ -55,8 +55,8 @@ final class DefaultScreenUITests: XCTestCase {
     }
     
     private func verifyHomeButton() {
-        let activeHomeButton = app.buttons["HomeButton_Active"]
-        XCTAssertTrue(activeHomeButton.waitForExistence(timeout: 5.0), "Home button is not filled in when launching the application")
+        XCTAssertTrue(app.tabBars.buttons["Home"].waitForExistence(timeout: 5.0), "Home tab is missing when launching the application")
+        XCTAssertTrue(app.tabBars.buttons["Home"].isSelected, "Home tab is not selected when launching the application")
     }
 
     private func verifyRecords() {
