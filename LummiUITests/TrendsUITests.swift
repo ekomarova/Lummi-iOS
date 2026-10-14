@@ -113,7 +113,7 @@ final class TrendsUITests: XCTestCase {
         currentYearRow.tap()
         assertYearPageShowsAllSections()
 
-        app.buttons["YearTrendsBackButton"].tap()
+        app.navigationBackButton.tap()
         // Waits out the return transition before the next tap, same as `openTrends()` does.
         XCTAssertTrue(previousYearRow.waitForExistence(timeout: 2.0), "Previous year row did not reappear in All Time")
 

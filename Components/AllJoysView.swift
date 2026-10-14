@@ -12,84 +12,49 @@ import SwiftData
 // All Joys screen, opened from the Insights screen: a "Month" tab listing this month's joys, and an "All Time" tab
 // listing every calendar year on record, each opening its own `YearJoysView` page — mirroring Trends.
 struct AllJoysView: View {
-    @Binding var isShowingAllJoys: Bool
+    // Opens a year's page on the Insights tab's stack.
+    let onOpenYear: (Int) -> Void
 
     // One single-entry fetch of the oldest joy: it gives the year list and tells whether the journal is empty.
     @Query(JoyEntry.oldestEntryDescriptor) private var oldestEntries: [JoyEntry]
     @State private var selectedTab: PeriodTab = .month
-    @State private var openYear: Int?
 
     private var availableYears: [Int] {
         TrendsCalculator.availableYears(oldestEntryDate: oldestEntries.first?.date)
     }
 
     var body: some View {
-        if let openYear {
-            YearJoysView(year: openYear, onBack: { closeYear() })
-        } else {
-            allJoysContent
-        }
-    }
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 30) {
+                PeriodTabPicker(selection: $selectedTab)
+                    .padding(.horizontal, 10)
 
-    private var allJoysContent: some View {
-        VStack(spacing: 0) {
-            ScreenHeader(
-                title: "All joys",
-                leftButton: {
-                    NavigationIconButton(systemImage: "chevron.left", accessibilityLabel: "Back", accessibilityID: "AllJoysBackButton") {
-                        withAnimation(.lummiSpring) {
-                            isShowingAllJoys = false
-                        }
+                switch selectedTab {
+                case .month:
+                    // The calendar year is unused by `.month`, which always covers the current calendar month.
+                    JoysListView(range: .month, year: Calendar.current.component(.year, from: Date()))
+                case .allTime:
+                    if oldestEntries.isEmpty {
+                        NoEntriesView()
+                    } else {
+                        YearsListView(years: availableYears, accessibilityIDPrefix: "AllJoysYearRow", onSelect: onOpenYear)
+                            .padding(.horizontal, 10)
                     }
                 }
-            )
-            .scrollHeaderBackground()
-
-            ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 30) {
-                    PeriodTabPicker(selection: $selectedTab)
-                        .padding(.horizontal, 10)
-
-                    switch selectedTab {
-                    case .month:
-                        // The calendar year is unused by `.month`, which always covers the current calendar month.
-                        JoysListView(range: .month, year: Calendar.current.component(.year, from: Date()))
-                    case .allTime:
-                        if oldestEntries.isEmpty {
-                            NoEntriesView()
-                        } else {
-                            YearsListView(years: availableYears, accessibilityIDPrefix: "AllJoysYearRow", onSelect: presentYear)
-                                .padding(.horizontal, 10)
-                        }
-                    }
-                }
-                .padding(.top, 13)
-                .padding(.bottom, 30)
             }
-            .scrollsUnderHeader()
-            .ignoresSafeArea(.container, edges: .bottom)
+            .padding(.top, 13)
+            .padding(.bottom, 30)
         }
-        .transition(.move(edge: .trailing).combined(with: .opacity))
-    }
-
-    // MARK: - Navigation
-
-    private func presentYear(_ year: Int) {
-        withAnimation(.lummiSpring) {
-            openYear = year
-        }
-    }
-
-    private func closeYear() {
-        withAnimation(.lummiSpring) {
-            openYear = nil
-        }
+        .ignoresSafeArea(.container, edges: .bottom)
+        .lummiNavigationTitle("All joys")
     }
 }
 
 #if DEBUG
 #Preview {
-    AllJoysView(isShowingAllJoys: .constant(true))
-        .previewEnvironment()
+    NavigationStack {
+        AllJoysView(onOpenYear: { _ in })
+    }
+    .previewEnvironment()
 }
 #endif

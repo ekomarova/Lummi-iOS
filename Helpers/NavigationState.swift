@@ -8,21 +8,34 @@
 
 import Foundation
 
-// Mutually exclusive top-level screens shown by `ContentView`.
-enum Screen: nonisolated Equatable {
+// Top-level tabs shown by `ContentView`. `.record` is the detached "New Joy" tab: an action that pushes the record
+// page onto the current tab, so it is never the selected screen.
+enum Screen: nonisolated Equatable, nonisolated Hashable {
     case home
     case insights
     case settings
     case record
 }
 
-// Single source of truth for `ContentView` navigation, so impossible flag combinations cannot be represented.
+// A page pushed onto a tab's `NavigationStack`, so the system back button and swipe-back gesture work on it.
+enum Route: nonisolated Equatable, nonisolated Hashable {
+    case allJoys
+    case trends
+    case joysYear(Int)
+    case trendsYear(Int)
+    case language
+    case record
+
+    // Pages that use the full-bleed space the tab bar would otherwise float over. The language list keeps it.
+    var hidesTabBar: Bool { self != .language }
+}
+
+// Single source of truth for `ContentView` navigation: the selected tab and the pages pushed onto each tab.
 struct NavigationState: nonisolated Equatable {
     private(set) var screen: Screen = .home
-    private var screenBeforeRecord: Screen = .home
+    // Pushed pages per tab, bound to that tab's `NavigationStack`. A tab with no entry shows its root page.
+    var paths: [Screen: [Route]] = [:]
     var isCalendarExpanded = false
-    var isShowingAllJoys = false
-    var isShowingTrends = false
     var selectedDate: Date
     var visibleMonth: Date
 
@@ -33,27 +46,26 @@ struct NavigationState: nonisolated Equatable {
 
     // MARK: - Transitions
 
-    // The one code path for switching screens. Switching always collapses the calendar; going home also
-    // resets the selection to today, and switching between the tabs closes Insights' nested "all joys" and
-    // "trends" pages. Opening the record screen remembers where it came from so `closeRecord()` can return there.
+    // The one code path for switching screens. Switching to a tab (or tapping the selected one again) always
+    // collapses the calendar and returns every tab to its root page; going home also resets the selection to today.
+    // The record tab only pushes the record page onto the current tab, keeping the selected day.
     mutating func navigate(to target: Screen, now: Date = Date(), calendar: Calendar = .current) {
         if target == .record {
-            if screen != .record { screenBeforeRecord = screen }
+            push(.record)
         } else {
-            isShowingAllJoys = false
-            isShowingTrends = false
+            paths = [:]
+            screen = target
         }
-        screen = target
         isCalendarExpanded = false
         if target == .home {
             resetToToday(now: now, calendar: calendar)
         }
     }
 
-    // Leaves the record screen for the one it was opened from, keeping the current selection.
-    mutating func closeRecord() {
-        guard screen == .record else { return }
-        screen = screenBeforeRecord
+    // Pushes a page onto the current tab. The record page is never pushed twice in a row.
+    mutating func push(_ route: Route) {
+        if route == .record && paths[screen]?.last == .record { return }
+        paths[screen, default: []].append(route)
     }
 
     // Collapses the calendar and returns the selection to today.
@@ -71,21 +83,19 @@ struct NavigationState: nonisolated Equatable {
 
     // MARK: - Derived UI state
 
-    var showsHeader: Bool { screen == .home }
+    // Whether the current tab shows its root page rather than a pushed one.
+    private var isAtRoot: Bool { paths[screen]?.isEmpty ?? true }
 
-    // Tab highlighted in the tab bar. The record screen is a one-shot action, so while it is open the tab it was
-    // opened from stays selected and the tab bar returns to it afterwards.
-    var selectedTab: Screen { screen == .record ? screenBeforeRecord : screen }
+    // The tab bar gives way to the page pushed on top of the current tab, when that page needs the full screen.
+    var hidesTabBar: Bool { paths[screen]?.last?.hidesTabBar ?? false }
 
-    // Hidden on the record screen and on Insights' nested "all joys" / "trends" pages, which use the
-    // full-bleed space the toolbar would otherwise float over.
-    var showsToolbar: Bool { screen != .record && !isShowingAllJoys && !isShowingTrends }
+    var showsHeader: Bool { screen == .home && isAtRoot }
 
     func isHomeActive(now: Date = Date(), calendar: Calendar = .current) -> Bool {
-        screen == .home && !isCalendarExpanded && calendar.isDate(selectedDate, inSameDayAs: now)
+        showsHeader && !isCalendarExpanded && calendar.isDate(selectedDate, inSameDayAs: now)
     }
 
-    var isInsightsActive: Bool { screen == .insights && !isShowingAllJoys && !isShowingTrends }
+    var isInsightsActive: Bool { screen == .insights && isAtRoot }
 
     var isSettingsActive: Bool { screen == .settings }
 

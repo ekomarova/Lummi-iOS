@@ -11,39 +11,24 @@ import SwiftUI
 // Every joy of one calendar year, opened by tapping a year in All Joys' "All Time" list.
 struct YearJoysView: View {
     let year: Int
-    let onBack: () -> Void
 
     var body: some View {
-        VStack(spacing: 0) {
-            ScreenHeader(
-                title: LocalizedStringResource(stringLiteral: String(year)),
-                leftButton: {
-                    NavigationIconButton(
-                        systemImage: "chevron.left",
-                        accessibilityLabel: "Back",
-                        accessibilityID: "YearJoysBackButton",
-                        action: onBack
-                    )
-                }
-            )
-            .scrollHeaderBackground()
-
-            ScrollView(showsIndicators: false) {
-                JoysListView(range: .year, year: year)
-                    .padding(.top, 18)
-                    .padding(.horizontal, 10)
-                    .padding(.bottom, 30)
-            }
-            .scrollsUnderHeader()
-            .ignoresSafeArea(.container, edges: .bottom)
+        ScrollView(showsIndicators: false) {
+            JoysListView(range: .year, year: year)
+                .padding(.top, 18)
+                .padding(.horizontal, 10)
+                .padding(.bottom, 30)
         }
-        .transition(.move(edge: .trailing).combined(with: .opacity))
+        .ignoresSafeArea(.container, edges: .bottom)
+        .lummiNavigationTitle(LocalizedStringResource(stringLiteral: String(year)))
     }
 }
 
 #if DEBUG
 #Preview {
-    YearJoysView(year: Calendar.current.component(.year, from: Date()), onBack: {})
-        .previewEnvironment()
+    NavigationStack {
+        YearJoysView(year: Calendar.current.component(.year, from: Date()))
+    }
+    .previewEnvironment()
 }
 #endif

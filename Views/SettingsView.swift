@@ -29,6 +29,9 @@ enum AppLanguage: String, CaseIterable, Identifiable {
 struct SettingsView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.modelContext) private var modelContext
+
+    // Opens a page on the Settings tab's stack.
+    let onNavigate: (Route) -> Void
     
     @AppStorage("appLanguage") private var selectedLanguage: AppLanguage = .english
     @AppStorage("isICloudSyncEnabled") private var isICloudSyncEnabled: Bool = false
@@ -39,20 +42,8 @@ struct SettingsView: View {
 
     @State private var showClearDataAlert: Bool = false
     @State private var showClearDataFailedAlert: Bool = false
-    @State private var isShowingLanguageSelection: Bool = false
 
     var body: some View {
-        if isShowingLanguageSelection {
-            LanguageSelectionView(
-                selectedLanguage: $selectedLanguage,
-                isShowingLanguageSelection: $isShowingLanguageSelection
-            )
-        } else {
-            settingsContent
-        }
-    }
-
-    private var settingsContent: some View {
         // The title's protected zone takes 12pt of the old 15pt gap (see `scrollHeaderBackground`).
         VStack(alignment: .leading, spacing: 3) {
             Text("Settings")
@@ -142,9 +133,7 @@ struct SettingsView: View {
                     title: selectedLanguage.displayName,
                     accessibilityID: "LanguageSelectorButton"
                 ) {
-                    withAnimation(.lummiSpring) {
-                        isShowingLanguageSelection = true
-                    }
+                    onNavigate(.language)
                 }
             }
 
@@ -216,68 +205,49 @@ struct SettingsView: View {
     }
 }
 
+// Pushed onto the Settings tab's stack, so the system back button and swipe-back gesture work on it.
 struct LanguageSelectionView: View {
     @Environment(ThemeManager.self) private var themeManager
-    @Binding var selectedLanguage: AppLanguage
-    @Binding var isShowingLanguageSelection: Bool
+    @Environment(\.dismiss) private var dismiss
+    @AppStorage("appLanguage") private var selectedLanguage: AppLanguage = .english
 
     var body: some View {
-        VStack(spacing: 0) {
-            ScreenHeader(
-                title: "Language",
-                leftButton: {
-                    NavigationIconButton(
-                        systemImage: "chevron.left",
-                        accessibilityLabel: "Back",
-                        accessibilityID: "LanguageSelectionBackButton"
-                    ) {
-                        withAnimation(.lummiSpring) {
-                            isShowingLanguageSelection = false
-                        }
-                    }
-                }
-            )
-            .scrollHeaderBackground()
+        VStack(spacing: 12) {
+            ForEach(AppLanguage.allCases) { language in
+                Button(
+                    action: {
+                        selectedLanguage = language
+                        dismiss()
+                    },
+                    label: {
+                        HStack {
+                            Text(language.displayName)
+                                .font(.lummiFont(size: 17))
+                                .foregroundColor(themeManager.currentTheme.textColor)
 
-            VStack(spacing: 12) {
-                ForEach(AppLanguage.allCases) { language in
-                    Button(
-                        action: {
-                            selectedLanguage = language
-                            withAnimation(.lummiSpring) {
-                                isShowingLanguageSelection = false
-                            }
-                        },
-                        label: {
-                            HStack {
-                                Text(language.displayName)
-                                    .font(.lummiFont(size: 17))
+                            Spacer()
+
+                            if language == selectedLanguage {
+                                Image(systemName: "checkmark")
+                                    .font(.system(size: 15, weight: .bold))
                                     .foregroundColor(themeManager.currentTheme.textColor)
-
-                                Spacer()
-
-                                if language == selectedLanguage {
-                                    Image(systemName: "checkmark")
-                                        .font(.system(size: 15, weight: .bold))
-                                        .foregroundColor(themeManager.currentTheme.textColor)
-                                }
                             }
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 16)
-                            .solidCard(RoundedRectangle(cornerRadius: 16))
                         }
-                    )
-                    .buttonStyle(.plain)
-                    .accessibilityIdentifier("LanguageOption_\(language.rawValue)")
-                }
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 16)
+                        .solidCard(RoundedRectangle(cornerRadius: 16))
+                    }
+                )
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("LanguageOption_\(language.rawValue)")
             }
-            .padding(.top, 18)
-            .padding(.horizontal, 20)
 
             Spacer()
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .transition(.move(edge: .trailing).combined(with: .opacity))
+        .padding(.top, 18)
+        .padding(.horizontal, 20)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .lummiNavigationTitle("Language")
     }
 }
 
@@ -313,12 +283,14 @@ private struct SyncStatusBanner: View {
 
 #if DEBUG
 #Preview {
-    SettingsView()
+    SettingsView(onNavigate: { _ in })
         .previewEnvironment()
 }
 
 #Preview {
-    LanguageSelectionView(selectedLanguage: .constant(.english), isShowingLanguageSelection: .constant(true))
-        .previewEnvironment()
+    NavigationStack {
+        LanguageSelectionView()
+    }
+    .previewEnvironment()
 }
 #endif

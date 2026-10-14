@@ -11,39 +11,24 @@ import SwiftUI
 // One calendar year's trends, opened by tapping a year in Trends' "All Time" list.
 struct YearTrendsView: View {
     let year: Int
-    let onBack: () -> Void
 
     var body: some View {
-        VStack(spacing: 0) {
-            ScreenHeader(
-                title: LocalizedStringResource(stringLiteral: String(year)),
-                leftButton: {
-                    NavigationIconButton(
-                        systemImage: "chevron.left",
-                        accessibilityLabel: "Back",
-                        accessibilityID: "YearTrendsBackButton",
-                        action: onBack
-                    )
-                }
-            )
-            .scrollHeaderBackground()
-
-            ScrollView(showsIndicators: false) {
-                TrendsChartsView(range: .year, year: year)
-                    .padding(.horizontal, 20)
-                    .padding(.top, 13)
-                    .padding(.bottom, 30)
-            }
-            .scrollClipDisabled()
-            .ignoresSafeArea(.container, edges: .bottom)
+        ScrollView(showsIndicators: false) {
+            TrendsChartsView(range: .year, year: year)
+                .padding(.horizontal, 20)
+                .padding(.top, 13)
+                .padding(.bottom, 30)
         }
-        .transition(.move(edge: .trailing).combined(with: .opacity))
+        .ignoresSafeArea(.container, edges: .bottom)
+        .lummiNavigationTitle(LocalizedStringResource(stringLiteral: String(year)))
     }
 }
 
 #if DEBUG
 #Preview {
-    YearTrendsView(year: Calendar.current.component(.year, from: Date()), onBack: {})
-        .previewEnvironment()
+    NavigationStack {
+        YearTrendsView(year: Calendar.current.component(.year, from: Date()))
+    }
+    .previewEnvironment()
 }
 #endif
