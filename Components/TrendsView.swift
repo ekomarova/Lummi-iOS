@@ -12,17 +12,17 @@ import SwiftData
 // Trends screen: a "Month" tab with this month's charts, and an "All Time" tab listing every calendar
 // year on record, each opening its own `YearTrendsView` page — mirroring how Insights opens "All Joys".
 struct TrendsView: View {
-    @Binding var isShowingTrends: Bool
+    // Opens a year's page on the Insights tab's stack.
+    let onOpenYear: (Int) -> Void
 
     // Two single-entry fetches instead of every entry: the oldest one gives the year list (and tells whether
     // the journal is empty), and any one entry of this month tells whether the Month tab has anything to chart.
     @Query(JoyEntry.oldestEntryDescriptor) private var oldestEntries: [JoyEntry]
     @Query private var entriesThisMonth: [JoyEntry]
     @State private var selectedTab: PeriodTab = .month
-    @State private var openYear: Int?
 
-    init(isShowingTrends: Binding<Bool>) {
-        _isShowingTrends = isShowingTrends
+    init(onOpenYear: @escaping (Int) -> Void) {
+        self.onOpenYear = onOpenYear
         var thisMonth = FetchDescriptor<JoyEntry>(predicate: JoyEntry.monthPredicate(for: Date()))
         thisMonth.fetchLimit = 1
         _entriesThisMonth = Query(thisMonth)
@@ -41,81 +41,40 @@ struct TrendsView: View {
     }
 
     var body: some View {
-        if let openYear {
-            YearTrendsView(year: openYear, onBack: { closeYear() })
-        } else {
-            trendsContent
-        }
-    }
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 30) {
+                PeriodTabPicker(selection: $selectedTab)
 
-    private var trendsContent: some View {
-        VStack(spacing: 0) {
-            ScreenHeader(
-                title: "Trends",
-                leftButton: {
-                    NavigationIconButton(systemImage: "chevron.left", accessibilityLabel: "Back", accessibilityID: "TrendsBackButton") {
-                        withAnimation(.lummiSpring) {
-                            isShowingTrends = false
-                        }
+                switch selectedTab {
+                case .month:
+                    if hasEntriesThisMonth {
+                        // `year` is unused by `.month`, which always covers the current calendar month.
+                        TrendsChartsView(range: .month, year: Calendar.current.component(.year, from: Date()))
+                    } else {
+                        NoEntriesView()
+                    }
+                case .allTime:
+                    if oldestEntries.isEmpty {
+                        NoEntriesView()
+                    } else {
+                        YearsListView(years: availableYears, accessibilityIDPrefix: "TrendsYearRow", onSelect: onOpenYear)
                     }
                 }
-            )
-            .scrollHeaderBackground()
-
-            ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 30) {
-                    PeriodTabPicker(selection: $selectedTab)
-
-                    switch selectedTab {
-                    case .month:
-                        if hasEntriesThisMonth {
-                            // `year` is unused by `.month`, which always covers the current calendar month.
-                            TrendsChartsView(range: .month, year: Calendar.current.component(.year, from: Date()))
-                        } else {
-                            NoEntriesView()
-                        }
-                    case .allTime:
-                        if oldestEntries.isEmpty {
-                            NoEntriesView()
-                        } else {
-                            yearsList
-                        }
-                    }
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 13)
-                .padding(.bottom, 30)
             }
-            .scrollClipDisabled()
-            .ignoresSafeArea(.container, edges: .bottom)
+            .padding(.horizontal, 20)
+            .padding(.top, 13)
+            .padding(.bottom, 30)
         }
-        .transition(.move(edge: .trailing).combined(with: .opacity))
-    }
-
-    // MARK: - Year List
-
-    private var yearsList: some View {
-        YearsListView(years: availableYears, accessibilityIDPrefix: "TrendsYearRow", onSelect: presentYear)
-    }
-
-    // MARK: - Navigation
-
-    private func presentYear(_ year: Int) {
-        withAnimation(.lummiSpring) {
-            openYear = year
-        }
-    }
-
-    private func closeYear() {
-        withAnimation(.lummiSpring) {
-            openYear = nil
-        }
+        .ignoresSafeArea(.container, edges: .bottom)
+        .lummiNavigationTitle("Trends")
     }
 }
 
 #if DEBUG
 #Preview {
-    TrendsView(isShowingTrends: .constant(true))
-        .previewEnvironment()
+    NavigationStack {
+        TrendsView(onOpenYear: { _ in })
+    }
+    .previewEnvironment()
 }
 #endif

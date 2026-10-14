@@ -25,8 +25,7 @@ struct NavigationStateTests {
         #expect(state.selectedDate == now)
         #expect(state.visibleMonth == makeDate(month: 9, day: 1))
         #expect(!state.isCalendarExpanded)
-        #expect(!state.isShowingAllJoys)
-        #expect(!state.isShowingTrends)
+        #expect(state.paths.isEmpty)
     }
 
     // MARK: - navigate(to:)
@@ -42,25 +41,25 @@ struct NavigationStateTests {
         #expect(!state.showsHeader)
     }
 
-    @Test func navigate_toSettings_closesAllJoysAndActivatesOnlySettings() {
+    @Test func navigate_toSettings_closesInsightsPagesAndActivatesOnlySettings() {
         var state = makeState()
         state.navigate(to: .insights, now: now, calendar: calendar)
-        state.isShowingAllJoys = true
+        state.push(.allJoys)
+        state.push(.joysYear(2025))
         state.navigate(to: .settings, now: now, calendar: calendar)
         #expect(state.screen == .settings)
-        #expect(!state.isShowingAllJoys)
+        #expect(state.paths[.insights]?.isEmpty ?? true)
         #expect(state.isSettingsActive)
         #expect(!state.isInsightsActive)
     }
 
-    @Test func navigate_toSettings_closesTrendsAndActivatesOnlySettings() {
+    @Test func navigate_toSameTab_returnsItToItsRootPage() {
         var state = makeState()
-        state.navigate(to: .insights, now: now, calendar: calendar)
-        state.isShowingTrends = true
+        state.navigate(to: .settings, now: now, calendar: calendar)
+        state.push(.language)
         state.navigate(to: .settings, now: now, calendar: calendar)
         #expect(state.screen == .settings)
-        #expect(!state.isShowingTrends)
-        #expect(state.isSettingsActive)
+        #expect(state.paths[.settings]?.isEmpty ?? true)
     }
 
     @Test func navigate_toHome_resetsSelectionToToday() {
@@ -86,20 +85,33 @@ struct NavigationStateTests {
         #expect(state.selectedDate == past)
     }
 
-    @Test func navigate_toRecord_hidesToolbarAndHeader() {
-        var state = makeState()
-        state.navigate(to: .record, now: now, calendar: calendar)
-        #expect(state.screen == .record)
-        #expect(!state.showsToolbar)
-        #expect(!state.showsHeader)
-    }
-
     @Test func navigate_sameScreenTwice_isIdempotent() {
         var state = makeState()
         state.navigate(to: .insights, now: now, calendar: calendar)
         let once = state
         state.navigate(to: .insights, now: now, calendar: calendar)
         #expect(state == once)
+    }
+
+    // MARK: - Record
+
+    @Test func navigate_toRecord_pushesRecordOntoCurrentTabAndStaysOnIt() {
+        var state = makeState()
+        state.navigate(to: .insights, now: now, calendar: calendar)
+        state.navigate(to: .record, now: now, calendar: calendar)
+        #expect(state.screen == .insights)
+        #expect(state.paths[.insights] == [.record])
+        #expect(!state.isInsightsActive)
+    }
+
+    @Test func navigate_toRecord_fromHome_hidesHeaderAndKeepsOtherTabsUntouched() {
+        var state = makeState()
+        state.navigate(to: .record, now: now, calendar: calendar)
+        #expect(state.screen == .home)
+        #expect(state.paths[.home] == [.record])
+        #expect(!state.showsHeader)
+        #expect(!state.isHomeActive(now: now, calendar: calendar))
+        #expect(state.paths[.insights] == nil)
     }
 
     @Test func navigate_toRecord_collapsesCalendarButKeepsSelectedDate() {
@@ -112,40 +124,59 @@ struct NavigationStateTests {
         #expect(state.selectedDate == past)
     }
 
-    // MARK: - closeRecord
+    @Test func navigate_toRecordTwice_pushesItOnlyOnce() {
+        var state = makeState()
+        state.navigate(to: .settings, now: now, calendar: calendar)
+        state.navigate(to: .record, now: now, calendar: calendar)
+        state.navigate(to: .record, now: now, calendar: calendar)
+        #expect(state.paths[.settings] == [.record])
+    }
 
-    @Test func closeRecord_returnsToScreenItWasOpenedFrom() {
+    @Test func navigate_toRecordOverLanguagePage_stacksOnTopOfIt() {
+        var state = makeState()
+        state.navigate(to: .settings, now: now, calendar: calendar)
+        state.push(.language)
+        state.navigate(to: .record, now: now, calendar: calendar)
+        #expect(state.paths[.settings] == [.language, .record])
+    }
+
+    @Test func navigate_toTabAfterRecord_returnsEveryTabToItsRoot() {
+        var state = makeState()
+        state.navigate(to: .record, now: now, calendar: calendar)
+        state.navigate(to: .insights, now: now, calendar: calendar)
+        state.navigate(to: .home, now: now, calendar: calendar)
+        #expect(state.showsHeader)
+        #expect(state.paths[.home]?.isEmpty ?? true)
+    }
+
+    // MARK: - push
+
+    @Test func push_addsPagesToTheCurrentTabInOrder() {
         var state = makeState()
         state.navigate(to: .insights, now: now, calendar: calendar)
-        state.navigate(to: .record, now: now, calendar: calendar)
-        state.closeRecord()
-        #expect(state.screen == .insights)
+        state.push(.trends)
+        state.push(.trendsYear(2025))
+        #expect(state.paths[.insights] == [.trends, .trendsYear(2025)])
+        #expect(state.paths[.home] == nil)
     }
 
-    @Test func closeRecord_fromHome_keepsSelectedDate() {
+    @Test func push_samePageTwice_keepsBothUnlessItIsRecord() {
         var state = makeState()
-        let past = makeDate(month: 8, day: 3)
-        state.selectedDate = past
-        state.navigate(to: .record, now: now, calendar: calendar)
-        state.closeRecord()
-        #expect(state.screen == .home)
-        #expect(state.selectedDate == past)
+        state.navigate(to: .insights, now: now, calendar: calendar)
+        state.push(.joysYear(2025))
+        state.push(.joysYear(2025))
+        #expect(state.paths[.insights] == [.joysYear(2025), .joysYear(2025)])
     }
 
-    @Test func closeRecord_openingRecordTwice_stillReturnsToOriginalScreen() {
-        var state = makeState()
-        state.navigate(to: .settings, now: now, calendar: calendar)
-        state.navigate(to: .record, now: now, calendar: calendar)
-        state.navigate(to: .record, now: now, calendar: calendar)
-        state.closeRecord()
-        #expect(state.screen == .settings)
-    }
+    // MARK: - Route
 
-    @Test func closeRecord_whenNotOnRecord_doesNothing() {
-        var state = makeState()
-        state.navigate(to: .settings, now: now, calendar: calendar)
-        state.closeRecord()
-        #expect(state.screen == .settings)
+    @Test func route_hidesTabBarOnEveryPageButLanguage() {
+        #expect(Route.allJoys.hidesTabBar)
+        #expect(Route.trends.hidesTabBar)
+        #expect(Route.joysYear(2025).hidesTabBar)
+        #expect(Route.trendsYear(2025).hidesTabBar)
+        #expect(Route.record.hidesTabBar)
+        #expect(!Route.language.hidesTabBar)
     }
 
     // MARK: - Calendar
@@ -192,64 +223,15 @@ struct NavigationStateTests {
     @Test func isInsightsActive_falseWhileShowingAllJoys() {
         var state = makeState()
         state.navigate(to: .insights, now: now, calendar: calendar)
-        state.isShowingAllJoys = true
+        state.push(.allJoys)
         #expect(!state.isInsightsActive)
     }
 
     @Test func isInsightsActive_falseWhileShowingTrends() {
         var state = makeState()
         state.navigate(to: .insights, now: now, calendar: calendar)
-        state.isShowingTrends = true
+        state.push(.trends)
         #expect(!state.isInsightsActive)
-    }
-
-    @Test func showsToolbar_falseWhileShowingAllJoys() {
-        var state = makeState()
-        state.navigate(to: .insights, now: now, calendar: calendar)
-        state.isShowingAllJoys = true
-        #expect(!state.showsToolbar)
-    }
-
-    @Test func showsToolbar_falseWhileShowingTrends() {
-        var state = makeState()
-        state.navigate(to: .insights, now: now, calendar: calendar)
-        state.isShowingTrends = true
-        #expect(!state.showsToolbar)
-    }
-
-    // MARK: - selectedTab
-
-    @Test func selectedTab_followsTheCurrentScreen() {
-        var state = makeState()
-        #expect(state.selectedTab == .home)
-        state.navigate(to: .insights, now: now, calendar: calendar)
-        #expect(state.selectedTab == .insights)
-        state.navigate(to: .settings, now: now, calendar: calendar)
-        #expect(state.selectedTab == .settings)
-    }
-
-    @Test func selectedTab_keepsTheOriginTabWhileRecording() {
-        var state = makeState()
-        state.navigate(to: .settings, now: now, calendar: calendar)
-        state.navigate(to: .record, now: now, calendar: calendar)
-        #expect(state.screen == .record)
-        #expect(state.selectedTab == .settings)
-    }
-
-    @Test func selectedTab_staysOnOriginAfterClosingRecord() {
-        var state = makeState()
-        state.navigate(to: .insights, now: now, calendar: calendar)
-        state.navigate(to: .record, now: now, calendar: calendar)
-        state.closeRecord()
-        #expect(state.selectedTab == .insights)
-    }
-
-    @Test func selectedTab_staysOnOriginWhenRecordIsOpenedTwice() {
-        var state = makeState()
-        state.navigate(to: .insights, now: now, calendar: calendar)
-        state.navigate(to: .record, now: now, calendar: calendar)
-        state.navigate(to: .record, now: now, calendar: calendar)
-        #expect(state.selectedTab == .insights)
     }
 
     // MARK: - recordDate

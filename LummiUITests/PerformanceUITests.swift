@@ -117,7 +117,7 @@ final class PerformanceUITests: XCTestCase {
             XCTAssertTrue(showAllJoys.waitForExistence(timeout: 30))
             startMeasuring()
             showAllJoys.tap()
-            XCTAssertTrue(app.buttons["AllJoysBackButton"].waitForExistence(timeout: 30))
+            XCTAssertTrue(app.navigationBackButton.waitForExistence(timeout: 30))
             stopMeasuring()
         }
     }
@@ -146,7 +146,7 @@ final class PerformanceUITests: XCTestCase {
             XCTAssertTrue(yearRow.waitForExistence(timeout: 30))
             startMeasuring()
             yearRow.tap()
-            XCTAssertTrue(app.buttons["YearJoysBackButton"].waitForExistence(timeout: 30))
+            XCTAssertTrue(app.navigationBackButton.waitForExistence(timeout: 30))
             stopMeasuring()
         }
     }
@@ -198,7 +198,7 @@ final class PerformanceUITests: XCTestCase {
         let showAllJoys = app.buttons["SeeAllJoysButton"]
         XCTAssertTrue(showAllJoys.waitForExistence(timeout: 30))
         showAllJoys.tap()
-        XCTAssertTrue(app.buttons["AllJoysBackButton"].waitForExistence(timeout: 30))
+        XCTAssertTrue(app.navigationBackButton.waitForExistence(timeout: 30))
     }
 
     private func dateKey(daysAgo: Int) -> String {

@@ -47,9 +47,7 @@
 		5E7A1C0D9B3F4A6E8D2C1B07 /* CloudKitSyncEventReaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E7A1C0D9B3F4A6E8D2C1B06 /* CloudKitSyncEventReaction.swift */; };
 		649AF115F3264D01730EF068 /* AnimationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ECC769E0A0AE871A7A1D999 /* AnimationExtension.swift */; };
 		987BD99D3540D75ECB4D3CB5 /* TrendsCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D085C748510EC29FCEA60BA0 /* TrendsCalculator.swift */; };
-		A1B2C3D41000000000000001 /* NavigationIconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000001 /* NavigationIconButton.swift */; };
 		A1B2C3D41000000000000002 /* RecordActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000002 /* RecordActionButton.swift */; };
-		A1B2C3D41000000000000003 /* ScreenHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000003 /* ScreenHeader.swift */; };
 		A1B2C3D41000000000000004 /* CapsuleRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000004 /* CapsuleRow.swift */; };
 		A1B2C3D41000000000000F01 /* SectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F01 /* SectionHeader.swift */; };
 		A1B2C3D41000000000000F10 /* TrendsPerformanceStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F10 /* TrendsPerformanceStats.swift */; };
@@ -123,9 +121,7 @@
 		4ECC769E0A0AE871A7A1D999 /* AnimationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationExtension.swift; sourceTree = "<group>"; };
 		5E7A1C0D9B3F4A6E8D2C1B06 /* CloudKitSyncEventReaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitSyncEventReaction.swift; sourceTree = "<group>"; };
 		6AFF479DE52BF9FBBE26AAF9 /* AccentColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccentColors.swift; sourceTree = "<group>"; };
-		A1B2C3D40000000000000001 /* NavigationIconButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationIconButton.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000002 /* RecordActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordActionButton.swift; sourceTree = "<group>"; };
-		A1B2C3D40000000000000003 /* ScreenHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenHeader.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000004 /* CapsuleRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleRow.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000F01 /* SectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeader.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000F10 /* TrendsPerformanceStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsPerformanceStats.swift; sourceTree = "<group>"; };
@@ -268,10 +264,8 @@
 			children = (
 				A75A501776D443E1961E0695 /* AllJoysView.swift */,
 				473B044F2F9AD05100C482FA /* DayCell.swift */,
-				A1B2C3D40000000000000003 /* ScreenHeader.swift */,
 				A1B2C3D40000000000000F01 /* SectionHeader.swift */,
 				A1B2C3D40000000000000004 /* CapsuleRow.swift */,
-				A1B2C3D40000000000000001 /* NavigationIconButton.swift */,
 				A1B2C3D40000000000000002 /* RecordActionButton.swift */,
 				473B045A2F9BB79B00C482FA /* RecordInput.swift */,
 				E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */,
@@ -504,10 +498,8 @@
 				47981EAD2FA54745005ADAB1 /* InsightsCalculator.swift in Sources */,
 				473B04502F9AD05200C482FA /* DayCell.swift in Sources */,
 				473B04572F9BB2FD00C482FA /* ThemeProtocol.swift in Sources */,
-				A1B2C3D41000000000000003 /* ScreenHeader.swift in Sources */,
 				A1B2C3D41000000000000F01 /* SectionHeader.swift in Sources */,
 				A1B2C3D41000000000000004 /* CapsuleRow.swift in Sources */,
-				A1B2C3D41000000000000001 /* NavigationIconButton.swift in Sources */,
 				A1B2C3D41000000000000002 /* RecordActionButton.swift in Sources */,
 				47289DCE2FAED17700E46B84 /* InsightsView.swift in Sources */,
 				5E7A1C0D9B3F4A6E8D2C1B07 /* CloudKitSyncEventReaction.swift in Sources */,

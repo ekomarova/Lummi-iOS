@@ -114,6 +114,7 @@
     },
     "Back" : {
       "comment" : "Accessibility label for a button that navigates back to the previous screen.",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

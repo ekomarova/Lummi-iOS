@@ -2,6 +2,9 @@
 
 All notable changes to the project will be documented in this file.
 ## [1.3.0] - 2026-MM-DD
+### Added
+- Added the swipe-back gesture from the left edge on every page that has a back button [#55](https://github.com/ekomarova/Lummi-iOS/pull/55)
+
 ### Changed
 - Replaced the custom bottom toolbar with the native tab bar [#52](https://github.com/ekomarova/Lummi-iOS/pull/52)
 - Updated the app theme [#54](https://github.com/ekomarova/Lummi-iOS/pull/54)

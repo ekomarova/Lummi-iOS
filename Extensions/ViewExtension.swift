@@ -23,13 +23,15 @@ extension View {
         }
     }
 
-    // For a scroll view with a lazy stack under a `scrollHeaderBackground` title. A lazy stack only keeps what is inside the
-    // scroll view's frame, so content scrolled above the frame's edge is dropped, even with `.scrollClipDisabled()`.
-    // This raises the frame by `extent` and pushes the content back down by the same amount, so nothing moves at rest
-    // and the content stays alive all the way up to the top of the screen.
-    func scrollsUnderHeader(extent: CGFloat = 200) -> some View {
-        contentMargins(.top, extent, for: .scrollContent)
-            .padding(.top, -extent)
+    // The title of a page pushed onto a `NavigationStack`: inline, in the app's font and theme color, next to the
+    // system back button.
+    func lummiNavigationTitle(_ title: LocalizedStringResource) -> some View {
+        modifier(NavigationTitleModifier(title: title))
+    }
+
+    // The theme's background behind a pushed page, which the tab's root page cannot provide.
+    func pageBackground() -> some View {
+        modifier(PageBackgroundModifier())
     }
 
     // Marks a page title as the protected zone above a scrolling page. It gets a slightly transparent background in the
@@ -54,6 +56,35 @@ extension View {
         lineWidth: CGFloat = 1
     ) -> some View {
         modifier(CardBackgroundModifier(shape: shape, fillOpacity: fillOpacity, strokeOpacity: strokeOpacity, lineWidth: lineWidth))
+    }
+}
+
+// Backs `lummiNavigationTitle`.
+private struct NavigationTitleModifier: ViewModifier {
+    @Environment(ThemeManager.self) private var themeManager
+
+    let title: LocalizedStringResource
+
+    func body(content: Content) -> some View {
+        content
+            .navigationTitle(title)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(title)
+                        .font(.lummiFont(size: 20, weight: .bold))
+                        .foregroundColor(themeManager.currentTheme.textColor)
+                }
+            }
+    }
+}
+
+// Backs `pageBackground`.
+private struct PageBackgroundModifier: ViewModifier {
+    @Environment(ThemeManager.self) private var themeManager
+
+    func body(content: Content) -> some View {
+        content.background(themeManager.currentTheme.backgroundColor.ignoresSafeArea())
     }
 }
 

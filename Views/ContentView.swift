@@ -9,7 +9,8 @@
 import SwiftUI
 import SwiftData
 
-// Root view: owns the theme and navigation, shows the top-level screens in a native tab bar and the record page above it.
+// Root view: owns the theme and navigation, shows the top-level screens in a native tab bar. Each tab has its own
+// `NavigationStack`, and the record page is pushed onto the current one, so the system swipe-back gesture works.
 struct ContentView: View {
     var syncError: Binding<(any Error)?> = .constant(nil)
 
@@ -20,16 +21,7 @@ struct ContentView: View {
     @State private var isKeyboardVisible = false
 
     var body: some View {
-        ZStack {
-            tabs
-                .accessibilityHidden(navigation.screen == .record)
-
-            if navigation.screen == .record {
-                // MARK: - Record Input
-                recordPage
-                    .transition(.opacity)
-            }
-        }
+        tabs
         .alert(
             "iCloud Sync Error",
             isPresented: Binding(
@@ -71,21 +63,18 @@ struct ContentView: View {
 private extension ContentView {
     // MARK: - Native tab bar
 
-    // Insights' nested pages and the keyboard hide the tab bar, as the floating toolbar used to do.
-    var isTabBarVisible: Bool { navigation.showsToolbar && !isKeyboardVisible }
-
     var tabs: some View {
         TabView(selection: tabSelection) {
             Tab(value: Screen.home) {
-                tabPage { homeContent }
+                tabStack(for: .home) { homeContent }
             } label: {
                 Label(LocalizedStringResource("Home"), systemImage: "house.fill")
             }
             .accessibilityIdentifier(navigation.isHomeActive() ? "HomeButton_Active" : "HomeButton_Inactive")
 
             Tab(value: Screen.insights) {
-                tabPage {
-                    InsightsView(isShowingAllJoys: $navigation.isShowingAllJoys, isShowingTrends: $navigation.isShowingTrends)
+                tabStack(for: .insights) {
+                    InsightsView(onNavigate: { navigation.push($0) })
                 }
             } label: {
                 Label(LocalizedStringResource("Insights"), systemImage: "chart.pie.fill")
@@ -93,7 +82,9 @@ private extension ContentView {
             .accessibilityIdentifier(navigation.isInsightsActive ? "InsightsButton_Active" : "InsightsButton_Inactive")
 
             Tab(value: Screen.settings) {
-                tabPage { SettingsView() }
+                tabStack(for: .settings) {
+                    SettingsView(onNavigate: { navigation.push($0) })
+                }
             } label: {
                 Label(LocalizedStringResource("Settings"), systemImage: "gearshape.fill")
             }
@@ -111,7 +102,6 @@ private extension ContentView {
         // On iPad the tabs can be shown in a sidebar, as in Apple's own apps; on iPhone this is the usual tab bar.
         .tabViewStyle(.sidebarAdaptable)
         .tint(themeManager.currentTheme.selectedTabColor)
-        .toolbar(isTabBarVisible ? .visible : .hidden, for: .tabBar)
     }
 
     // The role that detaches the record tab from the bar. Up to iOS 26 that is `.search`; on iOS 27 `.search` stays
@@ -125,39 +115,71 @@ private extension ContentView {
 
     // A tab's `set` runs on every tap, including a tap on the tab that is already selected, so tapping Home again
     // returns to today just as the old toolbar did. Record is never written back as the selection: the getter keeps
-    // returning the tab it was opened from, so the tab bar snaps back to it.
+    // returning the current tab, so the tab bar snaps back to it while the record page is pushed.
     var tabSelection: Binding<Screen> {
         Binding(
-            get: { navigation.selectedTab },
+            get: { navigation.screen },
             set: { screen in
-                withAnimation(.lummiSpring) {
-                    navigation.navigate(to: screen)
+                if screen == .record {
+                    // Pushed once the tab bar has snapped back to the current tab. Pushing during the tap leaves the
+                    // tab bar hidden after the page is closed.
+                    Task { @MainActor in navigation.navigate(to: .record) }
+                } else {
+                    withAnimation(.lummiSpring) {
+                        navigation.navigate(to: screen)
+                    }
                 }
             }
         )
     }
 
-    // Each tab paints its own background: the TabView would otherwise put its opaque system backdrop behind it.
-    func tabPage<Content: View>(@ViewBuilder content: () -> Content) -> some View {
-        content()
-            // The tab bar's tint would cascade into the page, which keeps the theme's text color.
-            .tint(themeManager.currentTheme.textColor)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .background(themeManager.currentTheme.backgroundColor.ignoresSafeArea())
+    // Each tab has its own stack. Its root page keeps the theme's text color for the tab bar's tint and paints its own
+    // background: the TabView would otherwise put its opaque system backdrop behind it. The root draws its own title,
+    // so the navigation bar only appears on pushed pages.
+    func tabStack<Root: View>(for tab: Screen, @ViewBuilder root: () -> Root) -> some View {
+        NavigationStack(path: pathBinding(for: tab)) {
+            root()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .background(themeManager.currentTheme.backgroundColor.ignoresSafeArea())
+                .toolbar(.hidden, for: .navigationBar)
+                // Pushed pages and the keyboard hide the tab bar, as the floating toolbar used to do.
+                .toolbar(isTabBarVisible(for: tab) ? .visible : .hidden, for: .tabBar)
+                .navigationDestination(for: Route.self) { route in
+                    destination(for: route)
+                        .pageBackground()
+                }
+        }
+        // The tab bar's tint would cascade into the pages, which keep the theme's text color.
+        .tint(themeManager.currentTheme.textColor)
     }
 
-    var recordPage: some View {
-        RecordInput(
-            recordDate: navigation.recordDate(),
-            onDismiss: {
-                withAnimation(.lummiSpring) {
-                    navigation.closeRecord()
-                }
-            }
+    func isTabBarVisible(for tab: Screen) -> Bool {
+        !(navigation.paths[tab]?.last?.hidesTabBar ?? false) && !isKeyboardVisible
+    }
+
+    func pathBinding(for tab: Screen) -> Binding<[Route]> {
+        Binding(
+            get: { navigation.paths[tab] ?? [] },
+            set: { navigation.paths[tab] = $0 }
         )
-        .padding(.top, 8)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .background(themeManager.currentTheme.backgroundColor.ignoresSafeArea())
+    }
+
+    @ViewBuilder
+    func destination(for route: Route) -> some View {
+        switch route {
+        case .allJoys:
+            AllJoysView(onOpenYear: { navigation.push(.joysYear($0)) })
+        case .trends:
+            TrendsView(onOpenYear: { navigation.push(.trendsYear($0)) })
+        case .joysYear(let year):
+            YearJoysView(year: year)
+        case .trendsYear(let year):
+            YearTrendsView(year: year)
+        case .language:
+            LanguageSelectionView()
+        case .record:
+            RecordInput(recordDate: navigation.recordDate())
+        }
     }
 
     // MARK: - Home tab

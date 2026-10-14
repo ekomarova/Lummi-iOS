@@ -103,4 +103,9 @@ extension XCUIApplication {
         let height = windows.firstMatch.frame.height
         return height > 0 && height <= 667
     }
+
+    // The system back button of the pushed page: the first button in the navigation bar, which has no identifier of its own.
+    var navigationBackButton: XCUIElement {
+        navigationBars.buttons.element(boundBy: 0)
+    }
 }

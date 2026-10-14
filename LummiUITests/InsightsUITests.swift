@@ -61,7 +61,7 @@ final class InsightsUITests: XCTestCase {
         XCTAssertTrue(showAll.waitForExistence(timeout: 2.0))
         showAll.tap()
 
-        let backButton = app.buttons["AllJoysBackButton"]
+        let backButton = app.navigationBackButton
         XCTAssertTrue(backButton.waitForExistence(timeout: 2.0))
         backButton.tap()
         XCTAssertTrue(app.staticTexts["Show All Joys"].waitForExistence(timeout: 2.0))
@@ -139,7 +139,7 @@ final class InsightsUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Previous year joy 1"].waitForExistence(timeout: 2.0), "Previous year's joy is missing")
         XCTAssertFalse(app.staticTexts["Current year joy 1"].exists, "A joy of another year is listed")
 
-        app.buttons["YearJoysBackButton"].tap()
+        app.navigationBackButton.tap()
         XCTAssertTrue(currentYearRow.waitForExistence(timeout: 2.0), "Current year row did not reappear in All Time")
     }
 
@@ -166,7 +166,7 @@ final class InsightsUITests: XCTestCase {
         XCTAssertFalse(app.staticTexts["\(prefix) \(shown + 1)"].exists, "More entries than expected are listed")
         XCTAssertFalse(app.staticTexts["\(hiddenPrefix) 1"].exists, "An entry of another month is listed")
 
-        app.buttons["AllJoysBackButton"].tap()
+        app.navigationBackButton.tap()
         XCTAssertTrue(app.staticTexts["Show All Joys"].waitForExistence(timeout: 2.0))
     }
 }

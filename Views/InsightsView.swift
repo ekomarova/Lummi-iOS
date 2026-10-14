@@ -12,11 +12,11 @@ import SwiftData
 // Insights screen: stats and a report for the current month.
 // The child view below fetches only that month's entries.
 struct InsightsView: View {
-    @Binding var isShowingAllJoys: Bool
-    @Binding var isShowingTrends: Bool
+    // Opens a page on the Insights tab's stack.
+    let onNavigate: (Route) -> Void
 
     var body: some View {
-        InsightsMonthView(month: Date().startOfMonth, isShowingAllJoys: $isShowingAllJoys, isShowingTrends: $isShowingTrends)
+        InsightsMonthView(month: Date().startOfMonth, onNavigate: onNavigate)
     }
 }
 
@@ -24,8 +24,7 @@ struct InsightsView: View {
 private struct InsightsMonthView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale
-    @Binding var isShowingAllJoys: Bool
-    @Binding var isShowingTrends: Bool
+    let onNavigate: (Route) -> Void
 
     // On iPhone the Joys and Day Streak cards are stacked to take the height of the Joyful Hours card
     private static let phoneCardHeight: CGFloat = 130
@@ -33,9 +32,8 @@ private struct InsightsMonthView: View {
 
     @Query private var monthlyEntries: [JoyEntry]
 
-    init(month: Date, isShowingAllJoys: Binding<Bool>, isShowingTrends: Binding<Bool>) {
-        _isShowingAllJoys = isShowingAllJoys
-        _isShowingTrends = isShowingTrends
+    init(month: Date, onNavigate: @escaping (Route) -> Void) {
+        self.onNavigate = onNavigate
         _monthlyEntries = Query(filter: JoyEntry.monthPredicate(for: month), sort: \JoyEntry.date)
     }
 
@@ -45,16 +43,6 @@ private struct InsightsMonthView: View {
 
     // MARK: - Body
     var body: some View {
-        if isShowingAllJoys {
-            AllJoysView(isShowingAllJoys: $isShowingAllJoys)
-        } else if isShowingTrends {
-            TrendsView(isShowingTrends: $isShowingTrends)
-        } else {
-            insightsContent
-        }
-    }
-
-    private var insightsContent: some View {
         GeometryReader { geometry in
             // The title's protected zone takes 12pt of the old 20pt gap (see `scrollHeaderBackground`).
             VStack(alignment: .leading, spacing: 8) {
@@ -113,9 +101,7 @@ private struct InsightsMonthView: View {
                                 title: "Show All Joys",
                                 accessibilityID: "SeeAllJoysButton"
                             ) {
-                                withAnimation(.lummiSpring) {
-                                    isShowingAllJoys = true
-                                }
+                                onNavigate(.allJoys)
                             }
                         }
 
@@ -129,9 +115,7 @@ private struct InsightsMonthView: View {
                                 title: "View Trends",
                                 accessibilityID: "ShowTrendsButton"
                             ) {
-                                withAnimation(.lummiSpring) {
-                                    isShowingTrends = true
-                                }
+                                onNavigate(.trends)
                             }
                         }
                     }
@@ -337,7 +321,7 @@ struct MonthlyMomentCell: View {
 
 #if DEBUG
 #Preview {
-    InsightsView(isShowingAllJoys: .constant(false), isShowingTrends: .constant(false))
+    InsightsView(onNavigate: { _ in })
         .previewEnvironment()
 }
 #endif
