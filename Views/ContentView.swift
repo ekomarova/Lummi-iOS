@@ -99,8 +99,10 @@ private extension ContentView {
             }
             .accessibilityIdentifier("MainRecordButton")
         }
-        // On iPad the tabs can be shown in a sidebar, as in Apple's own apps; on iPhone this is the usual tab bar.
-        .tabViewStyle(.sidebarAdaptable)
+        // Tab bar only, with no iPad sidebar. On iOS 18 and 26 an open sidebar is lost for good when a pushed page hides the
+        // tab bar and the user goes back (Issue: FB25190777). On iOS 27 the left edge belongs to the sidebar, so the swipe-back
+        // gesture does not work there.
+        .tabViewStyle(.tabBarOnly)
         .tint(themeManager.currentTheme.selectedTabColor)
     }
 
@@ -147,6 +149,10 @@ private extension ContentView {
                 .navigationDestination(for: Route.self) { route in
                     destination(for: route)
                         .pageBackground()
+                        // Set again on the page itself: on iOS 26 the UIKit bar item hosts that build the toolbar items
+                        // evaluate the page's own view and may not get the environment set at the root (a crash). 
+                        // Issue: FB25190661.
+                        .environment(themeManager)
                 }
         }
         // The tab bar's tint would cascade into the pages, which keep the theme's text color.

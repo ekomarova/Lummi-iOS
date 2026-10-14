@@ -64,7 +64,8 @@ private struct InsightsMonthView: View {
 
                             if AdaptiveLayout.isPad {
                                 // MARK: - Joys, Joyful Hours & Streak (iPad: one row of squares)
-                                let padCardSize = (geometry.size.width - 50) / 3
+                                // The first layout pass can report a zero width, which would make the size negative.
+                                let padCardSize = max(0, (geometry.size.width - 50) / 3)
 
                                 HStack(spacing: 15) {
                                     joysCard(height: padCardSize)
