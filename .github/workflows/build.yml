@@ -149,6 +149,7 @@ jobs:
       matrix:
         device:
           - *iphone-device
+          - *ipad-device
     env:
       UI_TEST_TARGET: "LummiUITests"
       TEST_OS: "latest"
@@ -184,7 +185,7 @@ jobs:
           retention-days: 1
 
       - name: Upload Coverage
-        if: always()
+        if: always() && matrix.device == env.COVERAGE_DEVICE
         uses: ./.github/actions/upload-coverage
         with:
           xcresult-path: UITestResults.xcresult

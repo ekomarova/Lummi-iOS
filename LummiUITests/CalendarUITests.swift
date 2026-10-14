@@ -81,7 +81,7 @@ final class CalendarUITests: XCTestCase {
         
         XCTAssertTrue(app.staticTexts["Watched a beautiful sunset"].exists)
         
-        XCTAssertTrue(app.tabBars.buttons["Home"].exists, "The tab bar is missing")
+        XCTAssertTrue(app.tabItem("Home", identifier: "HomeButton").exists, "The tab bar is missing")
     }
 
     // Check the absence of edit/delete buttons for past recordings
@@ -98,10 +98,9 @@ final class CalendarUITests: XCTestCase {
     func test_HomeButtonReturnsToToday() throws {
         try test_TapPastRecordHidesCalendar()
         
-        app.tabBars.buttons["Home"].tap()
+        app.tabItem("Home", identifier: "HomeButton").tap()
         
-        expectation(for: NSPredicate(format: "isSelected == true"), evaluatedWith: app.tabBars.buttons["Home"])
-        waitForExpectations(timeout: 2.0)
+        expectTabSelected(app.tabItem("Home", identifier: "HomeButton"))
         let todayCell = app.buttons["DayCell_\(dateKey(for: today))"]
         XCTAssertFalse(todayCell.exists, "The calendar is not collapsed")
     }
