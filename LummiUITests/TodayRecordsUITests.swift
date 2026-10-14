@@ -108,4 +108,11 @@ extension XCUIApplication {
     var navigationBackButton: XCUIElement {
         navigationBars.buttons.element(boundBy: 0)
     }
+
+    // A tab bar item. On iPhone it is a `tabBars` button. On iPad the tab bar floats at the top and `tabBars` is empty,
+    // so the item is found by the prefix of its accessibility identifier instead (the Home and Insights ones change with the state).
+    func tabItem(_ label: String, identifier: String) -> XCUIElement {
+        guard UIDevice.current.userInterfaceIdiom == .pad else { return tabBars.buttons[label] }
+        return descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH %@", identifier)).firstMatch
+    }
 }
