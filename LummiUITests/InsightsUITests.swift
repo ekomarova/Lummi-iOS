@@ -23,19 +23,18 @@ final class InsightsUITests: XCTestCase {
     // Check the button color change
     func test_InsightsButtonChangesState() throws {
         launchApp(with: [""])
-        let insightsTabButton = app.tabBars.buttons["Insights"]
+        let insightsTabButton = app.tabItem("Insights", identifier: "InsightsButton")
         XCTAssertTrue(insightsTabButton.waitForExistence(timeout: 2.0), "Insights button was not found")
         
         insightsTabButton.tap()
         
-        expectation(for: NSPredicate(format: "isSelected == true"), evaluatedWith: app.tabBars.buttons["Insights"])
-        waitForExpectations(timeout: 2.0)
+        expectTabSelected(app.tabItem("Insights", identifier: "InsightsButton"))
     }
     
     // Check Insights header existence
     func test_InsightsTitleExists() throws {
         launchApp(with: [""])
-        app.tabBars.buttons["Insights"].tap()
+        app.tabItem("Insights", identifier: "InsightsButton").tap()
         
         let title = app.staticTexts["Insights"]
         XCTAssertTrue(title.waitForExistence(timeout: 2.0), "Insights header did not appear on the screen.")
@@ -44,7 +43,7 @@ final class InsightsUITests: XCTestCase {
     // Check Joys/Day streak/Joyful hours existence
     func test_InsightsDefaulEmptyCheckView() throws {
         launchApp(with: [""])
-        app.tabBars.buttons["Insights"].tap()
+        app.tabItem("Insights", identifier: "InsightsButton").tap()
 
         XCTAssertTrue(app.staticTexts["Joys"].waitForExistence(timeout: 2.0))
         XCTAssertTrue(app.staticTexts["Day Streak"].waitForExistence(timeout: 2.0))
@@ -54,7 +53,7 @@ final class InsightsUITests: XCTestCase {
     // Recall / Show All Joys stay available even when the month has no joys
     func test_InsightsRecallIsShownForEmptyMonth() throws {
         launchApp(with: [""])
-        app.tabBars.buttons["Insights"].tap()
+        app.tabItem("Insights", identifier: "InsightsButton").tap()
 
         XCTAssertTrue(app.staticTexts["Recall"].waitForExistence(timeout: 2.0))
         let showAll = app.staticTexts["Show All Joys"]
@@ -75,7 +74,7 @@ final class InsightsUITests: XCTestCase {
         // iPhone SE (667 pt tall) keeps this element under the bottom toolbar, so the tap misses it
         try XCTSkipIf(app.isSmallScreen, "Not supported on small screens (iPhone SE)")
 
-        let insightsTabButton = app.tabBars.buttons["Insights"]
+        let insightsTabButton = app.tabItem("Insights", identifier: "InsightsButton")
         XCTAssertTrue(insightsTabButton.waitForExistence(timeout: 2.0))
         insightsTabButton.tap()
 
@@ -101,7 +100,7 @@ final class InsightsUITests: XCTestCase {
         launchApp(with: ["-UI_TESTING_INSIGHTS_TWO_MONTHS"])
         try XCTSkipIf(app.isSmallScreen, "Not supported on small screens (iPhone SE)")
 
-        let insightsTabButton = app.tabBars.buttons["Insights"]
+        let insightsTabButton = app.tabItem("Insights", identifier: "InsightsButton")
         XCTAssertTrue(insightsTabButton.waitForExistence(timeout: 2.0))
         insightsTabButton.tap()
 
@@ -145,7 +144,7 @@ final class InsightsUITests: XCTestCase {
 
     // Opens Insights, then taps "Show All Joys" to reach the All Joys screen
     private func openAllJoys() {
-        let insightsTabButton = app.tabBars.buttons["Insights"]
+        let insightsTabButton = app.tabItem("Insights", identifier: "InsightsButton")
         XCTAssertTrue(insightsTabButton.waitForExistence(timeout: 2.0))
         insightsTabButton.tap()
 

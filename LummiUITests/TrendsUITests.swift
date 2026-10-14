@@ -20,7 +20,7 @@ final class TrendsUITests: XCTestCase {
 
     // Opens Insights, then taps "View Trends" to reach the Trends screen.
     private func openTrends() {
-        let insightsTabButton = app.tabBars.buttons["Insights"]
+        let insightsTabButton = app.tabItem("Insights", identifier: "InsightsButton")
         XCTAssertTrue(insightsTabButton.waitForExistence(timeout: 2.0))
         insightsTabButton.tap()
 
@@ -38,7 +38,7 @@ final class TrendsUITests: XCTestCase {
     // 1. The Trends entry point exists on the Insights screen.
     func test_TrendsEntryPointExists() throws {
         launchApp(with: [""])
-        app.tabBars.buttons["Insights"].tap()
+        app.tabItem("Insights", identifier: "InsightsButton").tap()
 
         let showTrends = app.buttons["ShowTrendsButton"]
         XCTAssertTrue(showTrends.waitForExistence(timeout: 2.0), "View Trends button did not appear on the Insights screen")

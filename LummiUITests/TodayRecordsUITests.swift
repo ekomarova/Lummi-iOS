@@ -82,7 +82,7 @@ final class TodayRecordsUITests: XCTestCase {
     // MARK: - Helpers
     
     private func createRecord(withText text: String) {
-        app.tabBars.buttons["New Joy"].tap()
+        app.tabItem("New Joy", identifier: "MainRecordButton").tap()
         
         let textEditor = app.textViews["RecordInputTextEditor"]
         XCTAssertTrue(textEditor.waitForExistence(timeout: 2.0))
@@ -114,5 +114,22 @@ extension XCUIApplication {
     func tabItem(_ label: String, identifier: String) -> XCUIElement {
         guard UIDevice.current.userInterfaceIdiom == .pad else { return tabBars.buttons[label] }
         return descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH %@", identifier)).firstMatch
+    }
+}
+
+extension XCUIElement {
+    // Whether a tab bar item is the selected one. The floating iPad tab bar does not report `isSelected`,
+    // so the state is read from the identifier suffix instead (`_Active`).
+    var isTabSelected: Bool {
+        guard UIDevice.current.userInterfaceIdiom == .pad else { return isSelected }
+        return identifier.hasSuffix("_Active")
+    }
+}
+
+extension XCTestCase {
+    func expectTabSelected(_ tab: XCUIElement, timeout: TimeInterval = 2.0) {
+        let selected = NSPredicate { element, _ in (element as? XCUIElement)?.isTabSelected ?? false }
+        expectation(for: selected, evaluatedWith: tab)
+        waitForExpectations(timeout: timeout)
     }
 }
