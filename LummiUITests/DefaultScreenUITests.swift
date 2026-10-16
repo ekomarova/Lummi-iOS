@@ -28,30 +28,25 @@ final class DefaultScreenUITests: XCTestCase {
         verifyRecords()
     }
     
-    func test_CalendarIsCollapsed() throws {
-        verifyCalendarCollapsed()
-    }
-    
     func test_AllDefaultStatesTogether() throws {
         verifyCurrentDate()
         verifyHomeButton()
         verifyRecords()
-        verifyCalendarCollapsed()
     }
     
     // MARK: - Helpers
     
     private func verifyCurrentDate() {
-        let headerButton = app.buttons["HeaderToggleButton"]
+        let headerText = app.staticTexts["HeaderDateText"]
 
-        XCTAssertTrue(headerButton.waitForExistence(timeout: 5.0), "No Header text date on the screen")
+        XCTAssertTrue(headerText.waitForExistence(timeout: 5.0), "No Header text date on the screen")
         
         let today = Date()
         let month = today.formatted(.dateTime.month(.wide))
         let day = Calendar.current.component(.day, from: today)
         let expectedDateString = "\(day) \(month)"
         
-        XCTAssertEqual(headerButton.label, expectedDateString, "Header does not display today's date")
+        XCTAssertEqual(headerText.label, expectedDateString, "Header does not display today's date")
     }
     
     private func verifyHomeButton() {
@@ -63,10 +58,5 @@ final class DefaultScreenUITests: XCTestCase {
     private func verifyRecords() {
         let noRecordsText = app.staticTexts["No records for this day"]
         XCTAssertTrue(noRecordsText.waitForExistence(timeout: 5.0), "There is no label w/o record")
-    }
-    
-    private func verifyCalendarCollapsed() {
-        let todayCell = app.buttons["DayCell_\(Date().uiTestDateKey)"]
-        XCTAssertFalse(todayCell.exists, "The calendar is not collapsed")
     }
 }

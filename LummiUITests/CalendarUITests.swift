@@ -1,18 +1,15 @@
 import XCTest
 
+// The calendar of the current month in Insights' Highlights: read-only, a star over every day with entries.
 final class CalendarUITests: XCTestCase {
 
     var app: XCUIApplication!
-    
+
     let today = Date()
-    var past32Date: Date { Calendar.current.date(byAdding: .day, value: -32, to: today) ?? today }
-    var future1Date: Date { Calendar.current.date(byAdding: .day, value: 1, to: today) ?? today }
 
     override func setUpWithError() throws {
         continueAfterFailure = false
         app = XCUIApplication()
-        app.launchArguments = ["-UI_TESTING_CALENDAR"]
-        app.launch()
     }
 
     override func tearDownWithError() throws {
@@ -21,171 +18,141 @@ final class CalendarUITests: XCTestCase {
 
     // MARK: - Tests
 
-    // Open the calendar and check the header date format
-    func test_ToggleCalendarAndDateFormat() throws {
-        let headerBtn = app.buttons["HeaderToggleButton"]
-        XCTAssertTrue(headerBtn.waitForExistence(timeout: 2.0))
-        
-        headerBtn.tap()
+    // The calendar shows today
+    func test_InsightsShowsCurrentMonthCalendar() throws {
+        launchAndOpenInsights(with: [""])
 
-        let month = today.formatted(.dateTime.month(.wide))
-        let year = today.formatted(.dateTime.year())
-        let expectedLabel = "\(month) \(year)"
-        let labelPredicate = NSPredicate(format: "label == %@", expectedLabel)
-        let labelExpectation = expectation(for: labelPredicate, evaluatedWith: headerBtn, handler: nil)
-        wait(for: [labelExpectation], timeout: 5.0)
-        XCTAssertEqual(headerBtn.label, expectedLabel, "Incorrect header format for the expanded calendar")
-        
-        let todayKey = dateKey(for: today)
-        let todayCell = app.buttons["DayCell_\(todayKey)"]
-        XCTAssertTrue(todayCell.waitForExistence(timeout: 2.0), "The calendar is not expanded")
+        let todayCell = dayCell(for: today)
+        XCTAssertTrue(scrollToExist(todayCell), "Today's cell is missing")
+        XCTAssertEqual(todayCell.value as? String, "Empty")
     }
 
-    // Check the calendar for date: current_date - 32
-    func test_PastMonthScrollAndStarRendering() throws {
-        let headerBtn = app.buttons["HeaderToggleButton"]
-        headerBtn.tap()
+    // Days with entries are marked, the others are not
+    func test_DaysWithEntriesAreFilled() throws {
+        launchAndOpenInsights(with: ["-UI_TESTING_4_DAYS_FILLED"])
 
-        let calendarScroll = app.scrollViews.firstMatch
-        calendarScroll.swipeDown()
-        calendarScroll.swipeDown()
-        calendarScroll.swipeDown()
-
-        let pastMonth = past32Date.formatted(.dateTime.month(.wide))
-        let pastYear = past32Date.formatted(.dateTime.year())
-        XCTAssertEqual(headerBtn.label, "\(pastMonth) \(pastYear)", "The month is displayed incorrectly")
-
-        let key = dateKey(for: past32Date)
-        let pastDayCell = app.buttons["DayCell_\(key)"]
-        XCTAssertTrue(pastDayCell.waitForExistence(timeout: 2.0), "Cell 'current_date - 32' does not exist")
-        
-        XCTAssertEqual(pastDayCell.value as? String, "Filled", "The start is not displayed on the bottom with the entry")
-    }
-
-    // Checking a record for date: current_date - 32
-    func test_TapPastRecordHidesCalendar() throws {
-        app.buttons["HeaderToggleButton"].tap()
-        
-        let calendarScroll = app.scrollViews.firstMatch
-        calendarScroll.swipeDown()
-        calendarScroll.swipeDown()
-        calendarScroll.swipeDown()
-        
-        let key = dateKey(for: past32Date)
-        let pastDayCell = app.buttons["DayCell_\(key)"]
-        XCTAssertTrue(pastDayCell.waitForExistence(timeout: 10.0))
-        pastDayCell.tap()
-        
-        let todayCell = app.buttons["DayCell_\(dateKey(for: today))"]
-        XCTAssertFalse(todayCell.exists, "The calendar is expanded")
-        
-        XCTAssertTrue(app.staticTexts["Watched a beautiful sunset"].exists)
-        
-        XCTAssertTrue(app.tabItem("Home", identifier: "HomeButton").exists, "The tab bar is missing")
-    }
-
-    // Check the absence of edit/delete buttons for past recordings
-    func test_PastRecordCannotBeEdited() throws {
-        try test_TapPastRecordHidesCalendar()
-        let recordText = app.staticTexts["Watched a beautiful sunset"]
-        recordText.press(forDuration: 1.5)
-        
-        XCTAssertFalse(app.buttons["pencil"].exists, "The past should not be edited")
-        XCTAssertFalse(app.buttons["trash"].exists, "The past should not be deleted")
-    }
-
-    // Check Home button state
-    func test_HomeButtonReturnsToToday() throws {
-        try test_TapPastRecordHidesCalendar()
-        
-        app.tabItem("Home", identifier: "HomeButton").tap()
-        
-        expectTabSelected(app.tabItem("Home", identifier: "HomeButton"))
-        let todayCell = app.buttons["DayCell_\(dateKey(for: today))"]
-        XCTAssertFalse(todayCell.exists, "The calendar is not collapsed")
-    }
-
-    // Each selected day must show its own records, not the ones of the previously selected day
-    func test_SwitchingBetweenDaysShowsEachDaysRecords() throws {
-        let yesterdayText = app.staticTexts["I ate a lot of chips and it was amazing!"]
-        let pastText = app.staticTexts["Watched a beautiful sunset"]
-        let yesterday = try XCTUnwrap(Calendar.current.date(byAdding: .day, value: -1, to: today))
-
-        selectDay(yesterday)
-        XCTAssertTrue(yesterdayText.waitForExistence(timeout: 2.0), "Yesterday's record is missing")
-        XCTAssertFalse(pastText.exists, "A record of another day is shown")
-
-        selectDay(past32Date)
-        XCTAssertTrue(pastText.waitForExistence(timeout: 2.0), "The record of the newly selected day is missing")
-        XCTAssertFalse(yesterdayText.exists, "The previous day's record is still shown after switching days")
-
-        selectDay(yesterday)
-        XCTAssertTrue(yesterdayText.waitForExistence(timeout: 2.0), "Yesterday's record did not come back")
-        XCTAssertFalse(pastText.exists, "The other day's record is still shown after switching back")
-    }
-
-    // Check empty date
-    func test_EmptyDayShowsNoRecords() throws {
-        app.buttons["HeaderToggleButton"].tap()
-
-        let emptyDayCell = app.buttons["DayCell_\(dateKey(for: today))"]
-        
-        XCTAssertTrue(emptyDayCell.waitForExistence(timeout: 2.0), "Today's cell should exist on the screen")
-        
-        emptyDayCell.tap()
-        
-        XCTAssertTrue(app.staticTexts["No records for this day"].exists)
-    }
-
-    // Check future day
-    func test_FutureDayShowsNotStartedYet() throws {
-        app.buttons["HeaderToggleButton"].tap()
-        
-        let futureDayCell = app.buttons["DayCell_\(dateKey(for: future1Date))"]
-                
-        if futureDayCell.waitForExistence(timeout: 2.0) {
-            futureDayCell.tap()
-            XCTAssertTrue(app.staticTexts["Oops! This day has not started yet"].exists)
+        // The mock entries fill the 12th to the 15th of the current month. The calendar draws two weeks at a time,
+        // but every day is in the hierarchy, so the cells are read without scrolling it.
+        for day in 12...15 {
+            let cell = dayCell(for: dayOfCurrentMonth(day))
+            XCTAssertTrue(scrollToExist(cell), "Cell of day \(day) is missing")
+            XCTAssertEqual(cell.value as? String, "Filled", "Day \(day) has an entry but no star")
         }
+        let emptyCell = dayCell(for: dayOfCurrentMonth(11))
+        XCTAssertTrue(scrollToExist(emptyCell))
+        XCTAssertEqual(emptyCell.value as? String, "Empty")
     }
 
-    // Check the absence of months > current one
-    func test_FutureMonthsAreNotAccessible() throws {
-        let headerBtn = app.buttons["HeaderToggleButton"]
-        headerBtn.tap()
-        let currentHeaderStr = headerBtn.label
-        
-        app.scrollViews.firstMatch.swipeUp()
-        
-        XCTAssertEqual(headerBtn.label, currentHeaderStr, "Next month is active")
+    // The calendar draws two weeks at a time: from the top of the month at most 14 days are on screen
+    func test_CalendarShowsTwoWeeksAtATime() throws {
+        launchAndOpenInsights(with: [""])
+        let calendar = app.scrollViews["MonthCalendar"]
+        XCTAssertTrue(calendar.waitForExistence(timeout: 5.0), "The calendar is missing")
+
+        scroll(calendar, down: true, until: dayCell(for: dayOfCurrentMonth(1)))
+
+        XCTAssertTrue(isVisible(dayCell(for: dayOfCurrentMonth(1)), in: calendar), "The first day of the month is not visible at the top")
+        let visibleDays = visibleDayCount(in: calendar)
+        XCTAssertTrue((1...14).contains(visibleDays), "Expected at most two weeks on screen, found \(visibleDays) days")
+        XCTAssertFalse(
+            isVisible(dayCell(for: dayOfCurrentMonth(lastDayOfMonth)), in: calendar),
+            "The whole month is on screen at once"
+        )
     }
-    
+
+    // Scrolling the calendar pages through the weeks to the end of the month, and back
+    func test_ScrollingCalendarReachesEndOfMonthAndBack() throws {
+        launchAndOpenInsights(with: [""])
+        let calendar = app.scrollViews["MonthCalendar"]
+        XCTAssertTrue(calendar.waitForExistence(timeout: 5.0), "The calendar is missing")
+
+        let firstDay = dayCell(for: dayOfCurrentMonth(1))
+        let lastDay = dayCell(for: dayOfCurrentMonth(lastDayOfMonth))
+
+        scroll(calendar, down: false, until: lastDay)
+        XCTAssertTrue(isVisible(lastDay, in: calendar), "Scrolling did not reach the last day of the month")
+        XCTAssertFalse(isVisible(firstDay, in: calendar), "The first day is still on screen at the end of the month")
+        XCTAssertLessThanOrEqual(visibleDayCount(in: calendar), 14, "More than two weeks are on screen")
+
+        scroll(calendar, down: true, until: firstDay)
+        XCTAssertTrue(isVisible(firstDay, in: calendar), "Scrolling back did not reach the first day of the month")
+        XCTAssertFalse(isVisible(lastDay, in: calendar), "The last day is still on screen at the start of the month")
+    }
+
+    // The days are not buttons: the calendar only shows the month
+    func test_DaysAreNotTappable() throws {
+        launchAndOpenInsights(with: [""])
+
+        XCTAssertTrue(scrollToExist(dayCell(for: today)))
+        XCTAssertFalse(app.buttons["DayCell_\(today.uiTestDateKey)"].exists, "A day of the calendar is a button")
+    }
+
+    // Home has no calendar any more: its date is only a title
+    func test_HomeHasNoCalendar() throws {
+        app.launch()
+
+        XCTAssertTrue(app.staticTexts["HeaderDateText"].waitForExistence(timeout: 5.0))
+        XCTAssertFalse(app.buttons["HeaderToggleButton"].exists, "The date title on Home is still a button")
+        XCTAssertFalse(dayCell(for: today).exists, "The calendar is shown on Home")
+    }
+
     // MARK: - Helpers
 
-    // Opens the calendar (it opens on the month of the selected day), looks for the cell of `date` in the
-    // current month, then scrolls toward the present and finally into the past, and taps it
-    private func selectDay(_ date: Date) {
-        app.buttons["HeaderToggleButton"].tap()
-        let cell = app.buttons["DayCell_\(dateKey(for: date))"]
-        let calendarScroll = app.scrollViews.firstMatch
-        var found = cell.waitForExistence(timeout: 3.0)
-        var swipes = 0
-        while !found && swipes < 2 {
-            calendarScroll.swipeUp()
-            found = cell.waitForExistence(timeout: 1.5)
-            swipes += 1
-        }
-        swipes = 0
-        while !found && swipes < 6 {
-            calendarScroll.swipeDown()
-            found = cell.waitForExistence(timeout: 1.5)
-            swipes += 1
-        }
-        XCTAssertTrue(found, "Day cell for \(dateKey(for: date)) was not found")
-        cell.tap()
+    private func launchAndOpenInsights(with arguments: [String]) {
+        app.launchArguments = arguments
+        app.launch()
+        let insightsTab = app.tabItem("Insights", identifier: "InsightsButton")
+        XCTAssertTrue(insightsTab.waitForExistence(timeout: 5.0), "Insights tab was not found")
+        insightsTab.tap()
     }
 
-    private func dateKey(for date: Date) -> String {
-        date.uiTestDateKey
+    private func dayCell(for date: Date) -> XCUIElement {
+        app.descendants(matching: .any)["DayCell_\(date.uiTestDateKey)"]
+    }
+
+    private func dayOfCurrentMonth(_ day: Int) -> Date {
+        var components = Calendar.current.dateComponents([.year, .month], from: today)
+        components.day = day
+        return Calendar.current.date(from: components) ?? today
+    }
+
+    private var lastDayOfMonth: Int {
+        Calendar.current.range(of: .day, in: .month, for: today)?.count ?? 28
+    }
+
+    // Whether the center of `cell` is inside the calendar's window. `isHittable` is not enough: it stays true for the
+    // days the window clips away.
+    private func isVisible(_ cell: XCUIElement, in calendar: XCUIElement) -> Bool {
+        guard cell.exists else { return false }
+        let frame = cell.frame
+        return calendar.frame.contains(CGPoint(x: frame.midX, y: frame.midY))
+    }
+
+    // Number of day cells inside the two-week window
+    private func visibleDayCount(in calendar: XCUIElement) -> Int {
+        app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "DayCell_"))
+            .allElementsBoundByIndex
+            .filter { isVisible($0, in: calendar) }
+            .count
+    }
+
+    // Swipes the calendar (down shows earlier weeks, up later ones) until `target` is in its window; a month has at most six weeks
+    private func scroll(_ calendar: XCUIElement, down: Bool, until target: XCUIElement) {
+        var swipes = 0
+        while !isVisible(target, in: calendar) && swipes < 6 {
+            if down { calendar.swipeDown() } else { calendar.swipeUp() }
+            swipes += 1
+        }
+    }
+
+    // The calendar sits among the highlight cards, so it may need a scroll to be built
+    private func scrollToExist(_ element: XCUIElement) -> Bool {
+        var swipes = 0
+        while !element.waitForExistence(timeout: 1.5) && swipes < 3 {
+            app.swipeUp()
+            swipes += 1
+        }
+        return element.exists
     }
 }

@@ -26,6 +26,9 @@ struct TrendsChartsView: View {
     // stays open across a month change (it then keeps showing the month it was opened for, like Insights).
     private let now: Date
 
+    // One size for every axis label of every chart.
+    private static let axisLabelFontSize: CGFloat = 10
+
     init(range: TrendsRange, year: Int) {
         let now = Date()
         self.range = range
@@ -96,7 +99,6 @@ struct TrendsChartsView: View {
             value: "\(stats.daysJournaled)",
             subtitle: "Active Days",
             systemImage: "calendar",
-            iconColor: AccentColors.activeDays,
             gradientColors: AccentColors.activeDaysGradient,
             height: 130,
             valueFontSize: 26,
@@ -139,7 +141,7 @@ struct TrendsChartsView: View {
                 AxisValueLabel {
                     if let date = value.as(Date.self) {
                         Text(volumeAxisLabel(for: date))
-                            .font(.lummiFont(size: 10))
+                            .font(.lummiFont(size: Self.axisLabelFontSize))
                             .foregroundColor(themeManager.currentTheme.textColor.opacity(0.5))
                     }
                 }
@@ -171,7 +173,7 @@ struct TrendsChartsView: View {
                 AxisValueLabel {
                     if let label = value.as(String.self) {
                         Text(label)
-                            .font(.lummiFont(size: 11))
+                            .font(.lummiFont(size: Self.axisLabelFontSize))
                             .foregroundColor(themeManager.currentTheme.textColor.opacity(0.5))
                     }
                 }
@@ -210,7 +212,7 @@ struct TrendsChartsView: View {
             AxisValueLabel {
                 if let count = value.as(Int.self) {
                     Text("\(count)")
-                        .font(.lummiFont(size: 10))
+                        .font(.lummiFont(size: Self.axisLabelFontSize))
                         .foregroundColor(themeManager.currentTheme.textColor.opacity(0.5))
                 }
             }

@@ -30,9 +30,12 @@ private struct InsightsMonthView: View {
     private static let phoneCardHeight: CGFloat = 130
     private static let phoneStackSpacing: CGFloat = 10
 
+    let month: Date
+
     @Query private var monthlyEntries: [JoyEntry]
 
     init(month: Date, onNavigate: @escaping (Route) -> Void) {
+        self.month = month
         self.onNavigate = onNavigate
         _monthlyEntries = Query(filter: JoyEntry.monthPredicate(for: month), sort: \JoyEntry.date)
     }
@@ -61,6 +64,11 @@ private struct InsightsMonthView: View {
                         // MARK: - Highlights
                         VStack(alignment: .leading, spacing: 15) {
                             SectionHeader(title: "Highlights", leadingInset: 10)
+
+                            // MARK: - Calendar of the month
+                            MonthCalendarView(month: month, filledDateKeys: Set(monthlyEntries.map(\.dateKey)))
+                                .frame(maxWidth: AdaptiveLayout.isPad ? 420 : .infinity)
+                                .frame(maxWidth: .infinity)
 
                             if AdaptiveLayout.isPad {
                                 // MARK: - Joys, Joyful Hours & Streak (iPad: one row of squares)
@@ -158,11 +166,11 @@ private struct InsightsMonthView: View {
 // MARK: - UI Components
 
 struct GlowCard: View {
-    @Environment(ThemeManager.self) private var themeManager
+    // The card keeps the same bright colors and dark text in light and dark mode.
+    private let cardTheme = LightTheme()
     var value: String
     var subtitle: LocalizedStringResource
     var systemImage: String
-    var iconColor: Color?
     var gradientColors: [Color]
     var height: CGFloat
     var valueFontSize: CGFloat
@@ -173,9 +181,7 @@ struct GlowCard: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 30)
-                .fill(LinearGradient(colors: gradientColors, startPoint: .topLeading, endPoint: .bottomTrailing))
-                .opacity(0.35)
-                .adaptiveGlass(in: RoundedRectangle(cornerRadius: 30))
+                .fill(LinearGradient(colors: gradientColors, startPoint: .leading, endPoint: .trailing))
 
             if isCompact {
                 compactContent
@@ -185,29 +191,25 @@ struct GlowCard: View {
         }
         .frame(maxWidth: .infinity)
         .frame(height: height)
-        .overlay(
-            RoundedRectangle(cornerRadius: 30)
-                .stroke(themeManager.currentTheme.textColor.opacity(CardOpacity.prominentStroke), lineWidth: 1)
-        )
     }
 
     private var subtitleLabel: some View {
         HStack(spacing: 4) {
             Image(systemName: systemImage)
                 .font(.system(size: 11, weight: .semibold))
-                .foregroundColor(iconColor ?? gradientColors.first ?? themeManager.currentTheme.textColor)
+                .foregroundColor(cardTheme.textColor)
 
             Text(subtitle)
                 .font(.lummiFont(size: 12))
                 .opacity(0.7)
-                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.85))
+                .foregroundColor(cardTheme.textColor.opacity(0.85))
         }
     }
 
     private var valueLabel: some View {
         Text(value)
             .font(.lummiFont(size: valueFontSize))
-            .foregroundColor(themeManager.currentTheme.textColor)
+            .foregroundColor(cardTheme.textColor)
             .minimumScaleFactor(0.3)
             .lineLimit(1)
     }
@@ -246,7 +248,6 @@ extension GlowCard {
             value: value,
             subtitle: "Joys",
             systemImage: "star.fill",
-            iconColor: AccentColors.joys,
             gradientColors: AccentColors.joysGradient,
             height: height,
             valueFontSize: valueFontSize,
@@ -260,7 +261,6 @@ extension GlowCard {
             value: value,
             subtitle: "Day Streak",
             systemImage: "flame.fill",
-            iconColor: AccentColors.streak,
             gradientColors: AccentColors.streakGradient,
             height: height,
             valueFontSize: valueFontSize,

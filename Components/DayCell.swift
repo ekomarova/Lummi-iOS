@@ -8,19 +8,19 @@
 
 import SwiftUI
 
-// Single day in the calendar grid, with a star when the day has entries and highlights for today/selected.
+// Single day in the calendar grid, with a star when the day has entries and a stronger color for today.
 struct DayCell: View {
     @Environment(ThemeManager.self) private var themeManager
+    static let height: CGFloat = 34
+
     let day: Int
     let isFilled: Bool
     let isToday: Bool
-    let isSelected: Bool
-    
     let dateKey: String
     
     var body: some View {
         ZStack {
-            VStack(spacing: 4) {
+            VStack(spacing: 2) {
                 if isFilled {
                     Image(systemName: "star.fill")
                         .font(.system(size: 8, weight: .bold))
@@ -32,7 +32,7 @@ struct DayCell: View {
                 }
 
                 Text("\(day)")
-                    .font(.system(size: 15, weight: .light, design: .default))
+                    .font(.lummiFont(size: 14))
                     .foregroundColor(
                         isToday ? themeManager.currentTheme.textColor :
                             (isFilled ? themeManager.currentTheme.dayFilledColor :
@@ -41,11 +41,10 @@ struct DayCell: View {
                     )
             }
         }
-        .frame(height: 38)
+        .frame(height: Self.height)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(day)")
         .accessibilityIdentifier("DayCell_\(dateKey)")
-        .accessibilityAddTraits(.isButton)
         .accessibilityValue(isFilled ? Text("Filled") : Text("Empty"))
     }
 }
@@ -53,8 +52,8 @@ struct DayCell: View {
 #if DEBUG
 #Preview {
     HStack {
-        DayCell(day: 12, isFilled: true, isToday: false, isSelected: false, dateKey: "2026-03-12")
-        DayCell(day: 13, isFilled: false, isToday: true, isSelected: true, dateKey: "2026-03-13")
+        DayCell(day: 12, isFilled: true, isToday: false, dateKey: "2026-03-12")
+        DayCell(day: 13, isFilled: false, isToday: true, dateKey: "2026-03-13")
     }
     .previewEnvironment()
 }

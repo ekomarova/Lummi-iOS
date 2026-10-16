@@ -69,36 +69,61 @@ struct CalendarMonthLayoutTests {
         #expect(cal.component(.day, from: dates[28]) == 29)
     }
 
-    // MARK: - monthStarts
+    // MARK: - weeks(inMonth:)
 
-    @Test func monthStarts_noEntries_returnsCurrentMonthOnly() {
+    @Test func weeks_everyRowHasSevenCells() {
         let cal = makeCalendar(firstWeekday: 1)
-        let now = makeDate(2026, 3, 20, calendar: cal)
-        let result = CalendarMonthLayout.monthStarts(firstEntryDate: nil, now: now, calendar: cal)
-        #expect(result.count == 1)
-        #expect(cal.component(.month, from: result[0]) == 3)
-        #expect(cal.component(.day, from: result[0]) == 1)
+        let weeks = CalendarMonthLayout.weeks(inMonth: makeDate(2026, 4, 1, calendar: cal), calendar: cal)
+        #expect(weeks.count == 5)
+        #expect(weeks.allSatisfy { $0.count == 7 })
     }
 
-    @Test func monthStarts_spansYearBoundary() {
+    @Test func weeks_leadingAndTrailingCellsAreEmpty() {
         let cal = makeCalendar(firstWeekday: 1)
-        let result = CalendarMonthLayout.monthStarts(
-            firstEntryDate: makeDate(2025, 11, 18, calendar: cal),
-            now: makeDate(2026, 2, 3, calendar: cal),
-            calendar: cal
-        )
-        #expect(result.count == 4)
-        #expect(cal.component(.month, from: result[0]) == 11)
-        #expect(cal.component(.year, from: result[3]) == 2026)
+        // April 2026 starts on a Wednesday and ends on a Thursday
+        let weeks = CalendarMonthLayout.weeks(inMonth: makeDate(2026, 4, 1, calendar: cal), calendar: cal)
+        #expect(weeks[0].prefix(3).allSatisfy { $0 == nil })
+        #expect(weeks[0][3] != nil)
+        #expect(weeks[4][4] != nil)
+        #expect(weeks[4].suffix(2).allSatisfy { $0 == nil })
+        #expect(weeks.flatMap { $0 }.compactMap { $0 }.count == 30)
     }
 
-    @Test func monthStarts_entryInFuture_returnsEmpty() {
+    @Test func weeks_februaryStartingOnFirstWeekday_isFourFullRows() {
         let cal = makeCalendar(firstWeekday: 1)
-        let result = CalendarMonthLayout.monthStarts(
-            firstEntryDate: makeDate(2026, 6, 1, calendar: cal),
-            now: makeDate(2026, 3, 1, calendar: cal),
-            calendar: cal
-        )
-        #expect(result.isEmpty)
+        let weeks = CalendarMonthLayout.weeks(inMonth: makeDate(2026, 2, 1, calendar: cal), calendar: cal)
+        #expect(weeks.count == 4)
+        #expect(weeks.flatMap { $0 }.allSatisfy { $0 != nil })
+    }
+
+    @Test func weeks_monthSpanningSixRows() {
+        let cal = makeCalendar(firstWeekday: 1)
+        // August 2026 starts on a Saturday and has 31 days
+        let weeks = CalendarMonthLayout.weeks(inMonth: makeDate(2026, 8, 1, calendar: cal), calendar: cal)
+        #expect(weeks.count == 6)
+    }
+
+    @Test func weeks_followTheCalendarsFirstWeekday() {
+        let mondayFirst = makeCalendar(firstWeekday: 2)
+        // April 2026 starts on a Wednesday: two empty cells when the week starts on Monday
+        let weeks = CalendarMonthLayout.weeks(inMonth: makeDate(2026, 4, 1, calendar: mondayFirst), calendar: mondayFirst)
+        #expect(weeks[0].prefix(2).allSatisfy { $0 == nil })
+        #expect(weeks[0][2] != nil)
+    }
+
+    // MARK: - weekIndex(of:inMonth:)
+
+    @Test func weekIndex_findsTheRowOfADay() {
+        let cal = makeCalendar(firstWeekday: 1)
+        let month = makeDate(2026, 4, 1, calendar: cal)
+        #expect(CalendarMonthLayout.weekIndex(of: makeDate(2026, 4, 1, calendar: cal), inMonth: month, calendar: cal) == 0)
+        #expect(CalendarMonthLayout.weekIndex(of: makeDate(2026, 4, 5, calendar: cal), inMonth: month, calendar: cal) == 1)
+        #expect(CalendarMonthLayout.weekIndex(of: makeDate(2026, 4, 30, calendar: cal), inMonth: month, calendar: cal) == 4)
+    }
+
+    @Test func weekIndex_dayOutsideTheMonth_isNil() {
+        let cal = makeCalendar(firstWeekday: 1)
+        let month = makeDate(2026, 4, 1, calendar: cal)
+        #expect(CalendarMonthLayout.weekIndex(of: makeDate(2026, 5, 1, calendar: cal), inMonth: month, calendar: cal) == nil)
     }
 }
