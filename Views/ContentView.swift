@@ -95,7 +95,7 @@ private extension ContentView {
             Tab(value: Screen.record, role: recordTabRole) {
                 Color.clear
             } label: {
-                Label(LocalizedStringResource("New Joy"), systemImage: "plus")
+                Label(LocalizedStringResource("New Joy"), systemImage: "pencil")
             }
             .accessibilityIdentifier("MainRecordButton")
         }
