@@ -7,12 +7,10 @@
 //
 
 // Shared opacity levels for the "card" fill + stroke look used across
-// settings rows, capsule rows and glow cards.
+// settings rows and capsule rows.
 enum CardOpacity {
     // Default fill opacity for the card background, e.g. `cardBackground`'s default.
     static let fill: Double = 0.05
     // Default stroke opacity paired with `fill`.
     static let stroke: Double = 0.1
-    // Stronger stroke used where a card has no matching plain fill, e.g. GlowCard's gradient background.
-    static let prominentStroke: Double = 0.15
 }

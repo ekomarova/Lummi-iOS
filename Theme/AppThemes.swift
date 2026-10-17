@@ -14,11 +14,7 @@ struct DarkTheme: AppTheme {
     var cardColor: Color = Color(red: 0.11, green: 0.11, blue: 0.12)
 
     var textColor: Color = .white
-    var inactiveOpacity: Double = 0.35
 
-    var dayFilledColor: Color = Color(red: 0.6, green: 0.85, blue: 1.0)
-
-    var recordButtonColor: Color = Color(red: 0.15, green: 0.5, blue: 0.75)
     var selectedTabColor: Color = Color(red: 0.35, green: 0.65, blue: 1.0)
 }
 
@@ -27,10 +23,6 @@ struct LightTheme: AppTheme {
     var cardColor: Color = .white
 
     var textColor: Color = .black
-    var inactiveOpacity: Double = 0.35
 
-    var dayFilledColor: Color = Color(red: 0.10, green: 0.40, blue: 0.80)
-
-    var recordButtonColor: Color = Color(red: 0.65, green: 0.82, blue: 0.98)
     var selectedTabColor: Color = Color(red: 0.10, green: 0.40, blue: 0.80)
 }

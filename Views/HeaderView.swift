@@ -8,53 +8,36 @@
 
 import SwiftUI
 
-// Tappable date capsule at the top of Home that expands and collapses the calendar.
+// Title of Home: today's day and month, in the style of the Insights and Settings titles. Unlike them it changes
+// with the date.
 struct HeaderView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale
 
     let date: Date
-    let isExpanded: Bool
-    let onTap: () -> Void
 
     private var headerDateText: String {
-        if isExpanded {
-            date.monthYearTitle(locale: locale)
-        } else {
-            "\(date.format("d", locale: locale)) \(date.format("MMMM", locale: locale).capitalizedFirstLetter)"
-        }
+        "\(date.format("d", locale: locale)) \(date.format("MMMM", locale: locale).capitalizedFirstLetter)"
     }
 
     var body: some View {
-        Button(action: onTap) {
-            Text(headerDateText)
-                // Smaller than the 24pt used by Insights/Settings headers to offset the capsule background, 
-                // which makes text look larger
-                .font(.lummiFont(size: 22))
-                .foregroundColor(themeManager.currentTheme.textColor)
-                .accessibilityIdentifier("HeaderDateText")
-                .padding(.horizontal, 26)
-                .padding(.vertical, 10)
-                .adaptiveGlass(in: Capsule())
-        }
-        .buttonStyle(.plain)
-        .accessibilityIdentifier("HeaderToggleButton")
-        .frame(maxWidth: .infinity, alignment: .center)
-        // The date text and capsule width switch instantly; the calendar below still animates in and out.
-        .transaction { $0.animation = nil }
-        .sensoryFeedback(.selection, trigger: isExpanded)
+        Text(headerDateText)
+            .font(.lummiFont(size: 32, weight: .bold))
+            .foregroundColor(themeManager.currentTheme.textColor)
+            .accessibilityIdentifier("HeaderDateText")
+            .accessibilityAddTraits(.isHeader)
+            .padding(.top, 10)
+            .padding(.horizontal, 20)
     }
 }
 
 #if DEBUG
 #Preview {
-    // Same placement as in ContentView: pinned to the top, centered horizontally.
-    // Collapsed (selected day) and expanded (calendar month) states.
-    VStack(spacing: 15) {
-        HeaderView(date: Date(), isExpanded: false, onTap: { })
-        HeaderView(date: Date(), isExpanded: true, onTap: { })
+    VStack(alignment: .leading, spacing: 15) {
+        HeaderView(date: Date())
         Spacer()
     }
+    .frame(maxWidth: .infinity, alignment: .leading)
     .previewEnvironment()
 }
 #endif
