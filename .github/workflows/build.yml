@@ -23,7 +23,7 @@ env:
 jobs:
   build:
     name: Build
-    runs-on: macos-latest
+    runs-on: xcode-27
     timeout-minutes: 10
     permissions:
       actions: read
@@ -88,7 +88,7 @@ jobs:
   unit-tests:
     name: Unit Tests
     needs: build
-    runs-on: macos-latest
+    runs-on: xcode-27
     timeout-minutes: 20
     strategy:
       fail-fast: false
@@ -142,7 +142,7 @@ jobs:
   ui-tests:
     name: UI Tests
     needs: build
-    runs-on: macos-latest
+    runs-on: xcode-27
     timeout-minutes: 90
     strategy:
       fail-fast: false
