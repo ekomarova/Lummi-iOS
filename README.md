@@ -15,7 +15,6 @@ See [LICENSE](./LICENSE.md) for the full terms.
 ## 🚀 Features
 
 * **Joy Journal**: Create, edit, and delete daily "moments of joy"
-* **Smart Calendar**: Intuitive navigation through days and months to review your history
 * **Insights**: Comprehensive monthly analytics designed to help you understand your happiness patterns: 
     *   Track the volume of positive moments captured each month
     *   Discover your "peak joy" time window through intelligent time-density analysis
@@ -37,7 +36,7 @@ Your data is yours. Using SwiftData and CloudKit, the text of your moments is en
 
 ### Unit & UI Tests
 * **Unit tests** are written with the **Swift Testing** framework (`import Testing`) and cover all testable business logic.
-* **UI tests** are written with **XCUITest** and cover end-to-end user flows: calendar navigation, record creation/edit/delete, insights display, settings, iCloud sync toggle, and save failure paths.
+* **UI tests** are written with **XCUITest** and cover end-to-end user flows: record creation/edit/delete, insights display, settings, iCloud sync toggle, and save failure paths.
 
 ### Mocking
 A dedicated `MockDataManager` (under `#if DEBUG`) populates the database with specific states based on launch arguments, allowing robust UI testing of various scenarios without touching real user data.
@@ -52,7 +51,7 @@ The repository ships with [Claude Code](https://claude.com/claude-code) configur
 | `.claude/settings.json` + `.claude/hooks/pre-commit.sh` | Hook that runs before every `git commit` made by Claude: blocks the commit if SwiftLint fails and restores `DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";` in `project.pbxproj` (Xcode overwrites it with automatic signing) |
 | `.claude/skills/refactor-analysis` | On-demand `/refactor-analysis [path]`: read-only search for duplicated code, hardcoded values and hacks, and design weaknesses, with a summary and a table of proposed improvements |
 | `.claude/skills/audit` | On-demand `/audit [path]`: read-only audit of bugs, security, code quality, licenses, git hygiene and release readiness, with a prioritized report |
-| `.claude/skills/performance-profile` | On-demand `/performance-profile [scenarios]`: read-only Time Profiler run of launch, calendar, day switching, Insights, All Joys and Trends on a simulator, with the cost per app function and fix options rated by complexity. Needs `defusedxml` (`python3 -m pip install defusedxml`) |
+| `.claude/skills/performance-profile` | On-demand `/performance-profile [scenarios]`: read-only Time Profiler run of launch, Insights, All Joys and Trends on a simulator, with the cost per app function and fix options rated by complexity. Needs `defusedxml` (`python3 -m pip install defusedxml`) |
 
 ## 💻 Setup & Requirements
 

@@ -1,6 +1,6 @@
 ---
 name: performance-profile
-description: Read-only performance profiling of Lummi's main flows (launch and main screen, calendar, day switching, Insights, All Joys, Trends Month/Year). Records Time Profiler traces on a simulator, then reports where the time goes with fix options rated by implementation complexity. Manual use only.
+description: Read-only performance profiling of Lummi's main flows (launch and main screen, Insights, All Joys, Trends Month/Year). Records Time Profiler traces on a simulator, then reports where the time goes with fix options rated by implementation complexity. Manual use only.
 disable-model-invocation: true
 allowed-tools: Read, Glob, Grep, Bash(bash .claude/skills/performance-profile/scripts/profile.sh:*), Bash(python3 .claude/skills/performance-profile/scripts/analyze_trace.py:*), Bash(git status:*), Bash(git diff:*), Bash(ls:*)
 ---
@@ -14,8 +14,6 @@ Optional argument: scenario names to profile (`$ARGUMENTS`), for example `trends
 | Scenario | What is measured | UI test driving it (`LummiUITests/PerformanceUITests.swift`) |
 |---|---|---|
 | `launch` | app start up to the main screen with today's entries | none: the app is launched directly under the profiler, so the whole start is recorded |
-| `calendar` | open the calendar and page back through a year | `test_Perf_OpenCalendarAndScrollBack` |
-| `day-switch` | pick past days from the open calendar | `test_Perf_SwitchingSelectedDay` |
 | `insights` | open the Insights tab | `test_Perf_OpenInsights` |
 | `all-joys` | open "All Joys" from Insights (Month tab) | `test_Perf_OpenAllJoys` |
 | `all-joys-all-time` | switch "All Joys" to the All Time tab | `test_Perf_OpenAllJoysAllTime` |

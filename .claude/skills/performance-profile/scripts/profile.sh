@@ -3,7 +3,7 @@
 #
 # Usage: profile.sh <workdir> [scenario ...]      (no scenario, or "all", runs every scenario)
 #   <workdir>  a scratch folder OUTSIDE the repository; the build, traces and reports go there.
-#   scenarios: launch calendar day-switch insights all-joys all-joys-all-time all-joys-year trends-month trends-year
+#   scenarios: launch insights all-joys all-joys-all-time all-joys-year trends-month trends-year
 # Environment: SIM_UDID=<udid> picks the simulator, REBUILD=1 forces a fresh build,
 #   PYTHON=<python> picks the interpreter for the trace analysis (default python3; it needs the defusedxml package).
 #
@@ -38,8 +38,6 @@ esac
 scenario_test() {
     case "$1" in
         launch)       echo "-" ;;  # started directly under the profiler, no UI test
-        calendar)     echo "test_Perf_OpenCalendarAndScrollBack" ;;
-        day-switch)   echo "test_Perf_SwitchingSelectedDay" ;;
         insights)     echo "test_Perf_OpenInsights" ;;
         all-joys)     echo "test_Perf_OpenAllJoys" ;;
         all-joys-all-time) echo "test_Perf_OpenAllJoysAllTime" ;;
@@ -49,7 +47,7 @@ scenario_test() {
         *) return 1 ;;
     esac
 }
-ALL_SCENARIOS="launch calendar day-switch insights all-joys all-joys-all-time all-joys-year trends-month trends-year"
+ALL_SCENARIOS="launch insights all-joys all-joys-all-time all-joys-year trends-month trends-year"
 
 SCENARIOS="${*:-all}"
 [ "$SCENARIOS" = "all" ] && SCENARIOS="$ALL_SCENARIOS"

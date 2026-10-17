@@ -95,7 +95,7 @@ private extension ContentView {
             Tab(value: Screen.record, role: recordTabRole) {
                 Color.clear
             } label: {
-                Label(LocalizedStringResource("New Joy"), systemImage: "plus")
+                Label(LocalizedStringResource("New Joy"), systemImage: "pencil")
             }
             .accessibilityIdentifier("MainRecordButton")
         }
@@ -191,60 +191,21 @@ private extension ContentView {
     // MARK: - Home tab
 
     var homeContent: some View {
-        ZStack(alignment: .top) {
-            if navigation.isCalendarExpanded {
-                Color.black.opacity(0.001)
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        withAnimation(.lummiSpring) {
-                            navigation.dismissCalendar()
-                        }
-                    }
-            }
+        // The title's protected zone takes 12pt of the old 20pt gap (see `scrollHeaderBackground`), as on Insights and Settings.
+        VStack(alignment: .leading, spacing: 8) {
+            // MARK: - Header View
+            HeaderView(date: navigation.selectedDate)
+                .scrollHeaderBackground(alignment: .leading)
 
-            // The date capsule's protected zone takes 12pt of the old 15pt gap (see `scrollHeaderBackground`).
-            VStack(spacing: 3) {
-                // MARK: - Header View
-                HeaderView(
-                    date: navigation.isCalendarExpanded ? navigation.visibleMonth : navigation.selectedDate,
-                    isExpanded: navigation.isCalendarExpanded,
-                    onTap: {
-                        withAnimation(.lummiSpring) {
-                            navigation.toggleCalendar()
-                        }
-                    }
-                )
-                .scrollHeaderBackground()
+            // MARK: - Selected Day View
+            SelectedDayDetailView(
+                selectedDate: navigation.selectedDate
+            )
 
-                if navigation.isCalendarExpanded {
-                    // MARK: - Calendar View
-                    MainCalendarView(
-                        selectedDate: $navigation.selectedDate,
-                        isCalendarExpanded: $navigation.isCalendarExpanded,
-                        visibleMonth: $navigation.visibleMonth
-                    )
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 18)
-                    .frame(maxWidth: AdaptiveLayout.isPad ? 420 : .infinity)
-                    .frame(height: 340)
-                    .adaptiveGlass(in: RoundedRectangle(cornerRadius: 24))
-                    .transition(.opacity)
-                    .padding(.top, 28)
-                    .padding(.horizontal, 20)
-                    .onTapGesture { }
-                } else {
-                    // MARK: - Selected Day View
-                    SelectedDayDetailView(
-                        selectedDate: navigation.selectedDate
-                    )
-                    .transition(.opacity)
-                }
-
-                Spacer()
-            }
-            // Lets the day's entries scroll under the tab bar, as Insights and All Joys do.
-            .ignoresSafeArea(.container, edges: .bottom)
+            Spacer()
         }
+        // Lets the day's entries scroll under the tab bar, as Insights and All Joys do.
+        .ignoresSafeArea(.container, edges: .bottom)
     }
 }
 

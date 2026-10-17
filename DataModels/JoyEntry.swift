@@ -22,8 +22,6 @@ final class JoyEntry {
     // Date of record creation
     var date: Date = Date()
     
-    var dateKey: String { date.stringKey }
-    
     init(text: String, date: Date) {
         self.text = text
         self.date = date

@@ -14,16 +14,6 @@ struct DateExtensionTests {
         return Calendar.current.date(from: components) ?? Date()
     }
 
-    // MARK: - stringKey
-
-    @Test func stringKey_formatsAsISO8601Date() {
-        #expect(makeDate(year: 2026, month: 3, day: 5).stringKey == "2026-03-05")
-    }
-
-    @Test func stringKey_singleDigitMonthAndDay_padsWithZero() {
-        #expect(makeDate(year: 2026, month: 1, day: 7).stringKey == "2026-01-07")
-    }
-
     // MARK: - format
 
     @Test func format_customPattern_returnsFormattedString() {

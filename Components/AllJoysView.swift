@@ -27,7 +27,7 @@ struct AllJoysView: View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 30) {
                 PeriodTabPicker(selection: $selectedTab)
-                    .padding(.horizontal, 10)
+                    .padding(.horizontal, 20)
 
                 switch selectedTab {
                 case .month:
@@ -38,7 +38,7 @@ struct AllJoysView: View {
                         NoEntriesView()
                     } else {
                         YearsListView(years: availableYears, accessibilityIDPrefix: "AllJoysYearRow", onSelect: onOpenYear)
-                            .padding(.horizontal, 10)
+                            .padding(.horizontal, 20)
                     }
                 }
             }
