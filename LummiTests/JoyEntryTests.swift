@@ -3,42 +3,6 @@ import Foundation
 import SwiftData
 @testable import Lummi
 
-struct JoyEntryTests {
-
-    private func makeDate(year: Int, month: Int, day: Int) -> Date {
-        var components = DateComponents()
-        components.year = year
-        components.month = month
-        components.day = day
-        return Calendar.current.date(from: components) ?? Date()
-    }
-
-    // MARK: - dateKey
-
-    @Test func dateKey_matchesDateStringKey() {
-        let date = makeDate(year: 2026, month: 3, day: 5)
-        let entry = JoyEntry(text: "test", date: date)
-        #expect(entry.dateKey == "2026-03-05")
-        #expect(entry.dateKey == date.stringKey)
-    }
-
-    @Test func dateKey_twoEntriesOnSameDay_haveEqualKeys() {
-        let morning = makeDate(year: 2026, month: 6, day: 10)
-        let evening = Calendar.current.date(byAdding: .hour, value: 14, to: morning) ?? morning
-        let entryA = JoyEntry(text: "morning", date: morning)
-        let entryB = JoyEntry(text: "evening", date: evening)
-        #expect(entryA.dateKey == entryB.dateKey)
-    }
-
-    @Test func dateKey_twoEntriesOnDifferentDays_haveDifferentKeys() {
-        let entryA = JoyEntry(text: "a", date: makeDate(year: 2026, month: 1, day: 10))
-        let entryB = JoyEntry(text: "b", date: makeDate(year: 2026, month: 6, day: 20))
-        #expect(entryA.dateKey != entryB.dateKey)
-        #expect(entryA.dateKey == "2026-01-10")
-        #expect(entryB.dateKey == "2026-06-20")
-    }
-}
-
 @MainActor
 struct JoyEntryQueriesTests {
 
@@ -103,20 +67,6 @@ struct JoyEntryQueriesTests {
         let context = try makeContext()
         context.insert(JoyEntry(text: "other day", date: makeDate(year: 2026, month: 3, day: 5, hour: 12)))
         #expect(try texts(JoyEntry.dayPredicate(for: makeDate(year: 2026, month: 3, day: 7)), in: context).isEmpty)
-    }
-
-    @Test func dayPredicate_agreesWithDateKey() throws {
-        let context = try makeContext()
-        let target = makeDate(year: 2026, month: 3, day: 5, hour: 9)
-        for hour in [0, 1, 11, 12, 22, 23] {
-            for day in 4...6 {
-                context.insert(JoyEntry(text: "\(day)-\(hour)", date: makeDate(year: 2026, month: 3, day: day, hour: hour)))
-            }
-        }
-        let all = try context.fetch(FetchDescriptor<JoyEntry>(sortBy: [SortDescriptor(\.date)]))
-        let expected = all.filter { $0.dateKey == target.stringKey }.map(\.text)
-        #expect(try texts(JoyEntry.dayPredicate(for: target), in: context) == expected)
-        #expect(!expected.isEmpty)
     }
 
     // MARK: - Month predicate

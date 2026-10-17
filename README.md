@@ -15,7 +15,6 @@ See [LICENSE](./LICENSE.md) for the full terms.
 ## 🚀 Features
 
 * **Joy Journal**: Create, edit, and delete daily "moments of joy"
-* **Month Calendar**: See the days of the current month with joys at a glance in Insights
 * **Insights**: Comprehensive monthly analytics designed to help you understand your happiness patterns: 
     *   Track the volume of positive moments captured each month
     *   Discover your "peak joy" time window through intelligent time-density analysis
@@ -37,7 +36,7 @@ Your data is yours. Using SwiftData and CloudKit, the text of your moments is en
 
 ### Unit & UI Tests
 * **Unit tests** are written with the **Swift Testing** framework (`import Testing`) and cover all testable business logic.
-* **UI tests** are written with **XCUITest** and cover end-to-end user flows: the Insights calendar, record creation/edit/delete, insights display, settings, iCloud sync toggle, and save failure paths.
+* **UI tests** are written with **XCUITest** and cover end-to-end user flows: record creation/edit/delete, insights display, settings, iCloud sync toggle, and save failure paths.
 
 ### Mocking
 A dedicated `MockDataManager` (under `#if DEBUG`) populates the database with specific states based on launch arguments, allowing robust UI testing of various scenarios without touching real user data.

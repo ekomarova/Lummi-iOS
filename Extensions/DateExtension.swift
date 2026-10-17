@@ -9,21 +9,10 @@
 import Foundation
 import os
 
-// Date helpers: day keys, cached formatting, month boundaries and the current-month check.
+// Date helpers: cached formatting, month boundaries and the current-month check.
 extension Date {
-    private static let keyFormatter: DateFormatter = {
-        let fmt = DateFormatter()
-        fmt.locale = Locale(identifier: "en_US_POSIX")
-        fmt.dateFormat = "yyyy-MM-dd"
-        return fmt
-    }()
-
     // Shared by every caller, so access goes through a lock instead of relying on being called from the main thread.
     private static let formatterCache = OSAllocatedUnfairLock<[String: DateFormatter]>(initialState: [:])
-
-    var stringKey: String {
-        Date.keyFormatter.string(from: self)
-    }
 
     func format(_ format: String, locale: Locale = .current) -> String {
         let cacheKey = "\(format)|\(locale.identifier)"
@@ -36,11 +25,6 @@ extension Date {
             return created
         }
         return formatter.string(from: self)
-    }
-
-    // Full month and year, e.g. "March 2026", capitalized for locales that lowercase month names.
-    func monthYearTitle(locale: Locale = .current) -> String {
-        format("LLLL yyyy", locale: locale).capitalizedFirstLetter
     }
 
     // Get the beginning of the month for a specific date

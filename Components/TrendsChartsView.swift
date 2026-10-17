@@ -190,8 +190,8 @@ struct TrendsChartsView: View {
     // capitalized three-letter month abbreviation otherwise. Built by hand rather than via
     // `AxisValueLabel(format:)` because Swift Charts' axis formatting does not reliably follow the app's
     // in-app language selection from the environment, and because Foundation lowercases standalone month
-    // names in locales like Russian ("сент."), unlike English ("Sep") — `capitalizedFirstLetter` matches
-    // `Date.monthYearTitle`. Some locales' abbreviated forms also carry a trailing period and run longer
+    // names in locales like Russian ("сент."), unlike English ("Sep") — hence `capitalizedFirstLetter`.
+    // Some locales' abbreviated forms also carry a trailing period and run longer
     // than three letters (Russian's "нояб." vs. English's "Nov"); dropping the period and clipping to
     // three letters keeps every month label the same width so none crowd or overlap their neighbors.
     private func volumeAxisLabel(for date: Date) -> String {

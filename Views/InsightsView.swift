@@ -26,131 +26,88 @@ private struct InsightsMonthView: View {
     @Environment(\.locale) var locale
     let onNavigate: (Route) -> Void
 
-    // On iPhone the Joys and Day Streak cards are stacked to take the height of the Joyful Hours card
-    private static let phoneCardHeight: CGFloat = 130
-    private static let phoneStackSpacing: CGFloat = 10
-
-    let month: Date
+    private static let cardHeight: CGFloat = 130
 
     @Query private var monthlyEntries: [JoyEntry]
 
     init(month: Date, onNavigate: @escaping (Route) -> Void) {
-        self.month = month
         self.onNavigate = onNavigate
         _monthlyEntries = Query(filter: JoyEntry.monthPredicate(for: month), sort: \JoyEntry.date)
     }
 
-    private var monthStreak: Int {
-        InsightsCalculator.longestStreak(in: monthlyEntries)
-    }
-
     // MARK: - Body
     var body: some View {
-        GeometryReader { geometry in
-            // The title's protected zone takes 12pt of the old 20pt gap (see `scrollHeaderBackground`).
-            VStack(alignment: .leading, spacing: 8) {
+        // The title's protected zone takes 12pt of the old 20pt gap (see `scrollHeaderBackground`).
+        VStack(alignment: .leading, spacing: 8) {
 
-                Text("Insights")
-                    .font(.lummiFont(size: 32, weight: .bold))
-                    .foregroundColor(themeManager.currentTheme.textColor)
-                    .padding(.top, 10)
-                    .padding(.horizontal, 20)
-                    .scrollHeaderBackground(alignment: .leading)
+            Text("Insights")
+                .font(.lummiFont(size: 32, weight: .bold))
+                .foregroundColor(themeManager.currentTheme.textColor)
+                .padding(.top, 10)
+                .padding(.horizontal, 20)
+                .scrollHeaderBackground(alignment: .leading)
 
-                // MARK: - Main Content Area
-                ScrollView(showsIndicators: false) {
-                    VStack(spacing: 35) {
+            // MARK: - Main Content Area
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 35) {
 
-                        // MARK: - Highlights
-                        VStack(alignment: .leading, spacing: 15) {
-                            SectionHeader(title: "Highlights", leadingInset: 10)
+                    // MARK: - Highlights
+                    VStack(alignment: .leading, spacing: 15) {
+                        SectionHeader(title: "Highlights", leadingInset: 10)
 
-                            // MARK: - Calendar of the month
-                            MonthCalendarView(month: month, filledDateKeys: Set(monthlyEntries.map(\.dateKey)))
-                                .frame(maxWidth: AdaptiveLayout.isPad ? 420 : .infinity)
-                                .frame(maxWidth: .infinity)
-
-                            if AdaptiveLayout.isPad {
-                                // MARK: - Joys, Joyful Hours & Streak (iPad: one row of squares)
-                                // The first layout pass can report a zero width, which would make the size negative.
-                                let padCardSize = max(0, (geometry.size.width - 50) / 3)
-
-                                HStack(spacing: 15) {
-                                    joysCard(height: padCardSize)
-                                        .frame(width: padCardSize)
-
-                                    joyfulHoursCard(height: padCardSize)
-                                        .frame(width: padCardSize)
-
-                                    streakCard(height: padCardSize)
-                                        .frame(width: padCardSize)
-                                }
-                            } else {
-                                // MARK: - Joys & Streak stacked, next to Joyful Hours
-                                let compactHeight = (Self.phoneCardHeight - Self.phoneStackSpacing) / 2
-
-                                HStack(spacing: 15) {
-                                    VStack(spacing: Self.phoneStackSpacing) {
-                                        joysCard(height: compactHeight, isCompact: true)
-                                        streakCard(height: compactHeight, isCompact: true)
-                                    }
-
-                                    joyfulHoursCard(height: Self.phoneCardHeight)
-                                }
-                            }
-                        }
-
-                        // MARK: - Recall
-                        VStack(alignment: .leading, spacing: 15) {
-                            SectionHeader(title: "Recall", leadingInset: 10)
-
-                            DisclosureRow(
-                                systemImage: "list.star",
-                                iconColor: AccentColors.activeDays,
-                                title: "Show All Joys",
-                                accessibilityID: "SeeAllJoysButton"
-                            ) {
-                                onNavigate(.allJoys)
-                            }
-                        }
-
-                        // MARK: - Trends
-                        VStack(alignment: .leading, spacing: 15) {
-                            SectionHeader(title: "Trends", leadingInset: 10)
-
-                            DisclosureRow(
-                                systemImage: "chart.bar.fill",
-                                iconColor: AccentColors.activeDays,
-                                title: "View Trends",
-                                accessibilityID: "ShowTrendsButton"
-                            ) {
-                                onNavigate(.trends)
-                            }
+                        // MARK: - Joys & Joyful Hours
+                        HStack(spacing: 15) {
+                            joysCard(height: Self.cardHeight)
+                            joyfulHoursCard(height: Self.cardHeight)
                         }
                     }
-                    .padding(.horizontal, 10)
-                    .padding(.bottom, 100)
+
+                    // MARK: - Recall
+                    VStack(alignment: .leading, spacing: 15) {
+                        SectionHeader(title: "Recall", leadingInset: 10)
+
+                        DisclosureRow(
+                            systemImage: "list.star",
+                            iconColor: AccentColors.activeDays,
+                            title: "Show All Joys",
+                            accessibilityID: "SeeAllJoysButton"
+                        ) {
+                            onNavigate(.allJoys)
+                        }
+                    }
+
+                    // MARK: - Trends
+                    VStack(alignment: .leading, spacing: 15) {
+                        SectionHeader(title: "Trends", leadingInset: 10)
+
+                        DisclosureRow(
+                            systemImage: "chart.bar.fill",
+                            iconColor: AccentColors.activeDays,
+                            title: "View Trends",
+                            accessibilityID: "ShowTrendsButton"
+                        ) {
+                            onNavigate(.trends)
+                        }
+                    }
                 }
-                .scrollClipDisabled()
-                .ignoresSafeArea(.container, edges: .bottom)
+                .padding(.horizontal, 10)
+                .padding(.bottom, 100)
             }
+            .scrollClipDisabled()
+            .ignoresSafeArea(.container, edges: .bottom)
         }
     }
 
     // MARK: - Highlight Cards
 
-    // One value size for all three cards. The Joyful Hours range is a long string, so on the narrow iPhone cards
+    // One value size for both cards. The Joyful Hours range is a long string, so on the narrow iPhone cards
     // it needs a smaller size to fit without being scaled down further than the numbers next to it.
     private var valueFontSize: CGFloat {
         AdaptiveLayout.isPad ? 28 : 20
     }
 
-    private func joysCard(height: CGFloat, isCompact: Bool = false) -> some View {
-        GlowCard.joys(value: "\(monthlyEntries.count)", height: height, valueFontSize: valueFontSize, valuePadding: 12, isCompact: isCompact)
-    }
-
-    private func streakCard(height: CGFloat, isCompact: Bool = false) -> some View {
-        GlowCard.streak(value: "\(monthStreak)", height: height, valueFontSize: valueFontSize, valuePadding: 12, isCompact: isCompact)
+    private func joysCard(height: CGFloat) -> some View {
+        GlowCard.joys(value: "\(monthlyEntries.count)", height: height, valueFontSize: valueFontSize, valuePadding: 12)
     }
 
     private func joyfulHoursCard(height: CGFloat) -> some View {
@@ -175,19 +132,13 @@ struct GlowCard: View {
     var height: CGFloat
     var valueFontSize: CGFloat
     var valuePadding: CGFloat
-    // Low card: the subtitle and the value share one row instead of being stacked
-    var isCompact = false
 
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 30)
                 .fill(LinearGradient(colors: gradientColors, startPoint: .leading, endPoint: .trailing))
 
-            if isCompact {
-                compactContent
-            } else {
-                content
-            }
+            content
         }
         .frame(maxWidth: .infinity)
         .frame(height: height)
@@ -227,23 +178,11 @@ struct GlowCard: View {
             }
         }
     }
-
-    // Subtitle on the leading edge, value on the trailing edge
-    private var compactContent: some View {
-        HStack(spacing: 8) {
-            subtitleLabel
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-            Spacer(minLength: 0)
-            valueLabel
-        }
-        .padding(.horizontal, 20)
-    }
 }
 
 // Shared presets for the "Joys"/"Day Streak"/"Joyful Hours" cards shown by both Insights and Trends.
 extension GlowCard {
-    static func joys(value: String, height: CGFloat, valueFontSize: CGFloat, valuePadding: CGFloat, isCompact: Bool = false) -> GlowCard {
+    static func joys(value: String, height: CGFloat, valueFontSize: CGFloat, valuePadding: CGFloat) -> GlowCard {
         GlowCard(
             value: value,
             subtitle: "Joys",
@@ -251,12 +190,11 @@ extension GlowCard {
             gradientColors: AccentColors.joysGradient,
             height: height,
             valueFontSize: valueFontSize,
-            valuePadding: valuePadding,
-            isCompact: isCompact
+            valuePadding: valuePadding
         )
     }
 
-    static func streak(value: String, height: CGFloat, valueFontSize: CGFloat, valuePadding: CGFloat, isCompact: Bool = false) -> GlowCard {
+    static func streak(value: String, height: CGFloat, valueFontSize: CGFloat, valuePadding: CGFloat) -> GlowCard {
         GlowCard(
             value: value,
             subtitle: "Day Streak",
@@ -264,8 +202,7 @@ extension GlowCard {
             gradientColors: AccentColors.streakGradient,
             height: height,
             valueFontSize: valueFontSize,
-            valuePadding: valuePadding,
-            isCompact: isCompact
+            valuePadding: valuePadding
         )
     }
 

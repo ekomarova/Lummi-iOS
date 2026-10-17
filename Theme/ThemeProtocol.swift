@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-// Contract for a theme: the colors and opacities every theme must provide.
+// Contract for a theme: the colors every theme must provide.
 protocol AppTheme {
     // App background
     var backgroundColor: Color { get }
@@ -18,13 +18,7 @@ protocol AppTheme {
 
     // Text
     var textColor: Color { get }
-    var inactiveOpacity: Double { get }
     
-    // Calendar
-    var dayFilledColor: Color { get }
-    
-    // Bottom panel
-    var recordButtonColor: Color { get }
     // Icon and label of the selected tab in the tab bar
     var selectedTabColor: Color { get }
 }

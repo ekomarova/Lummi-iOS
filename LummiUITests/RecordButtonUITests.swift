@@ -3,8 +3,6 @@ import XCTest
 final class RecordButtonUITests: XCTestCase {
 
     var app: XCUIApplication!
-    
-    let today = Date()
 
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -28,7 +26,6 @@ final class RecordButtonUITests: XCTestCase {
         XCTAssertTrue(app.tabItem("Home", identifier: "HomeButton").isTabSelected, "Home tab is not selected after saving the record")
         XCTAssertTrue(app.staticTexts[recordText].waitForExistence(timeout: 5.0), "There is no record on the default screen")
 
-        verifyStarOnTodayInCalendar()
     }
 
     // MARK: - Helpers
@@ -48,27 +45,5 @@ final class RecordButtonUITests: XCTestCase {
         saveBtn.tap()
 
         XCTAssertTrue(textEditor.waitForNonExistence(timeout: 5.0), "The text input field did not close after saving")
-    }
-    
-    // Opens the calendar in Insights, checks today's star and returns to Home
-    private func verifyStarOnTodayInCalendar() {
-        let insightsTab = app.tabItem("Insights", identifier: "InsightsButton")
-        insightsTab.tap()
-
-        let todayCell = app.descendants(matching: .any)["DayCell_\(dateKey(for: today))"]
-        var swipes = 0
-        while !todayCell.waitForExistence(timeout: 1.5) && swipes < 3 {
-            app.swipeUp()
-            swipes += 1
-        }
-        XCTAssertTrue(todayCell.exists, "The calendar is missing in Insights")
-
-        XCTAssertEqual(todayCell.value as? String, "Filled", "The star has not appeared today.")
-
-        app.tabItem("Home", identifier: "HomeButton").tap()
-    }
-
-    private func dateKey(for date: Date) -> String {
-        date.uiTestDateKey
     }
 }

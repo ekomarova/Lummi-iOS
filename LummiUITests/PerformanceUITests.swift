@@ -56,7 +56,7 @@ final class PerformanceUITests: XCTestCase {
         }
     }
 
-    // Open Insights: the month's highlights (joys, streak, joyful hours) are calculated before the screen appears.
+    // Open Insights: the month's highlights (joys, joyful hours) are calculated before the screen appears.
     func test_Perf_OpenInsights() throws {
         measure(metrics: metrics, options: manualOptions) {
             relaunch()
@@ -162,10 +162,5 @@ final class PerformanceUITests: XCTestCase {
         XCTAssertTrue(showAllJoys.waitForExistence(timeout: 30))
         showAllJoys.tap()
         XCTAssertTrue(app.navigationBackButton.waitForExistence(timeout: 30))
-    }
-
-    private func dateKey(daysAgo: Int) -> String {
-        let date = Calendar.current.date(byAdding: .day, value: -daysAgo, to: Date()) ?? Date()
-        return date.uiTestDateKey
     }
 }
