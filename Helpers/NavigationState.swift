@@ -35,30 +35,27 @@ struct NavigationState: nonisolated Equatable {
     private(set) var screen: Screen = .home
     // Pushed pages per tab, bound to that tab's `NavigationStack`. A tab with no entry shows its root page.
     var paths: [Screen: [Route]] = [:]
-    var isCalendarExpanded = false
+    // The day Home shows. It is today; going home refreshes it, so a session that crosses midnight shows the new day.
     var selectedDate: Date
-    var visibleMonth: Date
 
-    init(now: Date = Date(), calendar: Calendar = .current) {
+    init(now: Date = Date()) {
         selectedDate = now
-        visibleMonth = calendar.monthStart(for: now) ?? now
     }
 
     // MARK: - Transitions
 
     // The one code path for switching screens. Switching to a tab (or tapping the selected one again) always
-    // collapses the calendar and returns every tab to its root page; going home also resets the selection to today.
-    // The record tab only pushes the record page onto the current tab, keeping the selected day.
-    mutating func navigate(to target: Screen, now: Date = Date(), calendar: Calendar = .current) {
+    // returns every tab to its root page; going home also resets the selection to today.
+    // The record tab only pushes the record page onto the current tab.
+    mutating func navigate(to target: Screen, now: Date = Date()) {
         if target == .record {
             push(.record)
         } else {
             paths = [:]
             screen = target
         }
-        isCalendarExpanded = false
         if target == .home {
-            resetToToday(now: now, calendar: calendar)
+            selectedDate = now
         }
     }
 
@@ -66,19 +63,6 @@ struct NavigationState: nonisolated Equatable {
     mutating func push(_ route: Route) {
         if route == .record && paths[screen]?.last == .record { return }
         paths[screen, default: []].append(route)
-    }
-
-    // Collapses the calendar and returns the selection to today.
-    mutating func dismissCalendar(now: Date = Date(), calendar: Calendar = .current) {
-        isCalendarExpanded = false
-        resetToToday(now: now, calendar: calendar)
-    }
-
-    mutating func toggleCalendar(calendar: Calendar = .current) {
-        isCalendarExpanded.toggle()
-        if !isCalendarExpanded {
-            visibleMonth = calendar.monthStart(for: selectedDate) ?? selectedDate
-        }
     }
 
     // MARK: - Derived UI state
@@ -92,7 +76,7 @@ struct NavigationState: nonisolated Equatable {
     var showsHeader: Bool { screen == .home && isAtRoot }
 
     func isHomeActive(now: Date = Date(), calendar: Calendar = .current) -> Bool {
-        showsHeader && !isCalendarExpanded && calendar.isDate(selectedDate, inSameDayAs: now)
+        showsHeader && calendar.isDate(selectedDate, inSameDayAs: now)
     }
 
     var isInsightsActive: Bool { screen == .insights && isAtRoot }
@@ -101,13 +85,6 @@ struct NavigationState: nonisolated Equatable {
 
     // MARK: - Record date
 
-    // Date stored on a new record. Records are always created for today, whichever day is selected in the calendar.
+    // Date stored on a new record: always today.
     func recordDate(now: Date = Date()) -> Date { now }
-
-    // MARK: - Private
-
-    private mutating func resetToToday(now: Date, calendar: Calendar) {
-        selectedDate = now
-        visibleMonth = calendar.monthStart(for: now) ?? now
-    }
 }

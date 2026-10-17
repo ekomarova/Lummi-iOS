@@ -16,7 +16,7 @@ struct YearJoysView: View {
         ScrollView(showsIndicators: false) {
             JoysListView(range: .year, year: year)
                 .padding(.top, 18)
-                .padding(.horizontal, 10)
+                .padding(.horizontal, 20)
                 .padding(.bottom, 30)
         }
         .ignoresSafeArea(.container, edges: .bottom)

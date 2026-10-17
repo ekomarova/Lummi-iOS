@@ -44,8 +44,8 @@ struct SettingsView: View {
     @State private var showClearDataFailedAlert: Bool = false
 
     var body: some View {
-        // The title's protected zone takes 12pt of the old 15pt gap (see `scrollHeaderBackground`).
-        VStack(alignment: .leading, spacing: 3) {
+        // The title's protected zone takes 12pt of the old 20pt gap (see `scrollHeaderBackground`), as on Insights.
+        VStack(alignment: .leading, spacing: 8) {
             Text("Settings")
                 .font(.lummiFont(size: 32, weight: .bold))
                 .foregroundColor(themeManager.currentTheme.textColor)

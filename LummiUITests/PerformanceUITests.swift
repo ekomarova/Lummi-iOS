@@ -56,44 +56,7 @@ final class PerformanceUITests: XCTestCase {
         }
     }
 
-    // Open the calendar and page back through a year of months.
-    func test_Perf_OpenCalendarAndScrollBack() throws {
-        measure(metrics: metrics, options: manualOptions) {
-            relaunch()
-            let header = app.buttons["HeaderToggleButton"]
-            XCTAssertTrue(header.waitForExistence(timeout: 30))
-            startMeasuring()
-            header.tap()
-            let calendarScroll = app.scrollViews.firstMatch
-            XCTAssertTrue(calendarScroll.waitForExistence(timeout: 10))
-            for _ in 0..<12 { calendarScroll.swipeDown() }
-            stopMeasuring()
-        }
-    }
-
-    // Pick past days from the open calendar, so the selected day's list is re-fetched each time.
-    func test_Perf_SwitchingSelectedDay() throws {
-        measure(metrics: metrics, options: manualOptions) {
-            relaunch()
-            let header = app.buttons["HeaderToggleButton"]
-            XCTAssertTrue(header.waitForExistence(timeout: 30))
-            startMeasuring()
-            for daysAgo in [3, 40, 100] {
-                header.tap()
-                let cell = app.buttons["DayCell_\(dateKey(daysAgo: daysAgo))"]
-                var swipes = 0
-                while !cell.waitForExistence(timeout: 1) && swipes < 12 {
-                    app.scrollViews.firstMatch.swipeDown()
-                    swipes += 1
-                }
-                XCTAssertTrue(cell.exists, "Day \(daysAgo) days ago was not found in the calendar")
-                cell.tap()
-            }
-            stopMeasuring()
-        }
-    }
-
-    // Open Insights: the month's highlights (joys, streak, joyful hours) are calculated before the screen appears.
+    // Open Insights: the month's highlights (joys, joyful hours) are calculated before the screen appears.
     func test_Perf_OpenInsights() throws {
         measure(metrics: metrics, options: manualOptions) {
             relaunch()
@@ -199,10 +162,5 @@ final class PerformanceUITests: XCTestCase {
         XCTAssertTrue(showAllJoys.waitForExistence(timeout: 30))
         showAllJoys.tap()
         XCTAssertTrue(app.navigationBackButton.waitForExistence(timeout: 30))
-    }
-
-    private func dateKey(daysAgo: Int) -> String {
-        let date = Calendar.current.date(byAdding: .day, value: -daysAgo, to: Date()) ?? Date()
-        return date.uiTestDateKey
     }
 }
