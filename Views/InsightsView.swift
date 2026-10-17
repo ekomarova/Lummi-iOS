@@ -53,7 +53,7 @@ private struct InsightsMonthView: View {
 
                     // MARK: - Highlights
                     VStack(alignment: .leading, spacing: 15) {
-                        SectionHeader(title: "Highlights", leadingInset: 10)
+                        SectionHeader(title: "Highlights")
 
                         // MARK: - Joys & Joyful Hours
                         HStack(spacing: 15) {
@@ -64,7 +64,7 @@ private struct InsightsMonthView: View {
 
                     // MARK: - Recall
                     VStack(alignment: .leading, spacing: 15) {
-                        SectionHeader(title: "Recall", leadingInset: 10)
+                        SectionHeader(title: "Recall")
 
                         DisclosureRow(
                             systemImage: "list.star",
@@ -78,7 +78,7 @@ private struct InsightsMonthView: View {
 
                     // MARK: - Trends
                     VStack(alignment: .leading, spacing: 15) {
-                        SectionHeader(title: "Trends", leadingInset: 10)
+                        SectionHeader(title: "Trends")
 
                         DisclosureRow(
                             systemImage: "chart.bar.fill",
@@ -90,7 +90,7 @@ private struct InsightsMonthView: View {
                         }
                     }
                 }
-                .padding(.horizontal, 10)
+                .padding(.horizontal, 20)
                 .padding(.bottom, 100)
             }
             .scrollClipDisabled()

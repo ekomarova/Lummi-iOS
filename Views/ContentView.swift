@@ -191,8 +191,8 @@ private extension ContentView {
     // MARK: - Home tab
 
     var homeContent: some View {
-        // The title's protected zone takes 12pt of the old 15pt gap (see `scrollHeaderBackground`).
-        VStack(alignment: .leading, spacing: 3) {
+        // The title's protected zone takes 12pt of the old 20pt gap (see `scrollHeaderBackground`), as on Insights and Settings.
+        VStack(alignment: .leading, spacing: 8) {
             // MARK: - Header View
             HeaderView(date: navigation.selectedDate)
                 .scrollHeaderBackground(alignment: .leading)
