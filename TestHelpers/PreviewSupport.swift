@@ -45,7 +45,7 @@ extension View {
     @MainActor
     func previewEnvironment(withSampleEntries: Bool = true, isDark: Bool = true) -> some View {
         let manager = ThemeManager()
-        manager.isDark = isDark
+        manager.mode = isDark ? .dark : .light
         return ZStack {
             PreviewThemeBackground()
             self

@@ -49,8 +49,7 @@ struct ContentView: View {
                 isKeyboardVisible = false
             }
         }
-        .environment(themeManager)
-        .preferredColorScheme(themeManager.isDark ? .dark : .light)
+        .appTheme(themeManager)
         // MARK: For tests only
         .onAppear {
 #if DEBUG

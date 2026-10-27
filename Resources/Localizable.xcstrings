@@ -112,6 +112,23 @@
         }
       }
     },
+    "Auto" : {
+      "comment" : "A label for the automatic appearance option in the settings view. It follows the system light or dark appearance.",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Авто"
+          }
+        }
+      }
+    },
     "Can't open your joys" : {
       "comment" : "The title of the full-screen error shown when the app's storage cannot be opened.",
       "localizations" : {
