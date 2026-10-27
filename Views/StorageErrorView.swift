@@ -55,8 +55,7 @@ struct StorageErrorView: View {
             .padding(.horizontal, 32)
             .frame(maxWidth: AdaptiveLayout.isPad ? 480 : .infinity)
         }
-        .environment(themeManager)
-        .preferredColorScheme(themeManager.isDark ? .dark : .light)
+        .appTheme(themeManager)
     }
 }
 

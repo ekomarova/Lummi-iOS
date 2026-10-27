@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-// Labeled checkmark option used to choose between the light and dark theme in Settings.
+// Labeled checkmark option used to choose between the light, dark and auto theme in Settings.
 struct ThemeOptionButton: View {
     @Environment(ThemeManager.self) private var themeManager
 
@@ -49,12 +49,13 @@ struct ThemeOptionButton: View {
 
 #if DEBUG
 #Preview {
-    @Previewable @State var isDark = true
+    @Previewable @State var mode = AppearanceMode.dark
 
-    // Same two options as the Settings screen (Light, Dark). Local state only, so the saved theme stays untouched.
+    // Same three options as the Settings screen (Light, Dark, Auto). Local state only, so the saved theme stays untouched.
     HStack(spacing: 0) {
-        ThemeOptionButton(title: "Light", isSelected: !isDark, accessibilityID: "PreviewLightThemeButton", action: { isDark = false })
-        ThemeOptionButton(title: "Dark", isSelected: isDark, accessibilityID: "PreviewDarkThemeButton", action: { isDark = true })
+        ThemeOptionButton(title: "Light", isSelected: mode == .light, accessibilityID: "PreviewLightThemeButton", action: { mode = .light })
+        ThemeOptionButton(title: "Dark", isSelected: mode == .dark, accessibilityID: "PreviewDarkThemeButton", action: { mode = .dark })
+        ThemeOptionButton(title: "Auto", isSelected: mode == .auto, accessibilityID: "PreviewAutoThemeButton", action: { mode = .auto })
     }
     .padding()
     .previewEnvironment()

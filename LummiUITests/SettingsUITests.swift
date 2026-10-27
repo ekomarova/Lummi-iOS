@@ -53,9 +53,11 @@ final class SettingsUITests: XCTestCase {
         
         let lightBtn = app.buttons["LightThemeButton"]
         let darkBtn = app.buttons["DarkThemeButton"]
+        let autoBtn = app.buttons["AutoThemeButton"]
         
         XCTAssertTrue(lightBtn.exists, "Light theme option is missing")
         XCTAssertTrue(darkBtn.exists, "Dark theme option is missing")
+        XCTAssertTrue(autoBtn.exists, "Auto theme option is missing")
     }
 
     // Check theme change
@@ -75,6 +77,13 @@ final class SettingsUITests: XCTestCase {
         darkBtn.tap()
 
         XCTAssertEqual(darkBtn.value as? String, "Selected", "Dark theme is not active")
+        XCTAssertEqual(lightBtn.value as? String, "Unselected", "Light theme is active")
+
+        let autoBtn = app.buttons["AutoThemeButton"]
+        autoBtn.tap()
+
+        XCTAssertEqual(autoBtn.value as? String, "Selected", "Auto theme is not active")
+        XCTAssertEqual(darkBtn.value as? String, "Unselected", "Dark theme is active")
         XCTAssertEqual(lightBtn.value as? String, "Unselected", "Light theme is active")
     }
     
