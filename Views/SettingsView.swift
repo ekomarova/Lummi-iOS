@@ -108,16 +108,23 @@ struct SettingsView: View {
                 HStack(spacing: 0) {
                     ThemeOptionButton(
                         title: "Light",
-                        isSelected: !themeManager.isDark,
+                        isSelected: themeManager.mode == .light,
                         accessibilityID: "LightThemeButton",
-                        action: { themeManager.isDark = false }
+                        action: { themeManager.mode = .light }
                     )
 
                     ThemeOptionButton(
                         title: "Dark",
-                        isSelected: themeManager.isDark,
+                        isSelected: themeManager.mode == .dark,
                         accessibilityID: "DarkThemeButton",
-                        action: { themeManager.isDark = true }
+                        action: { themeManager.mode = .dark }
+                    )
+
+                    ThemeOptionButton(
+                        title: "Auto",
+                        isSelected: themeManager.mode == .auto,
+                        accessibilityID: "AutoThemeButton",
+                        action: { themeManager.mode = .auto }
                     )
                 }
                 .padding(.vertical, 20)
