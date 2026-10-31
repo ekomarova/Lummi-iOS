@@ -47,7 +47,7 @@ struct SettingsView: View {
         // The title's protected zone takes 12pt of the old 20pt gap (see `scrollHeaderBackground`), as on Insights.
         VStack(alignment: .leading, spacing: 8) {
             Text("Settings")
-                .font(.lummiFont(size: 32, weight: .bold))
+                .lummiScaledFont(size: 32, weight: .bold, relativeTo: .largeTitle)
                 .foregroundColor(themeManager.currentTheme.textColor)
                 .padding(.top, 10)
                 .padding(.horizontal, 20)
@@ -151,7 +151,7 @@ struct SettingsView: View {
                 CapsuleRow {
                     HStack {
                         Text("iCloud")
-                            .font(.lummiFont(size: 17))
+                            .lummiScaledFont(size: 17, relativeTo: .body)
                             .foregroundColor(themeManager.currentTheme.textColor)
 
                         Spacer()
@@ -190,7 +190,7 @@ struct SettingsView: View {
                     label: {
                         CapsuleRow {
                             Text("Delete")
-                                .font(.lummiFont(size: 17))
+                                .lummiScaledFont(size: 17, relativeTo: .body)
                                 .foregroundColor(AccentColors.destructive)
                         }
                     }
@@ -229,14 +229,14 @@ struct LanguageSelectionView: View {
                     label: {
                         HStack {
                             Text(language.displayName)
-                                .font(.lummiFont(size: 17))
+                                .lummiScaledFont(size: 17, relativeTo: .body)
                                 .foregroundColor(themeManager.currentTheme.textColor)
 
                             Spacer()
 
                             if language == selectedLanguage {
                                 Image(systemName: "checkmark")
-                                    .font(.system(size: 15, weight: .bold))
+                                    .lummiScaledFont(size: 15, weight: .bold, relativeTo: .subheadline)
                                     .foregroundColor(themeManager.currentTheme.textColor)
                             }
                         }
@@ -266,11 +266,11 @@ private struct SyncStatusBanner: View {
             if let syncMessage = monitor.syncState.message {
                 HStack(alignment: .top, spacing: 12) {
                     Image(systemName: "exclamationmark.icloud.fill")
-                        .font(.system(size: 20))
+                        .lummiScaledFont(size: 20, relativeTo: .title3)
                         .foregroundColor(.white)
 
                     Text(syncMessage)
-                        .font(.lummiFont(size: 14))
+                        .lummiScaledFont(size: 14, relativeTo: .subheadline)
                         .foregroundColor(.white)
                         .multilineTextAlignment(.leading)
                         .accessibilityIdentifier("SyncBannerMessage")
@@ -291,6 +291,12 @@ private struct SyncStatusBanner: View {
 #if DEBUG
 #Preview {
     SettingsView(onNavigate: { _ in })
+        .previewEnvironment()
+}
+
+#Preview("Largest text") {
+    SettingsView(onNavigate: { _ in })
+        .dynamicTypeSize(DynamicTypeSize.lummiSupportedRange.upperBound)
         .previewEnvironment()
 }
 

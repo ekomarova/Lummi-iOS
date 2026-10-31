@@ -4,6 +4,7 @@ All notable changes to the project will be documented in this file.
 ## [1.3.0] - 2026-MM-DD
 ### Added
 - Added the `Auto` appearance option that follows the light or dark mode of the phone [#61](https://github.com/ekomarova/Lummi-iOS/pull/61)
+- Added support for the `Larger Text` feature [#62](https://github.com/ekomarova/Lummi-iOS/pull/62)
 - Added the swipe-back gesture from the left edge on every page that has a back button [#55](https://github.com/ekomarova/Lummi-iOS/pull/55)
 
 ### Changed

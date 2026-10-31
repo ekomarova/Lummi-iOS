@@ -213,4 +213,10 @@ private extension ContentView {
     ContentView()
         .modelContainer(PreviewSupport.makeContainer())
 }
+
+#Preview("Smallest text") {
+    ContentView()
+        .dynamicTypeSize(DynamicTypeSize.lummiSupportedRange.lowerBound)
+        .modelContainer(PreviewSupport.makeContainer())
+}
 #endif

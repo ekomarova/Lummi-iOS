@@ -39,18 +39,18 @@ struct DisclosureRow: View {
                 HStack(spacing: 10) {
                     if let systemImage {
                         Image(systemName: systemImage)
-                            .font(.system(size: 17, weight: .semibold))
+                            .lummiScaledFont(size: 17, weight: .semibold, relativeTo: .body)
                             .foregroundColor(iconColor)
                     }
 
                     Text(title)
-                        .font(.lummiFont(size: 17))
+                        .lummiScaledFont(size: 17, relativeTo: .body)
                         .foregroundColor(themeManager.currentTheme.textColor)
 
                     Spacer()
 
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 14, weight: .bold))
+                        .lummiScaledFont(size: 14, weight: .bold, relativeTo: .subheadline)
                         .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
                 }
             }
@@ -78,7 +78,7 @@ private struct CapsuleRowPreview: View {
             )
             DisclosureRow(title: "English", accessibilityID: "PreviewWithoutIcon", action: { })
         }
-        .font(.lummiFont(size: 17))
+        .lummiScaledFont(size: 17, relativeTo: .body)
         .foregroundColor(themeManager.currentTheme.textColor)
         .padding(.horizontal, 20)
     }

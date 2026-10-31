@@ -123,17 +123,17 @@ private extension SelectedDayDetailView {
     var futureDayView: some View {
         VStack(spacing: 12) {
             Image(systemName: "moon.stars.fill")
-                .font(.system(size: 40))
+                .lummiScaledFont(size: 40, relativeTo: .largeTitle)
                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.2))
             Text("Oops! This day has not started yet")
-                .font(.lummiFont(size: 16))
+                .lummiScaledFont(size: 16, relativeTo: .callout)
                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
         }
     }
 
     var noRecordsView: some View {
         Text("No records for this day")
-            .font(.lummiFont(size: 16))
+            .lummiScaledFont(size: 16, relativeTo: .callout)
             .foregroundColor(themeManager.currentTheme.textColor.opacity(0.3))
     }
 
@@ -195,7 +195,7 @@ private extension SelectedDayDetailView {
                 .accessibilityLabel("Record text")
                 .accessibilityIdentifier("EditRecordTextField")
                 .focused($isTextFieldFocused)
-                .font(.lummiFont(size: 16))
+                .lummiScaledFont(size: 16, relativeTo: .callout)
                 .foregroundColor(themeManager.currentTheme.textColor)
         }
     }
@@ -203,7 +203,7 @@ private extension SelectedDayDetailView {
     func noteCellTextDisplay(entry: JoyEntry, index: Int, isActive: Bool, proxy: ScrollViewProxy) -> some View {
         NoteBubble {
             Text(entry.text)
-                .font(.lummiFont(size: 17))
+                .lummiScaledFont(size: 17, relativeTo: .body)
                 .foregroundColor(themeManager.currentTheme.textColor)
         }
         .contentShape(RoundedRectangle(cornerRadius: 20))

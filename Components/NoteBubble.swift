@@ -28,12 +28,12 @@ private struct NoteBubblePreview: View {
         VStack(spacing: 15) {
             NoteBubble {
                 Text("A quiet walk in the park.")
-                    .font(.lummiFont(size: 17))
+                    .lummiScaledFont(size: 17, relativeTo: .body)
                     .foregroundColor(themeManager.currentTheme.textColor)
             }
             NoteBubble {
                 Text("Highlighted while active.")
-                    .font(.lummiFont(size: 17))
+                    .lummiScaledFont(size: 17, relativeTo: .body)
                     .foregroundColor(themeManager.currentTheme.textColor)
             }
         }

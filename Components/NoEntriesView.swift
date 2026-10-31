@@ -15,7 +15,7 @@ struct NoEntriesView: View {
 
     var body: some View {
         Text("Add at least one joy")
-            .font(.lummiFont(size: 16))
+            .lummiScaledFont(size: 16, relativeTo: .callout)
             .foregroundColor(themeManager.currentTheme.textColor.opacity(0.3))
             .frame(maxWidth: .infinity)
             .padding(.top, 40)

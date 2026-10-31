@@ -23,13 +23,13 @@ struct RecordActionButton: View {
             label: {
                 HStack(spacing: 6) {
                     Image(systemName: systemImage)
-                        .font(.lummiFont(size: 14))
+                        .lummiScaledFont(size: 14, relativeTo: .subheadline)
                     Text(title)
-                        .font(.lummiFont(size: 14))
+                        .lummiScaledFont(size: 14, relativeTo: .subheadline)
                 }
                 .foregroundColor(themeManager.currentTheme.textColor)
                 .padding(.horizontal, 16)
-                .frame(height: 44)
+                .frame(minHeight: 44)
                 .adaptiveGlass(in: Capsule())
             }
         )

@@ -72,7 +72,7 @@ private struct NavigationTitleModifier: ViewModifier {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text(title)
-                        .font(.lummiFont(size: 20, weight: .bold))
+                        .lummiScaledFont(size: 20, weight: .bold, relativeTo: .title3)
                         .foregroundColor(themeManager.currentTheme.textColor)
                 }
             }
