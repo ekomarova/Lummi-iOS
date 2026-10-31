@@ -37,7 +37,7 @@ struct RecordInput: View {
                 .scrollContentBackground(.hidden)
                 .cardBackground(RoundedRectangle(cornerRadius: 20), fillOpacity: 0.1, strokeOpacity: 0.2)
                 .foregroundColor(themeManager.currentTheme.textColor)
-                .font(.lummiFont(size: 18))
+                .lummiScaledFont(size: 18, relativeTo: .body)
                 .accessibilityIdentifier("RecordInputTextEditor")
                 .onChange(of: text) { _, newValue in
                     let clamped = RecordInputRules.clamped(newValue)
@@ -47,7 +47,7 @@ struct RecordInput: View {
             HStack {
                 Spacer()
                 Text("\(text.count)/\(maxLength)")
-                    .font(.lummiFont(size: 12))
+                    .lummiScaledFont(size: 12, relativeTo: .caption)
                     .foregroundColor(themeManager.currentTheme.textColor.opacity(
                         text.count > maxLength - 20 ? 0.7 : 0.35
                     ))

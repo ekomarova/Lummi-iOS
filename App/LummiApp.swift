@@ -133,6 +133,7 @@ struct LummiApp: App {
                 }
             }
             .environment(\.locale, Locale(identifier: selectedLanguage.rawValue))
+            .dynamicTypeSize(DynamicTypeSize.lummiSupportedRange)
             .onChange(of: isICloudSyncEnabled) { _, newValue in
                 // Skips the flag change made below to revert a failed switch, and the one made by a launch fallback.
                 guard newValue != isSyncActive else { return }

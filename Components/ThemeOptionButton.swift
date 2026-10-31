@@ -21,7 +21,7 @@ struct ThemeOptionButton: View {
         Button(action: action) {
             VStack(spacing: 12) {
                 Text(title)
-                    .font(.lummiFont(size: 16))
+                    .lummiScaledFont(size: 16, relativeTo: .callout)
                     .foregroundColor(themeManager.currentTheme.textColor)
 
                 ZStack {
@@ -33,7 +33,7 @@ struct ThemeOptionButton: View {
                         )
 
                     Image(systemName: "checkmark")
-                        .font(.system(size: 13, weight: .bold))
+                        .lummiScaledFont(size: 13, weight: .bold, relativeTo: .footnote)
                         .foregroundColor(.white)
                         .opacity(isSelected ? 1 : 0)
                 }

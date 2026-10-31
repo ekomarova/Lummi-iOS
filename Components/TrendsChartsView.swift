@@ -240,7 +240,7 @@ struct TrendsSection<Content: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(title)
-                .font(.lummiFont(size: 18, weight: .bold))
+                .lummiScaledFont(size: 18, weight: .bold, relativeTo: .body)
                 .foregroundColor(themeManager.currentTheme.textColor)
 
             content()

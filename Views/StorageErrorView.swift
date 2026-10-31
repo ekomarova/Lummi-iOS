@@ -22,24 +22,24 @@ struct StorageErrorView: View {
 
             VStack(spacing: 16) {
                 Image(systemName: "exclamationmark.triangle")
-                    .font(.lummiFont(size: 40))
+                    .lummiScaledFont(size: 40, relativeTo: .largeTitle)
                     .foregroundColor(themeManager.currentTheme.textColor)
                     .accessibilityHidden(true)
 
                 Text("Can't open your joys")
-                    .font(.lummiFont(size: 22))
+                    .lummiScaledFont(size: 22, relativeTo: .title2)
                     .foregroundColor(themeManager.currentTheme.textColor)
                     .multilineTextAlignment(.center)
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityIdentifier("StorageErrorTitle")
 
                 Text("Lummi couldn't open its storage. Your joys haven't been deleted. Try again, or restart the app.")
-                    .font(.lummiFont(size: 16))
+                    .lummiScaledFont(size: 16, relativeTo: .callout)
                     .foregroundColor(themeManager.currentTheme.textColor.opacity(0.7))
                     .multilineTextAlignment(.center)
 
                 Text(verbatim: error.localizedDescription)
-                    .font(.lummiFont(size: 12))
+                    .lummiScaledFont(size: 12, relativeTo: .caption)
                     .foregroundColor(themeManager.currentTheme.textColor.opacity(0.4))
                     .multilineTextAlignment(.center)
                     .accessibilityIdentifier("StorageErrorDetails")

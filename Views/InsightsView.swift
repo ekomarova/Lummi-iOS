@@ -41,7 +41,7 @@ private struct InsightsMonthView: View {
         VStack(alignment: .leading, spacing: 8) {
 
             Text("Insights")
-                .font(.lummiFont(size: 32, weight: .bold))
+                .lummiScaledFont(size: 32, weight: .bold, relativeTo: .largeTitle)
                 .foregroundColor(themeManager.currentTheme.textColor)
                 .padding(.top, 10)
                 .padding(.horizontal, 20)
@@ -225,18 +225,20 @@ struct MonthlyMomentCell: View {
     let entry: JoyEntry
     // False for all but the latest entry of a day: the date column stays as empty space so the bubbles still align.
     var showsDate = true
+    // Grows with the text size, so the two-digit day never gets cut off.
+    @ScaledMetric(relativeTo: .body) private var dateColumnWidth: CGFloat = 35
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             dateLabel
-                .frame(width: 35)
+                .frame(width: dateColumnWidth)
                 .padding(.top, 4)
                 .opacity(showsDate ? 1 : 0)
                 .accessibilityHidden(!showsDate)
 
             NoteBubble {
                 Text(entry.text)
-                    .font(.lummiFont(size: 17))
+                    .lummiScaledFont(size: 17, relativeTo: .body)
                     .foregroundColor(themeManager.currentTheme.textColor)
             }
         }
@@ -247,11 +249,11 @@ struct MonthlyMomentCell: View {
     private var dateLabel: some View {
         VStack(alignment: .center, spacing: 2) {
             Text(entry.date.format("dd", locale: locale))
-                .font(.lummiFont(size: 18))
+                .lummiScaledFont(size: 18, relativeTo: .body)
                 .foregroundColor(themeManager.currentTheme.textColor)
 
             Text(entry.date.format("MMM", locale: locale).capitalizedFirstLetter)
-                .font(.lummiFont(size: 11))
+                .lummiScaledFont(size: 11, relativeTo: .caption2)
                 .foregroundColor(themeManager.currentTheme.textColor.opacity(0.5))
         }
     }
@@ -260,6 +262,12 @@ struct MonthlyMomentCell: View {
 #if DEBUG
 #Preview {
     InsightsView(onNavigate: { _ in })
+        .previewEnvironment()
+}
+
+#Preview("Largest text") {
+    InsightsView(onNavigate: { _ in })
+        .dynamicTypeSize(DynamicTypeSize.lummiSupportedRange.upperBound)
         .previewEnvironment()
 }
 #endif
