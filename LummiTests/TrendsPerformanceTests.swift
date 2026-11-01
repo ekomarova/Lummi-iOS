@@ -3,8 +3,11 @@ import SwiftData
 @testable import Lummi
 
 // Measures the Trends calculations on a 5,000-entry in-memory store, with no UI involved.
-// Compares the old way (every card and chart filters the whole journal again, 7 passes) with
-// `TrendsPerformanceStats` (one pass), for the Month tab and for a year's page.
+// Compares three ways, for the Month tab and for a year's page:
+//   legacy     the old `TrendsChartsView`: every card and chart filters the whole journal again (7 passes);
+//   singlePass `TrendsPerformanceStats` over the whole journal: the calculation alone, one pass;
+//   asInApp    what `TrendsChartsView` does today: the store returns only the entries of the range
+//              (`JoyEntry.predicate(in:)`, like its `@Query`), then `TrendsPerformanceStats` makes one pass over them.
 //
 // Manual only: every test is skipped unless RUN_PERFORMANCE_TESTS=1 is set. From the terminal:
 //   TEST_RUNNER_RUN_PERFORMANCE_TESTS=1 xcodebuild test -scheme Lummi -destination 'platform=iOS Simulator,name=iPhone 17' \
@@ -14,6 +17,7 @@ import SwiftData
 final class TrendsPerformanceTests: XCTestCase {
 
     private var container: ModelContainer!
+    private var context: ModelContext!
     private var entries: [JoyEntry] = []
     private let locale = Locale(identifier: "en_US")
     private let currentYear = Calendar.current.component(.year, from: Date())
@@ -26,15 +30,16 @@ final class TrendsPerformanceTests: XCTestCase {
         continueAfterFailure = false
         let configuration = ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)
         container = try ModelContainer(for: JoyEntry.self, configurations: configuration)
-        let context = ModelContext(container)
+        context = ModelContext(container)
         insertFiveThousandEntries(into: context)
-        // Fetched the way `@Query(sort: \JoyEntry.date)` hands them to the views.
+        // The whole journal, sorted by date: the input of the legacy and single-pass variants.
         entries = try context.fetch(FetchDescriptor<JoyEntry>(sortBy: [SortDescriptor(\.date)]))
         XCTAssertEqual(entries.count, 5_000)
     }
 
     override func tearDownWithError() throws {
         entries = []
+        context = nil
         container = nil
     }
 
@@ -75,8 +80,23 @@ final class TrendsPerformanceTests: XCTestCase {
     }
 
     private func singlePassStats(range: TrendsRange, year: Int) -> Int {
-        let stats = TrendsPerformanceStats.make(from: entries, range: range, year: year, locale: locale)
-        return stats.entryCount + stats.daysJournaled + stats.bestStreak + (stats.joyfulHours?.count ?? 0)
+        checksum(of: TrendsPerformanceStats.make(from: entries, range: range, year: year, locale: locale))
+    }
+
+    // The current `TrendsChartsView`: the store fetches only the range (sorted like its `@Query`), then one pass.
+    private func asInAppStats(range: TrendsRange, year: Int) throws -> Int {
+        let now = Date()
+        let descriptor = FetchDescriptor<JoyEntry>(
+            predicate: JoyEntry.predicate(in: TrendsCalculator.dateRange(for: range, year: year, now: now)),
+            sortBy: [SortDescriptor(\.date)]
+        )
+        let rangedEntries = try context.fetch(descriptor)
+        return checksum(of: TrendsPerformanceStats.make(from: rangedEntries, range: range, year: year, locale: locale, now: now))
+    }
+
+    // Same sum as `legacyStats`, so the variants can be compared.
+    private func checksum(of stats: TrendsPerformanceStats) -> Int {
+        stats.entryCount + stats.daysJournaled + stats.bestStreak + (stats.joyfulHours?.count ?? 0)
             + stats.dataPoints.count + stats.weekdayCounts.count + stats.entryCount
     }
 
@@ -104,10 +124,24 @@ final class TrendsPerformanceTests: XCTestCase {
         }
     }
 
-    // Both ways must show the same numbers, otherwise the comparison above is meaningless.
-    func test_Perf_BothWaysGiveTheSameResult() {
+    func test_Perf_TrendsMonth_asInApp() throws {
+        measure(metrics: metrics, options: options) {
+            XCTAssertGreaterThan((try? asInAppStats(range: .month, year: currentYear)) ?? 0, 0)
+        }
+    }
+
+    func test_Perf_TrendsYear_asInApp() throws {
+        measure(metrics: metrics, options: options) {
+            XCTAssertGreaterThan((try? asInAppStats(range: .year, year: currentYear)) ?? 0, 0)
+        }
+    }
+
+    // All ways must show the same numbers, otherwise the comparison above is meaningless.
+    func test_Perf_AllWaysGiveTheSameResult() throws {
         for range in [TrendsRange.month, .year] {
-            XCTAssertEqual(legacyStats(range: range, year: currentYear), singlePassStats(range: range, year: currentYear))
+            let legacy = legacyStats(range: range, year: currentYear)
+            XCTAssertEqual(legacy, singlePassStats(range: range, year: currentYear))
+            XCTAssertEqual(legacy, try asInAppStats(range: range, year: currentYear))
         }
     }
 }
