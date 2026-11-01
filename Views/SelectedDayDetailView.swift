@@ -196,6 +196,10 @@ private extension SelectedDayDetailView {
                 .accessibilityIdentifier("EditRecordTextField")
                 .focused($isTextFieldFocused)
                 .lummiScaledFont(size: 16, relativeTo: .callout)
+                .onChange(of: editingText) { _, newValue in
+                    let clamped = RecordInputRules.clamped(newValue)
+                    if clamped != newValue { editingText = clamped }
+                }
         }
     }
 
