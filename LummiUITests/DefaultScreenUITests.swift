@@ -56,7 +56,8 @@ final class DefaultScreenUITests: XCTestCase {
     }
 
     private func verifyRecords() {
-        let noRecordsText = app.staticTexts["No records for this day"]
-        XCTAssertTrue(noRecordsText.waitForExistence(timeout: 5.0), "There is no label w/o record")
+        let dayPromptText = app.staticTexts["DayPromptText"]
+        XCTAssertTrue(dayPromptText.waitForExistence(timeout: 5.0), "There is no question for the day")
+        XCTAssertFalse(app.staticTexts["RecordText_0"].exists, "A new journal must have no records")
     }
 }

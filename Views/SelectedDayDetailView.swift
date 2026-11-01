@@ -66,19 +66,15 @@ struct SelectedDayDetailView: View {
                 ScrollView(.vertical, showsIndicators: false) {
                     ScrollViewReader { proxy in
                         VStack(spacing: 15) {
-                            if Calendar.current.startOfDay(for: selectedDate) > Calendar.current.startOfDay(for: today) {
-                                futureDayView
-                                    .blur(radius: activeEntryID != nil ? 6 : 0)
-                                    .opacity(activeEntryID != nil ? 0.5 : 1.0)
-                                    .padding(.top, 40)
-                            } else if !dayEntries.isEmpty {
+                            // Like the first message of a chat: the question stays on top and the day's entries follow
+                            // it, scrolling up together once there are many.
+                            dayPromptView
+                                .blur(radius: activeEntryID != nil ? 6 : 0)
+                                .opacity(activeEntryID != nil ? 0.5 : 1.0)
+                                .padding(.top, 10)
+
+                            if !dayEntries.isEmpty {
                                 notesListView(entries: dayEntries, proxy: proxy)
-                                    .padding(.top, 10)
-                            } else {
-                                noRecordsView
-                                    .blur(radius: activeEntryID != nil ? 6 : 0)
-                                    .opacity(activeEntryID != nil ? 0.5 : 1.0)
-                                    .padding(.top, 40)
                             }
                         }
                         .padding(.horizontal)
@@ -120,21 +116,12 @@ struct SelectedDayDetailView: View {
 
 private extension SelectedDayDetailView {
 
-    var futureDayView: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "moon.stars.fill")
-                .lummiScaledFont(size: 40, relativeTo: .largeTitle)
-                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.2))
-            Text("Oops! This day has not started yet")
-                .lummiScaledFont(size: 16, relativeTo: .callout)
-                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
+    var dayPromptView: some View {
+        NoteBubble(sharpCorner: .bottomLeading, style: .card) {
+            Text("What made this day brighter?")
+                .lummiScaledFont(size: 17, relativeTo: .body)
+                .accessibilityIdentifier("DayPromptText")
         }
-    }
-
-    var noRecordsView: some View {
-        Text("No records for this day")
-            .lummiScaledFont(size: 16, relativeTo: .callout)
-            .foregroundColor(themeManager.currentTheme.textColor.opacity(0.3))
     }
 
     func notesListView(entries: [JoyEntry], proxy: ScrollViewProxy) -> some View {
@@ -190,23 +177,24 @@ private extension SelectedDayDetailView {
     }
 
     var noteCellEditField: some View {
-        NoteBubble {
+        NoteBubble(sharpCorner: .bottomTrailing, fillsWidth: true) {
             TextField("", text: $editingText, axis: .vertical)
                 .accessibilityLabel("Record text")
                 .accessibilityIdentifier("EditRecordTextField")
                 .focused($isTextFieldFocused)
                 .lummiScaledFont(size: 16, relativeTo: .callout)
-                .foregroundColor(themeManager.currentTheme.textColor)
+                .onChange(of: editingText) { _, newValue in
+                    let clamped = RecordInputRules.clamped(newValue)
+                    if clamped != newValue { editingText = clamped }
+                }
         }
     }
 
     func noteCellTextDisplay(entry: JoyEntry, index: Int, isActive: Bool, proxy: ScrollViewProxy) -> some View {
-        NoteBubble {
+        NoteBubble(sharpCorner: .bottomTrailing) {
             Text(entry.text)
                 .lummiScaledFont(size: 17, relativeTo: .body)
-                .foregroundColor(themeManager.currentTheme.textColor)
         }
-        .contentShape(RoundedRectangle(cornerRadius: 20))
         .onTapGesture {
             if activeEntryID != nil { saveAndDismiss() }
         }

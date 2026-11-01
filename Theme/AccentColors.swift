@@ -24,9 +24,6 @@ enum AccentColors {
     static let trendsVolumeGradient = [Color(red: 0.75, green: 0.6, blue: 0.95), Color(red: 0.45, green: 0.25, blue: 0.75)]
     static let weekdayGradient = [Color(red: 0.55, green: 0.85, blue: 0.55), Color(red: 0.15, green: 0.55, blue: 0.35)]
 
-    // Matches `trendsVolumeGradient`'s darker stop; used for the year-row icon in Trends' "All Time" list.
-    static let yearRow = Color(red: 0.45, green: 0.25, blue: 0.75)
-
     static let destructive = Color(red: 0.95, green: 0.2, blue: 0.3)
     static let syncBannerBackground = Color.red.opacity(0.8)
 

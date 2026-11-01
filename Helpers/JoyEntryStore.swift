@@ -48,10 +48,10 @@ struct JoyEntryStore {
         try commit()
     }
 
-    // Saves trimmed `newText`; an empty result deletes the entry.
+    // Saves trimmed `newText`, cut to the same length limit as a new entry; an empty result deletes the entry.
     @discardableResult
     func applyEdit(to entry: JoyEntry, newText: String) throws -> EditOutcome {
-        let trimmed = newText.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmed = RecordInputRules.clamped(newText).trimmingCharacters(in: .whitespacesAndNewlines)
         let originalText = entry.text
         let outcome: EditOutcome
         if trimmed.isEmpty {

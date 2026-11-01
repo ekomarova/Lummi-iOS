@@ -102,6 +102,26 @@ struct JoyEntryStoreTests {
         #expect(entry.text == "New")
     }
 
+    @Test func applyEdit_overLimit_cutsTextToMaxLength() throws {
+        let context = try makeContext()
+        let entry = JoyEntry(text: "Old", date: Date())
+        context.insert(entry)
+        try context.save()
+        let outcome = try store(context).applyEdit(to: entry, newText: String(repeating: "a", count: RecordInputRules.maxLength + 20))
+        #expect(outcome == .updated)
+        #expect(entry.text.count == RecordInputRules.maxLength)
+    }
+
+    @Test func applyEdit_exactlyAtLimit_keepsFullText() throws {
+        let context = try makeContext()
+        let entry = JoyEntry(text: "Old", date: Date())
+        context.insert(entry)
+        try context.save()
+        let text = String(repeating: "a", count: RecordInputRules.maxLength)
+        try store(context).applyEdit(to: entry, newText: text)
+        #expect(entry.text == text)
+    }
+
     @Test func applyEdit_blank_deletesEntry() throws {
         let context = try makeContext()
         let entry = JoyEntry(text: "Old", date: Date())

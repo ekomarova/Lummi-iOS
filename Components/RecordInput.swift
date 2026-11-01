@@ -28,21 +28,40 @@ struct RecordInput: View {
         RecordInputRules.canSave(text)
     }
 
+    // A `TextEditor` does not size itself to its text, so an invisible copy of the text sets the height and the editor
+    // fills it: one line when empty, growing with the text up to `maxEditorLines`, after which the editor scrolls.
+    // The extra character keeps the height of a trailing line break, which `Text` would otherwise drop. The cap is a
+    // line limit: a `maxHeight` frame would stretch the copy to that height instead of only limiting it.
+    private var editor: some View {
+        Text(text.isEmpty ? " " : text + "\u{200B}")
+            .lummiScaledFont(size: 18, relativeTo: .body)
+            .lineLimit(maxEditorLines)
+            .padding(.horizontal, 5)
+            .padding(.vertical, 8)
+            .frame(maxWidth: .infinity, alignment: .topLeading)
+            .opacity(0)
+            .accessibilityHidden(true)
+            .overlay {
+                TextEditor(text: $text)
+                    .focused($isTextEditorFocused)
+                    .scrollContentBackground(.hidden)
+                    .foregroundColor(themeManager.currentTheme.textColor)
+                    .lummiScaledFont(size: 18, relativeTo: .body)
+                    .accessibilityIdentifier("RecordInputTextEditor")
+                    .onChange(of: text) { _, newValue in
+                        let clamped = RecordInputRules.clamped(newValue)
+                        if clamped != newValue { text = clamped }
+                    }
+            }
+    }
+
+    private var maxEditorLines: Int { AdaptiveLayout.isPad ? 16 : 9 }
+
     var body: some View {
         VStack(spacing: 25) {
-            TextEditor(text: $text)
-                .focused($isTextEditorFocused)
-                .frame(height: AdaptiveLayout.isPad ? 280 : 150)
+            editor
                 .padding()
-                .scrollContentBackground(.hidden)
                 .cardBackground(RoundedRectangle(cornerRadius: 20), fillOpacity: 0.1, strokeOpacity: 0.2)
-                .foregroundColor(themeManager.currentTheme.textColor)
-                .lummiScaledFont(size: 18, relativeTo: .body)
-                .accessibilityIdentifier("RecordInputTextEditor")
-                .onChange(of: text) { _, newValue in
-                    let clamped = RecordInputRules.clamped(newValue)
-                    if clamped != newValue { text = clamped }
-                }
 
             HStack {
                 Spacer()

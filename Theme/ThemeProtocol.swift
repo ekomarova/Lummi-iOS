@@ -18,7 +18,10 @@ protocol AppTheme {
 
     // Text
     var textColor: Color { get }
-    
+
+    // Joy bubbles. The text on a bubble is `textColor`.
+    var bubbleColor: Color { get }
+
     // Icon and label of the selected tab in the tab bar
     var selectedTabColor: Color { get }
 }

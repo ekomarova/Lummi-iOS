@@ -293,11 +293,13 @@ final class SettingsUITests: XCTestCase {
             homeBtn.tap()
         }
         
-        // Verify the empty state is shown
-        let noRecordsLabel = app.staticTexts["No records for this day"]
+        // Verify no records are left: only the question of the day remains
+        let firstRecord = app.staticTexts["RecordText_0"]
+        let recordGone = expectation(for: doesNotExistPredicate, evaluatedWith: firstRecord, handler: nil)
+        wait(for: [recordGone], timeout: 3.0)
         XCTAssertTrue(
-            noRecordsLabel.waitForExistence(timeout: 3.0),
-            "Expected 'No records for this day' to appear, meaning data was successfully deleted."
+            app.staticTexts["DayPromptText"].exists,
+            "Expected the question of the day to stay on Home after the data was deleted."
         )
     }
 }
