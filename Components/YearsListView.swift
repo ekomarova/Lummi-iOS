@@ -20,7 +20,7 @@ struct YearsListView: View {
             ForEach(years, id: \.self) { year in
                 DisclosureRow(
                     systemImage: "calendar",
-                    iconColor: AccentColors.yearRow,
+                    iconColor: AccentColors.activeDays,
                     title: LocalizedStringResource(stringLiteral: String(year)),
                     accessibilityID: "\(accessibilityIDPrefix)_\(year)"
                 ) {
