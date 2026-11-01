@@ -56,6 +56,29 @@ final class PerformanceUITests: XCTestCase {
         }
     }
 
+    // Save a new joy from the record page: the entry is inserted into the 5,000-entry store and shows up on Home.
+    // The text is typed before the measurement starts, so only saving and returning to Home is measured.
+    func test_Perf_AddRecord() throws {
+        measure(metrics: metrics, options: manualOptions) {
+            relaunch()
+            XCTAssertTrue(app.staticTexts["RecordText_0"].waitForExistence(timeout: 30))
+            let newJoyTab = app.tabItem("New Joy", identifier: "MainRecordButton")
+            XCTAssertTrue(newJoyTab.waitForExistence(timeout: 30))
+            newJoyTab.tap()
+            let textEditor = app.textViews["RecordInputTextEditor"]
+            XCTAssertTrue(textEditor.waitForExistence(timeout: 30))
+            textEditor.tap()
+            let text = "Perf joy \(UUID().uuidString)"
+            textEditor.typeText(text)
+            let saveButton = app.buttons["SaveRecordButton"]
+            XCTAssertTrue(saveButton.isEnabled)
+            startMeasuring()
+            saveButton.tap()
+            XCTAssertTrue(app.staticTexts[text].waitForExistence(timeout: 30))
+            stopMeasuring()
+        }
+    }
+
     // Open Insights: the month's highlights (joys, joyful hours) are calculated before the screen appears.
     func test_Perf_OpenInsights() throws {
         measure(metrics: metrics, options: manualOptions) {
