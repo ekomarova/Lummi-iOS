@@ -33,8 +33,8 @@ struct SettingsView: View {
     // Opens a page on the Settings tab's stack.
     let onNavigate: (Route) -> Void
     
-    @AppStorage("appLanguage") private var selectedLanguage: AppLanguage = .english
-    @AppStorage("isICloudSyncEnabled") private var isICloudSyncEnabled: Bool = false
+    @AppStorage(SettingsKey.appLanguage) private var selectedLanguage: AppLanguage = .english
+    @AppStorage(SettingsKey.isICloudSyncEnabled) private var isICloudSyncEnabled: Bool = false
     
     @State private var syncBannerVisible = false
     // Exists only while iCloud sync is enabled, so Settings never contacts iCloud with sync off, and every enable checks the account afresh.
@@ -216,7 +216,7 @@ struct SettingsView: View {
 struct LanguageSelectionView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.dismiss) private var dismiss
-    @AppStorage("appLanguage") private var selectedLanguage: AppLanguage = .english
+    @AppStorage(SettingsKey.appLanguage) private var selectedLanguage: AppLanguage = .english
 
     var body: some View {
         VStack(spacing: 12) {
