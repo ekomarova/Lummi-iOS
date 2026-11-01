@@ -190,23 +190,20 @@ private extension SelectedDayDetailView {
     }
 
     var noteCellEditField: some View {
-        NoteBubble {
+        NoteBubble(sharpCorner: .bottomTrailing, fillsWidth: true) {
             TextField("", text: $editingText, axis: .vertical)
                 .accessibilityLabel("Record text")
                 .accessibilityIdentifier("EditRecordTextField")
                 .focused($isTextFieldFocused)
                 .lummiScaledFont(size: 16, relativeTo: .callout)
-                .foregroundColor(themeManager.currentTheme.textColor)
         }
     }
 
     func noteCellTextDisplay(entry: JoyEntry, index: Int, isActive: Bool, proxy: ScrollViewProxy) -> some View {
-        NoteBubble {
+        NoteBubble(sharpCorner: .bottomTrailing) {
             Text(entry.text)
                 .lummiScaledFont(size: 17, relativeTo: .body)
-                .foregroundColor(themeManager.currentTheme.textColor)
         }
-        .contentShape(RoundedRectangle(cornerRadius: 20))
         .onTapGesture {
             if activeEntryID != nil { saveAndDismiss() }
         }

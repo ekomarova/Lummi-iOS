@@ -27,6 +27,10 @@ enum AccentColors {
     // Matches `trendsVolumeGradient`'s darker stop; used for the year-row icon in Trends' "All Time" list.
     static let yearRow = Color(red: 0.45, green: 0.25, blue: 0.75)
 
+    // Joy bubbles on Home and Insights and the selected tab of the tab bar: the same blue and white text in light and dark mode.
+    static let joyBubble = Color(red: 0.10, green: 0.40, blue: 0.80)
+    static let joyBubbleText = Color.white
+
     static let destructive = Color(red: 0.95, green: 0.2, blue: 0.3)
     static let syncBannerBackground = Color.red.opacity(0.8)
 

@@ -18,7 +18,4 @@ protocol AppTheme {
 
     // Text
     var textColor: Color { get }
-    
-    // Icon and label of the selected tab in the tab bar
-    var selectedTabColor: Color { get }
 }

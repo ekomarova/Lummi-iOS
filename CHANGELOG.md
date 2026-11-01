@@ -13,6 +13,7 @@ All notable changes to the project will be documented in this file.
 - Removed the iPad sidebar [#56](https://github.com/ekomarova/Lummi-iOS/pull/56)
 - Replaced the `+` on the new joy button with a pen [#59](https://github.com/ekomarova/Lummi-iOS/pull/59)
 - Simplified the style of `Insights` and `Home` [#60](https://github.com/ekomarova/Lummi-iOS/pull/60)
+- Restyled the entries as speech bubbles [#63](https://github.com/ekomarova/Lummi-iOS/pull/63)
 
 ## [1.2.1] - 2026-10-09
 ### Fixed

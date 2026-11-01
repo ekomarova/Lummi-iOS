@@ -102,7 +102,7 @@ private extension ContentView {
         // tab bar and the user goes back (Issue: FB25190777). On iOS 27 the left edge belongs to the sidebar, so the swipe-back
         // gesture does not work there.
         .tabViewStyle(.tabBarOnly)
-        .tint(themeManager.currentTheme.selectedTabColor)
+        .tint(AccentColors.joyBubble)
     }
 
     // The role that detaches the record tab from the bar. Up to iOS 26 that is `.search`; on iOS 27 `.search` stays

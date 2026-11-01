@@ -236,10 +236,9 @@ struct MonthlyMomentCell: View {
                 .opacity(showsDate ? 1 : 0)
                 .accessibilityHidden(!showsDate)
 
-            NoteBubble {
+            NoteBubble(sharpCorner: .topLeading) {
                 Text(entry.text)
                     .lummiScaledFont(size: 17, relativeTo: .body)
-                    .foregroundColor(themeManager.currentTheme.textColor)
             }
         }
         .padding(.leading, 4)
