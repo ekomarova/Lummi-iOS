@@ -20,8 +20,8 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     var displayName: LocalizedStringResource {
         switch self {
         case .english: return "English"
-        case .russian: return "Русский"
-        case .german: return "Deutsch"
+        case .russian: return "Russian"
+        case .german: return "German"
         }
     }
 }

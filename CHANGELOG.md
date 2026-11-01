@@ -14,6 +14,7 @@ All notable changes to the project will be documented in this file.
 - Replaced the `+` on the new joy button with a pen [#59](https://github.com/ekomarova/Lummi-iOS/pull/59)
 - Simplified the style of `Insights` and `Home` [#60](https://github.com/ekomarova/Lummi-iOS/pull/60)
 - Restyled the entries [#63](https://github.com/ekomarova/Lummi-iOS/pull/63)
+- Showed language names in the language list in the current app language [#64](https://github.com/ekomarova/Lummi-iOS/pull/64)
 
 ## [1.2.1] - 2026-10-09
 ### Fixed
