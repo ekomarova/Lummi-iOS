@@ -24,10 +24,6 @@ enum AccentColors {
     static let trendsVolumeGradient = [Color(red: 0.75, green: 0.6, blue: 0.95), Color(red: 0.45, green: 0.25, blue: 0.75)]
     static let weekdayGradient = [Color(red: 0.55, green: 0.85, blue: 0.55), Color(red: 0.15, green: 0.55, blue: 0.35)]
 
-    // Joy bubbles on Home and Insights and the selected tab of the tab bar: the same blue and white text in light and dark mode.
-    static let joyBubble = Color(red: 0.10, green: 0.40, blue: 0.80)
-    static let joyBubbleText = Color.white
-
     static let destructive = Color(red: 0.95, green: 0.2, blue: 0.3)
     static let syncBannerBackground = Color.red.opacity(0.8)
 

@@ -8,8 +8,7 @@
 
 import SwiftUI
 
-// Placeholder shown in place of a tab's or year's content when it has no entries, matching
-// `SelectedDayDetailView`'s "No records for this day" placeholder.
+// Placeholder shown in place of a tab's or year's content when it has no entries.
 struct NoEntriesView: View {
     @Environment(ThemeManager.self) private var themeManager
 

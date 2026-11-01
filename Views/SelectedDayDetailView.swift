@@ -71,14 +71,17 @@ struct SelectedDayDetailView: View {
                                     .blur(radius: activeEntryID != nil ? 6 : 0)
                                     .opacity(activeEntryID != nil ? 0.5 : 1.0)
                                     .padding(.top, 40)
-                            } else if !dayEntries.isEmpty {
-                                notesListView(entries: dayEntries, proxy: proxy)
-                                    .padding(.top, 10)
                             } else {
-                                noRecordsView
+                                // Like the first message of a chat: the question stays on top and the day's entries follow
+                                // it, scrolling up together once there are many.
+                                dayPromptView
                                     .blur(radius: activeEntryID != nil ? 6 : 0)
                                     .opacity(activeEntryID != nil ? 0.5 : 1.0)
-                                    .padding(.top, 40)
+                                    .padding(.top, 10)
+
+                                if !dayEntries.isEmpty {
+                                    notesListView(entries: dayEntries, proxy: proxy)
+                                }
                             }
                         }
                         .padding(.horizontal)
@@ -131,10 +134,12 @@ private extension SelectedDayDetailView {
         }
     }
 
-    var noRecordsView: some View {
-        Text("No records for this day")
-            .lummiScaledFont(size: 16, relativeTo: .callout)
-            .foregroundColor(themeManager.currentTheme.textColor.opacity(0.3))
+    var dayPromptView: some View {
+        NoteBubble(sharpCorner: .bottomLeading, style: .card) {
+            Text("What made this day brighter?")
+                .lummiScaledFont(size: 17, relativeTo: .body)
+                .accessibilityIdentifier("DayPromptText")
+        }
     }
 
     func notesListView(entries: [JoyEntry], proxy: ScrollViewProxy) -> some View {

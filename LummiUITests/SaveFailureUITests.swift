@@ -99,7 +99,6 @@ final class SaveFailureUITests: XCTestCase {
             homeButton.tap()
         }
         XCTAssertTrue(app.staticTexts["RecordText_0"].waitForExistence(timeout: 3.0), "Records should persist after failed clear")
-        XCTAssertFalse(app.staticTexts["No records for this day"].exists, "Empty state must not be shown after failed clear")
     }
 
     // MARK: - Edit Record
