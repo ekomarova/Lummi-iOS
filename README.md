@@ -15,11 +15,11 @@ See [LICENSE](./LICENSE.md) for the full terms.
 ## 🚀 Features
 
 * **Joy Journal**: Create, edit, and delete daily "moments of joy"
-* **Insights**: Comprehensive monthly analytics designed to help you understand your happiness patterns: 
-    *   Track the volume of positive moments captured each month
-    *   Discover your "peak joy" time window through intelligent time-density analysis
-    *   Instant access to your full monthly history with interactive, beautifully blurred data cards
-* **Dynamic Themes**: Full support for Light and Dark modes managed via a custom `ThemeManager`
+* **Insights**: Monthly analytics designed to help you understand your happiness patterns:
+    *   **Highlights**: how many moments you captured this month and your "joyful hours", the 3-hour window of the day when joy happens most
+    *   **Recall**: "All Joys" lists every moment of the current month, or of any past year from the All Time tab
+    *   **Trends**: charts of joys by date (or by month for a year), by weekday, and the number of active days, for the current month or any year
+* **Dynamic Themes**: Light, Dark or Auto (follows the system appearance), managed via a custom `ThemeManager`
 * **Seamless iCloud Sync:** Keep your joyful moments safe and synchronized across your iPhone and iPad (Opt-in via Settings)
 * **Multi-language Support**: English, Russian, German
 
@@ -35,8 +35,8 @@ Your data is yours. Using SwiftData and CloudKit, the text of your moments is en
 ## 🧪 Testing
 
 ### Unit & UI Tests
-* **Unit tests** are written with the **Swift Testing** framework (`import Testing`) and cover all testable business logic.
-* **UI tests** are written with **XCUITest** and cover end-to-end user flows: record creation/edit/delete, insights display, settings, iCloud sync toggle, and save failure paths.
+* **Unit tests** are written with the **Swift Testing** framework (`import Testing`; the performance test uses XCTest) and cover all testable business logic.
+* **UI tests** are written with **XCUITest** and cover end-to-end user flows: record creation/edit/delete, insights and trends, settings, iCloud sync toggle, save failure and storage error paths. Performance UI tests on a 5,000-entry store are manual (`RUN_PERFORMANCE_TESTS=1`).
 
 ### Mocking
 A dedicated `MockDataManager` (under `#if DEBUG`) populates the database with specific states based on launch arguments, allowing robust UI testing of various scenarios without touching real user data.

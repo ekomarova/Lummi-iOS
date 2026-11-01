@@ -5,8 +5,8 @@ Supported languages: English, Russian, German.
 
 ## Project layout
 - `App/`: app entry point
-- `Views/`: SwiftUI screens
-- `Components/`: reusable UI components
+- `Views/`: SwiftUI tab screens (Home, Insights, Settings) and the storage error screen
+- `Components/`: reusable UI components and the pushed sub-screens (Trends, All Joys, year pages)
 - `DataModels/`: SwiftData models
 - `Extensions/`, `Helpers/`: shared utilities
 - `Theme/`: ThemeManager, colors, fonts
