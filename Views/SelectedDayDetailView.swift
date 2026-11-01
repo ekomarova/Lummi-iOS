@@ -66,22 +66,15 @@ struct SelectedDayDetailView: View {
                 ScrollView(.vertical, showsIndicators: false) {
                     ScrollViewReader { proxy in
                         VStack(spacing: 15) {
-                            if Calendar.current.startOfDay(for: selectedDate) > Calendar.current.startOfDay(for: today) {
-                                futureDayView
-                                    .blur(radius: activeEntryID != nil ? 6 : 0)
-                                    .opacity(activeEntryID != nil ? 0.5 : 1.0)
-                                    .padding(.top, 40)
-                            } else {
-                                // Like the first message of a chat: the question stays on top and the day's entries follow
-                                // it, scrolling up together once there are many.
-                                dayPromptView
-                                    .blur(radius: activeEntryID != nil ? 6 : 0)
-                                    .opacity(activeEntryID != nil ? 0.5 : 1.0)
-                                    .padding(.top, 10)
+                            // Like the first message of a chat: the question stays on top and the day's entries follow
+                            // it, scrolling up together once there are many.
+                            dayPromptView
+                                .blur(radius: activeEntryID != nil ? 6 : 0)
+                                .opacity(activeEntryID != nil ? 0.5 : 1.0)
+                                .padding(.top, 10)
 
-                                if !dayEntries.isEmpty {
-                                    notesListView(entries: dayEntries, proxy: proxy)
-                                }
+                            if !dayEntries.isEmpty {
+                                notesListView(entries: dayEntries, proxy: proxy)
                             }
                         }
                         .padding(.horizontal)
@@ -122,17 +115,6 @@ struct SelectedDayDetailView: View {
 // MARK: - Subviews
 
 private extension SelectedDayDetailView {
-
-    var futureDayView: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "moon.stars.fill")
-                .lummiScaledFont(size: 40, relativeTo: .largeTitle)
-                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.2))
-            Text("Oops! This day has not started yet")
-                .lummiScaledFont(size: 16, relativeTo: .callout)
-                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.6))
-        }
-    }
 
     var dayPromptView: some View {
         NoteBubble(sharpCorner: .bottomLeading, style: .card) {
