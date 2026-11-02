@@ -94,31 +94,16 @@ struct TrendsChartsView: View {
 
     @ViewBuilder
     private func countCards(_ stats: TrendsPerformanceStats) -> some View {
-        GlowCard.joys(value: "\(stats.entryCount)", height: 130, valueFontSize: 26, valuePadding: 8)
-        GlowCard(
-            value: "\(stats.daysJournaled)",
-            subtitle: "Active Days",
-            systemImage: "calendar",
-            gradientColors: AccentColors.activeDaysGradient,
-            height: 130,
-            valueFontSize: 26,
-            valuePadding: 8
-        )
-        GlowCard.streak(value: "\(stats.bestStreak)", height: 130, valueFontSize: 26, valuePadding: 8)
+        GlowCard.joys(value: "\(stats.entryCount)", metrics: .trends)
+        GlowCard.activeDays(value: "\(stats.daysJournaled)", metrics: .trends)
+        GlowCard.streak(value: "\(stats.bestStreak)", metrics: .trends)
     }
 
-    // Full-width on iPhone, since the "HH:mm - HH:mm" value is wider than a short number and doesn't fit the
-    // three-across row above; a quarter of the row on iPad, hence the smaller padding. `valueFontSize` still
-    // matches the other cards for a consistent look.
+    // Full-width on iPhone, since its value doesn't fit the three-across row above (see `Metrics.trendsJoyfulHours`).
     @ViewBuilder
     private func joyfulHoursCard(_ stats: TrendsPerformanceStats) -> some View {
         if let joyfulHours = stats.joyfulHours {
-            GlowCard.joyfulHours(
-                value: joyfulHours,
-                height: 130,
-                valueFontSize: 26,
-                valuePadding: AdaptiveLayout.isPad ? 12 : 30
-            )
+            GlowCard.joyfulHours(value: joyfulHours, metrics: .trendsJoyfulHours)
         }
     }
 
