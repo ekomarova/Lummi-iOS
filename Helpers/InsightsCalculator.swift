@@ -11,27 +11,26 @@ import Foundation
 // Pure calculations behind the Insights screen: streaks, unique days and joyful hours.
 struct InsightsCalculator {
 
-    private static let goldenHourWindowSize = 3
+    private static let joyfulHoursWindowSize = 3
+    private static let hoursPerDay = 24
 
     // MARK: - General Stats
-    
-    static func uniqueDaysCount(in entries: [JoyEntry]) -> Int {
-        let calendar = Calendar.current
-        return Set(entries.map { calendar.startOfDay(for: $0.date) }).count
+
+    static func uniqueDaysCount(in entries: [JoyEntry], calendar: Calendar = .current) -> Int {
+        uniqueDays(in: entries, calendar: calendar).count
     }
-    
-    static func longestStreak(in entries: [JoyEntry]) -> Int {
+
+    static func longestStreak(in entries: [JoyEntry], calendar: Calendar = .current) -> Int {
         guard !entries.isEmpty else { return 0 }
-        
-        let calendar = Calendar.current
-        let uniqueDays = Set(entries.map { calendar.startOfDay(for: $0.date) }).sorted(by: <)
-        
+
+        let days = uniqueDays(in: entries, calendar: calendar).sorted(by: <)
+
         var currentStreak = 1
         var maxStreak = 1
-        
-        for index in 1..<uniqueDays.count {
-            let difference = calendar.dateComponents([.day], from: uniqueDays[index-1], to: uniqueDays[index]).day ?? 0
-            
+
+        for index in 1..<days.count {
+            let difference = calendar.dateComponents([.day], from: days[index - 1], to: days[index]).day ?? 0
+
             if difference == 1 {
                 currentStreak += 1
                 maxStreak = max(maxStreak, currentStreak)
@@ -42,19 +41,24 @@ struct InsightsCalculator {
         return maxStreak
     }
 
+    // The start of every day that has at least one entry.
+    private static func uniqueDays(in entries: [JoyEntry], calendar: Calendar) -> Set<Date> {
+        Set(entries.map { calendar.startOfDay(for: $0.date) })
+    }
+
     // MARK: - Advanced Metrics
 
-    static func calculateGoldenHours(entries: [JoyEntry], locale: Locale) -> String {
-        guard !entries.isEmpty else { return "-- : --" }
-        
+    // The `joyfulHoursWindowSize`-hour stretch of the day with the most entries, e.g. "18:00 - 21:00".
+    static func joyfulHours(entries: [JoyEntry], locale: Locale, calendar: Calendar = .current) -> String {
+        guard !entries.isEmpty else { return noJoyfulHours(locale: locale) }
+
         var hourCounts = [Int: Int]()
         var lastEntryDateForHour = [Int: Date]()
-        
-        let calendar = Calendar.current
+
         for entry in entries {
             let hour = calendar.component(.hour, from: entry.date)
             hourCounts[hour, default: 0] += 1
-            
+
             // Track the most recent chronological entry for each hour to break ties predictably
             if let existingDate = lastEntryDateForHour[hour] {
                 if entry.date > existingDate {
@@ -64,8 +68,8 @@ struct InsightsCalculator {
                 lastEntryDateForHour[hour] = entry.date
             }
         }
-        
-        // Slide a window of `goldenHourWindowSize` hours around the clock (wrapping past midnight)
+
+        // Slide a window of `joyfulHoursWindowSize` hours around the clock (wrapping past midnight)
         // and pick the one that contains the most entries. Windows only start at an hour that has
         // entries: any best window can be shifted to begin at its first occupied hour.
         var bestStart = 0
@@ -73,7 +77,7 @@ struct InsightsCalculator {
         var bestLatest = Date.distantPast
 
         for start in hourCounts.keys.sorted() {
-            let hoursInWindow = (0..<goldenHourWindowSize).map { (start + $0) % 24 }
+            let hoursInWindow = (0..<joyfulHoursWindowSize).map { (start + $0) % hoursPerDay }
             let count = hoursInWindow.reduce(0) { $0 + (hourCounts[$1] ?? 0) }
             // If counts are equal, deterministically pick the window with the latest overall entry
             let latest = hoursInWindow.compactMap { lastEntryDateForHour[$0] }.max() ?? .distantPast
@@ -86,12 +90,20 @@ struct InsightsCalculator {
         }
 
         let peakHour = bestStart
-        let endHour = (peakHour + goldenHourWindowSize) % 24
+        let endHour = (peakHour + joyfulHoursWindowSize) % hoursPerDay
 
         guard let startDate = calendar.date(from: DateComponents(hour: peakHour)),
-              let endDate = calendar.date(from: DateComponents(hour: endHour)) else { return "-- : --" }
-        
-        let style = Date.FormatStyle(locale: locale).hour().minute()
+              let endDate = calendar.date(from: DateComponents(hour: endHour)) else { return noJoyfulHours(locale: locale) }
+
+        let style = Date.FormatStyle(locale: locale, calendar: calendar, timeZone: calendar.timeZone).hour().minute()
         return "\(startDate.formatted(style)) - \(endDate.formatted(style))"
+    }
+
+    // Shown in place of the range when there are no entries to find it in. Looked up in `locale`, which is the app's
+    // language and not necessarily the system's.
+    private static func noJoyfulHours(locale: Locale) -> String {
+        var placeholder: LocalizedStringResource = "-- : --"
+        placeholder.locale = locale
+        return String(localized: placeholder)
     }
 }

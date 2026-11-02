@@ -104,7 +104,7 @@ private struct InsightsMonthView: View {
 
     private var joyfulHoursCard: some View {
         GlowCard.joyfulHours(
-            value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
+            value: InsightsCalculator.joyfulHours(entries: monthlyEntries, locale: locale),
             metrics: .insights
         )
     }

@@ -72,7 +72,7 @@ final class TrendsPerformanceTests: XCTestCase {
         var checksum = ranged().count
         checksum += InsightsCalculator.uniqueDaysCount(in: ranged())
         checksum += InsightsCalculator.longestStreak(in: ranged())
-        if range.isYear { checksum += InsightsCalculator.calculateGoldenHours(entries: ranged(), locale: locale).count }
+        if range.isYear { checksum += InsightsCalculator.joyfulHours(entries: ranged(), locale: locale).count }
         checksum += TrendsCalculator.dataPoints(for: ranged(), range: range).count
         checksum += TrendsCalculator.weekdayCounts(in: ranged(), calendar: .lummiCalendar(locale: locale)).count
         checksum += ranged().count
