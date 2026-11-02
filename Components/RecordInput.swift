@@ -18,8 +18,6 @@ struct RecordInput: View {
 
     let recordDate: Date
 
-    private let maxLength = RecordInputRules.maxLength
-
     @State private var text: String = ""
     @State private var showSaveAlert = false
     @FocusState private var isTextEditorFocused: Bool
@@ -48,10 +46,7 @@ struct RecordInput: View {
                     .foregroundColor(themeManager.currentTheme.textColor)
                     .lummiScaledFont(size: 18, relativeTo: .body)
                     .accessibilityIdentifier("RecordInputTextEditor")
-                    .onChange(of: text) { _, newValue in
-                        let clamped = RecordInputRules.clamped(newValue)
-                        if clamped != newValue { text = clamped }
-                    }
+                    .limitedLength($text)
             }
     }
 
@@ -65,10 +60,10 @@ struct RecordInput: View {
 
             HStack {
                 Spacer()
-                Text("\(text.count)/\(maxLength)")
+                Text("\(text.count)/\(RecordInputRules.maxLength)")
                     .lummiScaledFont(size: 12, relativeTo: .caption)
                     .foregroundColor(themeManager.currentTheme.textColor.opacity(
-                        text.count > maxLength - 20 ? 0.7 : 0.35
+                        RecordInputRules.isNearLimit(text) ? 0.7 : 0.35
                     ))
             }
             .padding(.horizontal, 5)
@@ -88,11 +83,7 @@ struct RecordInput: View {
                 .accessibilityIdentifier("SaveRecordButton")
             }
         }
-        .alert("Failed to Save", isPresented: $showSaveAlert) {
-            Button("OK", role: .cancel) { }
-        } message: {
-            Text("Your moment could not be saved. Please try again.")
-        }
+        .errorAlert("Failed to Save", message: Text("Your moment could not be saved. Please try again."), isPresented: $showSaveAlert)
     }
 
     private func save() {
@@ -102,7 +93,7 @@ struct RecordInput: View {
             isTextEditorFocused = false
             dismiss()
         } catch {
-            withAnimation { showSaveAlert = true }
+            showSaveAlert = true
         }
     }
 }

@@ -70,8 +70,13 @@ struct NavigationState: nonisolated Equatable {
     // Whether the current tab shows its root page rather than a pushed one.
     private var isAtRoot: Bool { paths[screen]?.isEmpty ?? true }
 
-    // The tab bar gives way to the page pushed on top of the current tab, when that page needs the full screen.
-    var hidesTabBar: Bool { paths[screen]?.last?.hidesTabBar ?? false }
+    // The tab bar gives way to the page pushed on top of `tab`, when that page needs the full screen.
+    func hidesTabBar(for tab: Screen) -> Bool { paths[tab]?.last?.hidesTabBar ?? false }
+
+    // Pushed pages and the keyboard hide the tab bar, as the floating toolbar used to do.
+    func showsTabBar(for tab: Screen, isKeyboardVisible: Bool) -> Bool {
+        !hidesTabBar(for: tab) && !isKeyboardVisible
+    }
 
     var showsHeader: Bool { screen == .home && isAtRoot }
 

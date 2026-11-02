@@ -22,18 +22,17 @@ struct TrendsPerformanceStats {
     static func make(
         from entries: [JoyEntry],
         range: TrendsRange,
-        year: Int,
         locale: Locale,
         now: Date = Date(),
         calendar: Calendar = .current
     ) -> TrendsPerformanceStats {
-        let rangedEntries = TrendsCalculator.entries(entries, in: range, year: year, now: now, calendar: calendar)
+        let rangedEntries = TrendsCalculator.entries(entries, in: range, now: now, calendar: calendar)
         return TrendsPerformanceStats(
             entryCount: rangedEntries.count,
-            daysJournaled: InsightsCalculator.uniqueDaysCount(in: rangedEntries),
-            bestStreak: InsightsCalculator.longestStreak(in: rangedEntries),
-            joyfulHours: range == .year ? InsightsCalculator.calculateGoldenHours(entries: rangedEntries, locale: locale) : nil,
-            dataPoints: TrendsCalculator.dataPoints(for: rangedEntries, range: range, year: year, now: now, calendar: calendar),
+            daysJournaled: InsightsCalculator.uniqueDaysCount(in: rangedEntries, calendar: calendar),
+            bestStreak: InsightsCalculator.longestStreak(in: rangedEntries, calendar: calendar),
+            joyfulHours: range.isYear ? InsightsCalculator.joyfulHours(entries: rangedEntries, locale: locale, calendar: calendar) : nil,
+            dataPoints: TrendsCalculator.dataPoints(for: rangedEntries, range: range, now: now, calendar: calendar),
             weekdayCounts: TrendsCalculator.weekdayCounts(in: rangedEntries, calendar: .lummiCalendar(locale: locale))
         )
     }

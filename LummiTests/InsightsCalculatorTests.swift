@@ -49,6 +49,20 @@ struct InsightsCalculatorTests {
         #expect(InsightsCalculator.uniqueDaysCount(in: entries) == 2)
     }
 
+    @Test func uniqueDaysCount_usesTheGivenCalendarsTimeZone() {
+        // 23:30 and 00:30 UTC are the same day in New York (evening of the day before) but two days in UTC.
+        var utc = Calendar(identifier: .gregorian)
+        utc.timeZone = TimeZone(identifier: "UTC") ?? .current
+        var newYork = utc
+        newYork.timeZone = TimeZone(identifier: "America/New_York") ?? .current
+        let entries = [
+            JoyEntry(text: "a", date: utc.date(from: DateComponents(year: 2026, month: 3, day: 5, hour: 23, minute: 30)) ?? Date()),
+            JoyEntry(text: "b", date: utc.date(from: DateComponents(year: 2026, month: 3, day: 6, hour: 0, minute: 30)) ?? Date())
+        ]
+        #expect(InsightsCalculator.uniqueDaysCount(in: entries, calendar: utc) == 2)
+        #expect(InsightsCalculator.uniqueDaysCount(in: entries, calendar: newYork) == 1)
+    }
+
     // MARK: - longestStreak
 
     @Test func longestStreak_emptyList_returnsZero() {
@@ -106,51 +120,83 @@ struct InsightsCalculatorTests {
         #expect(InsightsCalculator.longestStreak(in: entries) == 1)
     }
 
-    // MARK: - calculateGoldenHours
-
-    @Test func calculateGoldenHours_emptyList_returnsPlaceholder() {
-        #expect(InsightsCalculator.calculateGoldenHours(entries: [], locale: .current) == "-- : --")
+    @Test func longestStreak_usesTheGivenCalendarsTimeZone() {
+        var utc = Calendar(identifier: .gregorian)
+        utc.timeZone = TimeZone(identifier: "UTC") ?? .current
+        var newYork = utc
+        newYork.timeZone = TimeZone(identifier: "America/New_York") ?? .current
+        // Three UTC days in a row, but in New York the first two share a day and the third is two days later.
+        let entries = [
+            JoyEntry(text: "a", date: utc.date(from: DateComponents(year: 2026, month: 3, day: 5, hour: 23, minute: 30)) ?? Date()),
+            JoyEntry(text: "b", date: utc.date(from: DateComponents(year: 2026, month: 3, day: 6, hour: 0, minute: 30)) ?? Date()),
+            JoyEntry(text: "c", date: utc.date(from: DateComponents(year: 2026, month: 3, day: 7, hour: 12)) ?? Date())
+        ]
+        #expect(InsightsCalculator.longestStreak(in: entries, calendar: utc) == 3)
+        #expect(InsightsCalculator.longestStreak(in: entries, calendar: newYork) == 1)
     }
 
-    @Test func calculateGoldenHours_withEntries_returnsFormattedRange() {
+    // MARK: - joyfulHours
+
+    @Test func joyfulHours_emptyList_returnsPlaceholder() {
+        #expect(InsightsCalculator.joyfulHours(entries: [], locale: .current) == "-- : --")
+    }
+
+    @Test(arguments: ["en", "ru", "de"])
+    func joyfulHours_emptyList_returnsThePlaceholderInEveryLanguage(identifier: String) {
+        #expect(InsightsCalculator.joyfulHours(entries: [], locale: Locale(identifier: identifier)) == "-- : --")
+    }
+
+    @Test func joyfulHours_usesTheGivenCalendarsTimeZone() {
+        var utc = Calendar(identifier: .gregorian)
+        utc.timeZone = TimeZone(identifier: "UTC") ?? .current
+        var tokyo = utc
+        tokyo.timeZone = TimeZone(identifier: "Asia/Tokyo") ?? .current
+        let entries = [JoyEntry(text: "a", date: utc.date(from: DateComponents(year: 2026, month: 3, day: 5, hour: 10)) ?? Date())]
+        let locale = Locale(identifier: "en_GB")
+        // 10:00 UTC is 19:00 in Tokyo, so the window starts at 19:00 there.
+        #expect(InsightsCalculator.joyfulHours(entries: entries, locale: locale, calendar: utc).hasPrefix("10:00"))
+        #expect(InsightsCalculator.joyfulHours(entries: entries, locale: locale, calendar: tokyo).hasPrefix("19:00"))
+    }
+
+    @Test func joyfulHours_withEntries_returnsFormattedRange() {
         let entries = [
             entry(year: 2026, month: 1, day: 1, hour: 14),
             entry(year: 2026, month: 1, day: 2, hour: 14)
         ]
-        let result = InsightsCalculator.calculateGoldenHours(entries: entries, locale: .current)
+        let result = InsightsCalculator.joyfulHours(entries: entries, locale: .current)
         #expect(result != "-- : --")
         #expect(result.contains(" - "))
     }
 
-    @Test func calculateGoldenHours_singleEntry_returnsFormattedRange() {
+    @Test func joyfulHours_singleEntry_returnsFormattedRange() {
         let entries = [entry(year: 2026, month: 1, day: 1, hour: 10)]
-        let result = InsightsCalculator.calculateGoldenHours(entries: entries, locale: Locale(identifier: "en_GB"))
+        let result = InsightsCalculator.joyfulHours(entries: entries, locale: Locale(identifier: "en_GB"))
         #expect(result == "10:00 - 13:00")
     }
 
-    @Test func calculateGoldenHours_mostFrequentHourWins() {
+    @Test func joyfulHours_mostFrequentHourWins() {
         let entries = [
             entry(year: 2026, month: 1, day: 1, hour: 10),
             entry(year: 2026, month: 1, day: 1, hour: 14),
             entry(year: 2026, month: 1, day: 2, hour: 14),
             entry(year: 2026, month: 1, day: 3, hour: 14)
         ]
-        let result = InsightsCalculator.calculateGoldenHours(entries: entries, locale: Locale(identifier: "en_GB"))
+        let result = InsightsCalculator.joyfulHours(entries: entries, locale: Locale(identifier: "en_GB"))
         #expect(result == "14:00 - 17:00")
     }
 
-    @Test func calculateGoldenHours_tieBreaking_picksHourWithLatestEntry() {
+    @Test func joyfulHours_tieBreaking_picksHourWithLatestEntry() {
         let entries = [
             entry(year: 2026, month: 1, day: 1, hour: 10),
             entry(year: 2026, month: 1, day: 2, hour: 10),
             entry(year: 2026, month: 1, day: 3, hour: 14),
             entry(year: 2026, month: 2, day: 4, hour: 14)
         ]
-        let result = InsightsCalculator.calculateGoldenHours(entries: entries, locale: Locale(identifier: "en_GB"))
+        let result = InsightsCalculator.joyfulHours(entries: entries, locale: Locale(identifier: "en_GB"))
         #expect(result == "14:00 - 17:00")
     }
 
-    @Test func calculateGoldenHours_picksThreeHourWindowWithMostEntries() {
+    @Test func joyfulHours_picksThreeHourWindowWithMostEntries() {
         // 9, 10 and 11 each have one entry, while 15 alone has two: the 9-12 window (3 entries) beats it.
         let entries = [
             entry(year: 2026, month: 1, day: 1, hour: 9),
@@ -159,17 +205,17 @@ struct InsightsCalculatorTests {
             entry(year: 2026, month: 1, day: 4, hour: 15),
             entry(year: 2026, month: 1, day: 5, hour: 15)
         ]
-        let result = InsightsCalculator.calculateGoldenHours(entries: entries, locale: Locale(identifier: "en_GB"))
+        let result = InsightsCalculator.joyfulHours(entries: entries, locale: Locale(identifier: "en_GB"))
         #expect(result == "09:00 - 12:00")
     }
 
-    @Test func calculateGoldenHours_midnightWrapAround_producesValidRange() {
+    @Test func joyfulHours_midnightWrapAround_producesValidRange() {
         let entries = [
             entry(year: 2026, month: 1, day: 1, hour: 23),
             entry(year: 2026, month: 1, day: 2, hour: 23),
             entry(year: 2026, month: 1, day: 3, hour: 23)
         ]
-        let result = InsightsCalculator.calculateGoldenHours(entries: entries, locale: Locale(identifier: "en_GB"))
+        let result = InsightsCalculator.joyfulHours(entries: entries, locale: Locale(identifier: "en_GB"))
         #expect(result == "23:00 - 02:00")
     }
 }

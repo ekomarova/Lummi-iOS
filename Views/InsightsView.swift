@@ -26,8 +26,6 @@ private struct InsightsMonthView: View {
     @Environment(\.locale) var locale
     let onNavigate: (Route) -> Void
 
-    private static let cardHeight: CGFloat = 130
-
     @Query private var monthlyEntries: [JoyEntry]
 
     init(month: Date, onNavigate: @escaping (Route) -> Void) {
@@ -41,7 +39,7 @@ private struct InsightsMonthView: View {
         VStack(alignment: .leading, spacing: 8) {
 
             Text("Insights")
-                .lummiScaledFont(size: 32, weight: .bold, relativeTo: .largeTitle)
+                .lummiScaledFont(size: 28, weight: .bold, relativeTo: .largeTitle)
                 .foregroundColor(themeManager.currentTheme.textColor)
                 .padding(.top, 10)
                 .padding(.horizontal, 20)
@@ -57,8 +55,8 @@ private struct InsightsMonthView: View {
 
                         // MARK: - Joys & Joyful Hours
                         HStack(spacing: 15) {
-                            joysCard(height: Self.cardHeight)
-                            joyfulHoursCard(height: Self.cardHeight)
+                            joysCard
+                            joyfulHoursCard
                         }
                     }
 
@@ -100,161 +98,15 @@ private struct InsightsMonthView: View {
 
     // MARK: - Highlight Cards
 
-    // One value size for both cards. The Joyful Hours range is a long string, so on the narrow iPhone cards
-    // it needs a smaller size to fit without being scaled down further than the numbers next to it.
-    private var valueFontSize: CGFloat {
-        AdaptiveLayout.isPad ? 28 : 20
+    private var joysCard: some View {
+        GlowCard.joys(value: "\(monthlyEntries.count)", metrics: .insights)
     }
 
-    private func joysCard(height: CGFloat) -> some View {
-        GlowCard.joys(value: "\(monthlyEntries.count)", height: height, valueFontSize: valueFontSize, valuePadding: 12)
-    }
-
-    private func joyfulHoursCard(height: CGFloat) -> some View {
+    private var joyfulHoursCard: some View {
         GlowCard.joyfulHours(
-            value: InsightsCalculator.calculateGoldenHours(entries: monthlyEntries, locale: locale),
-            height: height,
-            valueFontSize: valueFontSize,
-            valuePadding: 12
+            value: InsightsCalculator.joyfulHours(entries: monthlyEntries, locale: locale),
+            metrics: .insights
         )
-    }
-}
-
-// MARK: - UI Components
-
-struct GlowCard: View {
-    // The card keeps the same bright colors and dark text in light and dark mode.
-    private let cardTheme = LightTheme()
-    var value: String
-    var subtitle: LocalizedStringResource
-    var systemImage: String
-    var gradientColors: [Color]
-    var height: CGFloat
-    var valueFontSize: CGFloat
-    var valuePadding: CGFloat
-
-    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 30)
-                .fill(LinearGradient(colors: gradientColors, startPoint: .leading, endPoint: .trailing))
-
-            content
-        }
-        .frame(maxWidth: .infinity)
-        .frame(height: height)
-    }
-
-    private var subtitleLabel: some View {
-        HStack(spacing: 4) {
-            Image(systemName: systemImage)
-                .font(.system(size: 11, weight: .semibold))
-                .foregroundColor(cardTheme.textColor)
-
-            Text(subtitle)
-                .font(.lummiFont(size: 12))
-                .opacity(0.7)
-                .foregroundColor(cardTheme.textColor.opacity(0.85))
-        }
-    }
-
-    private var valueLabel: some View {
-        Text(value)
-            .font(.lummiFont(size: valueFontSize))
-            .foregroundColor(cardTheme.textColor)
-            .minimumScaleFactor(0.3)
-            .lineLimit(1)
-    }
-
-    // Value in the middle, subtitle at the bottom
-    private var content: some View {
-        ZStack {
-            valueLabel
-                .padding(.horizontal, valuePadding)
-
-            VStack {
-                Spacer()
-                subtitleLabel
-                    .padding(.bottom, 16)
-            }
-        }
-    }
-}
-
-// Shared presets for the "Joys"/"Day Streak"/"Joyful Hours" cards shown by both Insights and Trends.
-extension GlowCard {
-    static func joys(value: String, height: CGFloat, valueFontSize: CGFloat, valuePadding: CGFloat) -> GlowCard {
-        GlowCard(
-            value: value,
-            subtitle: "Joys",
-            systemImage: "star.fill",
-            gradientColors: AccentColors.joysGradient,
-            height: height,
-            valueFontSize: valueFontSize,
-            valuePadding: valuePadding
-        )
-    }
-
-    static func streak(value: String, height: CGFloat, valueFontSize: CGFloat, valuePadding: CGFloat) -> GlowCard {
-        GlowCard(
-            value: value,
-            subtitle: "Day Streak",
-            systemImage: "flame.fill",
-            gradientColors: AccentColors.streakGradient,
-            height: height,
-            valueFontSize: valueFontSize,
-            valuePadding: valuePadding
-        )
-    }
-
-    static func joyfulHours(value: String, height: CGFloat, valueFontSize: CGFloat, valuePadding: CGFloat) -> GlowCard {
-        GlowCard(
-            value: value,
-            subtitle: "Joyful Hours",
-            systemImage: "sun.max.fill",
-            gradientColors: AccentColors.joyfulHoursGradient,
-            height: height,
-            valueFontSize: valueFontSize,
-            valuePadding: valuePadding
-        )
-    }
-}
-
-struct MonthlyMomentCell: View {
-    @Environment(ThemeManager.self) private var themeManager
-    @Environment(\.locale) var locale
-    let entry: JoyEntry
-    // False for all but the latest entry of a day: the date column stays as empty space so the bubbles still align.
-    var showsDate = true
-    // Grows with the text size, so the two-digit day never gets cut off.
-    @ScaledMetric(relativeTo: .body) private var dateColumnWidth: CGFloat = 35
-
-    var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            dateLabel
-                .frame(width: dateColumnWidth)
-                .padding(.top, 4)
-                .opacity(showsDate ? 1 : 0)
-                .accessibilityHidden(!showsDate)
-
-            NoteBubble(sharpCorner: .topLeading) {
-                Text(entry.text)
-                    .lummiScaledFont(size: 17, relativeTo: .body)
-            }
-        }
-        .padding(.leading, 4)
-        .padding(.trailing, 15)
-    }
-
-    private var dateLabel: some View {
-        VStack(alignment: .center, spacing: 2) {
-            Text(entry.date.format("dd", locale: locale))
-                .lummiScaledFont(size: 18, relativeTo: .body)
-                .foregroundColor(themeManager.currentTheme.textColor)
-
-            Text(entry.date.format("MMM", locale: locale).capitalizedFirstLetter)
-                .lummiScaledFont(size: 11, relativeTo: .caption2)
-                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.5))
-        }
     }
 }
 

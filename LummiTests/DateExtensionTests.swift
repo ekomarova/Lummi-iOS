@@ -29,6 +29,52 @@ struct DateExtensionTests {
         #expect(first == second)
     }
 
+    // MARK: - monthName
+
+    private let september = Date(timeIntervalSince1970: 1_788_609_600) // 2026-09-05 12:00 UTC
+
+    @Test func monthName_full_isCapitalizedInEveryLanguage() {
+        #expect(september.monthName(style: .full, locale: Locale(identifier: "en")) == "September")
+        #expect(september.monthName(style: .full, locale: Locale(identifier: "de")) == "September")
+        let russian = september.monthName(style: .full, locale: Locale(identifier: "ru"))
+        #expect(russian.hasPrefix("Сентябр"))
+    }
+
+    @Test func monthName_full_capitalizesWhatFoundationLowercases() {
+        let russian = Locale(identifier: "ru")
+        let raw = september.format("MMMM", locale: russian)
+        #expect(raw.first?.isLowercase == true)
+        #expect(september.monthName(style: .full, locale: russian).first?.isUppercase == true)
+    }
+
+    @Test func monthName_abbreviated_isTheLocalesAbbreviationCapitalized() {
+        #expect(september.monthName(style: .abbreviated, locale: Locale(identifier: "en")) == "Sep")
+        for identifier in ["en", "ru", "de"] {
+            let locale = Locale(identifier: identifier)
+            #expect(september.monthName(style: .abbreviated, locale: locale) == september.format("MMM", locale: locale).capitalizedFirstLetter)
+        }
+    }
+
+    @Test(arguments: ["en", "ru", "de"])
+    func monthName_threeLetters_isShortWithoutPeriodForEveryMonth(identifier: String) {
+        let locale = Locale(identifier: identifier)
+        for month in 1...12 {
+            let name = makeDate(year: 2026, month: month, day: 10, hour: 12).monthName(style: .threeLetters, locale: locale)
+            #expect(!name.isEmpty)
+            #expect(name.count <= 3, "\(identifier) month \(month): \(name)")
+            #expect(!name.contains("."), "\(identifier) month \(month): \(name)")
+            #expect(name.first?.isUppercase == true, "\(identifier) month \(month): \(name)")
+        }
+    }
+
+    @Test func monthName_threeLetters_clipsLongAbbreviationsAndDropsThePeriod() {
+        // Russian abbreviates November as "нояб." in most ICU versions: the period goes and the rest is clipped.
+        let november = makeDate(year: 2026, month: 11, day: 10, hour: 12)
+        let name = november.monthName(style: .threeLetters, locale: Locale(identifier: "ru"))
+        #expect(name.count == 3)
+        #expect(name.hasPrefix("Ноя"))
+    }
+
     // MARK: - startOfMonth
 
     @Test func startOfMonth_midMonthDate_returnsFirstDayAtMidnight() {

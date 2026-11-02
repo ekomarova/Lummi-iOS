@@ -14,8 +14,8 @@ import SwiftData
 @main
 struct LummiApp: App {
     
-    @AppStorage("appLanguage") private var selectedLanguage: AppLanguage = .english
-    @AppStorage("isICloudSyncEnabled") private var isICloudSyncEnabled: Bool = false
+    @AppStorage(SettingsKey.appLanguage) private var selectedLanguage: AppLanguage = .english
+    @AppStorage(SettingsKey.isICloudSyncEnabled) private var isICloudSyncEnabled: Bool = false
 
     @State private var container: ModelContainer
     @State private var containerError: (any Error)?
@@ -36,12 +36,12 @@ struct LummiApp: App {
         // `-UI_TESTING_SYNC_ENABLED_AT_LAUNCH` lets a test start with sync on, to exercise the launch fallback.
         let startsWithSync = isUITesting && ProcessInfo.processInfo.arguments.contains("-UI_TESTING_SYNC_ENABLED_AT_LAUNCH")
         if isUITesting {
-            UserDefaults.standard.set(startsWithSync, forKey: "isICloudSyncEnabled")
+            UserDefaults.standard.set(startsWithSync, forKey: SettingsKey.isICloudSyncEnabled)
         }
         let isScreenshots = MockDataManager.isScreenshotsMode
-        let isSyncEnabled = startsWithSync || (!isUITesting && !isScreenshots && UserDefaults.standard.bool(forKey: "isICloudSyncEnabled"))
+        let isSyncEnabled = startsWithSync || (!isUITesting && !isScreenshots && UserDefaults.standard.bool(forKey: SettingsKey.isICloudSyncEnabled))
         #else
-        let isSyncEnabled = UserDefaults.standard.bool(forKey: "isICloudSyncEnabled")
+        let isSyncEnabled = UserDefaults.standard.bool(forKey: SettingsKey.isICloudSyncEnabled)
         #endif
         let result = Self.openStorage(isICloudSyncEnabled: isSyncEnabled)
         _container = State(initialValue: result.container)
@@ -61,7 +61,7 @@ struct LummiApp: App {
             if result.fallback == .localOnly {
                 // Keep the saved flag in step with the container that opened, so the Settings toggle is not lying
                 // and the app does not retry a broken iCloud store on every launch.
-                UserDefaults.standard.set(false, forKey: "isICloudSyncEnabled")
+                UserDefaults.standard.set(false, forKey: SettingsKey.isICloudSyncEnabled)
             }
             return result
         } catch {

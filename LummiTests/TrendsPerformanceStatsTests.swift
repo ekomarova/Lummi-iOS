@@ -23,8 +23,8 @@ struct TrendsPerformanceStatsTests {
 
     private var now: Date { makeDate(year: 2026, month: 9, day: 24) }
 
-    private func stats(_ entries: [JoyEntry], range: TrendsRange, year: Int = 2026) -> TrendsPerformanceStats {
-        TrendsPerformanceStats.make(from: entries, range: range, year: year, locale: locale, now: now, calendar: calendar)
+    private func stats(_ entries: [JoyEntry], range: TrendsRange) -> TrendsPerformanceStats {
+        TrendsPerformanceStats.make(from: entries, range: range, locale: locale, now: now, calendar: calendar)
     }
 
     @Test func make_emptyEntries_returnsZeroedStats() {
@@ -62,10 +62,22 @@ struct TrendsPerformanceStatsTests {
             entry(year: 2026, month: 1, day: 1),
             entry(year: 2026, month: 9, day: 24)
         ]
-        let result = stats(entries, range: .year)
+        let result = stats(entries, range: .year(2026))
         #expect(result.entryCount == 2)
         #expect(result.joyfulHours != nil)
         #expect(result.dataPoints.count == 12)
+    }
+
+    @Test func make_pastYear_includesJoyfulHours() {
+        let result = stats([entry(year: 2025, month: 6, day: 1)], range: .year(2025))
+        #expect(result.joyfulHours != nil)
+        #expect(result.dataPoints.count == 12)
+    }
+
+    @Test func make_futureYear_isEmpty() {
+        let result = stats([entry(year: 2027, month: 1, day: 1)], range: .year(2027))
+        #expect(result.entryCount == 0)
+        #expect(result.dataPoints.isEmpty)
     }
 
     @Test func make_pastYear_ignoresOtherYears() {
@@ -73,17 +85,17 @@ struct TrendsPerformanceStatsTests {
             entry(year: 2025, month: 6, day: 1),
             entry(year: 2026, month: 6, day: 1)
         ]
-        let result = stats(entries, range: .year, year: 2025)
+        let result = stats(entries, range: .year(2025))
         #expect(result.entryCount == 1)
     }
 
     @Test func make_matchesTheSeparateCalculators() {
         let entries = (1...24).map { entry(year: 2026, month: 9, day: $0, hour: 8 + $0 % 12) }
         let result = stats(entries, range: .month)
-        let ranged = TrendsCalculator.entries(entries, in: .month, year: 2026, now: now, calendar: calendar)
+        let ranged = TrendsCalculator.entries(entries, in: .month, now: now, calendar: calendar)
         #expect(result.entryCount == ranged.count)
         #expect(result.daysJournaled == InsightsCalculator.uniqueDaysCount(in: ranged))
         #expect(result.bestStreak == InsightsCalculator.longestStreak(in: ranged))
-        #expect(result.dataPoints == TrendsCalculator.dataPoints(for: ranged, range: .month, year: 2026, now: now, calendar: calendar))
+        #expect(result.dataPoints == TrendsCalculator.dataPoints(for: ranged, range: .month, now: now, calendar: calendar))
     }
 }

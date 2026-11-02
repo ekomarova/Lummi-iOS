@@ -67,31 +67,31 @@ final class TrendsPerformanceTests: XCTestCase {
     }
 
     // The previous `TrendsChartsView`: each value filtered the whole journal again (7 passes).
-    private func legacyStats(range: TrendsRange, year: Int) -> Int {
-        func ranged() -> [JoyEntry] { TrendsCalculator.entries(entries, in: range, year: year) }
+    private func legacyStats(range: TrendsRange) -> Int {
+        func ranged() -> [JoyEntry] { TrendsCalculator.entries(entries, in: range) }
         var checksum = ranged().count
         checksum += InsightsCalculator.uniqueDaysCount(in: ranged())
         checksum += InsightsCalculator.longestStreak(in: ranged())
-        if range == .year { checksum += InsightsCalculator.calculateGoldenHours(entries: ranged(), locale: locale).count }
-        checksum += TrendsCalculator.dataPoints(for: ranged(), range: range, year: year).count
+        if range.isYear { checksum += InsightsCalculator.joyfulHours(entries: ranged(), locale: locale).count }
+        checksum += TrendsCalculator.dataPoints(for: ranged(), range: range).count
         checksum += TrendsCalculator.weekdayCounts(in: ranged(), calendar: .lummiCalendar(locale: locale)).count
         checksum += ranged().count
         return checksum
     }
 
-    private func singlePassStats(range: TrendsRange, year: Int) -> Int {
-        checksum(of: TrendsPerformanceStats.make(from: entries, range: range, year: year, locale: locale))
+    private func singlePassStats(range: TrendsRange) -> Int {
+        checksum(of: TrendsPerformanceStats.make(from: entries, range: range, locale: locale))
     }
 
     // The current `TrendsChartsView`: the store fetches only the range (sorted like its `@Query`), then one pass.
-    private func asInAppStats(range: TrendsRange, year: Int) throws -> Int {
+    private func asInAppStats(range: TrendsRange) throws -> Int {
         let now = Date()
         let descriptor = FetchDescriptor<JoyEntry>(
-            predicate: JoyEntry.predicate(in: TrendsCalculator.dateRange(for: range, year: year, now: now)),
+            predicate: JoyEntry.predicate(in: TrendsCalculator.dateRange(for: range, now: now)),
             sortBy: [SortDescriptor(\.date)]
         )
         let rangedEntries = try context.fetch(descriptor)
-        return checksum(of: TrendsPerformanceStats.make(from: rangedEntries, range: range, year: year, locale: locale, now: now))
+        return checksum(of: TrendsPerformanceStats.make(from: rangedEntries, range: range, locale: locale, now: now))
     }
 
     // Same sum as `legacyStats`, so the variants can be compared.
@@ -102,46 +102,46 @@ final class TrendsPerformanceTests: XCTestCase {
 
     func test_Perf_TrendsMonth_legacy() {
         measure(metrics: metrics, options: options) {
-            XCTAssertGreaterThan(legacyStats(range: .month, year: currentYear), 0)
+            XCTAssertGreaterThan(legacyStats(range: .month), 0)
         }
     }
 
     func test_Perf_TrendsMonth_singlePass() {
         measure(metrics: metrics, options: options) {
-            XCTAssertGreaterThan(singlePassStats(range: .month, year: currentYear), 0)
+            XCTAssertGreaterThan(singlePassStats(range: .month), 0)
         }
     }
 
     func test_Perf_TrendsYear_legacy() {
         measure(metrics: metrics, options: options) {
-            XCTAssertGreaterThan(legacyStats(range: .year, year: currentYear), 0)
+            XCTAssertGreaterThan(legacyStats(range: .year(currentYear)), 0)
         }
     }
 
     func test_Perf_TrendsYear_singlePass() {
         measure(metrics: metrics, options: options) {
-            XCTAssertGreaterThan(singlePassStats(range: .year, year: currentYear), 0)
+            XCTAssertGreaterThan(singlePassStats(range: .year(currentYear)), 0)
         }
     }
 
     func test_Perf_TrendsMonth_asInApp() throws {
         measure(metrics: metrics, options: options) {
-            XCTAssertGreaterThan((try? asInAppStats(range: .month, year: currentYear)) ?? 0, 0)
+            XCTAssertGreaterThan((try? asInAppStats(range: .month)) ?? 0, 0)
         }
     }
 
     func test_Perf_TrendsYear_asInApp() throws {
         measure(metrics: metrics, options: options) {
-            XCTAssertGreaterThan((try? asInAppStats(range: .year, year: currentYear)) ?? 0, 0)
+            XCTAssertGreaterThan((try? asInAppStats(range: .year(currentYear))) ?? 0, 0)
         }
     }
 
     // All ways must show the same numbers, otherwise the comparison above is meaningless.
     func test_Perf_AllWaysGiveTheSameResult() throws {
-        for range in [TrendsRange.month, .year] {
-            let legacy = legacyStats(range: range, year: currentYear)
-            XCTAssertEqual(legacy, singlePassStats(range: range, year: currentYear))
-            XCTAssertEqual(legacy, try asInAppStats(range: range, year: currentYear))
+        for range in [TrendsRange.month, .year(currentYear)] {
+            let legacy = legacyStats(range: range)
+            XCTAssertEqual(legacy, singlePassStats(range: range))
+            XCTAssertEqual(legacy, try asInAppStats(range: range))
         }
     }
 }

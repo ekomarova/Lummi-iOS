@@ -11,9 +11,16 @@ import SwiftData
 // Input rules for the record text field.
 enum RecordInputRules {
     static let maxLength = 280
+    // How many characters before `maxLength` the counter starts to stand out.
+    static let warningThreshold = 20
 
     static func clamped(_ text: String) -> String {
         text.count > maxLength ? String(text.prefix(maxLength)) : text
+    }
+
+    // True once the text is within `warningThreshold` characters of the limit, or past it.
+    static func isNearLimit(_ text: String) -> Bool {
+        text.count > maxLength - warningThreshold
     }
 
     static func canSave(_ text: String) -> Bool {

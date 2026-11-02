@@ -20,12 +20,19 @@ enum AccentColors {
     static let streakGradient = [Color(red: 0.93, green: 0.42, blue: 0.22), Color(red: 0.94, green: 0.60, blue: 0.45)]
 
     static let joyfulHoursGradient = [Color(red: 0.35, green: 0.78, blue: 0.98), Color(red: 0.60, green: 0.88, blue: 0.99)]
+    // Text and icons on the highlight cards: dark in every theme, because the gradients stay bright in dark mode too.
+    static let glowCardText = Color.black
 
     static let trendsVolumeGradient = [Color(red: 0.75, green: 0.6, blue: 0.95), Color(red: 0.45, green: 0.25, blue: 0.75)]
     static let weekdayGradient = [Color(red: 0.55, green: 0.85, blue: 0.55), Color(red: 0.15, green: 0.55, blue: 0.35)]
 
     static let destructive = Color(red: 0.95, green: 0.2, blue: 0.3)
     static let syncBannerBackground = Color.red.opacity(0.8)
+    // Icon and text on `syncBannerBackground`, white in every theme.
+    static let syncBannerForeground = Color.white
+
+    // The checkmark on the selected appearance option, which is filled with the theme's `selectedTabColor`.
+    static let selectionCheckmark = Color.white
 
     // Each tab page sets its own tint (the theme's text color), so switches set their own on color.
     static let toggleOn = Color.green

@@ -9,23 +9,7 @@
 import SwiftUI
 import SwiftData
 
-// Settings screen (theme, language, iCloud sync, clearing data) and the supported app languages.
-enum AppLanguage: String, CaseIterable, Identifiable {
-    case english = "en"
-    case russian = "ru"
-    case german = "de"
-    
-    var id: String { self.rawValue }
-    
-    var displayName: LocalizedStringResource {
-        switch self {
-        case .english: return "English"
-        case .russian: return "Russian"
-        case .german: return "German"
-        }
-    }
-}
-
+// Settings screen: theme, language, iCloud sync and clearing data.
 struct SettingsView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.modelContext) private var modelContext
@@ -33,8 +17,8 @@ struct SettingsView: View {
     // Opens a page on the Settings tab's stack.
     let onNavigate: (Route) -> Void
     
-    @AppStorage("appLanguage") private var selectedLanguage: AppLanguage = .english
-    @AppStorage("isICloudSyncEnabled") private var isICloudSyncEnabled: Bool = false
+    @AppStorage(SettingsKey.appLanguage) private var selectedLanguage: AppLanguage = .english
+    @AppStorage(SettingsKey.isICloudSyncEnabled) private var isICloudSyncEnabled: Bool = false
     
     @State private var syncBannerVisible = false
     // Exists only while iCloud sync is enabled, so Settings never contacts iCloud with sync off, and every enable checks the account afresh.
@@ -47,7 +31,7 @@ struct SettingsView: View {
         // The title's protected zone takes 12pt of the old 20pt gap (see `scrollHeaderBackground`), as on Insights.
         VStack(alignment: .leading, spacing: 8) {
             Text("Settings")
-                .lummiScaledFont(size: 32, weight: .bold, relativeTo: .largeTitle)
+                .lummiScaledFont(size: 28, weight: .bold, relativeTo: .largeTitle)
                 .foregroundColor(themeManager.currentTheme.textColor)
                 .padding(.top, 10)
                 .padding(.horizontal, 20)
@@ -92,11 +76,7 @@ struct SettingsView: View {
         } message: {
             Text("This will permanently delete all your entries locally and in iCloud!")
         }
-        .alert("Failed to Delete", isPresented: $showClearDataFailedAlert) {
-            Button("OK", role: .cancel) { }
-        } message: {
-            Text("Your entries could not be deleted. Please try again.")
-        }
+        .errorAlert("Failed to Delete", message: Text("Your entries could not be deleted. Please try again."), isPresented: $showClearDataFailedAlert)
     }
 
     private var settingsSections: some View {
@@ -106,26 +86,14 @@ struct SettingsView: View {
                 SectionHeader(title: "Appearance")
 
                 HStack(spacing: 0) {
-                    ThemeOptionButton(
-                        title: "Light",
-                        isSelected: themeManager.mode == .light,
-                        accessibilityID: "LightThemeButton",
-                        action: { themeManager.mode = .light }
-                    )
-
-                    ThemeOptionButton(
-                        title: "Dark",
-                        isSelected: themeManager.mode == .dark,
-                        accessibilityID: "DarkThemeButton",
-                        action: { themeManager.mode = .dark }
-                    )
-
-                    ThemeOptionButton(
-                        title: "Auto",
-                        isSelected: themeManager.mode == .auto,
-                        accessibilityID: "AutoThemeButton",
-                        action: { themeManager.mode = .auto }
-                    )
+                    ForEach(AppearanceMode.displayOrder, id: \.self) { mode in
+                        ThemeOptionButton(
+                            title: mode.title,
+                            isSelected: themeManager.mode == mode,
+                            accessibilityID: "\(mode.rawValue.capitalized)ThemeButton",
+                            action: { themeManager.mode = mode }
+                        )
+                    }
                 }
                 .padding(.vertical, 20)
                 .solidCard(RoundedRectangle(cornerRadius: 20))
@@ -185,7 +153,7 @@ struct SettingsView: View {
 
                 Button(
                     action: {
-                        withAnimation { showClearDataAlert = true }
+                        showClearDataAlert = true
                     },
                     label: {
                         CapsuleRow {
@@ -207,54 +175,8 @@ struct SettingsView: View {
         do {
             try JoyEntryStore(context: modelContext).clearAll()
         } catch {
-            withAnimation { showClearDataFailedAlert = true }
+            showClearDataFailedAlert = true
         }
-    }
-}
-
-// Pushed onto the Settings tab's stack, so the system back button and swipe-back gesture work on it.
-struct LanguageSelectionView: View {
-    @Environment(ThemeManager.self) private var themeManager
-    @Environment(\.dismiss) private var dismiss
-    @AppStorage("appLanguage") private var selectedLanguage: AppLanguage = .english
-
-    var body: some View {
-        VStack(spacing: 12) {
-            ForEach(AppLanguage.allCases) { language in
-                Button(
-                    action: {
-                        selectedLanguage = language
-                        dismiss()
-                    },
-                    label: {
-                        HStack {
-                            Text(language.displayName)
-                                .lummiScaledFont(size: 17, relativeTo: .body)
-                                .foregroundColor(themeManager.currentTheme.textColor)
-
-                            Spacer()
-
-                            if language == selectedLanguage {
-                                Image(systemName: "checkmark")
-                                    .lummiScaledFont(size: 15, weight: .bold, relativeTo: .subheadline)
-                                    .foregroundColor(themeManager.currentTheme.textColor)
-                            }
-                        }
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 16)
-                        .solidCard(RoundedRectangle(cornerRadius: 16))
-                    }
-                )
-                .buttonStyle(.plain)
-                .accessibilityIdentifier("LanguageOption_\(language.rawValue)")
-            }
-
-            Spacer()
-        }
-        .padding(.top, 18)
-        .padding(.horizontal, 20)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .lummiNavigationTitle("Language")
     }
 }
 
@@ -267,11 +189,11 @@ private struct SyncStatusBanner: View {
                 HStack(alignment: .top, spacing: 12) {
                     Image(systemName: "exclamationmark.icloud.fill")
                         .lummiScaledFont(size: 20, relativeTo: .title3)
-                        .foregroundColor(.white)
+                        .foregroundColor(AccentColors.syncBannerForeground)
 
                     Text(syncMessage)
                         .lummiScaledFont(size: 14, relativeTo: .subheadline)
-                        .foregroundColor(.white)
+                        .foregroundColor(AccentColors.syncBannerForeground)
                         .multilineTextAlignment(.leading)
                         .accessibilityIdentifier("SyncBannerMessage")
                 }
@@ -284,7 +206,7 @@ private struct SyncStatusBanner: View {
                 .transition(.opacity.combined(with: .scale(scale: 0.95, anchor: .top)))
             }
         }
-        .animation(.spring(), value: monitor.syncState)
+        .animation(.lummiSpring, value: monitor.syncState)
     }
 }
 
@@ -300,10 +222,11 @@ private struct SyncStatusBanner: View {
         .previewEnvironment()
 }
 
-#Preview {
-    NavigationStack {
-        LanguageSelectionView()
-    }
-    .previewEnvironment()
+#Preview("Sync banner") {
+    let monitor = CloudKitSyncMonitor()
+    monitor.syncState = .storageFull
+    return SyncStatusBanner(monitor: monitor)
+        .padding(20)
+        .previewEnvironment()
 }
 #endif

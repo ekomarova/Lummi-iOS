@@ -10,7 +10,7 @@ import SwiftUI
 import SwiftData
 import Charts
 
-// Summary cards plus the "Joys By Date"/"Joys By Month" and "Joys By Weekday" charts for one range/year.
+// Summary cards plus the "Joys By Date"/"Joys By Month" and "Joys By Weekday" charts for one range.
 // Shared by `TrendsView`'s "Month" mode and `YearTrendsView`'s single-year page, so both stay pixel-identical.
 struct TrendsChartsView: View {
     @Environment(ThemeManager.self) private var themeManager
@@ -20,28 +20,30 @@ struct TrendsChartsView: View {
     @Query private var rangedEntries: [JoyEntry]
 
     let range: TrendsRange
-    // Ignored for `.month`, which always covers the current calendar month.
-    let year: Int
     // Taken once, so the fetched window and the calculation always agree on which month it is, even if the screen
     // stays open across a month change (it then keeps showing the month it was opened for, like Insights).
     private let now: Date
 
-    // One size for every axis label of every chart.
-    private static let axisLabelFontSize: CGFloat = 10
+    private static let barCornerRadius: CGFloat = 3
+    private static let chartHeight: CGFloat = 160
+    // Shorter than `chartHeight` on iPhone, where the weekday chart sits below the volume chart. On iPad the two charts
+    // are side by side and share the height, so the cards line up.
+    private static var weekdayChartHeight: CGFloat { AdaptiveLayout.isPad ? chartHeight : 140 }
+    // In `.month`, the volume chart labels every fourth day, so the day numbers don't crowd each other.
+    private static let monthLabelStride = 4
 
-    init(range: TrendsRange, year: Int) {
+    init(range: TrendsRange) {
         let now = Date()
         self.range = range
-        self.year = year
         self.now = now
         _rangedEntries = Query(
-            filter: JoyEntry.predicate(in: TrendsCalculator.dateRange(for: range, year: year, now: now)),
+            filter: JoyEntry.predicate(in: TrendsCalculator.dateRange(for: range, now: now)),
             sort: \JoyEntry.date
         )
     }
 
     private var stats: TrendsPerformanceStats {
-        TrendsPerformanceStats.make(from: rangedEntries, range: range, year: year, locale: locale, now: now)
+        TrendsPerformanceStats.make(from: rangedEntries, range: range, locale: locale, now: now)
     }
 
     var body: some View {
@@ -94,31 +96,16 @@ struct TrendsChartsView: View {
 
     @ViewBuilder
     private func countCards(_ stats: TrendsPerformanceStats) -> some View {
-        GlowCard.joys(value: "\(stats.entryCount)", height: 130, valueFontSize: 26, valuePadding: 8)
-        GlowCard(
-            value: "\(stats.daysJournaled)",
-            subtitle: "Active Days",
-            systemImage: "calendar",
-            gradientColors: AccentColors.activeDaysGradient,
-            height: 130,
-            valueFontSize: 26,
-            valuePadding: 8
-        )
-        GlowCard.streak(value: "\(stats.bestStreak)", height: 130, valueFontSize: 26, valuePadding: 8)
+        GlowCard.joys(value: "\(stats.entryCount)", metrics: .trends)
+        GlowCard.activeDays(value: "\(stats.daysJournaled)", metrics: .trends)
+        GlowCard.streak(value: "\(stats.bestStreak)", metrics: .trends)
     }
 
-    // Full-width on iPhone, since the "HH:mm - HH:mm" value is wider than a short number and doesn't fit the
-    // three-across row above; a quarter of the row on iPad, hence the smaller padding. `valueFontSize` still
-    // matches the other cards for a consistent look.
+    // Full-width on iPhone, since its value doesn't fit the three-across row above (see `Metrics.trendsJoyfulHours`).
     @ViewBuilder
     private func joyfulHoursCard(_ stats: TrendsPerformanceStats) -> some View {
         if let joyfulHours = stats.joyfulHours {
-            GlowCard.joyfulHours(
-                value: joyfulHours,
-                height: 130,
-                valueFontSize: 26,
-                valuePadding: AdaptiveLayout.isPad ? 12 : 30
-            )
+            GlowCard.joyfulHours(value: joyfulHours, metrics: .trendsJoyfulHours)
         }
     }
 
@@ -131,24 +118,22 @@ struct TrendsChartsView: View {
                 y: .value("Joys", point.count)
             )
             .foregroundStyle(trendsGradient)
-            .cornerRadius(3)
+            .cornerRadius(Self.barCornerRadius)
         }
         .chartXAxis {
             // `.stride` places one tick per actual bar (each calendar day or month), unlike `.automatic`,
             // which interpolates evenly spaced ticks across the continuous date range and can land more
             // than one tick inside the same bar, duplicating its label (e.g. two ticks reading "Aug").
-            AxisMarks(values: .stride(by: range.component, count: range == .month ? 4 : 1)) { value in
+            AxisMarks(values: .stride(by: range.component, count: range == .month ? Self.monthLabelStride : 1)) { value in
                 AxisValueLabel {
                     if let date = value.as(Date.self) {
-                        Text(volumeAxisLabel(for: date))
-                            .font(.lummiFont(size: Self.axisLabelFontSize))
-                            .foregroundColor(themeManager.currentTheme.textColor.opacity(0.5))
+                        axisLabel(volumeAxisLabel(for: date))
                     }
                 }
             }
         }
         .chartYAxis { yAxisMarks }
-        .frame(height: 160)
+        .frame(height: Self.chartHeight)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(volumeChartTitle))
         .accessibilityValue(Text("\(stats.entryCount)"))
@@ -166,40 +151,29 @@ struct TrendsChartsView: View {
                 y: .value("Joys", item.count)
             )
             .foregroundStyle(weekdayGradient)
-            .cornerRadius(3)
+            .cornerRadius(Self.barCornerRadius)
         }
         .chartXAxis {
             AxisMarks { value in
                 AxisValueLabel {
                     if let label = value.as(String.self) {
-                        Text(label)
-                            .font(.lummiFont(size: Self.axisLabelFontSize))
-                            .foregroundColor(themeManager.currentTheme.textColor.opacity(0.5))
+                        axisLabel(label)
                     }
                 }
             }
         }
         .chartYAxis { yAxisMarks }
-        // Matches the volume chart's height on iPad, so the two side-by-side cards line up.
-        .frame(height: AdaptiveLayout.isPad ? 160 : 140)
+        .frame(height: Self.weekdayChartHeight)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Joys By Weekday"))
     }
 
-    // The volume chart's x-axis label: a bare day number within `.month`, or an explicitly localized,
-    // capitalized three-letter month abbreviation otherwise. Built by hand rather than via
-    // `AxisValueLabel(format:)` because Swift Charts' axis formatting does not reliably follow the app's
-    // in-app language selection from the environment, and because Foundation lowercases standalone month
-    // names in locales like Russian ("сент."), unlike English ("Sep") — hence `capitalizedFirstLetter`.
-    // Some locales' abbreviated forms also carry a trailing period and run longer
-    // than three letters (Russian's "нояб." vs. English's "Nov"); dropping the period and clipping to
-    // three letters keeps every month label the same width so none crowd or overlap their neighbors.
+    // The volume chart's x-axis label: a bare day number within `.month`, or a three-letter month abbreviation otherwise.
     private func volumeAxisLabel(for date: Date) -> String {
         if range == .month {
             return date.formatted(Date.FormatStyle(locale: locale).day())
         }
-        let month = date.formatted(Date.FormatStyle(locale: locale).month(.abbreviated))
-        return String(month.replacingOccurrences(of: ".", with: "").prefix(3)).capitalizedFirstLetter
+        return date.monthName(style: .threeLetters, locale: locale)
     }
 
     // A few faint gridlines with integer counts, so a bar's height reads as a number of joys rather than
@@ -211,12 +185,18 @@ struct TrendsChartsView: View {
                 .foregroundStyle(themeManager.currentTheme.textColor.opacity(0.08))
             AxisValueLabel {
                 if let count = value.as(Int.self) {
-                    Text("\(count)")
-                        .font(.lummiFont(size: Self.axisLabelFontSize))
-                        .foregroundColor(themeManager.currentTheme.textColor.opacity(0.5))
+                    axisLabel("\(count)")
                 }
             }
         }
+    }
+
+    // A tick label on a chart axis: one size and color for every axis label of every chart. Built here and not as a
+    // separate view, so it takes the theme from this view and not from the environment inside Swift Charts.
+    private func axisLabel(_ text: String) -> some View {
+        Text(text)
+            .font(.lummiFont(size: 10))
+            .foregroundColor(themeManager.currentTheme.secondaryTextColor)
     }
 
     private var trendsGradient: LinearGradient {
@@ -254,9 +234,18 @@ struct TrendsSection<Content: View>: View {
 #if DEBUG
 #Preview {
     ScrollView {
-        TrendsChartsView(range: .month, year: Calendar.current.component(.year, from: Date()))
+        TrendsChartsView(range: .month)
             .padding(20)
     }
+    .previewEnvironment()
+}
+
+#Preview("Section") {
+    TrendsSection(title: "Joys By Weekday") {
+        Text("Chart")
+            .frame(maxWidth: .infinity)
+    }
+    .padding(20)
     .previewEnvironment()
 }
 #endif

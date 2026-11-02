@@ -26,7 +26,7 @@ struct ThemeOptionButton: View {
 
                 ZStack {
                     Circle()
-                        .fill(isSelected ? Color.blue : Color.clear)
+                        .fill(isSelected ? themeManager.currentTheme.selectedTabColor : Color.clear)
                         .overlay(
                             Circle()
                                 .stroke(themeManager.currentTheme.textColor.opacity(isSelected ? 0 : 0.3), lineWidth: 1.5)
@@ -34,7 +34,7 @@ struct ThemeOptionButton: View {
 
                     Image(systemName: "checkmark")
                         .lummiScaledFont(size: 13, weight: .bold, relativeTo: .footnote)
-                        .foregroundColor(.white)
+                        .foregroundColor(AccentColors.selectionCheckmark)
                         .opacity(isSelected ? 1 : 0)
                 }
                 .frame(width: 26, height: 26)
@@ -51,11 +51,16 @@ struct ThemeOptionButton: View {
 #Preview {
     @Previewable @State var mode = AppearanceMode.dark
 
-    // Same three options as the Settings screen (Light, Dark, Auto). Local state only, so the saved theme stays untouched.
+    // Same options as the Settings screen. Local state only, so the saved theme stays untouched.
     HStack(spacing: 0) {
-        ThemeOptionButton(title: "Light", isSelected: mode == .light, accessibilityID: "PreviewLightThemeButton", action: { mode = .light })
-        ThemeOptionButton(title: "Dark", isSelected: mode == .dark, accessibilityID: "PreviewDarkThemeButton", action: { mode = .dark })
-        ThemeOptionButton(title: "Auto", isSelected: mode == .auto, accessibilityID: "PreviewAutoThemeButton", action: { mode = .auto })
+        ForEach(AppearanceMode.displayOrder, id: \.self) { option in
+            ThemeOptionButton(
+                title: option.title,
+                isSelected: mode == option,
+                accessibilityID: "Preview\(option.rawValue.capitalized)ThemeButton",
+                action: { mode = option }
+            )
+        }
     }
     .padding()
     .previewEnvironment()

@@ -169,6 +169,59 @@ struct NavigationStateTests {
         #expect(!Route.language.hidesTabBar)
     }
 
+    // MARK: - Tab bar
+
+    @Test func hidesTabBar_atARoot_isFalse() {
+        let state = makeState()
+        #expect(!state.hidesTabBar(for: .home))
+        #expect(!state.hidesTabBar(for: .insights))
+    }
+
+    @Test func hidesTabBar_onAPushedPage_isTrueOnlyForThatTab() {
+        var state = makeState()
+        state.navigate(to: .insights, now: now)
+        state.push(.allJoys)
+        #expect(state.hidesTabBar(for: .insights))
+        #expect(!state.hidesTabBar(for: .home))
+        #expect(!state.hidesTabBar(for: .settings))
+    }
+
+    @Test func hidesTabBar_usesTheTopmostPage() {
+        var state = makeState()
+        state.navigate(to: .insights, now: now)
+        state.push(.allJoys)
+        state.push(.language)
+        #expect(!state.hidesTabBar(for: .insights))
+    }
+
+    @Test func hidesTabBar_afterPoppingToTheRoot_isFalse() {
+        var state = makeState()
+        state.navigate(to: .insights, now: now)
+        state.push(.trends)
+        state.paths[.insights] = []
+        #expect(!state.hidesTabBar(for: .insights))
+    }
+
+    @Test func showsTabBar_isHiddenByTheKeyboardEvenAtARoot() {
+        let state = makeState()
+        #expect(state.showsTabBar(for: .home, isKeyboardVisible: false))
+        #expect(!state.showsTabBar(for: .home, isKeyboardVisible: true))
+    }
+
+    @Test func showsTabBar_isHiddenByAPushedPageEvenWithoutTheKeyboard() {
+        var state = makeState()
+        state.push(.record)
+        #expect(!state.showsTabBar(for: .home, isKeyboardVisible: false))
+        #expect(!state.showsTabBar(for: .home, isKeyboardVisible: true))
+    }
+
+    @Test func showsTabBar_stayedOnTheLanguagePage() {
+        var state = makeState()
+        state.navigate(to: .settings, now: now)
+        state.push(.language)
+        #expect(state.showsTabBar(for: .settings, isKeyboardVisible: false))
+    }
+
     // MARK: - Derived state
 
     @Test func isHomeActive_trueOnlyOnHomeAndToday() {
