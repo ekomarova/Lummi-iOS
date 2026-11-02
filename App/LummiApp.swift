@@ -136,7 +136,12 @@ struct LummiApp: App {
             .environment(\.isICloudSyncActive, isSyncActive)
             .dynamicTypeSize(DynamicTypeSize.lummiSupportedRange)
             .onChange(of: isICloudSyncEnabled) { _, newValue in
-                switch SyncToggle.apply(requested: newValue, isActive: isSyncActive, makeContainer: Self.makeModelContainer) {
+                let outcome = SyncToggle.apply(
+                    requested: newValue,
+                    isActive: isSyncActive,
+                    makeContainer: { try Self.makeModelContainer(isICloudSyncEnabled: $0) }
+                )
+                switch outcome {
                 case .unchanged:
                     // The flag change made below to revert a failed switch, or the one made by a launch fallback.
                     break
