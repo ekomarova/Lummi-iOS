@@ -22,7 +22,7 @@ struct HeaderView: View {
 
     var body: some View {
         Text(headerDateText)
-            .lummiScaledFont(size: 32, weight: .bold, relativeTo: .largeTitle)
+            .lummiScaledFont(size: 28, weight: .bold, relativeTo: .largeTitle)
             .foregroundColor(themeManager.currentTheme.textColor)
             .accessibilityIdentifier("HeaderDateText")
             .accessibilityAddTraits(.isHeader)

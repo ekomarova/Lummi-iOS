@@ -31,7 +31,7 @@ struct SettingsView: View {
         // The title's protected zone takes 12pt of the old 20pt gap (see `scrollHeaderBackground`), as on Insights.
         VStack(alignment: .leading, spacing: 8) {
             Text("Settings")
-                .lummiScaledFont(size: 32, weight: .bold, relativeTo: .largeTitle)
+                .lummiScaledFont(size: 28, weight: .bold, relativeTo: .largeTitle)
                 .foregroundColor(themeManager.currentTheme.textColor)
                 .padding(.top, 10)
                 .padding(.horizontal, 20)
