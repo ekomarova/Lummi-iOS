@@ -36,8 +36,9 @@ struct GlowCard: View {
         }
     }
 
-    // The card keeps the same bright colors and dark text in light and dark mode.
-    private let cardTheme = LightTheme()
+    // The caption is a little fainter than the value (about the same as the two stacked opacities it had before).
+    private static let captionOpacity = 0.6
+
     var value: String
     var subtitle: LocalizedStringResource
     var systemImage: String
@@ -58,20 +59,19 @@ struct GlowCard: View {
     private var subtitleLabel: some View {
         HStack(spacing: 4) {
             Image(systemName: systemImage)
-                .font(.system(size: 11, weight: .semibold))
-                .foregroundColor(cardTheme.textColor)
+                .font(.lummiFont(size: 11, weight: .semibold))
+                .foregroundColor(AccentColors.glowCardText)
 
             Text(subtitle)
                 .font(.lummiFont(size: 12))
-                .opacity(0.7)
-                .foregroundColor(cardTheme.textColor.opacity(0.85))
+                .foregroundColor(AccentColors.glowCardText.opacity(Self.captionOpacity))
         }
     }
 
     private var valueLabel: some View {
         Text(value)
             .font(.lummiFont(size: metrics.valueFontSize))
-            .foregroundColor(cardTheme.textColor)
+            .foregroundColor(AccentColors.glowCardText)
             .minimumScaleFactor(0.3)
             .lineLimit(1)
     }

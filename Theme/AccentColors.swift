@@ -20,6 +20,8 @@ enum AccentColors {
     static let streakGradient = [Color(red: 0.93, green: 0.42, blue: 0.22), Color(red: 0.94, green: 0.60, blue: 0.45)]
 
     static let joyfulHoursGradient = [Color(red: 0.35, green: 0.78, blue: 0.98), Color(red: 0.60, green: 0.88, blue: 0.99)]
+    // Text and icons on the highlight cards: dark in every theme, because the gradients stay bright in dark mode too.
+    static let glowCardText = Color.black
 
     static let trendsVolumeGradient = [Color(red: 0.75, green: 0.6, blue: 0.95), Color(red: 0.45, green: 0.25, blue: 0.75)]
     static let weekdayGradient = [Color(red: 0.55, green: 0.85, blue: 0.55), Color(red: 0.15, green: 0.55, blue: 0.35)]
