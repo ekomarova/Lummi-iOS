@@ -19,34 +19,12 @@ struct SelectedDayDetailView: View {
     // Only the selected day's entries are fetched, not the whole journal.
     @Query private var dayEntries: [JoyEntry]
 
-    @State private var activeEntryID: PersistentIdentifier?
-    @State private var editingText: String = ""
-    @State private var isEditing: Bool = false
-    @State private var saveAlert: SaveAlertKind?
+    @State private var session = EntryEditSession()
     @FocusState private var isTextFieldFocused: Bool
 
     init(selectedDate: Date) {
         self.selectedDate = selectedDate
         _dayEntries = Query(filter: JoyEntry.dayPredicate(for: selectedDate), sort: \JoyEntry.date)
-    }
-
-    enum SaveAlertKind: Equatable {
-        case editFailed
-        case deleteFailed
-
-        var title: LocalizedStringResource {
-            switch self {
-            case .editFailed: return "Failed to Save"
-            case .deleteFailed: return "Failed to Delete"
-            }
-        }
-
-        var message: LocalizedStringResource {
-            switch self {
-            case .editFailed: return "Your changes could not be saved. Please try again."
-            case .deleteFailed: return "Your record could not be deleted. Please try again."
-            }
-        }
     }
 
     private var today: Date { Date() }
@@ -58,7 +36,7 @@ struct SelectedDayDetailView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Color.black.opacity(0.001)
+                tapCatcher
                     .ignoresSafeArea()
                     .accessibilityIdentifier("GlobalDismissArea")
                     .onTapGesture { saveAndDismiss() }
@@ -69,8 +47,8 @@ struct SelectedDayDetailView: View {
                             // Like the first message of a chat: the question stays on top and the day's entries follow
                             // it, scrolling up together once there are many.
                             dayPromptView
-                                .blur(radius: activeEntryID != nil ? 6 : 0)
-                                .opacity(activeEntryID != nil ? 0.5 : 1.0)
+                                .blur(radius: session.hasActiveEntry ? 6 : 0)
+                                .opacity(session.hasActiveEntry ? 0.5 : 1.0)
                                 .padding(.top, 10)
 
                             if !dayEntries.isEmpty {
@@ -82,7 +60,7 @@ struct SelectedDayDetailView: View {
                         .frame(maxWidth: .infinity)
                         .frame(minHeight: geometry.size.height, alignment: .top)
                         .background(
-                            Color.black.opacity(0.001)
+                            tapCatcher
                                 .onTapGesture { saveAndDismiss() }
                         )
                     }
@@ -92,22 +70,22 @@ struct SelectedDayDetailView: View {
             }
         }
         .animation(.lummiSpringSlow, value: selectedDate)
-        .animation(.lummiSpring, value: activeEntryID)
-        .animation(.lummiSpring, value: isEditing)
+        .animation(.lummiSpring, value: session.activeEntryID)
+        .animation(.lummiSpring, value: session.isEditing)
         .onChange(of: selectedDate) { _, _ in saveAndDismiss() }
         .onDisappear { saveAndDismiss() }
         .alert(
-            Text(saveAlert?.title ?? ""),
+            Text(session.saveAlert?.title ?? ""),
             isPresented: Binding(
-                get: { saveAlert != nil },
+                get: { session.saveAlert != nil },
                 set: { isPresented in
-                    if !isPresented { dismissSaveAlert() }
+                    if !isPresented { withAnimation(.lummiSpring) { session.dismissSaveAlert() } }
                 }
             )
         ) {
-            Button("OK", role: .cancel) { dismissSaveAlert() }
+            Button("OK", role: .cancel) { withAnimation(.lummiSpring) { session.dismissSaveAlert() } }
         } message: {
-            Text(saveAlert?.message ?? "")
+            Text(session.saveAlert?.message ?? "")
         }
     }
 }
@@ -115,6 +93,11 @@ struct SelectedDayDetailView: View {
 // MARK: - Subviews
 
 private extension SelectedDayDetailView {
+
+    // An invisible area that takes taps, so a tap anywhere outside the entries leaves the edit mode.
+    var tapCatcher: some View {
+        Color.clear.contentShape(Rectangle())
+    }
 
     var dayPromptView: some View {
         NoteBubble(sharpCorner: .bottomLeading, style: .card) {
@@ -134,15 +117,15 @@ private extension SelectedDayDetailView {
 
     @ViewBuilder
     func noteCell(for entry: JoyEntry, index: Int, proxy: ScrollViewProxy) -> some View {
-        let isActive = (activeEntryID == entry.persistentModelID)
+        let isActive = session.isActive(entry.persistentModelID)
 
         VStack(alignment: .trailing, spacing: 8) {
-            if isActive && !isEditing {
+            if isActive && !session.isEditing {
                 noteCellActionButtons(entry: entry, proxy: proxy)
             }
 
             Group {
-                if isActive && isEditing {
+                if isActive && session.isEditing {
                     noteCellEditField
                 } else {
                     noteCellTextDisplay(entry: entry, index: index, isActive: isActive, proxy: proxy)
@@ -150,9 +133,9 @@ private extension SelectedDayDetailView {
             }
         }
         .id(entry.persistentModelID)
-        .blur(radius: (activeEntryID != nil && !isActive) ? 6 : 0)
-        .opacity((activeEntryID != nil && !isActive) ? 0.4 : 1.0)
-        .onChange(of: isEditing) { _, editing in
+        .blur(radius: (session.hasActiveEntry && !isActive) ? 6 : 0)
+        .opacity((session.hasActiveEntry && !isActive) ? 0.4 : 1.0)
+        .onChange(of: session.isEditing) { _, editing in
             if editing && isActive {
                 isTextFieldFocused = true
                 withAnimation(.lummiSpring) {
@@ -165,12 +148,11 @@ private extension SelectedDayDetailView {
     func noteCellActionButtons(entry: JoyEntry, proxy: ScrollViewProxy) -> some View {
         HStack(spacing: 12) {
             RecordActionButton(systemImage: "pencil", title: "Edit", accessibilityID: "EditRecordButton") {
-                editingText = entry.text
-                isEditing = true
+                session.beginEditing(text: entry.text)
             }
 
             RecordActionButton(systemImage: "trash", title: "Delete", accessibilityID: "DeleteRecordButton") {
-                deleteNote(entry)
+                deleteNote()
             }
         }
         .transition(.scale(scale: 0.8).combined(with: .opacity).combined(with: .move(edge: .bottom)))
@@ -178,12 +160,12 @@ private extension SelectedDayDetailView {
 
     var noteCellEditField: some View {
         NoteBubble(sharpCorner: .bottomTrailing, fillsWidth: true) {
-            TextField("", text: $editingText, axis: .vertical)
+            TextField("", text: Bindable(session).editingText, axis: .vertical)
                 .accessibilityLabel("Record text")
                 .accessibilityIdentifier("EditRecordTextField")
                 .focused($isTextFieldFocused)
                 .lummiScaledFont(size: 16, relativeTo: .callout)
-                .limitedLength($editingText)
+                .limitedLength(Bindable(session).editingText)
         }
     }
 
@@ -193,14 +175,13 @@ private extension SelectedDayDetailView {
                 .lummiScaledFont(size: 17, relativeTo: .body)
         }
         .onTapGesture {
-            if activeEntryID != nil { saveAndDismiss() }
+            if session.hasActiveEntry { saveAndDismiss() }
         }
         .onLongPressGesture {
-            if isSelectedToday && !isActive {
+            if session.canSelect(entry.persistentModelID, isToday: isSelectedToday) {
                 saveAndDismiss()
                 withAnimation(.lummiSpringQuick) {
-                    activeEntryID = entry.persistentModelID
-                    isEditing = false
+                    session.select(entry.persistentModelID)
                 }
                 withAnimation { proxy.scrollTo(entry.persistentModelID, anchor: .center) }
             }
@@ -213,46 +194,20 @@ private extension SelectedDayDetailView {
 
 private extension SelectedDayDetailView {
 
-    func deleteNote(_ entry: JoyEntry) {
-        do {
+    func deleteNote() {
+        session.delete { id in
+            guard let entry = dayEntries.first(where: { $0.persistentModelID == id }) else { return }
             try JoyEntryStore(context: modelContext).delete(entry)
-            withAnimation { activeEntryID = nil }
-        } catch {
-            withAnimation { saveAlert = .deleteFailed }
         }
     }
 
     func saveAndDismiss() {
         isTextFieldFocused = false
 
-        guard let id = activeEntryID else { return }
-
-        if isEditing {
-            if let entry = dayEntries.first(where: { $0.persistentModelID == id }) {
-                let originalText = entry.text
-                do {
-                    try JoyEntryStore(context: modelContext).applyEdit(to: entry, newText: editingText)
-                } catch {
-                    editingText = originalText
-                    withAnimation { saveAlert = .editFailed }
-                    return
-                }
-            }
-        }
-
         withAnimation(.lummiSpring) {
-            activeEntryID = nil
-            isEditing = false
-        }
-    }
-
-    func dismissSaveAlert() {
-        let kind = saveAlert
-        withAnimation(.easeInOut(duration: 0.25)) { saveAlert = nil }
-        if kind == .editFailed {
-            withAnimation(.lummiSpring) {
-                activeEntryID = nil
-                isEditing = false
+            session.saveAndDismiss { id, text in
+                guard let entry = dayEntries.first(where: { $0.persistentModelID == id }) else { return }
+                try JoyEntryStore(context: modelContext).applyEdit(to: entry, newText: text)
             }
         }
     }

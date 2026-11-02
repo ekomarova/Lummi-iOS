@@ -38,6 +38,7 @@
 		47BB00032FC0A5EA008B5D03 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB00042FC0A5EA008B5D04 /* StringExtension.swift */; };
 		47BB00052FC0A5EA008B5D05 /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB00062FC0A5EA008B5D06 /* ViewExtension.swift */; };
 		4A11C0DE0000000000000012 /* JoyEntryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11C0DE0000000000000002 /* JoyEntryStore.swift */; };
+		5E771A6000000000000000A4 /* EntryEditSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E771A6000000000000000A3 /* EntryEditSession.swift */; };
 		4A11C0DE0000000000000013 /* PreviewSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11C0DE0000000000000003 /* PreviewSupport.swift */; };
 		4A11C0DE00000000000000A2 /* NavigationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11C0DE00000000000000A1 /* NavigationState.swift */; };
 		4A11C0DE00000000000000B2 /* TabBarAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11C0DE00000000000000B1 /* TabBarAppearance.swift */; };
@@ -115,6 +116,7 @@
 		47BB00042FC0A5EA008B5D04 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		47BB00062FC0A5EA008B5D06 /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
 		4A11C0DE0000000000000002 /* JoyEntryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoyEntryStore.swift; sourceTree = "<group>"; };
+		5E771A6000000000000000A3 /* EntryEditSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryEditSession.swift; sourceTree = "<group>"; };
 		4A11C0DE0000000000000003 /* PreviewSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewSupport.swift; sourceTree = "<group>"; };
 		4A11C0DE00000000000000A1 /* NavigationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationState.swift; sourceTree = "<group>"; };
 		4A11C0DE00000000000000B1 /* TabBarAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarAppearance.swift; sourceTree = "<group>"; };
@@ -316,6 +318,7 @@
 				4766220C303F8AAC00041521 /* CloudKitSyncMonitor.swift */,
 				47981EAC2FA5473E005ADAB1 /* InsightsCalculator.swift */,
 				4A11C0DE0000000000000002 /* JoyEntryStore.swift */,
+				5E771A6000000000000000A3 /* EntryEditSession.swift */,
 				470FC4E6304A309F00F50A7A /* ModelContextSave.swift */,
 				A1B2C3D42FB0000201 /* ContainerBootstrap.swift */,
 				4A11C0DE00000000000000A1 /* NavigationState.swift */,
@@ -512,6 +515,7 @@
 				470FC4E7304A309F00F50A7A /* ModelContextSave.swift in Sources */,
 				A1B2C3D42FB0000202 /* ContainerBootstrap.swift in Sources */,
 				4A11C0DE0000000000000012 /* JoyEntryStore.swift in Sources */,
+				5E771A6000000000000000A4 /* EntryEditSession.swift in Sources */,
 				4A11C0DE00000000000000A2 /* NavigationState.swift in Sources */,
 				4A11C0DE00000000000000B2 /* TabBarAppearance.swift in Sources */,
 				5E771A6000000000000000A2 /* SettingsKey.swift in Sources */,
