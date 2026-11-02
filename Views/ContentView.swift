@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Combine
 import SwiftData
 
 // Root view: owns the theme and navigation, shows the top-level screens in a native tab bar. Each tab has its own
@@ -20,6 +21,12 @@ struct ContentView: View {
     @State private var navigation = NavigationState()
     @State private var isKeyboardVisible = false
 
+    // Listens to the system keyboard notifications: true when the keyboard is about to show, false when it is about to hide.
+    private static let keyboardVisibility = Publishers.Merge(
+        NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification).map { _ in true },
+        NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification).map { _ in false }
+    )
+
     var body: some View {
         tabs
         .errorAlert(
@@ -30,15 +37,9 @@ struct ContentView: View {
             syncError.wrappedValue = nil
         }
 
-        // Listen to system keyboard notifications
-        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+        .onReceive(Self.keyboardVisibility) { isVisible in
             withAnimation(.easeOut(duration: 0.2)) {
-                isKeyboardVisible = true
-            }
-        }
-        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
-            withAnimation(.easeOut(duration: 0.2)) {
-                isKeyboardVisible = false
+                isKeyboardVisible = isVisible
             }
         }
         .appTheme(themeManager)
@@ -135,8 +136,7 @@ private extension ContentView {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 .background(themeManager.currentTheme.backgroundColor.ignoresSafeArea())
                 .toolbar(.hidden, for: .navigationBar)
-                // Pushed pages and the keyboard hide the tab bar, as the floating toolbar used to do.
-                .toolbar(isTabBarVisible(for: tab) ? .visible : .hidden, for: .tabBar)
+                .toolbar(navigation.showsTabBar(for: tab, isKeyboardVisible: isKeyboardVisible) ? .visible : .hidden, for: .tabBar)
                 .navigationDestination(for: Route.self) { route in
                     destination(for: route)
                         .pageBackground()
@@ -148,10 +148,6 @@ private extension ContentView {
         }
         // The tab bar's tint would cascade into the pages, which keep the theme's text color.
         .tint(themeManager.currentTheme.textColor)
-    }
-
-    func isTabBarVisible(for tab: Screen) -> Bool {
-        !(navigation.paths[tab]?.last?.hidesTabBar ?? false) && !isKeyboardVisible
     }
 
     func pathBinding(for tab: Screen) -> Binding<[Route]> {
