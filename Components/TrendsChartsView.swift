@@ -168,20 +168,12 @@ struct TrendsChartsView: View {
         .accessibilityLabel(Text("Joys By Weekday"))
     }
 
-    // The volume chart's x-axis label: a bare day number within `.month`, or an explicitly localized,
-    // capitalized three-letter month abbreviation otherwise. Built by hand rather than via
-    // `AxisValueLabel(format:)` because Swift Charts' axis formatting does not reliably follow the app's
-    // in-app language selection from the environment, and because Foundation lowercases standalone month
-    // names in locales like Russian ("сент."), unlike English ("Sep") — hence `capitalizedFirstLetter`.
-    // Some locales' abbreviated forms also carry a trailing period and run longer
-    // than three letters (Russian's "нояб." vs. English's "Nov"); dropping the period and clipping to
-    // three letters keeps every month label the same width so none crowd or overlap their neighbors.
+    // The volume chart's x-axis label: a bare day number within `.month`, or a three-letter month abbreviation otherwise.
     private func volumeAxisLabel(for date: Date) -> String {
         if range == .month {
             return date.formatted(Date.FormatStyle(locale: locale).day())
         }
-        let month = date.formatted(Date.FormatStyle(locale: locale).month(.abbreviated))
-        return String(month.replacingOccurrences(of: ".", with: "").prefix(3)).capitalizedFirstLetter
+        return date.monthName(style: .threeLetters, locale: locale)
     }
 
     // A few faint gridlines with integer counts, so a bar's height reads as a number of joys rather than

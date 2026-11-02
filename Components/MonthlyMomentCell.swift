@@ -41,7 +41,7 @@ struct MonthlyMomentCell: View {
                 .lummiScaledFont(size: 18, relativeTo: .body)
                 .foregroundColor(themeManager.currentTheme.textColor)
 
-            Text(entry.date.format("MMM", locale: locale).capitalizedFirstLetter)
+            Text(entry.date.monthName(style: .abbreviated, locale: locale))
                 .lummiScaledFont(size: 11, relativeTo: .caption2)
                 .foregroundColor(themeManager.currentTheme.secondaryTextColor)
         }
