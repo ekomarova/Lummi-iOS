@@ -22,23 +22,15 @@ struct ContentView: View {
 
     var body: some View {
         tabs
-        .alert(
+        .errorAlert(
             "iCloud Sync Error",
-            isPresented: Binding(
-                get: { syncError.wrappedValue != nil },
-                set: { isPresented in
-                    if !isPresented { syncError.wrappedValue = nil }
-                }
-            )
+            message: Text(syncError.wrappedValue?.localizedDescription ?? ""),
+            isPresented: syncError.wrappedValue != nil
         ) {
-            Button("OK", role: .cancel) {
-                syncError.wrappedValue = nil
-            }
-        } message: {
-            Text(syncError.wrappedValue?.localizedDescription ?? "")
+            syncError.wrappedValue = nil
         }
 
-        // Listenen to system keyboard notifications
+        // Listen to system keyboard notifications
         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
             withAnimation(.easeOut(duration: 0.2)) {
                 isKeyboardVisible = true

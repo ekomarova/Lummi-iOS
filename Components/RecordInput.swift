@@ -83,11 +83,7 @@ struct RecordInput: View {
                 .accessibilityIdentifier("SaveRecordButton")
             }
         }
-        .alert("Failed to Save", isPresented: $showSaveAlert) {
-            Button("OK", role: .cancel) { }
-        } message: {
-            Text("Your moment could not be saved. Please try again.")
-        }
+        .errorAlert("Failed to Save", message: Text("Your moment could not be saved. Please try again."), isPresented: $showSaveAlert)
     }
 
     private func save() {
@@ -97,7 +93,7 @@ struct RecordInput: View {
             isTextEditorFocused = false
             dismiss()
         } catch {
-            withAnimation { showSaveAlert = true }
+            showSaveAlert = true
         }
     }
 }

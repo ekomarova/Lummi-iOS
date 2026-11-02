@@ -76,11 +76,7 @@ struct SettingsView: View {
         } message: {
             Text("This will permanently delete all your entries locally and in iCloud!")
         }
-        .alert("Failed to Delete", isPresented: $showClearDataFailedAlert) {
-            Button("OK", role: .cancel) { }
-        } message: {
-            Text("Your entries could not be deleted. Please try again.")
-        }
+        .errorAlert("Failed to Delete", message: Text("Your entries could not be deleted. Please try again."), isPresented: $showClearDataFailedAlert)
     }
 
     private var settingsSections: some View {
@@ -157,7 +153,7 @@ struct SettingsView: View {
 
                 Button(
                     action: {
-                        withAnimation { showClearDataAlert = true }
+                        showClearDataAlert = true
                     },
                     label: {
                         CapsuleRow {
@@ -179,7 +175,7 @@ struct SettingsView: View {
         do {
             try JoyEntryStore(context: modelContext).clearAll()
         } catch {
-            withAnimation { showClearDataFailedAlert = true }
+            showClearDataFailedAlert = true
         }
     }
 }

@@ -74,18 +74,12 @@ struct SelectedDayDetailView: View {
         .animation(.lummiSpring, value: session.isEditing)
         .onChange(of: selectedDate) { _, _ in saveAndDismiss() }
         .onDisappear { saveAndDismiss() }
-        .alert(
-            Text(session.saveAlert?.title ?? ""),
-            isPresented: Binding(
-                get: { session.saveAlert != nil },
-                set: { isPresented in
-                    if !isPresented { withAnimation(.lummiSpring) { session.dismissSaveAlert() } }
-                }
-            )
+        .errorAlert(
+            session.saveAlert?.title ?? "",
+            message: Text(session.saveAlert?.message ?? ""),
+            isPresented: session.saveAlert != nil
         ) {
-            Button("OK", role: .cancel) { withAnimation(.lummiSpring) { session.dismissSaveAlert() } }
-        } message: {
-            Text(session.saveAlert?.message ?? "")
+            withAnimation(.lummiSpring) { session.dismissSaveAlert() }
         }
     }
 }
