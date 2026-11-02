@@ -91,9 +91,9 @@ struct SelectedDayDetailView: View {
                 .ignoresSafeArea(.container, edges: .bottom)
             }
         }
-        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: selectedDate)
-        .animation(.spring(response: 0.35, dampingFraction: 0.8), value: activeEntryID)
-        .animation(.spring(response: 0.35, dampingFraction: 0.8), value: isEditing)
+        .animation(.lummiSpringSlow, value: selectedDate)
+        .animation(.lummiSpring, value: activeEntryID)
+        .animation(.lummiSpring, value: isEditing)
         .onChange(of: selectedDate) { _, _ in saveAndDismiss() }
         .onDisappear { saveAndDismiss() }
         .alert(
@@ -155,7 +155,7 @@ private extension SelectedDayDetailView {
         .onChange(of: isEditing) { _, editing in
             if editing && isActive {
                 isTextFieldFocused = true
-                withAnimation(.spring()) {
+                withAnimation(.lummiSpring) {
                     proxy.scrollTo(entry.persistentModelID, anchor: .center)
                 }
             }
@@ -201,7 +201,7 @@ private extension SelectedDayDetailView {
         .onLongPressGesture {
             if isSelectedToday && !isActive {
                 saveAndDismiss()
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                withAnimation(.lummiSpringQuick) {
                     activeEntryID = entry.persistentModelID
                     isEditing = false
                 }
@@ -243,7 +243,7 @@ private extension SelectedDayDetailView {
             }
         }
 
-        withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+        withAnimation(.lummiSpring) {
             activeEntryID = nil
             isEditing = false
         }
@@ -253,7 +253,7 @@ private extension SelectedDayDetailView {
         let kind = saveAlert
         withAnimation(.easeInOut(duration: 0.25)) { saveAlert = nil }
         if kind == .editFailed {
-            withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+            withAnimation(.lummiSpring) {
                 activeEntryID = nil
                 isEditing = false
             }

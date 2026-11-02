@@ -284,7 +284,7 @@ private struct SyncStatusBanner: View {
                 .transition(.opacity.combined(with: .scale(scale: 0.95, anchor: .top)))
             }
         }
-        .animation(.spring(), value: monitor.syncState)
+        .animation(.lummiSpring, value: monitor.syncState)
     }
 }
 
