@@ -26,7 +26,7 @@ struct ThemeOptionButton: View {
 
                 ZStack {
                     Circle()
-                        .fill(isSelected ? Color.blue : Color.clear)
+                        .fill(isSelected ? themeManager.currentTheme.selectedTabColor : Color.clear)
                         .overlay(
                             Circle()
                                 .stroke(themeManager.currentTheme.textColor.opacity(isSelected ? 0 : 0.3), lineWidth: 1.5)
@@ -34,7 +34,7 @@ struct ThemeOptionButton: View {
 
                     Image(systemName: "checkmark")
                         .lummiScaledFont(size: 13, weight: .bold, relativeTo: .footnote)
-                        .foregroundColor(.white)
+                        .foregroundColor(AccentColors.selectionCheckmark)
                         .opacity(isSelected ? 1 : 0)
                 }
                 .frame(width: 26, height: 26)

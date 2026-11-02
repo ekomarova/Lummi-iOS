@@ -142,7 +142,7 @@ struct TrendsChartsView: View {
                     if let date = value.as(Date.self) {
                         Text(volumeAxisLabel(for: date))
                             .font(.lummiFont(size: Self.axisLabelFontSize))
-                            .foregroundColor(themeManager.currentTheme.textColor.opacity(0.5))
+                            .foregroundColor(themeManager.currentTheme.secondaryTextColor)
                     }
                 }
             }
@@ -174,7 +174,7 @@ struct TrendsChartsView: View {
                     if let label = value.as(String.self) {
                         Text(label)
                             .font(.lummiFont(size: Self.axisLabelFontSize))
-                            .foregroundColor(themeManager.currentTheme.textColor.opacity(0.5))
+                            .foregroundColor(themeManager.currentTheme.secondaryTextColor)
                     }
                 }
             }
@@ -213,7 +213,7 @@ struct TrendsChartsView: View {
                 if let count = value.as(Int.self) {
                     Text("\(count)")
                         .font(.lummiFont(size: Self.axisLabelFontSize))
-                        .foregroundColor(themeManager.currentTheme.textColor.opacity(0.5))
+                        .foregroundColor(themeManager.currentTheme.secondaryTextColor)
                 }
             }
         }

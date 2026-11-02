@@ -26,6 +26,11 @@ enum AccentColors {
 
     static let destructive = Color(red: 0.95, green: 0.2, blue: 0.3)
     static let syncBannerBackground = Color.red.opacity(0.8)
+    // Icon and text on `syncBannerBackground`, white in every theme.
+    static let syncBannerForeground = Color.white
+
+    // The checkmark on the selected appearance option, which is filled with the theme's `selectedTabColor`.
+    static let selectionCheckmark = Color.white
 
     // Each tab page sets its own tint (the theme's text color), so switches set their own on color.
     static let toggleOn = Color.green

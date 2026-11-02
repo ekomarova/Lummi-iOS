@@ -267,11 +267,11 @@ private struct SyncStatusBanner: View {
                 HStack(alignment: .top, spacing: 12) {
                     Image(systemName: "exclamationmark.icloud.fill")
                         .lummiScaledFont(size: 20, relativeTo: .title3)
-                        .foregroundColor(.white)
+                        .foregroundColor(AccentColors.syncBannerForeground)
 
                     Text(syncMessage)
                         .lummiScaledFont(size: 14, relativeTo: .subheadline)
-                        .foregroundColor(.white)
+                        .foregroundColor(AccentColors.syncBannerForeground)
                         .multilineTextAlignment(.leading)
                         .accessibilityIdentifier("SyncBannerMessage")
                 }

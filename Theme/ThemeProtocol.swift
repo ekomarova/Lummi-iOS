@@ -25,3 +25,11 @@ protocol AppTheme {
     // Icon and label of the selected tab in the tab bar
     var selectedTabColor: Color { get }
 }
+
+extension AppTheme {
+    // Secondary text, such as axis labels and month captions.
+    var secondaryTextColor: Color { textColor.opacity(0.5) }
+
+    // Faint text, such as an empty-state hint.
+    var tertiaryTextColor: Color { textColor.opacity(0.3) }
+}

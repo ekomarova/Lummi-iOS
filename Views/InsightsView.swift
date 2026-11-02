@@ -253,7 +253,7 @@ struct MonthlyMomentCell: View {
 
             Text(entry.date.format("MMM", locale: locale).capitalizedFirstLetter)
                 .lummiScaledFont(size: 11, relativeTo: .caption2)
-                .foregroundColor(themeManager.currentTheme.textColor.opacity(0.5))
+                .foregroundColor(themeManager.currentTheme.secondaryTextColor)
         }
     }
 }
