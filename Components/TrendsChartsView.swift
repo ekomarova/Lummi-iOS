@@ -26,8 +26,13 @@ struct TrendsChartsView: View {
     // stays open across a month change (it then keeps showing the month it was opened for, like Insights).
     private let now: Date
 
-    // One size for every axis label of every chart.
-    private static let axisLabelFontSize: CGFloat = 10
+    private static let barCornerRadius: CGFloat = 3
+    private static let chartHeight: CGFloat = 160
+    // Shorter than `chartHeight` on iPhone, where the weekday chart sits below the volume chart. On iPad the two charts
+    // are side by side and share the height, so the cards line up.
+    private static var weekdayChartHeight: CGFloat { AdaptiveLayout.isPad ? chartHeight : 140 }
+    // In `.month`, the volume chart labels every fourth day, so the day numbers don't crowd each other.
+    private static let monthLabelStride = 4
 
     init(range: TrendsRange, year: Int) {
         let now = Date()
@@ -116,24 +121,22 @@ struct TrendsChartsView: View {
                 y: .value("Joys", point.count)
             )
             .foregroundStyle(trendsGradient)
-            .cornerRadius(3)
+            .cornerRadius(Self.barCornerRadius)
         }
         .chartXAxis {
             // `.stride` places one tick per actual bar (each calendar day or month), unlike `.automatic`,
             // which interpolates evenly spaced ticks across the continuous date range and can land more
             // than one tick inside the same bar, duplicating its label (e.g. two ticks reading "Aug").
-            AxisMarks(values: .stride(by: range.component, count: range == .month ? 4 : 1)) { value in
+            AxisMarks(values: .stride(by: range.component, count: range == .month ? Self.monthLabelStride : 1)) { value in
                 AxisValueLabel {
                     if let date = value.as(Date.self) {
-                        Text(volumeAxisLabel(for: date))
-                            .font(.lummiFont(size: Self.axisLabelFontSize))
-                            .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                        axisLabel(volumeAxisLabel(for: date))
                     }
                 }
             }
         }
         .chartYAxis { yAxisMarks }
-        .frame(height: 160)
+        .frame(height: Self.chartHeight)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(volumeChartTitle))
         .accessibilityValue(Text("\(stats.entryCount)"))
@@ -151,22 +154,19 @@ struct TrendsChartsView: View {
                 y: .value("Joys", item.count)
             )
             .foregroundStyle(weekdayGradient)
-            .cornerRadius(3)
+            .cornerRadius(Self.barCornerRadius)
         }
         .chartXAxis {
             AxisMarks { value in
                 AxisValueLabel {
                     if let label = value.as(String.self) {
-                        Text(label)
-                            .font(.lummiFont(size: Self.axisLabelFontSize))
-                            .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                        axisLabel(label)
                     }
                 }
             }
         }
         .chartYAxis { yAxisMarks }
-        // Matches the volume chart's height on iPad, so the two side-by-side cards line up.
-        .frame(height: AdaptiveLayout.isPad ? 160 : 140)
+        .frame(height: Self.weekdayChartHeight)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Joys By Weekday"))
     }
@@ -196,12 +196,18 @@ struct TrendsChartsView: View {
                 .foregroundStyle(themeManager.currentTheme.textColor.opacity(0.08))
             AxisValueLabel {
                 if let count = value.as(Int.self) {
-                    Text("\(count)")
-                        .font(.lummiFont(size: Self.axisLabelFontSize))
-                        .foregroundColor(themeManager.currentTheme.secondaryTextColor)
+                    axisLabel("\(count)")
                 }
             }
         }
+    }
+
+    // A tick label on a chart axis: one size and color for every axis label of every chart. Built here and not as a
+    // separate view, so it takes the theme from this view and not from the environment inside Swift Charts.
+    private func axisLabel(_ text: String) -> some View {
+        Text(text)
+            .font(.lummiFont(size: 10))
+            .foregroundColor(themeManager.currentTheme.secondaryTextColor)
     }
 
     private var trendsGradient: LinearGradient {
