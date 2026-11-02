@@ -16,11 +16,11 @@ struct JoysListView: View {
     // Only the entries of `range`, fetched by the store instead of filtered from the whole journal.
     @Query private var entries: [JoyEntry]
 
-    // `year` is ignored for `.month`, which always covers the current calendar month. `now` is taken once here,
-    // like `TrendsChartsView`, so the window is computed in this `init` and not in every parent `body`.
-    init(range: TrendsRange, year: Int) {
+    // `now` is taken once here, like `TrendsChartsView`, so the window is computed in this `init` and not in every
+    // parent `body`.
+    init(range: TrendsRange) {
         _entries = Query(
-            filter: JoyEntry.predicate(in: TrendsCalculator.dateRange(for: range, year: year, now: Date())),
+            filter: JoyEntry.predicate(in: TrendsCalculator.dateRange(for: range, now: Date())),
             sort: \JoyEntry.date,
             order: .reverse
         )
@@ -52,7 +52,7 @@ struct JoysListView: View {
 #if DEBUG
 #Preview {
     ScrollView {
-        JoysListView(range: .month, year: Calendar.current.component(.year, from: Date()))
+        JoysListView(range: .month)
     }
     .previewEnvironment()
 }

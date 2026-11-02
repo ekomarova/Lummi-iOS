@@ -10,7 +10,7 @@ import SwiftUI
 import SwiftData
 import Charts
 
-// Summary cards plus the "Joys By Date"/"Joys By Month" and "Joys By Weekday" charts for one range/year.
+// Summary cards plus the "Joys By Date"/"Joys By Month" and "Joys By Weekday" charts for one range.
 // Shared by `TrendsView`'s "Month" mode and `YearTrendsView`'s single-year page, so both stay pixel-identical.
 struct TrendsChartsView: View {
     @Environment(ThemeManager.self) private var themeManager
@@ -20,8 +20,6 @@ struct TrendsChartsView: View {
     @Query private var rangedEntries: [JoyEntry]
 
     let range: TrendsRange
-    // Ignored for `.month`, which always covers the current calendar month.
-    let year: Int
     // Taken once, so the fetched window and the calculation always agree on which month it is, even if the screen
     // stays open across a month change (it then keeps showing the month it was opened for, like Insights).
     private let now: Date
@@ -34,19 +32,18 @@ struct TrendsChartsView: View {
     // In `.month`, the volume chart labels every fourth day, so the day numbers don't crowd each other.
     private static let monthLabelStride = 4
 
-    init(range: TrendsRange, year: Int) {
+    init(range: TrendsRange) {
         let now = Date()
         self.range = range
-        self.year = year
         self.now = now
         _rangedEntries = Query(
-            filter: JoyEntry.predicate(in: TrendsCalculator.dateRange(for: range, year: year, now: now)),
+            filter: JoyEntry.predicate(in: TrendsCalculator.dateRange(for: range, now: now)),
             sort: \JoyEntry.date
         )
     }
 
     private var stats: TrendsPerformanceStats {
-        TrendsPerformanceStats.make(from: rangedEntries, range: range, year: year, locale: locale, now: now)
+        TrendsPerformanceStats.make(from: rangedEntries, range: range, locale: locale, now: now)
     }
 
     var body: some View {
@@ -245,7 +242,7 @@ struct TrendsSection<Content: View>: View {
 #if DEBUG
 #Preview {
     ScrollView {
-        TrendsChartsView(range: .month, year: Calendar.current.component(.year, from: Date()))
+        TrendsChartsView(range: .month)
             .padding(20)
     }
     .previewEnvironment()

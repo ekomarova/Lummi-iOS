@@ -14,7 +14,7 @@ struct YearTrendsView: View {
 
     var body: some View {
         ScrollView(showsIndicators: false) {
-            TrendsChartsView(range: .year, year: year)
+            TrendsChartsView(range: .year(year))
                 .padding(.horizontal, 20)
                 .padding(.top, PageSpacing.topBelowControl)
                 .padding(.bottom, 30)

@@ -9,15 +9,20 @@
 import Foundation
 
 // Time window for the Trends screen. `.month` plots one bar per day of the current calendar month;
-// `.year` plots one bar per month of a chosen calendar year (browsable, not necessarily this year).
-enum TrendsRange: Equatable {
+// `.year` plots one bar per month of the given calendar year (browsable, not necessarily this year).
+enum TrendsRange: nonisolated Equatable {
     case month
-    case year
+    case year(Int)
 
     // The bar chart's granularity: individual days only make sense once the window has narrowed to a month.
     // Also used directly by the chart view to group `BarMark`s by the same unit.
     var component: Calendar.Component {
         self == .month ? .day : .month
+    }
+
+    var isYear: Bool {
+        if case .year = self { return true }
+        return false
     }
 }
 
@@ -42,16 +47,15 @@ struct TrendsCalculator {
 
     // MARK: - Range
 
-    // The entries that fall inside `range`. For `.year`, `year` is whichever calendar year the browser is
-    // currently showing (not necessarily the current one); a `year` later than `now`'s returns nothing.
+    // The entries that fall inside `range`. A `.year` is whichever calendar year the browser is currently
+    // showing (not necessarily the current one); one later than `now`'s year returns nothing.
     static func entries(
         _ entries: [JoyEntry],
         in range: TrendsRange,
-        year: Int,
         now: Date = Date(),
         calendar: Calendar = .current
     ) -> [JoyEntry] {
-        guard let bounds = bounds(for: range, year: year, now: now, calendar: calendar) else { return [] }
+        guard let bounds = bounds(for: range, now: now, calendar: calendar) else { return [] }
         return entries.filter { $0.date >= bounds.start && $0.date < bounds.end }
     }
 
@@ -59,11 +63,10 @@ struct TrendsCalculator {
     // entries instead of the whole journal. Nil when the window cannot be resolved, or a `.year` lies in the future.
     static func dateRange(
         for range: TrendsRange,
-        year: Int,
         now: Date = Date(),
         calendar: Calendar = .current
     ) -> Range<Date>? {
-        bounds(for: range, year: year, now: now, calendar: calendar).map { $0.start..<$0.end }
+        bounds(for: range, now: now, calendar: calendar).map { $0.start..<$0.end }
     }
 
     // MARK: - Chart data
@@ -75,11 +78,10 @@ struct TrendsCalculator {
     static func dataPoints(
         for entries: [JoyEntry],
         range: TrendsRange,
-        year: Int,
         now: Date = Date(),
         calendar: Calendar = .current
     ) -> [TrendsDataPoint] {
-        guard let bounds = bounds(for: range, year: year, now: now, calendar: calendar) else { return [] }
+        guard let bounds = bounds(for: range, now: now, calendar: calendar) else { return [] }
         let component = range.component
 
         var counts = [Date: Int]()
@@ -128,7 +130,6 @@ struct TrendsCalculator {
 
     private static func bounds(
         for range: TrendsRange,
-        year: Int,
         now: Date,
         calendar: Calendar
     ) -> (start: Date, end: Date)? {
@@ -136,7 +137,7 @@ struct TrendsCalculator {
         case .month:
             guard let interval = calendar.dateInterval(of: .month, for: now) else { return nil }
             return (interval.start, interval.end) // always the full month, 1st through the last day
-        case .year:
+        case .year(let year):
             guard let yearStart = calendar.date(from: DateComponents(year: year, month: 1, day: 1)),
                   let yearInterval = calendar.dateInterval(of: .year, for: yearStart) else { return nil }
             let currentYear = calendar.component(.year, from: now)

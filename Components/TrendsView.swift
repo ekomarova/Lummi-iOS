@@ -48,8 +48,7 @@ struct TrendsView: View {
                 switch selectedTab {
                 case .month:
                     if hasEntriesThisMonth {
-                        // `year` is unused by `.month`, which always covers the current calendar month.
-                        TrendsChartsView(range: .month, year: Calendar.current.component(.year, from: Date()))
+                        TrendsChartsView(range: .month)
                     } else {
                         NoEntriesView()
                     }

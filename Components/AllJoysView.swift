@@ -31,8 +31,7 @@ struct AllJoysView: View {
 
                 switch selectedTab {
                 case .month:
-                    // The calendar year is unused by `.month`, which always covers the current calendar month.
-                    JoysListView(range: .month, year: Calendar.current.component(.year, from: Date()))
+                    JoysListView(range: .month)
                 case .allTime:
                     if oldestEntries.isEmpty {
                         NoEntriesView()
