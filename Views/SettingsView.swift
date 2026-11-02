@@ -225,4 +225,12 @@ private struct SyncStatusBanner: View {
         .dynamicTypeSize(DynamicTypeSize.lummiSupportedRange.upperBound)
         .previewEnvironment()
 }
+
+#Preview("Sync banner") {
+    let monitor = CloudKitSyncMonitor()
+    monitor.syncState = .storageFull
+    return SyncStatusBanner(monitor: monitor)
+        .padding(20)
+        .previewEnvironment()
+}
 #endif

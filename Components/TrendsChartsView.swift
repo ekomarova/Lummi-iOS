@@ -250,4 +250,13 @@ struct TrendsSection<Content: View>: View {
     }
     .previewEnvironment()
 }
+
+#Preview("Section") {
+    TrendsSection(title: "Joys By Weekday") {
+        Text("Chart")
+            .frame(maxWidth: .infinity)
+    }
+    .padding(20)
+    .previewEnvironment()
+}
 #endif
