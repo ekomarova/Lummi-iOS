@@ -11,6 +11,7 @@
 		2EAF024321A84B0DA72034CB /* CardOpacity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33595B21D97D40CAAE9F5BE2 /* CardOpacity.swift */; };
 		5E771A6000000000000000B2 /* PageSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E771A6000000000000000B1 /* PageSpacing.swift */; };
 		3994D6B50DC44AD6A11FE59F /* ThemeOptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */; };
+		5E771A6000000000000000E2 /* LanguageSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E771A6000000000000000E1 /* LanguageSelectionView.swift */; };
 		5E771A6000000000000000D2 /* MonthlyMomentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E771A6000000000000000D1 /* MonthlyMomentCell.swift */; };
 		5E771A6000000000000000C2 /* GlowCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E771A6000000000000000C1 /* GlowCard.swift */; };
 		43EC30172F8B381CFABEA13E /* NoteBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = A974D4023557EF74B1627FA8 /* NoteBubble.swift */; };
@@ -44,6 +45,7 @@
 		53C153FCE78D3225B6E08E12 /* TrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAFE68702064D16D0CCEE2C8 /* TrendsView.swift */; };
 		5898100AD50D595B6311DD1E /* YearTrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E6B030D5CB8FB51A8D0675 /* YearTrendsView.swift */; };
 		5E771A6000000000000000A2 /* SettingsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E771A6000000000000000A1 /* SettingsKey.swift */; };
+		5E771A6000000000000000F2 /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E771A6000000000000000F1 /* AppLanguage.swift */; };
 		5E7A1C0D9B3F4A6E8D2C1B07 /* CloudKitSyncEventReaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E7A1C0D9B3F4A6E8D2C1B06 /* CloudKitSyncEventReaction.swift */; };
 		649AF115F3264D01730EF068 /* AnimationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ECC769E0A0AE871A7A1D999 /* AnimationExtension.swift */; };
 		987BD99D3540D75ECB4D3CB5 /* TrendsCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D085C748510EC29FCEA60BA0 /* TrendsCalculator.swift */; };
@@ -118,6 +120,7 @@
 		4A11C0DE00000000000000B1 /* TabBarAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarAppearance.swift; sourceTree = "<group>"; };
 		4ECC769E0A0AE871A7A1D999 /* AnimationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationExtension.swift; sourceTree = "<group>"; };
 		5E771A6000000000000000A1 /* SettingsKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsKey.swift; sourceTree = "<group>"; };
+		5E771A6000000000000000F1 /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLanguage.swift; sourceTree = "<group>"; };
 		5E7A1C0D9B3F4A6E8D2C1B06 /* CloudKitSyncEventReaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitSyncEventReaction.swift; sourceTree = "<group>"; };
 		6AFF479DE52BF9FBBE26AAF9 /* AccentColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccentColors.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000002 /* RecordActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordActionButton.swift; sourceTree = "<group>"; };
@@ -140,6 +143,7 @@
 		D085C748510EC29FCEA60BA0 /* TrendsCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsCalculator.swift; sourceTree = "<group>"; };
 		DAFE68702064D16D0CCEE2C8 /* TrendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsView.swift; sourceTree = "<group>"; };
 		E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeOptionButton.swift; sourceTree = "<group>"; };
+		5E771A6000000000000000E1 /* LanguageSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSelectionView.swift; sourceTree = "<group>"; };
 		5E771A6000000000000000D1 /* MonthlyMomentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyMomentCell.swift; sourceTree = "<group>"; };
 		5E771A6000000000000000C1 /* GlowCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlowCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -267,6 +271,7 @@
 				A1B2C3D40000000000000002 /* RecordActionButton.swift */,
 				473B045A2F9BB79B00C482FA /* RecordInput.swift */,
 				E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */,
+				5E771A6000000000000000E1 /* LanguageSelectionView.swift */,
 				5E771A6000000000000000D1 /* MonthlyMomentCell.swift */,
 				5E771A6000000000000000C1 /* GlowCard.swift */,
 				A974D4023557EF74B1627FA8 /* NoteBubble.swift */,
@@ -316,6 +321,7 @@
 				4A11C0DE00000000000000A1 /* NavigationState.swift */,
 				4A11C0DE00000000000000B1 /* TabBarAppearance.swift */,
 				5E771A6000000000000000A1 /* SettingsKey.swift */,
+				5E771A6000000000000000F1 /* AppLanguage.swift */,
 				D085C748510EC29FCEA60BA0 /* TrendsCalculator.swift */,
 				A1B2C3D40000000000000F10 /* TrendsPerformanceStats.swift */,
 			);
@@ -509,11 +515,13 @@
 				4A11C0DE00000000000000A2 /* NavigationState.swift in Sources */,
 				4A11C0DE00000000000000B2 /* TabBarAppearance.swift in Sources */,
 				5E771A6000000000000000A2 /* SettingsKey.swift in Sources */,
+				5E771A6000000000000000F2 /* AppLanguage.swift in Sources */,
 				473B04552F9BB2F400C482FA /* ThemeManager.swift in Sources */,
 				2EAF024321A84B0DA72034CB /* CardOpacity.swift in Sources */,
 				5E771A6000000000000000B2 /* PageSpacing.swift in Sources */,
 				24DEA4823F27415591ADBA5F /* AllJoysView.swift in Sources */,
 				3994D6B50DC44AD6A11FE59F /* ThemeOptionButton.swift in Sources */,
+				5E771A6000000000000000E2 /* LanguageSelectionView.swift in Sources */,
 				5E771A6000000000000000D2 /* MonthlyMomentCell.swift in Sources */,
 				5E771A6000000000000000C2 /* GlowCard.swift in Sources */,
 				E4FDF21B7DE4405C342C1EA7 /* CalendarExtension.swift in Sources */,

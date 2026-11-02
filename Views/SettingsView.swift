@@ -9,23 +9,7 @@
 import SwiftUI
 import SwiftData
 
-// Settings screen (theme, language, iCloud sync, clearing data) and the supported app languages.
-enum AppLanguage: String, CaseIterable, Identifiable {
-    case english = "en"
-    case russian = "ru"
-    case german = "de"
-    
-    var id: String { self.rawValue }
-    
-    var displayName: LocalizedStringResource {
-        switch self {
-        case .english: return "English"
-        case .russian: return "Russian"
-        case .german: return "German"
-        }
-    }
-}
-
+// Settings screen: theme, language, iCloud sync and clearing data.
 struct SettingsView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.modelContext) private var modelContext
@@ -106,26 +90,14 @@ struct SettingsView: View {
                 SectionHeader(title: "Appearance")
 
                 HStack(spacing: 0) {
-                    ThemeOptionButton(
-                        title: "Light",
-                        isSelected: themeManager.mode == .light,
-                        accessibilityID: "LightThemeButton",
-                        action: { themeManager.mode = .light }
-                    )
-
-                    ThemeOptionButton(
-                        title: "Dark",
-                        isSelected: themeManager.mode == .dark,
-                        accessibilityID: "DarkThemeButton",
-                        action: { themeManager.mode = .dark }
-                    )
-
-                    ThemeOptionButton(
-                        title: "Auto",
-                        isSelected: themeManager.mode == .auto,
-                        accessibilityID: "AutoThemeButton",
-                        action: { themeManager.mode = .auto }
-                    )
+                    ForEach(AppearanceMode.displayOrder, id: \.self) { mode in
+                        ThemeOptionButton(
+                            title: mode.title,
+                            isSelected: themeManager.mode == mode,
+                            accessibilityID: "\(mode.rawValue.capitalized)ThemeButton",
+                            action: { themeManager.mode = mode }
+                        )
+                    }
                 }
                 .padding(.vertical, 20)
                 .solidCard(RoundedRectangle(cornerRadius: 20))
@@ -212,52 +184,6 @@ struct SettingsView: View {
     }
 }
 
-// Pushed onto the Settings tab's stack, so the system back button and swipe-back gesture work on it.
-struct LanguageSelectionView: View {
-    @Environment(ThemeManager.self) private var themeManager
-    @Environment(\.dismiss) private var dismiss
-    @AppStorage(SettingsKey.appLanguage) private var selectedLanguage: AppLanguage = .english
-
-    var body: some View {
-        VStack(spacing: 12) {
-            ForEach(AppLanguage.allCases) { language in
-                Button(
-                    action: {
-                        selectedLanguage = language
-                        dismiss()
-                    },
-                    label: {
-                        HStack {
-                            Text(language.displayName)
-                                .lummiScaledFont(size: 17, relativeTo: .body)
-                                .foregroundColor(themeManager.currentTheme.textColor)
-
-                            Spacer()
-
-                            if language == selectedLanguage {
-                                Image(systemName: "checkmark")
-                                    .lummiScaledFont(size: 15, weight: .bold, relativeTo: .subheadline)
-                                    .foregroundColor(themeManager.currentTheme.textColor)
-                            }
-                        }
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 16)
-                        .solidCard(RoundedRectangle(cornerRadius: 16))
-                    }
-                )
-                .buttonStyle(.plain)
-                .accessibilityIdentifier("LanguageOption_\(language.rawValue)")
-            }
-
-            Spacer()
-        }
-        .padding(.top, PageSpacing.topBelowList)
-        .padding(.horizontal, 20)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .lummiNavigationTitle("Language")
-    }
-}
-
 private struct SyncStatusBanner: View {
     let monitor: CloudKitSyncMonitor
 
@@ -298,12 +224,5 @@ private struct SyncStatusBanner: View {
     SettingsView(onNavigate: { _ in })
         .dynamicTypeSize(DynamicTypeSize.lummiSupportedRange.upperBound)
         .previewEnvironment()
-}
-
-#Preview {
-    NavigationStack {
-        LanguageSelectionView()
-    }
-    .previewEnvironment()
 }
 #endif

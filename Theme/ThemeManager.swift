@@ -14,6 +14,17 @@ enum AppearanceMode: String, CaseIterable {
     case auto
     case light
     case dark
+
+    // The order of the options in Settings.
+    static let displayOrder: [AppearanceMode] = [.light, .dark, .auto]
+
+    var title: LocalizedStringResource {
+        switch self {
+        case .auto: return "Auto"
+        case .light: return "Light"
+        case .dark: return "Dark"
+        }
+    }
 }
 
 // Holds the current theme and persists the appearance choice (light, dark or auto) in UserDefaults.

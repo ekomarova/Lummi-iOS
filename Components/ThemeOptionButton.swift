@@ -51,11 +51,16 @@ struct ThemeOptionButton: View {
 #Preview {
     @Previewable @State var mode = AppearanceMode.dark
 
-    // Same three options as the Settings screen (Light, Dark, Auto). Local state only, so the saved theme stays untouched.
+    // Same options as the Settings screen. Local state only, so the saved theme stays untouched.
     HStack(spacing: 0) {
-        ThemeOptionButton(title: "Light", isSelected: mode == .light, accessibilityID: "PreviewLightThemeButton", action: { mode = .light })
-        ThemeOptionButton(title: "Dark", isSelected: mode == .dark, accessibilityID: "PreviewDarkThemeButton", action: { mode = .dark })
-        ThemeOptionButton(title: "Auto", isSelected: mode == .auto, accessibilityID: "PreviewAutoThemeButton", action: { mode = .auto })
+        ForEach(AppearanceMode.displayOrder, id: \.self) { option in
+            ThemeOptionButton(
+                title: option.title,
+                isSelected: mode == option,
+                accessibilityID: "Preview\(option.rawValue.capitalized)ThemeButton",
+                action: { mode = option }
+            )
+        }
     }
     .padding()
     .previewEnvironment()
