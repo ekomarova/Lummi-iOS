@@ -42,6 +42,11 @@ extension View {
         modifier(ScrollHeaderBackgroundModifier(alignment: alignment, extraHeight: extraHeight))
     }
 
+    // Keeps `text` within `RecordInputRules.maxLength`: anything typed or pasted past the limit is cut off.
+    func limitedLength(_ text: Binding<String>) -> some View {
+        modifier(LimitedLengthModifier(text: text))
+    }
+
     // Applies the solid card look: an opaque fill in the theme's card color, with no stroke and no glass.
     func solidCard<S: Shape>(_ shape: S) -> some View {
         modifier(SolidCardModifier(shape: shape))
@@ -109,6 +114,18 @@ private struct ScrollHeaderBackgroundModifier: ViewModifier {
     }
 }
 
+// Backs `limitedLength`.
+private struct LimitedLengthModifier: ViewModifier {
+    @Binding var text: String
+
+    func body(content: Content) -> some View {
+        content.onChange(of: text) { _, newValue in
+            let clamped = RecordInputRules.clamped(newValue)
+            if clamped != newValue { text = clamped }
+        }
+    }
+}
+
 // Backs `solidCard`.
 private struct SolidCardModifier<S: Shape>: ViewModifier {
     @Environment(ThemeManager.self) private var themeManager
@@ -154,6 +171,26 @@ private struct CardBackgroundPreview: View {
         }
         .padding()
     }
+}
+
+private struct LimitedLengthPreview: View {
+    @State private var text = String(repeating: "a", count: RecordInputRules.maxLength - 5)
+
+    var body: some View {
+        VStack(alignment: .trailing) {
+            TextField("", text: $text, axis: .vertical)
+                .limitedLength($text)
+                .padding()
+                .cardBackground(RoundedRectangle(cornerRadius: 20))
+            Text("\(text.count)/\(RecordInputRules.maxLength)")
+        }
+        .padding()
+    }
+}
+
+#Preview("Limited length") {
+    LimitedLengthPreview()
+        .previewEnvironment(isDark: false)
 }
 
 #Preview("Light") {

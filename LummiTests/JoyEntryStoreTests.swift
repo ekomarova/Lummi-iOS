@@ -42,6 +42,18 @@ struct JoyEntryStoreTests {
         #expect(RecordInputRules.clamped(text).count == 280)
     }
 
+    @Test func isNearLimit_belowThreshold_isFalse() {
+        let limit = RecordInputRules.maxLength - RecordInputRules.warningThreshold
+        #expect(!RecordInputRules.isNearLimit(""))
+        #expect(!RecordInputRules.isNearLimit(String(repeating: "a", count: limit)))
+    }
+
+    @Test func isNearLimit_pastThresholdAndAtLimit_isTrue() {
+        let limit = RecordInputRules.maxLength - RecordInputRules.warningThreshold
+        #expect(RecordInputRules.isNearLimit(String(repeating: "a", count: limit + 1)))
+        #expect(RecordInputRules.isNearLimit(String(repeating: "a", count: RecordInputRules.maxLength)))
+    }
+
     @Test func canSave_emptyAndWhitespaceOnly_isFalse() {
         #expect(!RecordInputRules.canSave(""))
         #expect(!RecordInputRules.canSave("  \n\t "))
