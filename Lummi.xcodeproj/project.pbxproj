@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		24DEA4823F27415591ADBA5F /* AllJoysView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A75A501776D443E1961E0695 /* AllJoysView.swift */; };
 		2EAF024321A84B0DA72034CB /* CardOpacity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33595B21D97D40CAAE9F5BE2 /* CardOpacity.swift */; };
+		5E771A6000000000000000B2 /* PageSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E771A6000000000000000B1 /* PageSpacing.swift */; };
 		3994D6B50DC44AD6A11FE59F /* ThemeOptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32DFEC8CDD341D9A06C58AE /* ThemeOptionButton.swift */; };
 		43EC30172F8B381CFABEA13E /* NoteBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = A974D4023557EF74B1627FA8 /* NoteBubble.swift */; };
 		470FC4E7304A309F00F50A7A /* ModelContextSave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470FC4E6304A309F00F50A7A /* ModelContextSave.swift */; };
@@ -79,6 +80,7 @@
 
 /* Begin PBXFileReference section */
 		33595B21D97D40CAAE9F5BE2 /* CardOpacity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardOpacity.swift; sourceTree = "<group>"; };
+		5E771A6000000000000000B1 /* PageSpacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSpacing.swift; sourceTree = "<group>"; };
 		470FC4E6304A309F00F50A7A /* ModelContextSave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContextSave.swift; sourceTree = "<group>"; };
 		4714236E2F9CFAA000C1D681 /* SelectedDayDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedDayDetailView.swift; sourceTree = "<group>"; };
 		4726FFA72F9DA1FF008B5D3C /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
@@ -280,6 +282,7 @@
 				473B04532F9BB22F00C482FA /* AppThemes.swift */,
 				6AFF479DE52BF9FBBE26AAF9 /* AccentColors.swift */,
 				33595B21D97D40CAAE9F5BE2 /* CardOpacity.swift */,
+				5E771A6000000000000000B1 /* PageSpacing.swift */,
 				473B04542F9BB24E00C482FA /* ThemeManager.swift */,
 				473B04522F9BB22000C482FA /* ThemeProtocol.swift */,
 			);
@@ -502,6 +505,7 @@
 				5E771A6000000000000000A2 /* SettingsKey.swift in Sources */,
 				473B04552F9BB2F400C482FA /* ThemeManager.swift in Sources */,
 				2EAF024321A84B0DA72034CB /* CardOpacity.swift in Sources */,
+				5E771A6000000000000000B2 /* PageSpacing.swift in Sources */,
 				24DEA4823F27415591ADBA5F /* AllJoysView.swift in Sources */,
 				3994D6B50DC44AD6A11FE59F /* ThemeOptionButton.swift in Sources */,
 				E4FDF21B7DE4405C342C1EA7 /* CalendarExtension.swift in Sources */,

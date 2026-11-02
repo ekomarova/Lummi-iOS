@@ -16,7 +16,7 @@ struct YearTrendsView: View {
         ScrollView(showsIndicators: false) {
             TrendsChartsView(range: .year, year: year)
                 .padding(.horizontal, 20)
-                .padding(.top, 13)
+                .padding(.top, PageSpacing.topBelowControl)
                 .padding(.bottom, 30)
         }
         .ignoresSafeArea(.container, edges: .bottom)

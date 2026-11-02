@@ -251,7 +251,7 @@ struct LanguageSelectionView: View {
 
             Spacer()
         }
-        .padding(.top, 18)
+        .padding(.top, PageSpacing.topBelowList)
         .padding(.horizontal, 20)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .lummiNavigationTitle("Language")

@@ -15,7 +15,7 @@ struct YearJoysView: View {
     var body: some View {
         ScrollView(showsIndicators: false) {
             JoysListView(range: .year, year: year)
-                .padding(.top, 18)
+                .padding(.top, PageSpacing.topBelowList)
                 .padding(.horizontal, 20)
                 .padding(.bottom, 30)
         }

@@ -62,7 +62,7 @@ struct TrendsView: View {
                 }
             }
             .padding(.horizontal, 20)
-            .padding(.top, 13)
+            .padding(.top, PageSpacing.topBelowControl)
             .padding(.bottom, 30)
         }
         .ignoresSafeArea(.container, edges: .bottom)
