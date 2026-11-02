@@ -133,14 +133,17 @@ struct LummiApp: App {
                 }
             }
             .environment(\.locale, Locale(identifier: selectedLanguage.rawValue))
+            .environment(\.isICloudSyncActive, isSyncActive)
             .dynamicTypeSize(DynamicTypeSize.lummiSupportedRange)
             .onChange(of: isICloudSyncEnabled) { _, newValue in
-                // Skips the flag change made below to revert a failed switch, and the one made by a launch fallback.
-                guard newValue != isSyncActive else { return }
-                do {
-                    container = try Self.makeModelContainer(isICloudSyncEnabled: newValue)
+                switch SyncToggle.apply(requested: newValue, isActive: isSyncActive, makeContainer: Self.makeModelContainer) {
+                case .unchanged:
+                    // The flag change made below to revert a failed switch, or the one made by a launch fallback.
+                    break
+                case .switched(let newContainer):
+                    container = newContainer
                     isSyncActive = newValue
-                } catch {
+                case .failed(let error):
                     // Revert the toggle so AppStorage stays consistent with the actual container state
                     isICloudSyncEnabled = isSyncActive
                     containerError = error
