@@ -3,6 +3,7 @@ import SwiftUI
 @testable import Lummi
 
 // Serialized to avoid UserDefaults race conditions between tests
+@MainActor
 @Suite(.serialized)
 struct ThemeManagerTests {
 

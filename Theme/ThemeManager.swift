@@ -28,8 +28,9 @@ enum AppearanceMode: String, CaseIterable {
 }
 
 // Holds the current theme and persists the appearance choice (light, dark or auto) in UserDefaults.
+@MainActor
 @Observable
-class ThemeManager {
+final class ThemeManager {
     private static let modeKey = "appearanceMode"
     // Written by versions that only had the light and dark options.
     private static let legacyIsDarkKey = "isDarkMode"
