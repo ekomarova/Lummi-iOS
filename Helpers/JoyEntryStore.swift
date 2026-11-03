@@ -23,6 +23,11 @@ enum RecordInputRules {
         text.count > maxLength - warningThreshold
     }
 
+    // The text as stored: cut to `maxLength`, then stripped of surrounding whitespace and newlines.
+    static func normalized(_ text: String) -> String {
+        clamped(text).trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
     static func canSave(_ text: String) -> Bool {
         !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
@@ -45,8 +50,9 @@ struct JoyEntryStore {
     }
 
     func add(text: String, date: Date) throws {
-        guard RecordInputRules.canSave(text) else { return }
-        context.insert(JoyEntry(text: text, date: date))
+        let normalized = RecordInputRules.normalized(text)
+        guard !normalized.isEmpty else { return }
+        context.insert(JoyEntry(text: normalized, date: date))
         try commit()
     }
 
@@ -58,7 +64,7 @@ struct JoyEntryStore {
     // Saves trimmed `newText`, cut to the same length limit as a new entry; an empty result deletes the entry.
     @discardableResult
     func applyEdit(to entry: JoyEntry, newText: String) throws -> EditOutcome {
-        let trimmed = RecordInputRules.clamped(newText).trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmed = RecordInputRules.normalized(newText)
         let originalText = entry.text
         let outcome: EditOutcome
         if trimmed.isEmpty {

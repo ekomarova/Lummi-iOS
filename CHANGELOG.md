@@ -18,6 +18,7 @@ All notable changes to the project will be documented in this file.
 
 ### Fixed
 - Started the iCloud sync monitor and showed its banner in `Settings` only after the sync switch is confirmed [#67](https://github.com/ekomarova/Lummi-iOS/pull/67)
+- Trimmed surrounding spaces and line breaks and applied the 280-character limit when saving/editing a joy [#68](https://github.com/ekomarova/Lummi-iOS/pull/68)
 
 ## [1.2.1] - 2026-10-09
 ### Fixed
