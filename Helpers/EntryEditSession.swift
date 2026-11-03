@@ -33,6 +33,7 @@ enum SaveAlertKind: Equatable {
 // The edit flow of one day's page: which entry is selected, whether it is being edited, the text in the field and the
 // alert after a failed save. The view only draws this and reports taps. Writing to the store is passed in as a closure,
 // so the rules can be tested without one.
+@MainActor
 @Observable
 final class EntryEditSession {
     private(set) var activeEntryID: PersistentIdentifier?
