@@ -33,12 +33,12 @@ struct StorageErrorView: View {
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityIdentifier("StorageErrorTitle")
 
-                Text("Lummi couldn't open its storage. Your joys haven't been deleted. Try again, or restart the app.")
+                Text(ErrorMessages.storageExplanation(for: error))
                     .lummiScaledFont(size: 16, relativeTo: .callout)
                     .foregroundColor(themeManager.currentTheme.textColor.opacity(0.7))
                     .multilineTextAlignment(.center)
 
-                Text(verbatim: error.localizedDescription)
+                Text(verbatim: error.technicalCode)
                     .lummiScaledFont(size: 12, relativeTo: .caption)
                     .foregroundColor(themeManager.currentTheme.textColor.opacity(0.4))
                     .multilineTextAlignment(.center)

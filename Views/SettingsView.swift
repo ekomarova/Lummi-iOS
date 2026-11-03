@@ -176,11 +176,20 @@ private struct SyncStatusBanner: View {
                         .lummiScaledFont(size: 20, relativeTo: .title3)
                         .foregroundColor(AccentColors.syncBannerForeground)
 
-                    Text(syncMessage)
-                        .lummiScaledFont(size: 14, relativeTo: .subheadline)
-                        .foregroundColor(AccentColors.syncBannerForeground)
-                        .multilineTextAlignment(.leading)
-                        .accessibilityIdentifier("SyncBannerMessage")
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(syncMessage)
+                            .lummiScaledFont(size: 14, relativeTo: .subheadline)
+                            .foregroundColor(AccentColors.syncBannerForeground)
+                            .multilineTextAlignment(.leading)
+                            .accessibilityIdentifier("SyncBannerMessage")
+
+                        if let detail = monitor.syncState.technicalDetail {
+                            Text(verbatim: detail)
+                                .lummiScaledFont(size: 12, relativeTo: .caption)
+                                .foregroundColor(AccentColors.syncBannerForeground.opacity(0.6))
+                                .accessibilityIdentifier("SyncBannerDetail")
+                        }
+                    }
                 }
                 .padding(15)
                 .frame(maxWidth: .infinity, alignment: .leading)

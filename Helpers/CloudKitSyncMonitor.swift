@@ -18,9 +18,11 @@ enum CloudKitSyncState: Equatable {
     case loggedOut
     case restricted
     case storageFull
+    case networkUnavailable
     case unavailableInThisBuild
     case statusUndetermined
     case statusUnrecognized
+    // The payload is `Error.technicalCode`, not the system description, which may be technical or untranslated.
     case unknownError(String)
 
     var message: LocalizedStringResource? {
@@ -33,15 +35,29 @@ enum CloudKitSyncState: Equatable {
             return "iCloud is restricted by security policies."
         case .storageFull:
             return "iCloud storage is full. Please free up space to continue syncing."
+        case .networkUnavailable:
+            return "Sync issue: iCloud can't be reached. Check your internet connection."
         case .unavailableInThisBuild:
             return "Sync issue: iCloud is not available in this build."
-        case .statusUndetermined:
-            return "Sync issue: Status could not be determined."
-        case .statusUnrecognized:
-            return "Sync issue: Unknown status."
-        case .unknownError(let msg):
-            return "Sync issue: \(msg)"
+        case .statusUndetermined, .statusUnrecognized:
+            return "Sync issue: Couldn't check your iCloud status. Check your internet connection and iCloud settings."
+        case .unknownError:
+            return "Sync issue: Something went wrong with iCloud. Check your iCloud settings and try again later."
         }
+    }
+
+    // A short code shown under the message for support, only for the state whose cause the message cannot name.
+    var technicalDetail: String? {
+        if case .unknownError(let code) = self { return code }
+        return nil
+    }
+
+    // The state for an error thrown while reading the iCloud account status.
+    static func forAccountStatusError(_ error: Error) -> CloudKitSyncState {
+        if let state = CloudKitSyncEventReaction.state(for: error) { return state }
+        let codes = CloudKitSyncEventReaction.ckErrorCodes(in: error)
+        if !codes.isDisjoint(with: [.networkUnavailable, .networkFailure]) { return .networkUnavailable }
+        return .unknownError(error.technicalCode)
     }
 }
 
@@ -158,7 +174,7 @@ final class CloudKitSyncMonitor {
                 self.syncState = .statusUnrecognized
             }
         } catch {
-            self.syncState = .unknownError(error.localizedDescription)
+            self.syncState = .forAccountStatusError(error)
         }
     }
 }
