@@ -24,7 +24,7 @@ struct TrendsPerformanceStats {
         range: TrendsRange,
         locale: Locale,
         now: Date = Date(),
-        calendar: Calendar = .current
+        calendar: Calendar
     ) -> TrendsPerformanceStats {
         let rangedEntries = TrendsCalculator.entries(entries, in: range, now: now, calendar: calendar)
         return TrendsPerformanceStats(
@@ -33,7 +33,7 @@ struct TrendsPerformanceStats {
             bestStreak: InsightsCalculator.longestStreak(in: rangedEntries, calendar: calendar),
             joyfulHours: range.isYear ? InsightsCalculator.joyfulHours(entries: rangedEntries, locale: locale, calendar: calendar) : nil,
             dataPoints: TrendsCalculator.dataPoints(for: rangedEntries, range: range, now: now, calendar: calendar),
-            weekdayCounts: TrendsCalculator.weekdayCounts(in: rangedEntries, calendar: .lummiCalendar(locale: locale))
+            weekdayCounts: TrendsCalculator.weekdayCounts(in: rangedEntries, calendar: calendar)
         )
     }
 }

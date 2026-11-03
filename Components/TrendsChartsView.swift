@@ -43,7 +43,13 @@ struct TrendsChartsView: View {
     }
 
     private var stats: TrendsPerformanceStats {
-        TrendsPerformanceStats.make(from: rangedEntries, range: range, locale: locale, now: now)
+        TrendsPerformanceStats.make(
+            from: rangedEntries,
+            range: range,
+            locale: locale,
+            now: now,
+            calendar: .lummiCalendar(locale: locale)
+        )
     }
 
     var body: some View {
