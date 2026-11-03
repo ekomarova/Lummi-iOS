@@ -80,3 +80,31 @@ enum ContainerBootstrap {
         )
     }
 }
+
+// What the app does when the iCloud switch changes while it is running.
+enum SyncToggleOutcome {
+    // The flag already matches the open container: the change is the app's own revert or a launch fallback.
+    case unchanged
+    // The container for the requested state opened and replaces the current one.
+    case switched(ModelContainer)
+    // The container did not open. The current one stays, and the switch must go back to its real state.
+    case failed(any Error)
+}
+
+enum SyncToggle {
+
+    // Decides the outcome of the switch. The sync state shown to the user (the banner and the monitor) follows
+    // `.switched` only, so a failed switch never reaches it.
+    static func apply(
+        requested: Bool,
+        isActive: Bool,
+        makeContainer: (_ isICloudSyncEnabled: Bool) throws -> ModelContainer
+    ) -> SyncToggleOutcome {
+        guard requested != isActive else { return .unchanged }
+        do {
+            return .switched(try makeContainer(requested))
+        } catch {
+            return .failed(error)
+        }
+    }
+}

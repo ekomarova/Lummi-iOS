@@ -20,8 +20,8 @@ struct SettingsView: View {
     @AppStorage(SettingsKey.appLanguage) private var selectedLanguage: AppLanguage = .english
     @AppStorage(SettingsKey.isICloudSyncEnabled) private var isICloudSyncEnabled: Bool = false
     
-    @State private var syncBannerVisible = false
-    // Exists only while iCloud sync is enabled, so Settings never contacts iCloud with sync off, and every enable checks the account afresh.
+    @Environment(\.isICloudSyncActive) private var isICloudSyncActive
+    // Exists only while iCloud sync is active, so Settings never contacts iCloud with sync off, and every enable checks the account afresh.
     @State private var syncMonitor: CloudKitSyncMonitor?
 
     @State private var showClearDataAlert: Bool = false
@@ -46,22 +46,16 @@ struct SettingsView: View {
             .ignoresSafeArea(.container, edges: .bottom)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .task(id: isICloudSyncEnabled) {
-            guard isICloudSyncEnabled else {
-                syncBannerVisible = false
+        // Follows the confirmed state and not the toggle, so a switch the app reverts after a container error
+        // never starts the monitor or shows the banner.
+        .task(id: isICloudSyncActive) {
+            guard isICloudSyncActive else {
                 syncMonitor = nil
                 return
             }
-            // Wait long enough for a container-error revert to complete before
-            // allowing the banner to appear, so a failed toggle never flashes the banner.
-            // A cancelled wait means the toggle changed again, and the task that replaced this one takes over.
-            do {
-                try await Task.sleep(for: .milliseconds(300))
-            } catch {
-                return
-            }
-            syncBannerVisible = isICloudSyncEnabled
-            guard isICloudSyncEnabled else { return }
+            // `.task` runs on every appearance of the screen. Keep the monitor it already has, so coming back to
+            // Settings does not reset the state and make the banner blink.
+            guard syncMonitor == nil else { return }
             // Started here and not from the banner: the banner is an empty view while the state is fine, and
             // SwiftUI does not run `.task` on an empty view, so the monitor would never learn the account state.
             let monitor = CloudKitSyncMonitor()
@@ -124,16 +118,7 @@ struct SettingsView: View {
 
                         Spacer()
 
-                        Toggle(
-                            "iCloud",
-                            isOn: Binding(
-                                get: { isICloudSyncEnabled },
-                                set: { newValue in
-                                    if newValue { syncBannerVisible = false }
-                                    isICloudSyncEnabled = newValue
-                                }
-                            )
-                        )
+                        Toggle("iCloud", isOn: $isICloudSyncEnabled)
                         .labelsHidden()
                         .toggleStyle(.switch)
                         .tint(AccentColors.toggleOn)
@@ -142,7 +127,7 @@ struct SettingsView: View {
                 }
 
                 // MARK: - iCloud Sync Banner
-                if isICloudSyncEnabled && syncBannerVisible, let syncMonitor {
+                if let syncMonitor {
                     SyncStatusBanner(monitor: syncMonitor)
                 }
             }

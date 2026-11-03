@@ -8,6 +8,12 @@
 
 import SwiftUI
 
+extension EnvironmentValues {
+    // Whether the current container really syncs with iCloud. Unlike the saved toggle, it changes only after the app
+    // has opened the new container, so a failed switch never reaches it.
+    @Entry var isICloudSyncActive: Bool = false
+}
+
 // Shared SwiftUI view modifiers: adaptive glass material and the themed card background.
 extension View {
     // Applies the native Liquid Glass material on iOS 26+, falling back to

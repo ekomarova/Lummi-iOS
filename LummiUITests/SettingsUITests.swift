@@ -185,6 +185,9 @@ final class SettingsUITests: XCTestCase {
         // Toggle must have reverted back to disabled
         XCTAssertEqual(syncToggle.value as? String, "0", "iCloud toggle should revert to disabled after error")
 
+        // A switch the app reverted must not start the sync monitor or show its banner
+        XCTAssertFalse(app.staticTexts["SyncBannerMessage"].exists, "Banner must not appear after a reverted switch")
+
         // Dismiss the alert
         alert.buttons["OK"].tap()
 
