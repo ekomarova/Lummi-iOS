@@ -31,7 +31,7 @@ struct JoysListView: View {
             NoEntriesView()
         } else {
             LazyVStack(spacing: 12) {
-                ForEach(Array(entries.enumerated()), id: \.element.id) { index, entry in
+                ForEach(Array(entries.enumerated()), id: \.element.persistentModelID) { index, entry in
                     MonthlyMomentCell(
                         entry: entry,
                         showsDate: Self.showsDate(for: entry.date, after: index > 0 ? entries[index - 1].date : nil)
