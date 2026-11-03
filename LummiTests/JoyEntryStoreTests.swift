@@ -54,6 +54,12 @@ struct JoyEntryStoreTests {
         #expect(RecordInputRules.isNearLimit(String(repeating: "a", count: RecordInputRules.maxLength)))
     }
 
+    @Test func normalized_trimsAndClamps() {
+        #expect(RecordInputRules.normalized("  joy \n") == "joy")
+        #expect(RecordInputRules.normalized(" \n ").isEmpty)
+        #expect(RecordInputRules.normalized(String(repeating: "a", count: 300)).count == 280)
+    }
+
     @Test func canSave_emptyAndWhitespaceOnly_isFalse() {
         #expect(!RecordInputRules.canSave(""))
         #expect(!RecordInputRules.canSave("  \n\t "))
@@ -66,6 +72,43 @@ struct JoyEntryStoreTests {
         let context = try makeContext()
         try store(context).add(text: "Sun", date: Date())
         #expect(try count(context) == 1)
+    }
+
+    @Test func add_surroundingWhitespaceAndNewlines_storesTrimmedText() throws {
+        let context = try makeContext()
+        try store(context).add(text: "\n  Sun  \n", date: Date())
+        let entries = try context.fetch(FetchDescriptor<JoyEntry>())
+        #expect(entries.map(\.text) == ["Sun"])
+    }
+
+    @Test func add_innerWhitespace_isKept() throws {
+        let context = try makeContext()
+        try store(context).add(text: " Warm \n sun ", date: Date())
+        let entries = try context.fetch(FetchDescriptor<JoyEntry>())
+        #expect(entries.map(\.text) == ["Warm \n sun"])
+    }
+
+    @Test func add_overLimit_cutsTextToMaxLength() throws {
+        let context = try makeContext()
+        try store(context).add(text: String(repeating: "a", count: RecordInputRules.maxLength + 20), date: Date())
+        let entries = try context.fetch(FetchDescriptor<JoyEntry>())
+        #expect(entries.map(\.text.count) == [RecordInputRules.maxLength])
+    }
+
+    @Test func add_exactlyAtLimit_keepsFullText() throws {
+        let context = try makeContext()
+        let text = String(repeating: "a", count: RecordInputRules.maxLength)
+        try store(context).add(text: text, date: Date())
+        let entries = try context.fetch(FetchDescriptor<JoyEntry>())
+        #expect(entries.map(\.text) == [text])
+    }
+
+    @Test func add_leadingWhitespaceAndOverLimit_matchesNormalizedText() throws {
+        let context = try makeContext()
+        let input = "  " + String(repeating: "a", count: RecordInputRules.maxLength + 20)
+        try store(context).add(text: input, date: Date())
+        let entries = try context.fetch(FetchDescriptor<JoyEntry>())
+        #expect(entries.map(\.text) == [RecordInputRules.normalized(input)])
     }
 
     @Test func add_blankText_insertsNothing() throws {
