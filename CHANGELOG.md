@@ -17,6 +17,7 @@ All notable changes to the project will be documented in this file.
 - Showed language names in the language list in the current app language [#64](https://github.com/ekomarova/Lummi-iOS/pull/64)
 
 ### Fixed
+- Replaced the raw system error text in the iCloud sync alert and banner with translated messages [#70](https://github.com/ekomarova/Lummi-iOS/pull/70)
 - Started the iCloud sync monitor and showed its banner in `Settings` only after the sync switch is confirmed [#67](https://github.com/ekomarova/Lummi-iOS/pull/67)
 - Trimmed surrounding spaces and line breaks and applied the 280-character limit when saving/editing a joy [#68](https://github.com/ekomarova/Lummi-iOS/pull/68)
 

@@ -31,7 +31,7 @@ struct ContentView: View {
         tabs
         .errorAlert(
             "iCloud Sync Error",
-            message: Text(syncError.wrappedValue?.localizedDescription ?? ""),
+            message: Text(ErrorMessages.syncAlert(for: syncError.wrappedValue)),
             isPresented: syncError.wrappedValue != nil
         ) {
             syncError.wrappedValue = nil
