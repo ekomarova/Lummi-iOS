@@ -8,8 +8,8 @@ Supported languages: English, Russian, German.
 - `Views/`: SwiftUI tab screens (Home, Insights, Settings) and the storage error screen
 - `Components/`: reusable UI components and the pushed sub-screens (Trends, All Joys, year pages)
 - `DataModels/`: SwiftData models
-- `Extensions/`, `Helpers/`: shared utilities
-- `Theme/`: ThemeManager, colors, fonts
+- `Extensions/`, `Helpers/`: shared utilities, fonts
+- `Theme/`: ThemeManager, themes, colors, card opacity, page spacing
 - `Resources/`: String Catalogs, assets
 - `LummiTests/`: unit tests. `LummiUITests/`: UI tests. `TestHelpers/`: shared test utilities
 
@@ -29,7 +29,7 @@ Supported languages: English, Russian, German.
 - No force unwrapping (`!`). Use `guard let`, `if let` or `??`.
 - Keep lines under 150 characters.
 - All user-facing text goes through the String Catalog (`.xcstrings`) and `LocalizedStringResource`, with en, ru and de translations added together. No hardcoded strings.
-- Colors and fonts come only from `Theme` / `ThemeManager`. No hardcoded values in views.
+- Colors come only from `Theme` / `ThemeManager`, fonts only from `FontExtension.swift`. No hardcoded values in views.
 - SwiftUI: keep views small and extract subviews, mark `@State` as `private`, add a `#Preview` for every new view, add accessibility labels to interactive elements.
 - SwiftData models synced via CloudKit: give every property a default value or make it optional, no `@Attribute(.unique)`, relationships optional.
 - Put new files in the matching folder from Project layout.
