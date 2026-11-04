@@ -80,7 +80,7 @@ final class TrendsPerformanceTests: XCTestCase {
     }
 
     private func singlePassStats(range: TrendsRange) -> Int {
-        checksum(of: TrendsPerformanceStats.make(from: entries, range: range, locale: locale))
+        checksum(of: TrendsPerformanceStats.make(from: entries, range: range, locale: locale, calendar: .lummiCalendar(locale: locale)))
     }
 
     // The current `TrendsChartsView`: the store fetches only the range (sorted like its `@Query`), then one pass.
@@ -91,7 +91,13 @@ final class TrendsPerformanceTests: XCTestCase {
             sortBy: [SortDescriptor(\.date)]
         )
         let rangedEntries = try context.fetch(descriptor)
-        return checksum(of: TrendsPerformanceStats.make(from: rangedEntries, range: range, locale: locale, now: now))
+        return checksum(of: TrendsPerformanceStats.make(
+            from: rangedEntries,
+            range: range,
+            locale: locale,
+            now: now,
+            calendar: .lummiCalendar(locale: locale)
+        ))
     }
 
     // Same sum as `legacyStats`, so the variants can be compared.

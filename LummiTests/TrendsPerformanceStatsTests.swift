@@ -89,6 +89,41 @@ struct TrendsPerformanceStatsTests {
         #expect(result.entryCount == 1)
     }
 
+    @Test func make_weekdayCounts_followTheGivenCalendarsFirstWeekday() {
+        var mondayFirst = calendar
+        mondayFirst.firstWeekday = 2 // Monday
+        let result = TrendsPerformanceStats.make(
+            from: [entry(year: 2026, month: 9, day: 1)],
+            range: .month,
+            locale: locale,
+            now: now,
+            calendar: mondayFirst
+        )
+        #expect(result.weekdayCounts.first?.weekday == 2) // Monday
+        #expect(result.weekdayCounts.last?.weekday == 1) // Sunday wraps to the end
+        #expect(result.weekdayCounts.reduce(0) { $0 + $1.count } == 1)
+    }
+
+    // The calendar the Trends screen passes: the app's own locale-aware one, not the fixed Gregorian test calendar.
+    @Test(arguments: ["ru_RU", "de_DE", "en_US"])
+    func make_withLummiCalendar_matchesTheSeparateCalculators(localeIdentifier: String) {
+        let locale = Locale(identifier: localeIdentifier)
+        let lummi = Calendar.lummiCalendar(locale: locale)
+        let entries = (1...24).map { entry(year: 2026, month: 9, day: $0, hour: 8 + $0 % 12) }
+            + [entry(year: 2026, month: 1, day: 5), entry(year: 2025, month: 12, day: 31)]
+        for range in [TrendsRange.month, .year(2026)] {
+            let result = TrendsPerformanceStats.make(from: entries, range: range, locale: locale, now: now, calendar: lummi)
+            let ranged = TrendsCalculator.entries(entries, in: range, now: now, calendar: lummi)
+            #expect(result.entryCount == ranged.count)
+            #expect(result.daysJournaled == InsightsCalculator.uniqueDaysCount(in: ranged, calendar: lummi))
+            #expect(result.bestStreak == InsightsCalculator.longestStreak(in: ranged, calendar: lummi))
+            #expect(result.dataPoints == TrendsCalculator.dataPoints(for: ranged, range: range, now: now, calendar: lummi))
+            #expect(result.weekdayCounts == TrendsCalculator.weekdayCounts(in: ranged, calendar: lummi))
+            #expect(result.weekdayCounts.first?.weekday == lummi.firstWeekday)
+            #expect(result.weekdayCounts.reduce(0) { $0 + $1.count } == ranged.count)
+        }
+    }
+
     @Test func make_matchesTheSeparateCalculators() {
         let entries = (1...24).map { entry(year: 2026, month: 9, day: $0, hour: 8 + $0 % 12) }
         let result = stats(entries, range: .month)
