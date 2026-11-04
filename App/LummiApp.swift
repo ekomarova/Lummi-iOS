@@ -14,7 +14,7 @@ import SwiftData
 @main
 struct LummiApp: App {
     
-    @AppStorage(SettingsKey.appLanguage) private var selectedLanguage: AppLanguage = .english
+    @AppStorage(SettingsKey.appLanguage) private var selectedLanguage: AppLanguage = .systemDefault
     @AppStorage(SettingsKey.isICloudSyncEnabled) private var isICloudSyncEnabled: Bool = false
 
     @State private var container: ModelContainer
