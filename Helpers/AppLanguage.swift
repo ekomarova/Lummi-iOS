@@ -16,6 +16,16 @@ enum AppLanguage: String, CaseIterable, Identifiable {
 
     var id: String { self.rawValue }
 
+    // The language used until the user picks one in Settings: the first of the system's preferred languages
+    // the app supports, or English when none of them is supported.
+    static func preferred(from preferredLanguages: [String] = Locale.preferredLanguages) -> AppLanguage {
+        let supported = allCases.map(\.rawValue)
+        let match = Bundle.preferredLocalizations(from: supported, forPreferences: preferredLanguages).first
+        return match.flatMap(AppLanguage.init(rawValue:)) ?? .english
+    }
+
+    static var systemDefault: AppLanguage { preferred() }
+
     var displayName: LocalizedStringResource {
         switch self {
         case .english: return "English"

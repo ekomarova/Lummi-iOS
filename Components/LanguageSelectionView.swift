@@ -12,7 +12,7 @@ import SwiftUI
 struct LanguageSelectionView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.dismiss) private var dismiss
-    @AppStorage(SettingsKey.appLanguage) private var selectedLanguage: AppLanguage = .english
+    @AppStorage(SettingsKey.appLanguage) private var selectedLanguage: AppLanguage = .systemDefault
 
     var body: some View {
         VStack(spacing: 12) {

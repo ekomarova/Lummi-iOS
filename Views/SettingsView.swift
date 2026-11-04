@@ -17,7 +17,7 @@ struct SettingsView: View {
     // Opens a page on the Settings tab's stack.
     let onNavigate: (Route) -> Void
     
-    @AppStorage(SettingsKey.appLanguage) private var selectedLanguage: AppLanguage = .english
+    @AppStorage(SettingsKey.appLanguage) private var selectedLanguage: AppLanguage = .systemDefault
     @AppStorage(SettingsKey.isICloudSyncEnabled) private var isICloudSyncEnabled: Bool = false
     
     @Environment(\.isICloudSyncActive) private var isICloudSyncActive
