@@ -77,22 +77,20 @@ final class CloudKitSyncMonitor {
         // on builds without a signed iCloud entitlement, e.g. CI builds made with
         // CODE_SIGNING_ALLOWED=NO. UI test runs always fall into that category, so skip
         // it there the same way LummiApp already switches SwiftData to in-memory storage
-        // for UI tests, instead of touching CloudKit at all. -UI_TESTING_ICLOUD_LOGGED_OUT
-        // reports the real .loggedOut state deterministically, since a genuine account
-        // status can't be exercised without live entitlements.
+        // for UI tests, instead of touching CloudKit at all. See `TestLaunchArguments.iCloudLoggedOut`
+        // for the logged-out state.
         #if DEBUG
-        let arguments = ProcessInfo.processInfo.arguments
         // Xcode Previews run without the iCloud entitlement too, so they must not touch CloudKit either.
         if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
             self.isCloudKitDisabled = true
             return
         }
-        if arguments.contains("-UI_TESTING_ICLOUD_LOGGED_OUT") {
+        if TestLaunchArguments.iCloudLoggedOut.isSet {
             self.isCloudKitDisabled = true
             syncState = .loggedOut
             return
         }
-        if arguments.contains(where: { $0.hasPrefix("-UI_TESTING") }) {
+        if TestLaunchArguments.isUITesting {
             self.isCloudKitDisabled = true
             syncState = .unavailableInThisBuild
         }

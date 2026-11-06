@@ -13,7 +13,7 @@ import SwiftData
 extension ModelContext {
     func saveOrSimulate() throws {
         #if DEBUG
-        if ProcessInfo.processInfo.arguments.contains("-UI_TESTING_SIMULATE_SAVE_FAILURE") {
+        if TestLaunchArguments.simulateSaveFailure.isSet {
             struct SimulatedSaveError: LocalizedError {
                 let errorDescription: String? = "Simulated save failure"
             }

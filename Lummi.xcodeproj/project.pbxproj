@@ -55,13 +55,14 @@
 		A1B2C3D41000000000000002 /* RecordActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000002 /* RecordActionButton.swift */; };
 		A1B2C3D41000000000000004 /* CapsuleRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000004 /* CapsuleRow.swift */; };
 		A1B2C3D41000000000000F01 /* SectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F01 /* SectionHeader.swift */; };
-		A1B2C3D41000000000000F21 /* PushedScrollPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F21 /* PushedScrollPage.swift */; };
-		A1B2C3D41000000000000F22 /* YearPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F22 /* YearPage.swift */; };
-		A1B2C3D41000000000000F23 /* YearsListSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F23 /* YearsListSection.swift */; };
+		A1B2C3D41000000000000F10 /* TrendsPerformanceStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F10 /* TrendsPerformanceStats.swift */; };
 		A1B2C3D41000000000000F11 /* TabPageTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F11 /* TabPageTitle.swift */; };
 		A1B2C3D41000000000000F12 /* TabPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F12 /* TabPage.swift */; };
 		A1B2C3D41000000000000F13 /* SectionBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F13 /* SectionBlock.swift */; };
-		A1B2C3D41000000000000F10 /* TrendsPerformanceStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F10 /* TrendsPerformanceStats.swift */; };
+		A1B2C3D41000000000000F21 /* PushedScrollPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F21 /* PushedScrollPage.swift */; };
+		A1B2C3D41000000000000F22 /* YearPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F22 /* YearPage.swift */; };
+		A1B2C3D41000000000000F23 /* YearsListSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F23 /* YearsListSection.swift */; };
+		A1B2C3D41000000000000F31 /* TestLaunchArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F31 /* TestLaunchArguments.swift */; };
 		A1B2C3D42FB0000102 /* LummiSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D42FB0000101 /* LummiSchema.swift */; };
 		A1B2C3D42FB0000202 /* ContainerBootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D42FB0000201 /* ContainerBootstrap.swift */; };
 		A1B2C3D42FB0000302 /* StorageErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D42FB0000301 /* StorageErrorView.swift */; };
@@ -141,13 +142,14 @@
 		A1B2C3D40000000000000002 /* RecordActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordActionButton.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000004 /* CapsuleRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleRow.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000F01 /* SectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeader.swift; sourceTree = "<group>"; };
-		A1B2C3D40000000000000F21 /* PushedScrollPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushedScrollPage.swift; sourceTree = "<group>"; };
-		A1B2C3D40000000000000F22 /* YearPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearPage.swift; sourceTree = "<group>"; };
-		A1B2C3D40000000000000F23 /* YearsListSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearsListSection.swift; sourceTree = "<group>"; };
+		A1B2C3D40000000000000F10 /* TrendsPerformanceStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsPerformanceStats.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000F11 /* TabPageTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabPageTitle.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000F12 /* TabPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabPage.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000F13 /* SectionBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionBlock.swift; sourceTree = "<group>"; };
-		A1B2C3D40000000000000F10 /* TrendsPerformanceStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsPerformanceStats.swift; sourceTree = "<group>"; };
+		A1B2C3D40000000000000F21 /* PushedScrollPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushedScrollPage.swift; sourceTree = "<group>"; };
+		A1B2C3D40000000000000F22 /* YearPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearPage.swift; sourceTree = "<group>"; };
+		A1B2C3D40000000000000F23 /* YearsListSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearsListSection.swift; sourceTree = "<group>"; };
+		A1B2C3D40000000000000F31 /* TestLaunchArguments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestLaunchArguments.swift; sourceTree = "<group>"; };
 		A1B2C3D42FB0000101 /* LummiSchema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LummiSchema.swift; sourceTree = "<group>"; };
 		A1B2C3D42FB0000201 /* ContainerBootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerBootstrap.swift; sourceTree = "<group>"; };
 		A1B2C3D42FB0000301 /* StorageErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageErrorView.swift; sourceTree = "<group>"; };
@@ -329,6 +331,7 @@
 			isa = PBXGroup;
 			children = (
 				47981EB32FA59262005ADAB1 /* MockDataManager.swift */,
+				A1B2C3D40000000000000F31 /* TestLaunchArguments.swift */,
 				4A11C0DE0000000000000003 /* PreviewSupport.swift */,
 			);
 			path = TestHelpers;
@@ -527,6 +530,7 @@
 				A1B2C3D42FB0000102 /* LummiSchema.swift in Sources */,
 				473B044A2F9ABF1D00C482FA /* HeaderView.swift in Sources */,
 				47981EB82FA5928F005ADAB1 /* MockDataManager.swift in Sources */,
+				A1B2C3D41000000000000F31 /* TestLaunchArguments.swift in Sources */,
 				4A11C0DE0000000000000013 /* PreviewSupport.swift in Sources */,
 				47981EAD2FA54745005ADAB1 /* InsightsCalculator.swift in Sources */,
 				473B04572F9BB2FD00C482FA /* ThemeProtocol.swift in Sources */,
