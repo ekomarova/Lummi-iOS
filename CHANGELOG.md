@@ -13,6 +13,7 @@ All notable changes to the project will be documented in this file.
 - Removed the iPad sidebar [#56](https://github.com/ekomarova/Lummi-iOS/pull/56)
 - Replaced the `+` on the new joy button with a pen [#59](https://github.com/ekomarova/Lummi-iOS/pull/59)
 - Simplified the style of `Insights` and `Home` [#60](https://github.com/ekomarova/Lummi-iOS/pull/60)
+- Renamed the `Recall` section to `Recap` [#77](https://github.com/ekomarova/Lummi-iOS/pull/77)
 - Restyled the entries [#63](https://github.com/ekomarova/Lummi-iOS/pull/63)
 - Showed language names in the language list in the current app language [#64](https://github.com/ekomarova/Lummi-iOS/pull/64)
 - Updated the `Trends` design [#75](https://github.com/ekomarova/Lummi-iOS/pull/75)

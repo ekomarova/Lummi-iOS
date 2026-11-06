@@ -51,12 +51,12 @@ final class InsightsUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Day Streak"].waitForExistence(timeout: 2.0))
     }
 
-    // Recall / Show All Joys stay available even when the month has no joys
-    func test_InsightsRecallIsShownForEmptyMonth() throws {
+    // Recap / Show All Joys stay available even when the month has no joys
+    func test_InsightsRecapIsShownForEmptyMonth() throws {
         launchApp(with: [""])
         app.tabItem("Insights", identifier: "InsightsButton").tap()
 
-        XCTAssertTrue(app.staticTexts["Recall"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Recap"].waitForExistence(timeout: 2.0))
         let showAll = app.staticTexts["Show All Joys"]
         XCTAssertTrue(showAll.waitForExistence(timeout: 2.0))
         showAll.tap()

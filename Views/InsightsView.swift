@@ -62,9 +62,9 @@ private struct InsightsMonthView: View {
                         streakCard
                     }
 
-                    // MARK: - Recall
+                    // MARK: - Recap
                     VStack(alignment: .leading, spacing: 15) {
-                        SectionHeader(title: "Recall")
+                        SectionHeader(title: "Recap")
 
                         DisclosureRow(
                             systemImage: "list.star",
