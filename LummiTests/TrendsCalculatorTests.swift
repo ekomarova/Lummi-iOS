@@ -84,35 +84,13 @@ struct TrendsCalculatorTests {
         #expect(result.isEmpty)
     }
 
-    // MARK: - dataPoints(for:range:)
-
-    @Test func dataPoints_month_spansFullMonthIncludingUnreachedDays() {
-        // September 2026 has 30 days; "now" is the 24th, so the 25th through the 30th haven't happened
-        // yet but still draw as empty bars rather than being left off the chart.
-        let entries = [entry(year: 2026, month: 9, day: 1), entry(year: 2026, month: 9, day: 24)]
-        let points = TrendsCalculator.dataPoints(for: entries, range: .month, now: now, calendar: calendar)
-        #expect(points.count == 30)
-        #expect(points.first?.count == 1)
-        let lastDayCount = points.last?.count
-        #expect(lastDayCount == 0)
-        // Every other day is untouched, so the total mass across all bars should equal the two entries.
-        #expect(points.map(\.count).reduce(0, +) == 2)
-    }
-
-    @Test func dataPoints_month_multipleEntriesSameDay_sumIntoOneBar() {
-        let entries = [
-            entry(year: 2026, month: 9, day: 10, hour: 9),
-            entry(year: 2026, month: 9, day: 10, hour: 20)
-        ]
-        let points = TrendsCalculator.dataPoints(for: entries, range: .month, now: now, calendar: calendar)
-        #expect(points.first { calendar.component(.day, from: $0.periodStart) == 10 }?.count == 2)
-    }
+    // MARK: - dataPoints(for:year:)
 
     @Test func dataPoints_year_currentYear_spansAllTwelveMonthsIncludingUnreachedOnes() {
         // The chart always draws January through December, even for months later than today (here,
         // October through December), so the month labels never shift as the year progresses.
         let entries = [entry(year: 2026, month: 1, day: 5), entry(year: 2026, month: 9, day: 24)]
-        let points = TrendsCalculator.dataPoints(for: entries, range: .year(2026), now: now, calendar: calendar)
+        let points = TrendsCalculator.dataPoints(for: entries, year: 2026, now: now, calendar: calendar)
         #expect(points.count == 12)
         #expect(points.first?.count == 1) // January
         #expect(points[8].count == 1) // September
@@ -122,7 +100,7 @@ struct TrendsCalculatorTests {
 
     @Test func dataPoints_year_pastYear_spansAllTwelveMonths() {
         let entries = [entry(year: 2025, month: 1, day: 5), entry(year: 2025, month: 12, day: 20)]
-        let points = TrendsCalculator.dataPoints(for: entries, range: .year(2025), now: now, calendar: calendar)
+        let points = TrendsCalculator.dataPoints(for: entries, year: 2025, now: now, calendar: calendar)
         #expect(points.count == 12)
         #expect(points.first?.count == 1)
         #expect(points.last?.count == 1)
@@ -132,10 +110,31 @@ struct TrendsCalculatorTests {
         // The journal's very first entry ever was in August of this (current) year, so January through
         // July are drawn as empty bars rather than being left off the chart entirely.
         let entries = [entry(year: 2026, month: 8, day: 5)]
-        let points = TrendsCalculator.dataPoints(for: entries, range: .year(2026), now: now, calendar: calendar)
+        let points = TrendsCalculator.dataPoints(for: entries, year: 2026, now: now, calendar: calendar)
         #expect(points.count == 12)
         #expect(points.map(\.count).reduce(0, +) == 1)
         #expect(points[7].count == 1) // August
+    }
+
+    @Test func dataPoints_futureYear_isEmpty() {
+        let entries = [entry(year: 2027, month: 1, day: 1)]
+        #expect(TrendsCalculator.dataPoints(for: entries, year: 2027, now: now, calendar: calendar).isEmpty)
+    }
+
+    @Test func dataPoints_multipleEntriesSameMonth_sumIntoOneBar() {
+        let entries = [
+            entry(year: 2026, month: 3, day: 1, hour: 9),
+            entry(year: 2026, month: 3, day: 31, hour: 20)
+        ]
+        let points = TrendsCalculator.dataPoints(for: entries, year: 2026, now: now, calendar: calendar)
+        #expect(points[2].count == 2) // March
+        #expect(points.map(\.count).reduce(0, +) == 2)
+    }
+
+    @Test func dataPoints_noEntries_stillSpansAllTwelveMonthsWithZeroCounts() {
+        let points = TrendsCalculator.dataPoints(for: [], year: 2025, now: now, calendar: calendar)
+        #expect(points.count == 12)
+        #expect(points.map(\.count).reduce(0, +) == 0)
     }
 
     // MARK: - weekdayCounts
@@ -180,17 +179,6 @@ struct TrendsCalculatorTests {
     }
 
     // MARK: - TrendsRange
-
-    @Test func trendsRange_component_isDayForMonthAndMonthForAnyYear() {
-        #expect(TrendsRange.month.component == .day)
-        #expect(TrendsRange.year(2025).component == .month)
-        #expect(TrendsRange.year(2026).component == .month)
-    }
-
-    @Test func trendsRange_isYear_isTrueOnlyForYears() {
-        #expect(!TrendsRange.month.isYear)
-        #expect(TrendsRange.year(2025).isYear)
-    }
 
     @Test func trendsRange_yearsAreEqualOnlyForTheSameYear() {
         #expect(TrendsRange.year(2025) == .year(2025))

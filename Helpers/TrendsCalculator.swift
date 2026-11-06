@@ -8,25 +8,14 @@
 
 import Foundation
 
-// Time window for the Trends screen. `.month` plots one bar per day of the current calendar month;
-// `.year` plots one bar per month of the given calendar year (browsable, not necessarily this year).
+// A window of time to list or chart entries for. `.month` is the current calendar month and only feeds the joys list;
+// `.year` is the given calendar year (browsable, not necessarily this year), which the Trends charts are built for.
 enum TrendsRange: nonisolated Equatable {
     case month
     case year(Int)
-
-    // The bar chart's granularity: individual days only make sense once the window has narrowed to a month.
-    // Also used directly by the chart view to group `BarMark`s by the same unit.
-    var component: Calendar.Component {
-        self == .month ? .day : .month
-    }
-
-    var isYear: Bool {
-        if case .year = self { return true }
-        return false
-    }
 }
 
-// One bar in the Trends chart: either a calendar day or a calendar month, depending on the selected range.
+// One bar in the Trends chart: a calendar month.
 struct TrendsDataPoint: Identifiable, Equatable {
     var id: Date { periodStart }
     let periodStart: Date
@@ -71,24 +60,20 @@ struct TrendsCalculator {
 
     // MARK: - Chart data
 
-    // One data point per day (`.month`) or per month (`.year`), oldest first, with a zero count filled in
-    // for empty periods so the chart's axis has no gaps. `.month` always spans the full calendar month,
-    // 1st through last day, and `.year` always spans all twelve months of the chosen year, past or
-    // current, so neither chart's axis labels shift as the day or year progresses.
+    // One data point per month of `year`, oldest first, with a zero count filled in for empty months so the
+    // chart's axis has no gaps. Always spans all twelve months of the chosen year, past or current, so the axis
+    // labels do not shift as the year progresses. Empty for a year later than `now`'s.
     static func dataPoints(
         for entries: [JoyEntry],
-        range: TrendsRange,
+        year: Int,
         now: Date = Date(),
         calendar: Calendar = .current
     ) -> [TrendsDataPoint] {
-        guard let bounds = bounds(for: range, now: now, calendar: calendar) else { return [] }
-        let component = range.component
+        guard let bounds = bounds(for: .year(year), now: now, calendar: calendar) else { return [] }
 
         var counts = [Date: Int]()
         for entry in entries {
-            let periodStart = component == .day
-                ? calendar.startOfDay(for: entry.date)
-                : (calendar.dateInterval(of: .month, for: entry.date)?.start ?? entry.date)
+            let periodStart = calendar.dateInterval(of: .month, for: entry.date)?.start ?? entry.date
             counts[periodStart, default: 0] += 1
         }
 
@@ -96,7 +81,7 @@ struct TrendsCalculator {
         var cursor = bounds.start
         while cursor < bounds.end {
             points.append(TrendsDataPoint(periodStart: cursor, count: counts[cursor] ?? 0))
-            guard let next = calendar.date(byAdding: component, value: 1, to: cursor) else { break }
+            guard let next = calendar.date(byAdding: .month, value: 1, to: cursor) else { break }
             cursor = next
         }
         return points

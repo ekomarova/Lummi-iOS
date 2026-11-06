@@ -14,7 +14,7 @@ struct YearTrendsView: View {
 
     var body: some View {
         YearPage(year: year, top: PageSpacing.topBelowControl) {
-            TrendsChartsView(range: .year(year))
+            TrendsChartsView(year: year)
         }
     }
 }

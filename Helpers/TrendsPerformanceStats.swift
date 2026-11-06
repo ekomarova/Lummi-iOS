@@ -8,31 +8,30 @@
 
 import Foundation
 
-// Everything the Trends cards and charts show for one range, calculated once from a single pass over the
-// ranged entries instead of filtering the whole journal again for every card and chart.
+// Everything the Trends cards and charts show for one calendar year, calculated once from a single pass over the
+// year's entries instead of filtering the whole journal again for every card and chart.
 struct TrendsPerformanceStats {
     let entryCount: Int
     let daysJournaled: Int
     let bestStreak: Int
-    // Only calculated for `.year`: `.month` has no Joyful Hours card, since Insights already shows it.
-    let joyfulHours: String?
+    let joyfulHours: String
     let dataPoints: [TrendsDataPoint]
     let weekdayCounts: [WeekdayCount]
 
     static func make(
         from entries: [JoyEntry],
-        range: TrendsRange,
+        year: Int,
         locale: Locale,
         now: Date = Date(),
         calendar: Calendar
     ) -> TrendsPerformanceStats {
-        let rangedEntries = TrendsCalculator.entries(entries, in: range, now: now, calendar: calendar)
+        let rangedEntries = TrendsCalculator.entries(entries, in: .year(year), now: now, calendar: calendar)
         return TrendsPerformanceStats(
             entryCount: rangedEntries.count,
             daysJournaled: InsightsCalculator.uniqueDaysCount(in: rangedEntries, calendar: calendar),
             bestStreak: InsightsCalculator.longestStreak(in: rangedEntries, calendar: calendar),
-            joyfulHours: range.isYear ? InsightsCalculator.joyfulHours(entries: rangedEntries, locale: locale, calendar: calendar) : nil,
-            dataPoints: TrendsCalculator.dataPoints(for: rangedEntries, range: range, now: now, calendar: calendar),
+            joyfulHours: InsightsCalculator.joyfulHours(entries: rangedEntries, locale: locale, calendar: calendar),
+            dataPoints: TrendsCalculator.dataPoints(for: rangedEntries, year: year, now: now, calendar: calendar),
             weekdayCounts: TrendsCalculator.weekdayCounts(in: rangedEntries, calendar: calendar)
         )
     }

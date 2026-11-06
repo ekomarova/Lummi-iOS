@@ -55,7 +55,7 @@ extension TabPage where Header == TabPageTitle {
 #Preview {
     TabPage(title: "Insights") {
         VStack(alignment: .leading, spacing: 15) {
-            SectionHeader(title: "Highlights")
+            SectionHeader(title: "Recap")
             ForEach(0..<20, id: \.self) { index in
                 CapsuleRow { Text(verbatim: "Row \(index)") }
             }
