@@ -15,7 +15,7 @@ All notable changes to the project will be documented in this file.
 - Simplified the style of `Insights` and `Home` [#60](https://github.com/ekomarova/Lummi-iOS/pull/60)
 - Restyled the entries [#63](https://github.com/ekomarova/Lummi-iOS/pull/63)
 - Showed language names in the language list in the current app language [#64](https://github.com/ekomarova/Lummi-iOS/pull/64)
-- Moved `Active Days` and `Day Streak` to `Insights` (a second row on iPhone, one row of four on iPad) and removed the `Month` tab from `Trends`, which now lists the years only, and removed the `Highlights` title from `Insights`
+- Updated the `Trends` design [#75](https://github.com/ekomarova/Lummi-iOS/pull/75)
 
 ### Fixed
 - Started the app in the phone's language (Russian or German) instead of always English [#74](https://github.com/ekomarova/Lummi-iOS/pull/74)
