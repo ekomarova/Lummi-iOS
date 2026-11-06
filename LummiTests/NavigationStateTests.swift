@@ -158,17 +158,6 @@ struct NavigationStateTests {
         #expect(state.paths[.insights] == [.joysYear(2025), .joysYear(2025)])
     }
 
-    // MARK: - Route
-
-    @Test func route_hidesTabBarOnEveryPageButLanguage() {
-        #expect(Route.allJoys.hidesTabBar)
-        #expect(Route.trends.hidesTabBar)
-        #expect(Route.joysYear(2025).hidesTabBar)
-        #expect(Route.trendsYear(2025).hidesTabBar)
-        #expect(Route.record.hidesTabBar)
-        #expect(!Route.language.hidesTabBar)
-    }
-
     // MARK: - Tab bar
 
     @Test func hidesTabBar_atARoot_isFalse() {
@@ -186,12 +175,11 @@ struct NavigationStateTests {
         #expect(!state.hidesTabBar(for: .settings))
     }
 
-    @Test func hidesTabBar_usesTheTopmostPage() {
+    @Test func hidesTabBar_onTheLanguagePage_isTrue() {
         var state = makeState()
-        state.navigate(to: .insights, now: now)
-        state.push(.allJoys)
+        state.navigate(to: .settings, now: now)
         state.push(.language)
-        #expect(!state.hidesTabBar(for: .insights))
+        #expect(state.hidesTabBar(for: .settings))
     }
 
     @Test func hidesTabBar_afterPoppingToTheRoot_isFalse() {
@@ -215,11 +203,11 @@ struct NavigationStateTests {
         #expect(!state.showsTabBar(for: .home, isKeyboardVisible: true))
     }
 
-    @Test func showsTabBar_stayedOnTheLanguagePage() {
+    @Test func showsTabBar_isHiddenOnTheLanguagePage() {
         var state = makeState()
         state.navigate(to: .settings, now: now)
         state.push(.language)
-        #expect(state.showsTabBar(for: .settings, isKeyboardVisible: false))
+        #expect(!state.showsTabBar(for: .settings, isKeyboardVisible: false))
     }
 
     // MARK: - Derived state

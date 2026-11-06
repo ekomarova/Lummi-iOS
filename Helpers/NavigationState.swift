@@ -25,9 +25,6 @@ enum Route: nonisolated Equatable, nonisolated Hashable {
     case trendsYear(Int)
     case language
     case record
-
-    // Pages that use the full-bleed space the tab bar would otherwise float over. The language list keeps it.
-    var hidesTabBar: Bool { self != .language }
 }
 
 // Single source of truth for `ContentView` navigation: the selected tab and the pages pushed onto each tab.
@@ -70,8 +67,8 @@ struct NavigationState: nonisolated Equatable {
     // Whether the current tab shows its root page rather than a pushed one.
     private var isAtRoot: Bool { paths[screen]?.isEmpty ?? true }
 
-    // The tab bar gives way to the page pushed on top of `tab`, when that page needs the full screen.
-    func hidesTabBar(for tab: Screen) -> Bool { paths[tab]?.last?.hidesTabBar ?? false }
+    // The tab bar gives way to any page pushed on top of `tab`: pushed pages use the full screen.
+    func hidesTabBar(for tab: Screen) -> Bool { !(paths[tab]?.isEmpty ?? true) }
 
     // Pushed pages and the keyboard hide the tab bar, as the floating toolbar used to do.
     func showsTabBar(for tab: Screen, isKeyboardVisible: Bool) -> Bool {
