@@ -22,11 +22,11 @@ struct TestLaunchArgumentsTests {
         #expect(!TestLaunchArguments.hasUITestingFlag(in: [TestLaunchArguments.screenshots.rawValue]))
     }
 
-    @Test func flagsMatchTheStringsUITestsPass() {
-        #expect(TestLaunchArguments.calendar.rawValue == "-UI_TESTING_CALENDAR")
+    // The Xcode scheme and the screenshots workflow pass these strings by hand, so they must not change.
+    @Test func flagsKeepTheStringsPassedOutsideTheCode() {
+        #expect(TestLaunchArguments.uiTesting.rawValue == "-UI_TESTING")
+        #expect(TestLaunchArguments.uiTestingPrefix == "-UI_TESTING")
         #expect(TestLaunchArguments.fiveThousandEntries.rawValue == "-UI_TESTING_5K_ENTRIES")
-        #expect(TestLaunchArguments.forceStoreErrorOnce.rawValue == "-UI_TESTING_FORCE_STORE_ERROR_ONCE")
-        #expect(TestLaunchArguments.simulateSaveFailure.rawValue == "-UI_TESTING_SIMULATE_SAVE_FAILURE")
         #expect(TestLaunchArguments.screenshots.rawValue == "-SCREENSHOTS_DATA")
     }
 

@@ -19,7 +19,7 @@ final class PerformanceUITests: XCTestCase {
         )
         continueAfterFailure = false
         app = XCUIApplication()
-        app.launchArguments = ["-UI_TESTING_5K_ENTRIES"]
+        app.launchArguments = [TestLaunchArguments.fiveThousandEntries].map(\.rawValue)
     }
 
     override func tearDownWithError() throws {

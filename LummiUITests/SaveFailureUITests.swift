@@ -18,7 +18,7 @@ final class SaveFailureUITests: XCTestCase {
 
     func test_NewRecord_ShowsAlertAndRemainsOpen_OnSaveFailure() throws {
         app = XCUIApplication()
-        app.launchArguments = ["-UI_TESTING_SIMULATE_SAVE_FAILURE"]
+        app.launchArguments = [TestLaunchArguments.simulateSaveFailure].map(\.rawValue)
         app.launch()
 
         app.tabItem("New Joy", identifier: "MainRecordButton").tap()
@@ -49,7 +49,7 @@ final class SaveFailureUITests: XCTestCase {
         // Pre-populate via -UI_TESTING_10_RECORDS which calls modelContext.save() directly,
         // bypassing saveOrSimulate(), so records are inserted before the simulation flag takes effect.
         app = XCUIApplication()
-        app.launchArguments = ["-UI_TESTING_10_RECORDS", "-UI_TESTING_SIMULATE_SAVE_FAILURE"]
+        app.launchArguments = [TestLaunchArguments.tenRecords, .simulateSaveFailure].map(\.rawValue)
         app.launch()
 
         let recordToDelete = app.staticTexts["RecordText_0"]
@@ -74,7 +74,7 @@ final class SaveFailureUITests: XCTestCase {
 
     func test_ClearAllData_ShowsAlertAndRecordsPersist_OnSaveFailure() throws {
         app = XCUIApplication()
-        app.launchArguments = ["-UI_TESTING_10_RECORDS", "-UI_TESTING_SIMULATE_SAVE_FAILURE"]
+        app.launchArguments = [TestLaunchArguments.tenRecords, .simulateSaveFailure].map(\.rawValue)
         app.launch()
 
         XCTAssertTrue(app.staticTexts["RecordText_0"].waitForExistence(timeout: 2.0), "Pre-populated records not found")
@@ -105,7 +105,7 @@ final class SaveFailureUITests: XCTestCase {
 
     func test_EditRecord_ShowsAlertAndStaysInEditMode_OnSaveFailure() throws {
         app = XCUIApplication()
-        app.launchArguments = ["-UI_TESTING_10_RECORDS", "-UI_TESTING_SIMULATE_SAVE_FAILURE"]
+        app.launchArguments = [TestLaunchArguments.tenRecords, .simulateSaveFailure].map(\.rawValue)
         app.launch()
 
         let recordToEdit = app.staticTexts["RecordText_0"]

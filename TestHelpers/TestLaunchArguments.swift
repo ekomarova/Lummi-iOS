@@ -4,8 +4,13 @@ import Foundation
 // Every launch argument the app understands in Debug builds, for UI tests, previews of failure states and App Store
 // screenshots. Release builds do not compile this and ignore all of them.
 //
-// UI tests run in their own target and pass the same strings by hand.
+// Shared with the UI test target, so tests launch the app with the same typed flags the app reads.
 enum TestLaunchArguments: String, CaseIterable {
+
+    // MARK: - UI testing mode
+    // Any argument with this prefix puts the app into UI testing mode, see `isUITesting`. On its own it gives an
+    // empty throwaway store.
+    case uiTesting = "-UI_TESTING"
 
     // MARK: - Data scenarios (see `MockDataManager`)
     case calendar = "-UI_TESTING_CALENDAR"
@@ -36,10 +41,9 @@ enum TestLaunchArguments: String, CaseIterable {
     // tests never trigger it.
     case screenshots = "-SCREENSHOTS_DATA"
 
-    static let uiTestingPrefix = "-UI_TESTING"
+    static let uiTestingPrefix = uiTesting.rawValue
 
-    // Any argument starting with the prefix puts the app into UI testing mode: a throwaway in-memory store, sync off
-    // and no CloudKit.
+    // UI testing mode: a throwaway in-memory store, sync off and no CloudKit.
     static var isUITesting: Bool {
         hasUITestingFlag(in: ProcessInfo.processInfo.arguments)
     }

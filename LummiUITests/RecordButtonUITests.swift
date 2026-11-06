@@ -7,7 +7,7 @@ final class RecordButtonUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
         app = XCUIApplication()
-        app.launchArguments = ["-UI_TESTING_CALENDAR"]
+        app.launchArguments = [TestLaunchArguments.calendar].map(\.rawValue)
         app.launch()
     }
 

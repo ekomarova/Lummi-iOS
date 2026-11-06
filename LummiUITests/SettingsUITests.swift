@@ -13,8 +13,8 @@ final class SettingsUITests: XCTestCase {
         app = nil
     }
     
-    private func launchApp(with arguments: [String]) {
-        app.launchArguments = arguments
+    private func launchApp(with arguments: [TestLaunchArguments]) {
+        app.launchArguments = arguments.map(\.rawValue)
         app.launch()
     }
 
@@ -22,7 +22,7 @@ final class SettingsUITests: XCTestCase {
 
     // Check the button color change
     func test_SettingsButtonChangesState() throws {
-        launchApp(with: ["-UI_TESTING_CALENDAR"])
+        launchApp(with: [.calendar])
         
         let settingsTabButton = app.tabItem("Settings", identifier: "SettingsButton")
         XCTAssertTrue(settingsTabButton.waitForExistence(timeout: 2.0), "Settings button was not found")
@@ -34,7 +34,7 @@ final class SettingsUITests: XCTestCase {
 
     // Check Settings header existence
     func test_SettingsTitleExists() throws {
-        launchApp(with: ["-UI_TESTING_CALENDAR"])
+        launchApp(with: [.calendar])
         app.tabItem("Settings", identifier: "SettingsButton").tap()
         
         let title = app.staticTexts["Settings"]
@@ -45,7 +45,7 @@ final class SettingsUITests: XCTestCase {
 
     // Check Appearance section and options
     func test_AppearanceSectionExists() throws {
-        launchApp(with: ["-UI_TESTING_CALENDAR"])
+        launchApp(with: [.calendar])
         app.tabItem("Settings", identifier: "SettingsButton").tap()
         
         let appearanceLabel = app.staticTexts["Appearance"]
@@ -62,7 +62,7 @@ final class SettingsUITests: XCTestCase {
 
     // Check theme change
     func test_ThemeSelectionSwitchesState() throws {
-        launchApp(with: ["-UI_TESTING_CALENDAR"])
+        launchApp(with: [.calendar])
         app.tabItem("Settings", identifier: "SettingsButton").tap()
         
         let lightBtn = app.buttons["LightThemeButton"]
@@ -91,7 +91,7 @@ final class SettingsUITests: XCTestCase {
         
     // Check language button
     func test_LanguageSectionExists() throws {
-        launchApp(with: ["-UI_TESTING_CALENDAR"])
+        launchApp(with: [.calendar])
         app.tabItem("Settings", identifier: "SettingsButton").tap()
 
         let languageLabel = app.staticTexts["LanguageLabel"]
@@ -103,7 +103,7 @@ final class SettingsUITests: XCTestCase {
 
     // Check language changing
     func test_LanguageSelectionChangesAppLanguage() throws {
-        launchApp(with: ["-UI_TESTING_CALENDAR"])
+        launchApp(with: [.calendar])
         app.tabItem("Settings", identifier: "SettingsButton").tap()
 
         let languageLabel = app.staticTexts["LanguageLabel"]
@@ -133,7 +133,7 @@ final class SettingsUITests: XCTestCase {
         
     // Check iCloud Sync section and options
     func test_iCloudSyncSectionExists() throws {
-        launchApp(with: ["-UI_TESTING_CALENDAR"])
+        launchApp(with: [.calendar])
         app.tabItem("Settings", identifier: "SettingsButton").tap()
 
         let syncLabel = app.staticTexts["Sync"]
@@ -148,7 +148,7 @@ final class SettingsUITests: XCTestCase {
 
     // Check iCloud sync state change
     func test_iCloudSyncSelectionSwitchesState() throws {
-        launchApp(with: ["-UI_TESTING_CALENDAR"])
+        launchApp(with: [.calendar])
         app.tabItem("Settings", identifier: "SettingsButton").tap()
 
         let syncToggle = app.switches["iCloudSyncToggle"]
@@ -166,7 +166,7 @@ final class SettingsUITests: XCTestCase {
     }
 
     func test_iCloudSyncErrorOverlayAppearsAndReverts() throws {
-        launchApp(with: ["-UI_TESTING_FORCE_SYNC_ERROR"])
+        launchApp(with: [.forceSyncError])
 
         app.tabItem("Settings", identifier: "SettingsButton").tap()
 
@@ -199,7 +199,7 @@ final class SettingsUITests: XCTestCase {
     // CI/UI-testing builds have no iCloud entitlement (see CloudKitSyncMonitor), so this
     // covers the generic "sync unavailable" banner without depending on real account state.
     func test_iCloudSyncErrorBannerDisplays() throws {
-        launchApp(with: ["-UI_TESTING_CALENDAR"])
+        launchApp(with: [.calendar])
 
         // Navigate to settings
         app.tabItem("Settings", identifier: "SettingsButton").tap()
@@ -220,7 +220,7 @@ final class SettingsUITests: XCTestCase {
     // -UI_TESTING_ICLOUD_LOGGED_OUT reports deterministically since live account status
     // isn't available in signed-less test builds.
     func test_iCloudSyncErrorBannerDisplays_WhenLoggedOut() throws {
-        launchApp(with: ["-UI_TESTING_CALENDAR", "-UI_TESTING_ICLOUD_LOGGED_OUT"])
+        launchApp(with: [.calendar, .iCloudLoggedOut])
 
         app.tabItem("Settings", identifier: "SettingsButton").tap()
         let syncToggle = app.switches["iCloudSyncToggle"]
@@ -234,7 +234,7 @@ final class SettingsUITests: XCTestCase {
     // MARK: - Clear Data tests
     
     func test_ClearAllDataSectionExistsAndDeletes() throws {
-        launchApp(with: ["-UI_TESTING_CALENDAR"])
+        launchApp(with: [.calendar])
         app.tabItem("Settings", identifier: "SettingsButton").tap()
         
         let clearDataBtn = app.buttons["ClearAllDataButton"]
@@ -271,7 +271,7 @@ final class SettingsUITests: XCTestCase {
 
     func test_ClearAllDataActuallyRemovesRecords() throws {
         // Launch with 10 records for the CURRENT day so they show up on the main screen immediately
-        launchApp(with: ["-UI_TESTING_10_RECORDS"])
+        launchApp(with: [.tenRecords])
         
         // Go to Settings
         app.tabItem("Settings", identifier: "SettingsButton").tap()

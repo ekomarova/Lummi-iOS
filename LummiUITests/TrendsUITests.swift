@@ -13,8 +13,8 @@ final class TrendsUITests: XCTestCase {
         app = nil
     }
 
-    private func launchApp(with arguments: [String]) {
-        app.launchArguments = arguments
+    private func launchApp(with arguments: [TestLaunchArguments]) {
+        app.launchArguments = arguments.map(\.rawValue)
         app.launch()
     }
 
@@ -37,7 +37,7 @@ final class TrendsUITests: XCTestCase {
 
     // 1. The Trends entry point exists on the Insights screen.
     func test_TrendsEntryPointExists() throws {
-        launchApp(with: [""])
+        launchApp(with: [])
         app.tabItem("Insights", identifier: "InsightsButton").tap()
 
         let showTrends = app.buttons["ShowTrendsButton"]
@@ -46,7 +46,7 @@ final class TrendsUITests: XCTestCase {
 
     // 2. Tapping into Trends lists the years, with no Month/All Time tabs.
     func test_TrendsOpensWithYearsOnly() throws {
-        launchApp(with: ["-UI_TESTING_INSIGHTS_TWO_MONTHS"])
+        launchApp(with: [.insightsTwoMonths])
         openTrends()
 
         let currentYear = Calendar.current.component(.year, from: Date())
@@ -57,7 +57,7 @@ final class TrendsUITests: XCTestCase {
 
     // 3. Empty state copy appears when the journal has no entries at all.
     func test_TrendsEmptyState() throws {
-        launchApp(with: ["-UI_TESTING"])
+        launchApp(with: [.uiTesting])
         openTrends()
 
         XCTAssertTrue(app.staticTexts["Add at least one joy"].waitForExistence(timeout: 2.0), "Trends did not show the empty state")
@@ -68,7 +68,7 @@ final class TrendsUITests: XCTestCase {
     // 5 & 6. With several entries, Trends lists the current year, and that year's page shows
     // every card and chart.
     func test_TrendsAllTimeCurrentYearShowsAllSections() throws {
-        launchApp(with: ["-UI_TESTING_INSIGHTS_TWO_MONTHS"])
+        launchApp(with: [.insightsTwoMonths])
         openTrends()
 
         let currentYear = Calendar.current.component(.year, from: Date())
@@ -82,7 +82,7 @@ final class TrendsUITests: XCTestCase {
     // 7. With entries in both the current year and the previous one, Trends lists both years,
     // and each year's page shows every card and chart.
     func test_TrendsAllTimeMultipleYearsShowsAllSections() throws {
-        launchApp(with: ["-UI_TESTING_TRENDS_MULTI_YEAR"])
+        launchApp(with: [.trendsMultiYear])
         openTrends()
 
         let currentYear = Calendar.current.component(.year, from: Date())

@@ -13,8 +13,8 @@ final class InsightsUITests: XCTestCase {
         app = nil
     }
 
-    private func launchApp(with arguments: [String]) {
-        app.launchArguments = arguments
+    private func launchApp(with arguments: [TestLaunchArguments]) {
+        app.launchArguments = arguments.map(\.rawValue)
         app.launch()
     }
     
@@ -22,7 +22,7 @@ final class InsightsUITests: XCTestCase {
     
     // Check the button color change
     func test_InsightsButtonChangesState() throws {
-        launchApp(with: [""])
+        launchApp(with: [])
         let insightsTabButton = app.tabItem("Insights", identifier: "InsightsButton")
         XCTAssertTrue(insightsTabButton.waitForExistence(timeout: 2.0), "Insights button was not found")
         
@@ -33,7 +33,7 @@ final class InsightsUITests: XCTestCase {
     
     // Check Insights header existence
     func test_InsightsTitleExists() throws {
-        launchApp(with: [""])
+        launchApp(with: [])
         app.tabItem("Insights", identifier: "InsightsButton").tap()
         
         let title = app.staticTexts["Insights"]
@@ -42,7 +42,7 @@ final class InsightsUITests: XCTestCase {
     
     // Check that all four highlight cards are shown
     func test_InsightsDefaulEmptyCheckView() throws {
-        launchApp(with: [""])
+        launchApp(with: [])
         app.tabItem("Insights", identifier: "InsightsButton").tap()
 
         XCTAssertTrue(app.staticTexts["Joys"].waitForExistence(timeout: 2.0))
@@ -53,7 +53,7 @@ final class InsightsUITests: XCTestCase {
 
     // Recap / Show All Joys stay available even when the month has no joys
     func test_InsightsRecapIsShownForEmptyMonth() throws {
-        launchApp(with: [""])
+        launchApp(with: [])
         app.tabItem("Insights", identifier: "InsightsButton").tap()
 
         XCTAssertTrue(app.staticTexts["Recap"].waitForExistence(timeout: 2.0))
@@ -71,7 +71,7 @@ final class InsightsUITests: XCTestCase {
     
     // Check all data on the Insight tab
     func test_InsightsWithFourDaysFilled() throws {
-        launchApp(with: ["-UI_TESTING_4_DAYS_FILLED"])
+        launchApp(with: [.fourDaysFilled])
         // iPhone SE (667 pt tall) keeps this element under the bottom toolbar, so the tap misses it
         try XCTSkipIf(app.isSmallScreen, "Not supported on small screens (iPhone SE)")
 
@@ -98,7 +98,7 @@ final class InsightsUITests: XCTestCase {
 
     // Insights has no month switcher: it shows the current month's Joys count and entries only
     func test_InsightsShowsOnlyCurrentMonthData() throws {
-        launchApp(with: ["-UI_TESTING_INSIGHTS_TWO_MONTHS"])
+        launchApp(with: [.insightsTwoMonths])
         try XCTSkipIf(app.isSmallScreen, "Not supported on small screens (iPhone SE)")
 
         let insightsTabButton = app.tabItem("Insights", identifier: "InsightsButton")
@@ -113,7 +113,7 @@ final class InsightsUITests: XCTestCase {
 
     // All Joys mirrors Trends: an empty journal shows the placeholder in both the Month and All Time tabs
     func test_AllJoysEmptyStateInBothTabs() throws {
-        launchApp(with: ["-UI_TESTING"])
+        launchApp(with: [.uiTesting])
         openAllJoys()
 
         let emptyStateText = "Add at least one joy"
@@ -125,7 +125,7 @@ final class InsightsUITests: XCTestCase {
 
     // All Time lists every year on record, and each year's page lists only that calendar year's joys
     func test_AllJoysAllTimeListsEntriesPerYear() throws {
-        launchApp(with: ["-UI_TESTING_TRENDS_MULTI_YEAR"])
+        launchApp(with: [.trendsMultiYear])
         openAllJoys()
         app.buttons["All Time"].tap()
 

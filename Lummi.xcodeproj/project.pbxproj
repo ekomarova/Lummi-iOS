@@ -63,6 +63,7 @@
 		A1B2C3D41000000000000F22 /* YearPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F22 /* YearPage.swift */; };
 		A1B2C3D41000000000000F23 /* YearsListSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F23 /* YearsListSection.swift */; };
 		A1B2C3D41000000000000F31 /* TestLaunchArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F31 /* TestLaunchArguments.swift */; };
+		A1B2C3D41000000000000F32 /* TestLaunchArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F31 /* TestLaunchArguments.swift */; };
 		A1B2C3D42FB0000102 /* LummiSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D42FB0000101 /* LummiSchema.swift */; };
 		A1B2C3D42FB0000202 /* ContainerBootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D42FB0000201 /* ContainerBootstrap.swift */; };
 		A1B2C3D42FB0000302 /* StorageErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D42FB0000301 /* StorageErrorView.swift */; };
@@ -590,6 +591,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1B2C3D41000000000000F32 /* TestLaunchArguments.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
