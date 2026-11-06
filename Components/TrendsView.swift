@@ -9,59 +9,31 @@
 import SwiftUI
 import SwiftData
 
-// Trends screen: a "Month" tab with this month's charts, and an "All Time" tab listing every calendar
-// year on record, each opening its own `YearTrendsView` page — mirroring how Insights opens "All Joys".
+// Trends screen: every calendar year on record, each opening its own `YearTrendsView` page —
+// mirroring how Insights opens "All Joys". The current month's numbers live on Insights itself.
 struct TrendsView: View {
     // Opens a year's page on the Insights tab's stack.
     let onOpenYear: (Int) -> Void
 
-    // Two single-entry fetches instead of every entry: the oldest one gives the year list (and tells whether
-    // the journal is empty), and any one entry of this month tells whether the Month tab has anything to chart.
+    // A single-entry fetch instead of every entry: the oldest one gives the year list and tells whether
+    // the journal is empty.
     @Query(JoyEntry.oldestEntryDescriptor) private var oldestEntries: [JoyEntry]
-    @Query private var entriesThisMonth: [JoyEntry]
-    @State private var selectedTab: PeriodTab = .month
-
-    init(onOpenYear: @escaping (Int) -> Void) {
-        self.onOpenYear = onOpenYear
-        var thisMonth = FetchDescriptor<JoyEntry>(predicate: JoyEntry.monthPredicate(for: Date()))
-        thisMonth.fetchLimit = 1
-        _entriesThisMonth = Query(thisMonth)
-    }
-
-    private var oldestEntryDate: Date? { oldestEntries.first?.date }
 
     private var availableYears: [Int] {
-        TrendsCalculator.availableYears(oldestEntryDate: oldestEntryDate)
-    }
-
-    // Month's own empty check is scoped to the current month, not the whole journal: an otherwise
-    // active journal with a quiet month still has nothing to chart for "Joys By Date"/"Joys By Weekday".
-    private var hasEntriesThisMonth: Bool {
-        !entriesThisMonth.isEmpty
+        TrendsCalculator.availableYears(oldestEntryDate: oldestEntries.first?.date)
     }
 
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 30) {
-                PeriodTabPicker(selection: $selectedTab)
-
-                switch selectedTab {
-                case .month:
-                    if hasEntriesThisMonth {
-                        TrendsChartsView(range: .month)
-                    } else {
-                        NoEntriesView()
-                    }
-                case .allTime:
-                    if oldestEntries.isEmpty {
-                        NoEntriesView()
-                    } else {
-                        YearsListView(years: availableYears, accessibilityIDPrefix: "TrendsYearRow", onSelect: onOpenYear)
-                    }
+                if oldestEntries.isEmpty {
+                    NoEntriesView()
+                } else {
+                    YearsListView(years: availableYears, accessibilityIDPrefix: "TrendsYearRow", onSelect: onOpenYear)
                 }
             }
             .padding(.horizontal, 20)
-            .padding(.top, PageSpacing.topBelowControl)
+            .padding(.top, PageSpacing.topBelowList)
             .padding(.bottom, 30)
         }
         .ignoresSafeArea(.container, edges: .bottom)

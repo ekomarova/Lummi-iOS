@@ -26,6 +26,10 @@ private struct InsightsMonthView: View {
     @Environment(\.locale) var locale
     let onNavigate: (Route) -> Void
 
+    private static var highlightColumns: [GridItem] {
+        Array(repeating: GridItem(.flexible(), spacing: 15), count: AdaptiveLayout.isPad ? 4 : 2)
+    }
+
     @Query private var monthlyEntries: [JoyEntry]
 
     init(month: Date, onNavigate: @escaping (Route) -> Void) {
@@ -53,10 +57,12 @@ private struct InsightsMonthView: View {
                     VStack(alignment: .leading, spacing: 15) {
                         SectionHeader(title: "Highlights")
 
-                        // MARK: - Joys & Joyful Hours
-                        HStack(spacing: 15) {
+                        // Four cards in one row on iPad, two rows of two on iPhone.
+                        LazyVGrid(columns: Self.highlightColumns, spacing: 15) {
                             joysCard
                             joyfulHoursCard
+                            activeDaysCard
+                            streakCard
                         }
                     }
 
@@ -100,6 +106,14 @@ private struct InsightsMonthView: View {
 
     private var joysCard: some View {
         GlowCard.joys(value: "\(monthlyEntries.count)", metrics: .insights)
+    }
+
+    private var activeDaysCard: some View {
+        GlowCard.activeDays(value: "\(InsightsCalculator.uniqueDaysCount(in: monthlyEntries))", metrics: .insights)
+    }
+
+    private var streakCard: some View {
+        GlowCard.streak(value: "\(InsightsCalculator.longestStreak(in: monthlyEntries))", metrics: .insights)
     }
 
     private var joyfulHoursCard: some View {

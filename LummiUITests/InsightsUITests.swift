@@ -40,14 +40,15 @@ final class InsightsUITests: XCTestCase {
         XCTAssertTrue(title.waitForExistence(timeout: 2.0), "Insights header did not appear on the screen.")
     }
     
-    // Check Joys/Joyful hours existence and that the Day Streak card is gone
+    // Check that all four highlight cards are shown
     func test_InsightsDefaulEmptyCheckView() throws {
         launchApp(with: [""])
         app.tabItem("Insights", identifier: "InsightsButton").tap()
 
         XCTAssertTrue(app.staticTexts["Joys"].waitForExistence(timeout: 2.0))
         XCTAssertTrue(app.staticTexts["Joyful Hours"].waitForExistence(timeout: 2.0))
-        XCTAssertFalse(app.staticTexts["Day Streak"].exists, "Insights still shows the Day Streak card")
+        XCTAssertTrue(app.staticTexts["Active Days"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Day Streak"].waitForExistence(timeout: 2.0))
     }
 
     // Recall / Show All Joys stay available even when the month has no joys
