@@ -59,8 +59,22 @@ The repository ships with [Claude Code](https://claude.com/claude-code) configur
 * **Xcode 26.0+**
 * **Swift 5.x**
 
-## How to run:
-**To enable iCloud sync in your own fork**:
-* Change the Bundle Identifier in Target Settings
-* Select your own Development Team
-* In Signing & Capabilities, remove the existing iCloud container and add a new one with your own identifier
+## How to run
+
+Signing and iCloud settings are not stored in the project. They come from `Local.xcconfig`, which is git-ignored, so a fresh clone does not have it. Without it `DEVELOPMENT_TEAM` and `ICLOUD_CONTAINER_ID` are empty, and the app will not be signed or will not get an iCloud container.
+
+1. Create your local config from the template:
+   ```sh
+   cp Local.xcconfig.example Local.xcconfig
+   ```
+2. Edit `Local.xcconfig`:
+   ```
+   DEVELOPMENT_TEAM = ABCDE12345                      # your 10-character Team ID
+   ICLOUD_CONTAINER_ID = iCloud.com.example.Lummi     # your iCloud container
+   ```
+   Find the Team ID in your `Apple Developer account` under `Membership details`.
+3. Open `Lummi.xcodeproj` and run the **Lummi** scheme.
+
+**To run in your own fork**, also change the Bundle Identifier of the app target (and the test targets) in Target Settings, and make `ICLOUD_CONTAINER_ID` match it, for example `iCloud.<your bundle id>`. Xcode registers the container for your team on the first signed build.
+
+Do not select the team in Signing & Capabilities: Xcode would write it into `project.pbxproj` and it could be committed by accident. Keep it in `Local.xcconfig`.
