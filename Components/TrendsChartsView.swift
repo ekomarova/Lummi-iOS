@@ -215,7 +215,7 @@ struct TrendsChartsView: View {
 
 // MARK: - UI Components
 
-// Section title above a chart, matching Insights' "Highlights"/"Recall" section headers.
+// Section title above a chart, matching Insights' "Highlights"/"Recap" section headers.
 struct TrendsSection<Content: View>: View {
     @Environment(ThemeManager.self) private var themeManager
     let title: LocalizedStringResource
