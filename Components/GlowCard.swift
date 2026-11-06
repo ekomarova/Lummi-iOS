@@ -9,7 +9,7 @@
 import SwiftUI
 
 // A highlight card: one bright gradient, a big value in the middle and a caption at the bottom.
-// Shared by Insights and Trends.
+// Shared by Insights and Trends. The text scales with the system text size and shrinks to fit the card's width.
 struct GlowCard: View {
     // Sizes of a card. Each screen has its own set, so its cards stay in step with each other.
     struct Metrics {
@@ -39,6 +39,12 @@ struct GlowCard: View {
     // The caption is a little fainter than the value (about the same as the two stacked opacities it had before).
     private static let captionOpacity = 0.6
 
+    // Grows with the text size the user picked in Settings (1 at the default size), so the card and its text scale together.
+    // Capped so the largest text sizes don't turn the cards into a wall of color.
+    @ScaledMetric(relativeTo: .title) private var textScale: CGFloat = 1
+    private static let maxTextScale: CGFloat = 1.5
+    private var scale: CGFloat { min(textScale, Self.maxTextScale) }
+
     var value: String
     var subtitle: LocalizedStringResource
     var systemImage: String
@@ -53,24 +59,26 @@ struct GlowCard: View {
             content
         }
         .frame(maxWidth: .infinity)
-        .frame(height: metrics.height)
+        .frame(height: metrics.height * scale)
     }
 
     private var subtitleLabel: some View {
         HStack(spacing: 4) {
             Image(systemName: systemImage)
-                .font(.lummiFont(size: 11, weight: .semibold))
+                .font(.lummiFont(size: 11 * scale, weight: .semibold))
                 .foregroundColor(AccentColors.glowCardText)
 
             Text(subtitle)
-                .font(.lummiFont(size: 12))
+                .font(.lummiFont(size: 12 * scale))
                 .foregroundColor(AccentColors.glowCardText.opacity(Self.captionOpacity))
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
         }
     }
 
     private var valueLabel: some View {
         Text(value)
-            .font(.lummiFont(size: metrics.valueFontSize))
+            .font(.lummiFont(size: metrics.valueFontSize * scale))
             .foregroundColor(AccentColors.glowCardText)
             .minimumScaleFactor(0.3)
             .lineLimit(1)
@@ -148,6 +156,16 @@ extension GlowCard {
         }
     }
     .padding(20)
+    .previewEnvironment()
+}
+
+#Preview("Largest text") {
+    HStack(spacing: 15) {
+        GlowCard.joys(value: "42", metrics: .insights)
+        GlowCard.joyfulHours(value: "18:00 - 21:00", metrics: .insights)
+    }
+    .padding(20)
+    .dynamicTypeSize(DynamicTypeSize.lummiSupportedRange.upperBound)
     .previewEnvironment()
 }
 #endif

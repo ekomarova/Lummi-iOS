@@ -23,7 +23,8 @@ extension DynamicTypeSize {
 
 // Scales the font with the text size the user picked in Settings. `size` is the point size at the default
 // "Large" setting, and `style` is the Dynamic Type text style whose scaling curve it follows.
-// Used only for joy entries, titles and menu names. Charts and cards keep a fixed size with `Font.lummiFont`.
+// Used for joy entries, titles and menu names. Chart contents keep a fixed size with `Font.lummiFont`; the highlight cards
+// scale themselves with `@ScaledMetric` (see `GlowCard`).
 private struct LummiFontModifier: ViewModifier {
     @ScaledMetric private var scaledSize: CGFloat
     private let weight: Font.Weight
@@ -45,7 +46,8 @@ extension View {
 }
 
 extension Font {
-    // Fixed size that ignores the user's text size. For charts and cards, which are laid out for one size.
+    // Fixed size that ignores the user's text size. For chart contents, which are laid out for one size.
+    // Callers can multiply `size` by their own scale (as `GlowCard` does).
     static func lummiFont(size: CGFloat, weight: Font.Weight = .regular) -> Font {
         return .system(size: size, weight: weight, design: .default)
     }

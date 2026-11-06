@@ -16,9 +16,9 @@ See [LICENSE](./LICENSE.md) for the full terms.
 
 * **Joy Journal**: Create, edit, and delete daily "moments of joy"
 * **Insights**: Monthly analytics designed to help you understand your happiness patterns:
-    *   **Highlights**: how many moments you captured this month and your "joyful hours", the 3-hour window of the day when joy happens most
+    *   **Highlights**: how many moments you captured this month, your "joyful hours" (the 3-hour window of the day when joy happens most), active days and your day streak
     *   **Recall**: "All Joys" lists every moment of the current month, or of any past year from the All Time tab
-    *   **Trends**: charts of joys by date (or by month for a year), by weekday, and the number of active days, for the current month or any year
+    *   **Trends**: charts of joys by date (or by month for a year), by weekday, and the number of active days, for any year
 * **Dynamic Themes**: Light, Dark or Auto (follows the system appearance), managed via a custom `ThemeManager`
 * **Seamless iCloud Sync:** Keep your joyful moments safe and synchronized across your iPhone and iPad (Opt-in via Settings)
 * **Multi-language Support**: English, Russian, German

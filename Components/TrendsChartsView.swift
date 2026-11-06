@@ -11,7 +11,7 @@ import SwiftData
 import Charts
 
 // Summary cards plus the "Joys By Date"/"Joys By Month" and "Joys By Weekday" charts for one range.
-// Shared by `TrendsView`'s "Month" mode and `YearTrendsView`'s single-year page, so both stay pixel-identical.
+// Used by `YearTrendsView`'s single-year page.
 struct TrendsChartsView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale
@@ -81,8 +81,6 @@ struct TrendsChartsView: View {
     // MARK: - Summary
 
     // iPad is wide enough for all four cards in one row; on iPhone the Joyful Hours card gets a row of its own.
-    // It is only present on a year's page, not Trends' own Month tab: the main Insights screen already shows
-    // this same card for the current month, so repeating it there would be redundant.
     @ViewBuilder
     private func summarySection(_ stats: TrendsPerformanceStats) -> some View {
         if AdaptiveLayout.isPad {

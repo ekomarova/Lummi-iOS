@@ -14,7 +14,7 @@ struct TrendsPerformanceStats {
     let entryCount: Int
     let daysJournaled: Int
     let bestStreak: Int
-    // Only calculated for `.year`: the Month tab has no Joyful Hours card, since Insights already shows it.
+    // Only calculated for `.year`: `.month` has no Joyful Hours card, since Insights already shows it.
     let joyfulHours: String?
     let dataPoints: [TrendsDataPoint]
     let weekdayCounts: [WeekdayCount]
