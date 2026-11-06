@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import SwiftData
 
 // All Joys screen, opened from the Insights screen: a "Month" tab listing this month's joys, and an "All Time" tab
 // listing every calendar year on record, each opening its own `YearJoysView` page — mirroring Trends.
@@ -15,16 +14,10 @@ struct AllJoysView: View {
     // Opens a year's page on the Insights tab's stack.
     let onOpenYear: (Int) -> Void
 
-    // One single-entry fetch of the oldest joy: it gives the year list and tells whether the journal is empty.
-    @Query(JoyEntry.oldestEntryDescriptor) private var oldestEntries: [JoyEntry]
     @State private var selectedTab: PeriodTab = .month
 
-    private var availableYears: [Int] {
-        TrendsCalculator.availableYears(oldestEntryDate: oldestEntries.first?.date)
-    }
-
     var body: some View {
-        ScrollView(showsIndicators: false) {
+        PushedScrollPage(title: "All joys", top: PageSpacing.topBelowControl) {
             VStack(alignment: .leading, spacing: 30) {
                 PeriodTabPicker(selection: $selectedTab)
                     .padding(.horizontal, 20)
@@ -33,19 +26,10 @@ struct AllJoysView: View {
                 case .month:
                     JoysListView(range: .month)
                 case .allTime:
-                    if oldestEntries.isEmpty {
-                        NoEntriesView()
-                    } else {
-                        YearsListView(years: availableYears, accessibilityIDPrefix: "AllJoysYearRow", onSelect: onOpenYear)
-                            .padding(.horizontal, 20)
-                    }
+                    YearsListSection(accessibilityIDPrefix: "AllJoysYearRow", onOpenYear: onOpenYear)
                 }
             }
-            .padding(.top, PageSpacing.topBelowControl)
-            .padding(.bottom, 30)
         }
-        .ignoresSafeArea(.container, edges: .bottom)
-        .lummiNavigationTitle("All joys")
     }
 }
 

@@ -55,6 +55,9 @@
 		A1B2C3D41000000000000002 /* RecordActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000002 /* RecordActionButton.swift */; };
 		A1B2C3D41000000000000004 /* CapsuleRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000004 /* CapsuleRow.swift */; };
 		A1B2C3D41000000000000F01 /* SectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F01 /* SectionHeader.swift */; };
+		A1B2C3D41000000000000F21 /* PushedScrollPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F21 /* PushedScrollPage.swift */; };
+		A1B2C3D41000000000000F22 /* YearPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F22 /* YearPage.swift */; };
+		A1B2C3D41000000000000F23 /* YearsListSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F23 /* YearsListSection.swift */; };
 		A1B2C3D41000000000000F11 /* TabPageTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F11 /* TabPageTitle.swift */; };
 		A1B2C3D41000000000000F12 /* TabPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F12 /* TabPage.swift */; };
 		A1B2C3D41000000000000F13 /* SectionBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F13 /* SectionBlock.swift */; };
@@ -138,6 +141,9 @@
 		A1B2C3D40000000000000002 /* RecordActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordActionButton.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000004 /* CapsuleRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleRow.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000F01 /* SectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeader.swift; sourceTree = "<group>"; };
+		A1B2C3D40000000000000F21 /* PushedScrollPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushedScrollPage.swift; sourceTree = "<group>"; };
+		A1B2C3D40000000000000F22 /* YearPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearPage.swift; sourceTree = "<group>"; };
+		A1B2C3D40000000000000F23 /* YearsListSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearsListSection.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000F11 /* TabPageTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabPageTitle.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000F12 /* TabPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabPage.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000F13 /* SectionBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionBlock.swift; sourceTree = "<group>"; };
@@ -280,6 +286,9 @@
 			children = (
 				A75A501776D443E1961E0695 /* AllJoysView.swift */,
 				A1B2C3D40000000000000F01 /* SectionHeader.swift */,
+				A1B2C3D40000000000000F21 /* PushedScrollPage.swift */,
+				A1B2C3D40000000000000F22 /* YearPage.swift */,
+				A1B2C3D40000000000000F23 /* YearsListSection.swift */,
 				A1B2C3D40000000000000F11 /* TabPageTitle.swift */,
 				A1B2C3D40000000000000F12 /* TabPage.swift */,
 				A1B2C3D40000000000000F13 /* SectionBlock.swift */,
@@ -522,6 +531,9 @@
 				47981EAD2FA54745005ADAB1 /* InsightsCalculator.swift in Sources */,
 				473B04572F9BB2FD00C482FA /* ThemeProtocol.swift in Sources */,
 				A1B2C3D41000000000000F01 /* SectionHeader.swift in Sources */,
+				A1B2C3D41000000000000F21 /* PushedScrollPage.swift in Sources */,
+				A1B2C3D41000000000000F22 /* YearPage.swift in Sources */,
+				A1B2C3D41000000000000F23 /* YearsListSection.swift in Sources */,
 				A1B2C3D41000000000000F11 /* TabPageTitle.swift in Sources */,
 				A1B2C3D41000000000000F12 /* TabPage.swift in Sources */,
 				A1B2C3D41000000000000F13 /* SectionBlock.swift in Sources */,

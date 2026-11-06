@@ -13,14 +13,9 @@ struct YearTrendsView: View {
     let year: Int
 
     var body: some View {
-        ScrollView(showsIndicators: false) {
+        YearPage(year: year, top: PageSpacing.topBelowControl) {
             TrendsChartsView(range: .year(year))
-                .padding(.horizontal, 20)
-                .padding(.top, PageSpacing.topBelowControl)
-                .padding(.bottom, 30)
         }
-        .ignoresSafeArea(.container, edges: .bottom)
-        .lummiNavigationTitle(LocalizedStringResource(stringLiteral: String(year)))
     }
 }
 
