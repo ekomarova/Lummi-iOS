@@ -137,23 +137,7 @@ final class PerformanceUITests: XCTestCase {
         }
     }
 
-    // Open Trends from Insights: the Month tab calculates its cards and charts.
-    func test_Perf_OpenTrendsMonth() throws {
-        measure(metrics: metrics, options: manualOptions) {
-            relaunch()
-            let insightsTab = app.tabItem("Insights", identifier: "InsightsButton")
-            XCTAssertTrue(insightsTab.waitForExistence(timeout: 30))
-            insightsTab.tap()
-            let showTrends = app.buttons["ShowTrendsButton"]
-            XCTAssertTrue(showTrends.waitForExistence(timeout: 30))
-            startMeasuring()
-            showTrends.tap()
-            XCTAssertTrue(app.staticTexts["Joys By Date"].waitForExistence(timeout: 30))
-            stopMeasuring()
-        }
-    }
-
-    // Open the current year from the All Time tab: the year's cards and charts are calculated over all of its entries.
+    // Open the current year from Trends: the year's cards and charts are calculated over all of its entries.
     func test_Perf_OpenTrendsYear() throws {
         measure(metrics: metrics, options: manualOptions) {
             relaunch()
@@ -163,9 +147,6 @@ final class PerformanceUITests: XCTestCase {
             let showTrends = app.buttons["ShowTrendsButton"]
             XCTAssertTrue(showTrends.waitForExistence(timeout: 30))
             showTrends.tap()
-            let allTime = app.buttons["All Time"]
-            XCTAssertTrue(allTime.waitForExistence(timeout: 30))
-            allTime.tap()
             let yearRow = app.buttons["TrendsYearRow_\(Calendar.current.component(.year, from: Date()))"]
             XCTAssertTrue(yearRow.waitForExistence(timeout: 30))
             startMeasuring()
