@@ -54,16 +54,12 @@ private struct InsightsMonthView: View {
                 VStack(spacing: 35) {
 
                     // MARK: - Highlights
-                    VStack(alignment: .leading, spacing: 15) {
-                        SectionHeader(title: "Highlights")
-
-                        // Four cards in one row on iPad, two rows of two on iPhone.
-                        LazyVGrid(columns: Self.highlightColumns, spacing: 15) {
-                            joysCard
-                            joyfulHoursCard
-                            activeDaysCard
-                            streakCard
-                        }
+                    // Four cards in one row on iPad, two rows of two on iPhone.
+                    LazyVGrid(columns: Self.highlightColumns, spacing: 15) {
+                        joysCard
+                        joyfulHoursCard
+                        activeDaysCard
+                        streakCard
                     }
 
                     // MARK: - Recall
