@@ -55,6 +55,9 @@
 		A1B2C3D41000000000000002 /* RecordActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000002 /* RecordActionButton.swift */; };
 		A1B2C3D41000000000000004 /* CapsuleRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000004 /* CapsuleRow.swift */; };
 		A1B2C3D41000000000000F01 /* SectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F01 /* SectionHeader.swift */; };
+		A1B2C3D41000000000000F11 /* TabPageTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F11 /* TabPageTitle.swift */; };
+		A1B2C3D41000000000000F12 /* TabPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F12 /* TabPage.swift */; };
+		A1B2C3D41000000000000F13 /* SectionBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F13 /* SectionBlock.swift */; };
 		A1B2C3D41000000000000F10 /* TrendsPerformanceStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F10 /* TrendsPerformanceStats.swift */; };
 		A1B2C3D42FB0000102 /* LummiSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D42FB0000101 /* LummiSchema.swift */; };
 		A1B2C3D42FB0000202 /* ContainerBootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D42FB0000201 /* ContainerBootstrap.swift */; };
@@ -135,6 +138,9 @@
 		A1B2C3D40000000000000002 /* RecordActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordActionButton.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000004 /* CapsuleRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleRow.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000F01 /* SectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeader.swift; sourceTree = "<group>"; };
+		A1B2C3D40000000000000F11 /* TabPageTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabPageTitle.swift; sourceTree = "<group>"; };
+		A1B2C3D40000000000000F12 /* TabPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabPage.swift; sourceTree = "<group>"; };
+		A1B2C3D40000000000000F13 /* SectionBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionBlock.swift; sourceTree = "<group>"; };
 		A1B2C3D40000000000000F10 /* TrendsPerformanceStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsPerformanceStats.swift; sourceTree = "<group>"; };
 		A1B2C3D42FB0000101 /* LummiSchema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LummiSchema.swift; sourceTree = "<group>"; };
 		A1B2C3D42FB0000201 /* ContainerBootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerBootstrap.swift; sourceTree = "<group>"; };
@@ -274,6 +280,9 @@
 			children = (
 				A75A501776D443E1961E0695 /* AllJoysView.swift */,
 				A1B2C3D40000000000000F01 /* SectionHeader.swift */,
+				A1B2C3D40000000000000F11 /* TabPageTitle.swift */,
+				A1B2C3D40000000000000F12 /* TabPage.swift */,
+				A1B2C3D40000000000000F13 /* SectionBlock.swift */,
 				A1B2C3D40000000000000004 /* CapsuleRow.swift */,
 				A1B2C3D40000000000000002 /* RecordActionButton.swift */,
 				473B045A2F9BB79B00C482FA /* RecordInput.swift */,
@@ -513,6 +522,9 @@
 				47981EAD2FA54745005ADAB1 /* InsightsCalculator.swift in Sources */,
 				473B04572F9BB2FD00C482FA /* ThemeProtocol.swift in Sources */,
 				A1B2C3D41000000000000F01 /* SectionHeader.swift in Sources */,
+				A1B2C3D41000000000000F11 /* TabPageTitle.swift in Sources */,
+				A1B2C3D41000000000000F12 /* TabPage.swift in Sources */,
+				A1B2C3D41000000000000F13 /* SectionBlock.swift in Sources */,
 				A1B2C3D41000000000000004 /* CapsuleRow.swift in Sources */,
 				A1B2C3D41000000000000002 /* RecordActionButton.swift in Sources */,
 				47289DCE2FAED17700E46B84 /* InsightsView.swift in Sources */,

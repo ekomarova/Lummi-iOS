@@ -178,18 +178,19 @@ private extension ContentView {
     // MARK: - Home tab
 
     var homeContent: some View {
-        // The title's protected zone takes 12pt of the old 20pt gap (see `scrollHeaderBackground`), as on Insights and Settings.
-        VStack(alignment: .leading, spacing: 8) {
+        // The day's entries scroll in their own list, so the page does not wrap them in a ScrollView.
+        TabPage(scrolls: false) {
             // MARK: - Header View
             HeaderView(date: navigation.selectedDate)
-                .scrollHeaderBackground(alignment: .leading)
-
+        } content: {
             // MARK: - Selected Day View
-            SelectedDayDetailView(
-                selectedDate: navigation.selectedDate
-            )
+            VStack(alignment: .leading, spacing: 8) {
+                SelectedDayDetailView(
+                    selectedDate: navigation.selectedDate
+                )
 
-            Spacer()
+                Spacer()
+            }
         }
         // Lets the day's entries scroll under the tab bar, as Insights and All Joys do.
         .ignoresSafeArea(.container, edges: .bottom)
