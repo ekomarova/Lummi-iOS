@@ -35,39 +35,35 @@ struct SelectedDayDetailView: View {
 
     var body: some View {
         GeometryReader { geometry in
-            ZStack {
-                tapCatcher
-                    .ignoresSafeArea()
-                    .accessibilityIdentifier("GlobalDismissArea")
-                    .onTapGesture { saveAndDismiss() }
+            ScrollView(.vertical, showsIndicators: false) {
+                ScrollViewReader { proxy in
+                    VStack(spacing: 15) {
+                        // Like the first message of a chat: the question stays on top and the day's entries follow
+                        // it, scrolling up together once there are many.
+                        dayPromptView
+                            .blur(radius: session.hasActiveEntry ? 6 : 0)
+                            .opacity(session.hasActiveEntry ? 0.5 : 1.0)
+                            .padding(.top, 10)
 
-                ScrollView(.vertical, showsIndicators: false) {
-                    ScrollViewReader { proxy in
-                        VStack(spacing: 15) {
-                            // Like the first message of a chat: the question stays on top and the day's entries follow
-                            // it, scrolling up together once there are many.
-                            dayPromptView
-                                .blur(radius: session.hasActiveEntry ? 6 : 0)
-                                .opacity(session.hasActiveEntry ? 0.5 : 1.0)
-                                .padding(.top, 10)
-
-                            if !dayEntries.isEmpty {
-                                notesListView(entries: dayEntries, proxy: proxy)
-                            }
+                        if !dayEntries.isEmpty {
+                            notesListView(entries: dayEntries, proxy: proxy)
                         }
-                        .padding(.horizontal)
-                        .padding(.bottom, 160)
-                        .frame(maxWidth: .infinity)
-                        .frame(minHeight: geometry.size.height, alignment: .top)
-                        .background(
-                            tapCatcher
-                                .onTapGesture { saveAndDismiss() }
-                        )
                     }
+                    .padding(.horizontal)
+                    .padding(.bottom, 160)
+                    .frame(maxWidth: .infinity)
+                    .frame(minHeight: geometry.size.height, alignment: .top)
+                    // Behind the entries, so a tap anywhere outside them leaves the edit mode without swallowing taps
+                    // meant for an entry.
+                    .background(
+                        tapCatcher
+                            .accessibilityIdentifier("GlobalDismissArea")
+                            .onTapGesture { saveAndDismiss() }
+                    )
                 }
-                .scrollClipDisabled()
-                .ignoresSafeArea(.container, edges: .bottom)
             }
+            .scrollClipDisabled()
+            .ignoresSafeArea(.container, edges: .bottom)
         }
         .animation(.lummiSpringSlow, value: selectedDate)
         .animation(.lummiSpring, value: session.activeEntryID)
@@ -88,7 +84,7 @@ struct SelectedDayDetailView: View {
 
 private extension SelectedDayDetailView {
 
-    // An invisible area that takes taps, so a tap anywhere outside the entries leaves the edit mode.
+    // An invisible area that takes taps.
     var tapCatcher: some View {
         Color.clear.contentShape(Rectangle())
     }
@@ -115,14 +111,14 @@ private extension SelectedDayDetailView {
 
         VStack(alignment: .trailing, spacing: 8) {
             if isActive && !session.isEditing {
-                noteCellActionButtons(entry: entry, proxy: proxy)
+                noteCellActionButtons(entry: entry)
             }
 
             Group {
                 if isActive && session.isEditing {
                     noteCellEditField
                 } else {
-                    noteCellTextDisplay(entry: entry, index: index, isActive: isActive, proxy: proxy)
+                    noteCellTextDisplay(entry: entry, index: index, proxy: proxy)
                 }
             }
         }
@@ -139,7 +135,7 @@ private extension SelectedDayDetailView {
         }
     }
 
-    func noteCellActionButtons(entry: JoyEntry, proxy: ScrollViewProxy) -> some View {
+    func noteCellActionButtons(entry: JoyEntry) -> some View {
         HStack(spacing: 12) {
             RecordActionButton(systemImage: "pencil", title: "Edit", accessibilityID: "EditRecordButton") {
                 session.beginEditing(text: entry.text)
@@ -163,7 +159,7 @@ private extension SelectedDayDetailView {
         }
     }
 
-    func noteCellTextDisplay(entry: JoyEntry, index: Int, isActive: Bool, proxy: ScrollViewProxy) -> some View {
+    func noteCellTextDisplay(entry: JoyEntry, index: Int, proxy: ScrollViewProxy) -> some View {
         NoteBubble(sharpCorner: .bottomTrailing) {
             Text(entry.text)
                 .lummiScaledFont(size: 17, relativeTo: .body)
@@ -188,10 +184,15 @@ private extension SelectedDayDetailView {
 
 private extension SelectedDayDetailView {
 
+    // The day's entry with this id, if it is still there.
+    func entry(for id: PersistentIdentifier) -> JoyEntry? {
+        dayEntries.first { $0.persistentModelID == id }
+    }
+
     func deleteNote() {
         session.delete { id in
-            guard let entry = dayEntries.first(where: { $0.persistentModelID == id }) else { return }
-            try JoyEntryStore(context: modelContext).delete(entry)
+            guard let target = entry(for: id) else { return }
+            try JoyEntryStore(context: modelContext).delete(target)
         }
     }
 
@@ -200,8 +201,8 @@ private extension SelectedDayDetailView {
 
         withAnimation(.lummiSpring) {
             session.saveAndDismiss { id, text in
-                guard let entry = dayEntries.first(where: { $0.persistentModelID == id }) else { return }
-                try JoyEntryStore(context: modelContext).applyEdit(to: entry, newText: text)
+                guard let target = entry(for: id) else { return }
+                try JoyEntryStore(context: modelContext).applyEdit(to: target, newText: text)
             }
         }
     }
