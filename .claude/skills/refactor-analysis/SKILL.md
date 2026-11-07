@@ -1,6 +1,6 @@
 ---
 name: refactor-analysis
-description: Read-only refactoring analysis of the whole Lummi codebase. Finds duplicated code, hardcoded values, hacks and weak design, then reports a summary and a table of problems with proposed improvements. Manual use only.
+description: Read-only refactoring analysis of the whole Lummi codebase. Finds duplicated code, hardcoded values, hacks and weak design, rates each finding by what the user would notice and by performance impact, skips purely cosmetic ones, then reports a summary and a table of problems with proposed improvements. Manual use only.
 disable-model-invocation: true
 allowed-tools: Read, Glob, Grep, Agent, Bash(git ls-files:*), Bash(git log:*), Bash(wc:*), Bash(swiftlint:*)
 ---
@@ -39,25 +39,47 @@ Optional argument: a folder or file to narrow the scope (`$ARGUMENTS`). With no 
 - Missing accessibility labels, missing `#Preview`, logic without unit tests (per `CLAUDE.md`).
 - Only report things that are actually worth changing. Do not pad the report with style nitpicks that SwiftLint already covers; if `swiftlint` output helps, run it and mention only relevant items.
 
-## 3. Verify before reporting
+## 3. Rate the value of each finding
+Finding a problem is not a reason to fix it. Before a candidate goes into the main table, answer these questions about it, from the code you read:
+
+- **User impact.** Would the user of the app notice the fix?
+  - `Visible`: it changes what they see, feel or get (layout, behavior, speed, correctness, accessibility, text in their language).
+  - `Indirect`: they would not notice the fix, but it removes a real risk for them (a crash, lost or duplicated data, iCloud sync, a screen that can disagree with another one).
+  - `None`: only the code changes.
+- **Performance impact.** Does the code do work that matters, and how often?
+  - `None`, `Unclear`, `Likely` or `Measured`. Judge by how often it runs (once per launch, per tap, per render, per scroll frame), how much data it touches (the 5,000-entry scenario is the project's reference load) and whether it runs on the main thread.
+  - A performance claim without a number is a hypothesis. Say so, and say how to measure it: the existing manual tests (`LummiTests/TrendsPerformanceTests`, `LummiTests/JoyEntryStorePerformanceTests`, `LummiUITests/PerformanceUITests`, launch argument `-UI_TESTING_5K_ENTRIES`) or the `performance-profile` skill. Never propose a performance change for code that runs rarely or on small data without an estimate that it matters.
+- **Risk and upkeep.** Is there a real chance of a bug, or have copies of the code already diverged or spread to three or more places? Or is it just two similar short blocks that are easy to read as they are?
+- **Cost.** Compare the effort and the chance of breaking something with the value above. If the cost is higher than the value, say "not worth it".
+
+A finding is **actionable** only if at least one of these is true: the user would notice the fix; it has a real, plausible performance cost; it is a bug, data-loss or sync risk; it breaks a rule from `CLAUDE.md`; or it removes duplication that already diverged or spread to three or more places. A comment that is misleading (it describes a design that no longer exists) is actionable too, because it is cheap to fix and wrong text costs the next reader time.
+
+Everything else is **cosmetic**: renaming, reordering, moving a file, a constant used once, two identical short blocks with no sign of diverging, comment wording that is merely awkward. Do not put cosmetic findings in the main table and do not spend time proposing designs for them. Mention each one in a single line in the "Skipped as cosmetic" list, so the user can overrule you.
+
+If a comment explains why the code is written the way it is, treat that as a deliberate decision. Report it only if the stated reason no longer holds, or you can show that it is wrong.
+
+## 4. Verify before reporting
 - Every finding must cite `path:line` (or a line range) that you actually read.
 - For duplication, confirm the blocks really are equivalent, and note any real difference that would complicate merging.
 - For "unused" claims, grep for usages across the whole project first.
-- Mark uncertain findings as such rather than presenting guesses as facts.
+- Mark uncertain findings as such rather than presenting guesses as facts. This applies most to performance and to CloudKit behavior, which cannot be tested without a signed iCloud entitlement.
 
-## 4. Report format
+## 5. Report format
 Write the report in the user's language, in this order:
 
-1. **Summary** (3-6 sentences): overall state of the code, the main themes, how many findings per category and severity, and the top 3 things worth doing first.
-2. **Table of problems and proposals** with one row per finding, sorted by priority (High, Medium, Low), with these columns:
+1. **Summary** (3-6 sentences): overall state of the code, the main themes, how many findings are actionable per category and severity, how many were skipped as cosmetic, and the top 3 things worth doing first.
+2. **Table of problems and proposals** with one row per actionable finding, sorted by priority (High, Medium, Low), with these columns:
 
-| # | Category | Severity | Where (`file:line`) | Problem | Proposed improvement | Effort |
-|---|----------|----------|---------------------|---------|----------------------|--------|
+| # | Category | Severity | Where (`file:line`) | Problem | User impact | Performance | Proposed improvement | Effort |
+|---|----------|----------|---------------------|---------|-------------|-------------|----------------------|--------|
 
    - Category: `Duplication`, `Hardcode/Hack`, or `Design`.
-   - Severity: High (bug risk or spreads widely), Medium (clear maintainability cost), Low (nice to have).
+   - Severity follows the value from section 3: High (bug, data or sync risk, or visibly affects the user, or spreads widely), Medium (a real cost in speed or maintainability), Low (small but real, for example a misleading comment).
+   - User impact: `Visible`, `Indirect` or `None`, with a few words on what the user would notice.
+   - Performance: `None`, `Unclear`, `Likely` or `Measured`. For `Unclear` and `Likely` add how to measure it. For `Measured` give the number.
    - Effort: S / M / L.
    - Group duplicated clusters into one row that lists every location.
-3. **Suggested order of work**: a short list of 3-7 steps that groups related findings into sensible refactoring commits and notes dependencies between them.
+3. **Skipped as cosmetic**: one line per skipped item with `file:line` and the reason it is not worth the time. Say "none" if there were none.
+4. **Suggested order of work**: a short list of 3-7 steps that groups related findings into sensible refactoring commits and notes dependencies between them. Put anything that needs a measurement first, because the measurement may remove the item.
 
-If nothing significant is found in a category, say so explicitly instead of inventing findings. End by asking which items the user wants to fix; do not start fixing on your own.
+If nothing significant is found in a category, say so explicitly instead of inventing findings. An honest "nothing here is worth the time" is a good result. End by asking which items the user wants to fix; do not start fixing on your own.

@@ -8,19 +8,14 @@
 
 import SwiftUI
 
-// One calendar year's trends, opened by tapping a year in Trends' "All Time" list.
+// One calendar year's trends, opened by tapping a year in the Trends list.
 struct YearTrendsView: View {
     let year: Int
 
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            TrendsChartsView(range: .year(year))
-                .padding(.horizontal, 20)
-                .padding(.top, PageSpacing.topBelowControl)
-                .padding(.bottom, 30)
+        YearPage(year: year, top: PageSpacing.topBelowList) {
+            TrendsChartsView(year: year)
         }
-        .ignoresSafeArea(.container, edges: .bottom)
-        .lummiNavigationTitle(LocalizedStringResource(stringLiteral: String(year)))
     }
 }
 

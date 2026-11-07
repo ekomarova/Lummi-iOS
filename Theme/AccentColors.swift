@@ -11,6 +11,9 @@ import SwiftUI
 // Data/accent colors shared by Insights, Trends and Settings. Unlike `AppTheme`, these do not
 // change between light and dark mode, so they live outside the theme protocol.
 enum AccentColors {
+    // The app's own blue: the joy bubbles in the dark theme and the selected tab in both themes.
+    static let brandBlue = Color(red: 0.10, green: 0.40, blue: 0.80)
+
     // Highlight cards: one bright hue each, from a saturated leading edge to a lighter trailing edge.
     static let joysGradient = [Color(red: 0.35, green: 0.78, blue: 0.40), Color(red: 0.55, green: 0.87, blue: 0.55)]
 

@@ -1,6 +1,6 @@
 ---
 name: audit
-description: Full read-only audit of the project - implementation bugs, security, code quality, licenses, git hygiene and release readiness - ending with a prioritized report. Manual use only.
+description: Full read-only audit of the project - implementation bugs, security, code quality, licenses, git hygiene and release readiness - ending with a prioritized report. Reports only findings with real impact and says so plainly when there is nothing serious. Manual use only.
 disable-model-invocation: true
 allowed-tools: Read, Glob, Grep, Agent, WebSearch, WebFetch, Bash(git ls-files:*), Bash(git check-ignore:*), Bash(git log:*), Bash(git status:*), Bash(git ls-tree:*), Bash(wc:*), Bash(swiftlint:*), Bash(ls:*)
 ---
@@ -17,6 +17,12 @@ Optional argument: a folder or file to narrow the scope (`$ARGUMENTS`). With no 
 - **State limits explicitly.** If data for an item is missing (no CI access, no commit history, no production configs, no network for CVE lookups), say so as an analysis limitation. Never skip an item silently.
 - **Not applicable is an answer.** If a section does not apply to the project (for example CORS in an app with no server), write "not applicable" with a one-line reason.
 - **Verify before reporting.** Read the actual code around each finding. Do not report from grep hits or names alone. Mark uncertain findings as uncertain.
+- **Do not invent findings.** An empty section is a valid and good result. If nothing serious is found, write "none found" and stop; do not fill the report with minor points to make it look thorough. A short report on a healthy project is correct.
+- **Every finding needs a realistic scenario.** Say what triggers it, who or what is affected (the user, their data, their iCloud, the release) and how likely it is. If you cannot describe a realistic trigger, it is not a finding: drop it, or list it as an open question.
+- **Calibrate severity by real impact**, not by how the code looks. A crash path the user can reach, data loss, a leaked secret or a store rejection is serious. Code that merely looks unusual, or a risk that needs an unlikely combination of events, is not.
+- **Skip the cosmetic.** Naming, ordering, wording, style that `swiftlint` already covers and small duplication with no sign of diverging are not audit findings. If you want to mention them, do it in one line under "Skipped as cosmetic". Rules from `CLAUDE.md` count only when breaking them has a real effect or the rule is explicit and the violation is clear.
+- **Respect deliberate decisions.** If a comment, the README or the code's history explains why something is done a certain way, treat it as intentional. Report it only if the stated reason no longer holds, or you can show it is wrong.
+- **Performance claims need numbers.** Without a measurement, a performance concern is a hypothesis: say so, and say how to measure it (the project has manual performance tests and the 5,000-entry launch argument `-UI_TESTING_5K_ENTRIES`; see also the `performance-profile` skill). Do not call something slow because it looks slow.
 - For a large codebase (more than ~60 files), split the reading by folder across parallel agents, require `path:line` evidence from each, then merge and de-duplicate their findings yourself.
 
 ## Audit tasks
@@ -36,6 +42,7 @@ Logic errors, potential crashes (force unwraps, `try!`, `fatalError`, out-of-ran
 Give each security finding a severity: high / medium / low.
 
 ### 3. Implementation quality and best practices
+Report only what has a real cost: something that hides bugs, makes a likely change risky, is visibly wrong for the user, or breaks an explicit project rule with an effect. Leave out taste and minor tidiness. Consider:
 SOLID / DRY / KISS where appropriate; project structure and separation of concerns; naming of variables, functions and modules; existence and quality of tests (unit and integration) and coverage of critical paths; edge case handling; language and framework idioms (no "Swift written like another language", correct SwiftUI/SwiftData patterns); code duplication; accessibility and localization completeness where the project sets rules for them (see `CLAUDE.md`, `.swiftlint.yml`). Compare the code against the project's own documented rules and report violations.
 
 ### 4. Licenses
@@ -53,20 +60,21 @@ Rate readiness as **not ready / ready with reservations / ready**, based on: cri
 ## Report format
 Write the report in the user's language. Be concise and to the point, no filler. Use exactly this structure:
 
-1. **Summary** (3-5 sentences): overall impression and the release-readiness verdict.
-2. **Critical issues**: numbered list; for each one give file and line, description, risk, recommendation.
+1. **Summary** (3-5 sentences): overall impression and the release-readiness verdict. Say plainly if the project is in good shape and there is little to fix.
+2. **Critical issues**: numbered list; for each one give file and line, description, the scenario that triggers it and who it affects, risk, recommendation. Write "none found" if there are none.
 3. **Security issues**: separate list with severity high / medium / low.
 4. **Code quality and practices**: grouped by topic, with examples.
 5. **Licenses**: mismatches found (or "none found" / "not applicable" with reason).
 6. **Git hygiene**: extra tracked files, missing ignore rules (or "none found").
 7. **Release readiness**: rating with justification.
-8. **Prioritization table**:
+8. **Skipped as cosmetic**: one line per item with `file:line` and why it is not worth the time, so the user can overrule you. Write "none" if there were none.
+9. **Prioritization table** (only items that passed the checks above; leave it short or empty rather than pad it):
 
 | Priority | # | Item (with `file:line`) | Effort (S/M/L) |
 |----------|---|-------------------------|----------------|
 
    Priorities: **Critical** (blocks release or creates risk of bugs, vulnerabilities, data leaks), **Important** (fix in the next iterations), **Desirable** (quality improvements, refactoring, tech debt).
 
-9. **Overall assessment**: architecture, quality and maturity of the implementation, plus a list of analysis limitations and open questions.
+10. **Overall assessment**: architecture, quality and maturity of the implementation, plus a list of analysis limitations and open questions.
 
 Do not start fixing anything. End by asking which items the user wants to address.

@@ -10,8 +10,8 @@ import SwiftUI
 
 // Styled bubble for displaying and editing an already saved note; not used for the new-note input screen.
 // With a `sharpCorner` that corner is nearly square, like the tail of a speech bubble. The bubble is as wide as its
-// content, like in a messenger: it sits on the trailing side for a trailing corner and on the leading side otherwise.
-// `fillsWidth` stretches it across the row, for a text field that has no width of its own. The `.card` style is the
+// content, like in a messenger, and sits on the side `alignment` says: trailing for the user's own entries, leading
+// for messages from the app. `fillsWidth` stretches it across the row, for a text field that has no width of its own. The `.card` style is the
 // quiet look of a card in the theme's colors, for a message from the app rather than an entry of the user.
 struct NoteBubble<Content: View>: View {
     enum Style {
@@ -22,6 +22,8 @@ struct NoteBubble<Content: View>: View {
     @Environment(ThemeManager.self) private var themeManager
 
     var sharpCorner: NoteBubbleShape.Corner?
+    // Which side of the row the bubble sits on. Independent of the corner, so the two can be combined freely.
+    var alignment = Alignment.leading
     var style = Style.accent
     var fillsWidth = false
     @ViewBuilder var content: () -> Content
@@ -39,7 +41,7 @@ struct NoteBubble<Content: View>: View {
             .background(shape.fill(style == .card ? themeManager.currentTheme.cardColor : themeManager.currentTheme.bubbleColor))
             // The tap area is the bubble itself, not the empty space beside it.
             .contentShape(shape)
-            .frame(maxWidth: .infinity, alignment: sharpCorner == .bottomTrailing ? .trailing : .leading)
+            .frame(maxWidth: .infinity, alignment: alignment)
     }
 }
 
@@ -77,7 +79,7 @@ private struct NoteBubblePreview: View {
                 Text("A quiet walk in the park.")
                     .lummiScaledFont(size: 17, relativeTo: .body)
             }
-            NoteBubble(sharpCorner: .bottomTrailing) {
+            NoteBubble(sharpCorner: .bottomTrailing, alignment: .trailing) {
                 Text("A longer joy that still wraps onto a second line when it does not fit the width of the screen.")
                     .lummiScaledFont(size: 17, relativeTo: .body)
             }

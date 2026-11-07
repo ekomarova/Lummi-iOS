@@ -9,19 +9,20 @@
 import SwiftUI
 import SwiftData
 import Charts
+import OSLog
 
-// Summary cards plus the "Joys By Date"/"Joys By Month" and "Joys By Weekday" charts for one range.
+// Summary cards plus the "Joys By Month" and "Joys By Weekday" charts for one calendar year.
 // Used by `YearTrendsView`'s single-year page.
 struct TrendsChartsView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale
 
-    // Only the entries of `range`, fetched by the store instead of filtered from the whole journal.
+    // Only the entries of `year`, fetched by the store instead of filtered from the whole journal.
     @Query private var rangedEntries: [JoyEntry]
 
-    let range: TrendsRange
-    // Taken once, so the fetched window and the calculation always agree on which month it is, even if the screen
-    // stays open across a month change (it then keeps showing the month it was opened for, like Insights).
+    let year: Int
+    // Taken once, so the fetched window and the calculation always agree on what "now" is, even if the screen
+    // stays open across a year change.
     private let now: Date
 
     private static let barCornerRadius: CGFloat = 3
@@ -29,31 +30,35 @@ struct TrendsChartsView: View {
     // Shorter than `chartHeight` on iPhone, where the weekday chart sits below the volume chart. On iPad the two charts
     // are side by side and share the height, so the cards line up.
     private static var weekdayChartHeight: CGFloat { AdaptiveLayout.isPad ? chartHeight : 140 }
-    // In `.month`, the volume chart labels every fourth day, so the day numbers don't crowd each other.
-    private static let monthLabelStride = 4
-
-    init(range: TrendsRange) {
+    init(year: Int) {
         let now = Date()
-        self.range = range
+        self.year = year
         self.now = now
         _rangedEntries = Query(
-            filter: JoyEntry.predicate(in: TrendsCalculator.dateRange(for: range, now: now)),
+            filter: JoyEntry.predicate(in: TrendsCalculator.dateRange(for: .year(year), now: now)),
             sort: \JoyEntry.date
         )
     }
 
-    private var stats: TrendsPerformanceStats {
-        TrendsPerformanceStats.make(
-            from: rangedEntries,
-            range: range,
-            locale: locale,
-            now: now,
-            calendar: .lummiCalendar(locale: locale)
-        )
+    #if DEBUG
+    // Shows in Instruments (Points of Interest) how often the body runs and how often the statistics are really calculated.
+    private static let signposter = OSSignposter(subsystem: "io.github.ekomarova.Lummi", category: .pointsOfInterest)
+    #endif
+
+    private func stats(calendar: Calendar) -> TrendsPerformanceStats {
+        #if DEBUG
+        let interval = Self.signposter.beginInterval("TrendsStats calculation")
+        defer { Self.signposter.endInterval("TrendsStats calculation", interval) }
+        #endif
+        return TrendsPerformanceStats.make(from: rangedEntries, year: year, locale: locale, now: now, calendar: calendar)
     }
 
     var body: some View {
-        let stats = stats
+        #if DEBUG
+        Self.signposter.emitEvent("TrendsChartsView body")
+        #endif
+        let calendar = Calendar.lummiCalendar(locale: locale)
+        let stats = stats(calendar: calendar)
         // Side by side on iPad, where two full-width charts would be needlessly wide and tall.
         let chartsLayout = AdaptiveLayout.isPad
             ? AnyLayout(HStackLayout(alignment: .top, spacing: 20))
@@ -62,21 +67,18 @@ struct TrendsChartsView: View {
             summarySection(stats)
 
             chartsLayout {
-                TrendsSection(title: volumeChartTitle) {
+                TrendsSection(title: Self.volumeChartTitle) {
                     volumeChart(stats)
                 }
 
                 TrendsSection(title: "Joys By Weekday") {
-                    weekdayChart(stats)
+                    weekdayChart(stats, calendar: calendar)
                 }
             }
         }
     }
 
-    // "Joys By Date" (day granularity) for `.month`, "Joys By Month" (month granularity) for `.year`.
-    private var volumeChartTitle: LocalizedStringResource {
-        range == .month ? "Joys By Date" : "Joys By Month"
-    }
+    private static let volumeChartTitle: LocalizedStringResource = "Joys By Month"
 
     // MARK: - Summary
 
@@ -100,17 +102,14 @@ struct TrendsChartsView: View {
 
     @ViewBuilder
     private func countCards(_ stats: TrendsPerformanceStats) -> some View {
-        GlowCard.joys(value: "\(stats.entryCount)", metrics: .trends)
-        GlowCard.activeDays(value: "\(stats.daysJournaled)", metrics: .trends)
-        GlowCard.streak(value: "\(stats.bestStreak)", metrics: .trends)
+        GlowCard(kind: .joys, value: "\(stats.entryCount)", metrics: .trends)
+        GlowCard(kind: .activeDays, value: "\(stats.daysJournaled)", metrics: .trends)
+        GlowCard(kind: .streak, value: "\(stats.bestStreak)", metrics: .trends)
     }
 
     // Full-width on iPhone, since its value doesn't fit the three-across row above (see `Metrics.trendsJoyfulHours`).
-    @ViewBuilder
     private func joyfulHoursCard(_ stats: TrendsPerformanceStats) -> some View {
-        if let joyfulHours = stats.joyfulHours {
-            GlowCard.joyfulHours(value: joyfulHours, metrics: .trendsJoyfulHours)
-        }
+        GlowCard(kind: .joyfulHours, value: stats.joyfulHours, metrics: .trendsJoyfulHours)
     }
 
     // MARK: - Charts
@@ -118,20 +117,20 @@ struct TrendsChartsView: View {
     private func volumeChart(_ stats: TrendsPerformanceStats) -> some View {
         Chart(stats.dataPoints) { point in
             BarMark(
-                x: .value("Period", point.periodStart, unit: range.component),
+                x: .value("Period", point.periodStart, unit: .month),
                 y: .value("Joys", point.count)
             )
             .foregroundStyle(trendsGradient)
             .cornerRadius(Self.barCornerRadius)
         }
         .chartXAxis {
-            // `.stride` places one tick per actual bar (each calendar day or month), unlike `.automatic`,
+            // `.stride` places one tick per actual bar (each calendar month), unlike `.automatic`,
             // which interpolates evenly spaced ticks across the continuous date range and can land more
             // than one tick inside the same bar, duplicating its label (e.g. two ticks reading "Aug").
-            AxisMarks(values: .stride(by: range.component, count: range == .month ? Self.monthLabelStride : 1)) { value in
+            AxisMarks(values: .stride(by: .month)) { value in
                 AxisValueLabel {
                     if let date = value.as(Date.self) {
-                        axisLabel(volumeAxisLabel(for: date))
+                        axisLabel(date.monthName(style: .threeLetters, locale: locale))
                     }
                 }
             }
@@ -139,16 +138,16 @@ struct TrendsChartsView: View {
         .chartYAxis { yAxisMarks }
         .frame(height: Self.chartHeight)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(volumeChartTitle))
+        .accessibilityLabel(Text(Self.volumeChartTitle))
         .accessibilityValue(Text("\(stats.entryCount)"))
     }
 
-    private func weekdayChart(_ stats: TrendsPerformanceStats) -> some View {
+    private func weekdayChart(_ stats: TrendsPerformanceStats, calendar: Calendar) -> some View {
         // `shortWeekdaySymbols` (e.g. "Tue", "Thu"), not `veryShortWeekdaySymbols`: the single-letter form
         // repeats a letter for two weekdays in English ("T" for Tuesday and Thursday, "S" for Saturday and
         // Sunday) and German, and a bar chart's x-axis is categorical by that string, so the second weekday
         // silently lands on top of the first bar instead of getting its own.
-        let symbols = Calendar.lummiCalendar(locale: locale).shortWeekdaySymbols
+        let symbols = calendar.shortWeekdaySymbols
         return Chart(stats.weekdayCounts) { item in
             BarMark(
                 x: .value("Weekday", symbols[item.weekday - 1]),
@@ -170,14 +169,6 @@ struct TrendsChartsView: View {
         .frame(height: Self.weekdayChartHeight)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("Joys By Weekday"))
-    }
-
-    // The volume chart's x-axis label: a bare day number within `.month`, or a three-letter month abbreviation otherwise.
-    private func volumeAxisLabel(for date: Date) -> String {
-        if range == .month {
-            return date.formatted(Date.FormatStyle(locale: locale).day())
-        }
-        return date.monthName(style: .threeLetters, locale: locale)
     }
 
     // A few faint gridlines with integer counts, so a bar's height reads as a number of joys rather than
@@ -215,7 +206,7 @@ struct TrendsChartsView: View {
 
 // MARK: - UI Components
 
-// Section title above a chart, matching Insights' "Highlights"/"Recap" section headers.
+// Section title above a chart, matching Insights' "Recap"/"Trends" section headers.
 struct TrendsSection<Content: View>: View {
     @Environment(ThemeManager.self) private var themeManager
     let title: LocalizedStringResource
@@ -238,7 +229,7 @@ struct TrendsSection<Content: View>: View {
 #if DEBUG
 #Preview {
     ScrollView {
-        TrendsChartsView(range: .month)
+        TrendsChartsView(year: Calendar.current.component(.year, from: Date()))
             .padding(20)
     }
     .previewEnvironment()

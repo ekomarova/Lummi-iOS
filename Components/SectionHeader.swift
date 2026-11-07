@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-// Bold title above a group of cards or rows, e.g. "Highlights"/"Recap"/"Trends" on Insights.
+// Bold title above a group of cards or rows, e.g. "Recap"/"Trends" on Insights.
 struct SectionHeader: View {
     @Environment(ThemeManager.self) private var themeManager
     let title: LocalizedStringResource
@@ -22,7 +22,7 @@ struct SectionHeader: View {
 
 #if DEBUG
 #Preview {
-    SectionHeader(title: "Highlights")
+    SectionHeader(title: "Recap")
         .previewEnvironment()
 }
 #endif

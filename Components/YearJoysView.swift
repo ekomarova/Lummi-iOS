@@ -13,14 +13,9 @@ struct YearJoysView: View {
     let year: Int
 
     var body: some View {
-        ScrollView(showsIndicators: false) {
+        YearPage(year: year, top: PageSpacing.topBelowList) {
             JoysListView(range: .year(year))
-                .padding(.top, PageSpacing.topBelowList)
-                .padding(.horizontal, 20)
-                .padding(.bottom, 30)
         }
-        .ignoresSafeArea(.container, edges: .bottom)
-        .lummiNavigationTitle(LocalizedStringResource(stringLiteral: String(year)))
     }
 }
 

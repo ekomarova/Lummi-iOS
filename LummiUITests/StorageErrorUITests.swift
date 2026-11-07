@@ -13,8 +13,8 @@ final class StorageErrorUITests: XCTestCase {
         app = nil
     }
 
-    private func launchApp(with arguments: [String]) {
-        app.launchArguments = arguments
+    private func launchApp(with arguments: [TestLaunchArguments]) {
+        app.launchArguments = arguments.map(\.rawValue)
         app.launch()
     }
 
@@ -30,7 +30,7 @@ final class StorageErrorUITests: XCTestCase {
     // MARK: - No store can be opened
 
     func test_StorageError_ShowsErrorScreenInsteadOfApp() throws {
-        launchApp(with: ["-UI_TESTING_FORCE_STORE_ERROR"])
+        launchApp(with: [.forceStoreError])
 
         XCTAssertTrue(errorTitle.waitForExistence(timeout: 5.0), "Storage error screen did not appear")
         XCTAssertTrue(retryButton.exists, "Try Again button is missing")
@@ -42,7 +42,7 @@ final class StorageErrorUITests: XCTestCase {
     }
 
     func test_StorageError_ScreenStaysAfterRetry_WhenStoreStillFails() throws {
-        launchApp(with: ["-UI_TESTING_FORCE_STORE_ERROR"])
+        launchApp(with: [.forceStoreError])
 
         XCTAssertTrue(retryButton.waitForExistence(timeout: 5.0))
         retryButton.tap()
@@ -52,7 +52,7 @@ final class StorageErrorUITests: XCTestCase {
     }
 
     func test_StorageError_RetryOpensApp_WhenStoreRecovers() throws {
-        launchApp(with: ["-UI_TESTING_FORCE_STORE_ERROR_ONCE"])
+        launchApp(with: [.forceStoreErrorOnce])
 
         XCTAssertTrue(retryButton.waitForExistence(timeout: 5.0), "Storage error screen did not appear")
         retryButton.tap()
@@ -64,7 +64,7 @@ final class StorageErrorUITests: XCTestCase {
     // MARK: - iCloud store fails, local store opens
 
     func test_LaunchFallback_ShowsSyncAlertAndOpensApp_WhenICloudStoreFails() throws {
-        launchApp(with: ["-UI_TESTING_SYNC_ENABLED_AT_LAUNCH", "-UI_TESTING_FORCE_SYNC_ERROR"])
+        launchApp(with: [.syncEnabledAtLaunch, .forceSyncError])
 
         let alert = app.alerts["iCloud Sync Error"]
         XCTAssertTrue(alert.waitForExistence(timeout: 5.0), "Sync error alert should appear after the launch fallback")
@@ -77,7 +77,7 @@ final class StorageErrorUITests: XCTestCase {
     }
 
     func test_LaunchFallback_TurnsICloudToggleOff() throws {
-        launchApp(with: ["-UI_TESTING_SYNC_ENABLED_AT_LAUNCH", "-UI_TESTING_FORCE_SYNC_ERROR"])
+        launchApp(with: [.syncEnabledAtLaunch, .forceSyncError])
 
         let alert = app.alerts["iCloud Sync Error"]
         XCTAssertTrue(alert.waitForExistence(timeout: 5.0))

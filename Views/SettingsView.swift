@@ -28,24 +28,9 @@ struct SettingsView: View {
     @State private var showClearDataFailedAlert: Bool = false
 
     var body: some View {
-        // The title's protected zone takes 12pt of the old 20pt gap (see `scrollHeaderBackground`), as on Insights.
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Settings")
-                .lummiScaledFont(size: 28, weight: .bold, relativeTo: .largeTitle)
-                .foregroundColor(themeManager.currentTheme.textColor)
-                .padding(.top, 10)
-                .padding(.horizontal, 20)
-                .scrollHeaderBackground(alignment: .leading)
-
-            ScrollView(showsIndicators: false) {
-                settingsSections
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 100)
-            }
-            .scrollClipDisabled()
-            .ignoresSafeArea(.container, edges: .bottom)
+        TabPage(title: "Settings") {
+            settingsSections
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
         // Follows the confirmed state and not the toggle, so a switch the app reverts after a container error
         // never starts the monitor or shows the banner.
         .task(id: isICloudSyncActive) {
@@ -76,9 +61,7 @@ struct SettingsView: View {
     private var settingsSections: some View {
         VStack(alignment: .leading, spacing: 30) {
             // MARK: - Appearance
-            VStack(alignment: .leading, spacing: 15) {
-                SectionHeader(title: "Appearance")
-
+            SectionBlock(title: "Appearance") {
                 HStack(spacing: 0) {
                     ForEach(AppearanceMode.displayOrder, id: \.self) { mode in
                         ThemeOptionButton(
@@ -94,10 +77,7 @@ struct SettingsView: View {
             }
 
             // MARK: - Language
-            VStack(alignment: .leading, spacing: 15) {
-                SectionHeader(title: "Language")
-                    .accessibilityIdentifier("LanguageLabel")
-
+            SectionBlock(title: "Language", headerAccessibilityID: "LanguageLabel") {
                 DisclosureRow(
                     title: selectedLanguage.displayName,
                     accessibilityID: "LanguageSelectorButton"
@@ -107,9 +87,7 @@ struct SettingsView: View {
             }
 
             // MARK: - Sync
-            VStack(alignment: .leading, spacing: 15) {
-                SectionHeader(title: "Sync")
-
+            SectionBlock(title: "Sync") {
                 CapsuleRow {
                     HStack {
                         Text("iCloud")
@@ -133,9 +111,7 @@ struct SettingsView: View {
             }
 
             // MARK: - Clear All Data
-            VStack(alignment: .leading, spacing: 15) {
-                SectionHeader(title: "Data")
-
+            SectionBlock(title: "Data") {
                 Button(
                     action: {
                         showClearDataAlert = true

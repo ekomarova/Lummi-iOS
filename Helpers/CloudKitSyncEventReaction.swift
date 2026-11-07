@@ -17,9 +17,6 @@ enum CloudKitSyncEventReaction: Equatable {
     case recheckAccount(preservingStorageFull: Bool)
     case none
 
-    // Errors of NSPersistentCloudKitContainer wrap each other and partial failures, so the chain is cut off defensively.
-    private static let maxErrorDepth = 5
-
     static func make(type: NSPersistentCloudKitContainer.EventType, succeeded: Bool, error: Error?) -> CloudKitSyncEventReaction {
         if let error {
             guard let state = state(for: error) else { return .none }
@@ -42,22 +39,19 @@ enum CloudKitSyncEventReaction: Equatable {
     // Every CKError code found in the error, its underlying errors and the per-item errors of a partial failure.
     static func ckErrorCodes(in error: Error) -> Set<CKError.Code> {
         var codes = Set<CKError.Code>()
-        collectCodes(in: error, into: &codes, depth: 0)
+        collectCodes(in: error, into: &codes, remainingDepth: maxUnderlyingErrorDepth)
         return codes
     }
 
-    private static func collectCodes(in error: Error, into codes: inout Set<CKError.Code>, depth: Int) {
-        guard depth < maxErrorDepth else { return }
-        if let ckError = error as? CKError {
+    // Errors of NSPersistentCloudKitContainer wrap each other and partial failures. Both the underlying chain and the
+    // per-item errors count against the same depth limit, so the walk is cut off defensively.
+    private static func collectCodes(in error: Error, into codes: inout Set<CKError.Code>, remainingDepth: Int) {
+        for (index, link) in error.underlyingErrors(maxDepth: remainingDepth).enumerated() {
+            guard let ckError = link as? CKError else { continue }
             codes.insert(ckError.code)
-            if let itemErrors = ckError.partialErrorsByItemID {
-                for itemError in itemErrors.values {
-                    collectCodes(in: itemError, into: &codes, depth: depth + 1)
-                }
+            for itemError in ckError.partialErrorsByItemID?.values ?? [:].values {
+                collectCodes(in: itemError, into: &codes, remainingDepth: remainingDepth - index - 1)
             }
-        }
-        if let underlying = (error as NSError).userInfo[NSUnderlyingErrorKey] as? Error {
-            collectCodes(in: underlying, into: &codes, depth: depth + 1)
         }
     }
 }

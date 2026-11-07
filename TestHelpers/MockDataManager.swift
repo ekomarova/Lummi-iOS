@@ -4,14 +4,6 @@ import SwiftData
 
 struct MockDataManager {
     
-    // Launch argument that fills the app with demo data for App Store screenshots.
-    // Deliberately does not start with "-UI_TESTING", so UI tests never trigger it.
-    static let screenshotsFlag = "-SCREENSHOTS_DATA"
-
-    static var isScreenshotsMode: Bool {
-        ProcessInfo.processInfo.arguments.contains(screenshotsFlag)
-    }
-
     // Calendar arithmetic that falls back to the original date instead of force unwrapping.
     private static func shiftedDate(_ date: Date, by value: Int, _ component: Calendar.Component) -> Date {
         Calendar.current.date(byAdding: component, value: value, to: date) ?? date
@@ -19,34 +11,32 @@ struct MockDataManager {
 
     // Each UI-testing launch argument maps to one data scenario. `isStoreEmpty` is read once before any of
     // them runs, so scenarios that need an empty store do not see each other's unsaved inserts.
-    private typealias Scenario = (flag: String, insert: (ModelContext, _ isStoreEmpty: Bool) -> Void)
+    private typealias Scenario = (flag: TestLaunchArguments, insert: (ModelContext, _ isStoreEmpty: Bool) -> Void)
 
     private static let scenarios: [Scenario] = [
-        ("-UI_TESTING_CALENDAR", { context, _ in insertCalendarEntries(context) }),
-        ("-UI_TESTING_10_RECORDS", { context, _ in insertTenRecordsToday(context) }),
-        ("-UI_TESTING_PAST_MONTHS_AVAILABLE", { context, _ in insertEntryTwoMonthsAgo(context) }),
-        ("-UI_TESTING_PAST_MONTH_ONE_JOY", { context, isEmpty in if isEmpty { insertOneEntryLastMonth(context) } }),
-        ("-UI_TESTING_PAST_MONTH_MANY_JOYS", { context, isEmpty in if isEmpty { insertManyEntriesLastMonth(context) } }),
-        ("-UI_TESTING_INSIGHTS_TWO_MONTHS", { context, isEmpty in if isEmpty { insertTwoMonthsOfEntries(context) } }),
-        ("-UI_TESTING_5K_ENTRIES", { context, isEmpty in if isEmpty { insertFiveThousandEntries(context) } }),
-        ("-UI_TESTING_4_DAYS_FILLED", { context, isEmpty in if isEmpty { insertFourFilledDays(context) } }),
-        ("-UI_TESTING_TRENDS_MULTI_YEAR", { context, isEmpty in if isEmpty { insertTrendsMultiYearEntries(context) } })
+        (.calendar, { context, _ in insertCalendarEntries(context) }),
+        (.tenRecords, { context, _ in insertTenRecordsToday(context) }),
+        (.pastMonthsAvailable, { context, _ in insertEntryTwoMonthsAgo(context) }),
+        (.pastMonthOneJoy, { context, isEmpty in if isEmpty { insertOneEntryLastMonth(context) } }),
+        (.pastMonthManyJoys, { context, isEmpty in if isEmpty { insertManyEntriesLastMonth(context) } }),
+        (.insightsTwoMonths, { context, isEmpty in if isEmpty { insertTwoMonthsOfEntries(context) } }),
+        (.fiveThousandEntries, { context, isEmpty in if isEmpty { insertFiveThousandEntries(context) } }),
+        (.fourDaysFilled, { context, isEmpty in if isEmpty { insertFourFilledDays(context) } }),
+        (.trendsMultiYear, { context, isEmpty in if isEmpty { insertTrendsMultiYearEntries(context) } })
     ]
 
     static func injectIfNeeded(modelContext: ModelContext) {
-        let arguments = ProcessInfo.processInfo.arguments
-
-        if isScreenshotsMode {
+        if TestLaunchArguments.screenshots.isSet {
             injectScreenshotData(modelContext: modelContext)
             return
         }
 
-        guard arguments.contains(where: { $0.hasPrefix("-UI_TESTING") }) else { return }
+        guard TestLaunchArguments.isUITesting else { return }
 
         // Read from the store on demand, so the root view does not keep a live query over every entry.
         let isStoreEmpty = ((try? modelContext.fetchCount(FetchDescriptor<JoyEntry>())) ?? 0) == 0
 
-        for scenario in scenarios where arguments.contains(scenario.flag) {
+        for scenario in scenarios where scenario.flag.isSet {
             scenario.insert(modelContext, isStoreEmpty)
         }
     }
@@ -150,7 +140,7 @@ struct MockDataManager {
         try? context.save()
     }
 
-    // Trends "All Time": 3 distinct days in the current year and 3 in the year before it, so the
+    // Trends and All Joys years: 3 distinct days in the current year and 3 in the year before it, so the
     // year list shows both years and each year's page has non-empty cards and charts.
     private static func insertTrendsMultiYearEntries(_ context: ModelContext) {
         let now = Date()

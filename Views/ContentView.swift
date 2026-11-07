@@ -13,9 +13,10 @@ import SwiftData
 // Root view: owns the theme and navigation, shows the top-level screens in a native tab bar. Each tab has its own
 // `NavigationStack`, and the record page is pushed onto the current one, so the system swipe-back gesture works.
 struct ContentView: View {
+    // Shared with the storage error screen, so both follow the same appearance.
+    let themeManager: ThemeManager
     var syncError: Binding<(any Error)?> = .constant(nil)
 
-    @State private var themeManager = ThemeManager()
     @Environment(\.modelContext) private var modelContext
 
     @State private var navigation = NavigationState()
@@ -178,18 +179,19 @@ private extension ContentView {
     // MARK: - Home tab
 
     var homeContent: some View {
-        // The title's protected zone takes 12pt of the old 20pt gap (see `scrollHeaderBackground`), as on Insights and Settings.
-        VStack(alignment: .leading, spacing: 8) {
+        // The day's entries scroll in their own list, so the page does not wrap them in a ScrollView.
+        TabPage(scrolls: false) {
             // MARK: - Header View
             HeaderView(date: navigation.selectedDate)
-                .scrollHeaderBackground(alignment: .leading)
-
+        } content: {
             // MARK: - Selected Day View
-            SelectedDayDetailView(
-                selectedDate: navigation.selectedDate
-            )
+            VStack(alignment: .leading, spacing: 8) {
+                SelectedDayDetailView(
+                    selectedDate: navigation.selectedDate
+                )
 
-            Spacer()
+                Spacer()
+            }
         }
         // Lets the day's entries scroll under the tab bar, as Insights and All Joys do.
         .ignoresSafeArea(.container, edges: .bottom)
@@ -198,12 +200,12 @@ private extension ContentView {
 
 #if DEBUG
 #Preview {
-    ContentView()
+    ContentView(themeManager: ThemeManager())
         .modelContainer(PreviewSupport.makeContainer())
 }
 
 #Preview("Smallest text") {
-    ContentView()
+    ContentView(themeManager: ThemeManager())
         .dynamicTypeSize(DynamicTypeSize.lummiSupportedRange.lowerBound)
         .modelContainer(PreviewSupport.makeContainer())
 }

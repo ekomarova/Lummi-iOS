@@ -15,4 +15,8 @@ enum SettingsKey {
     static let appLanguage = "appLanguage"
     // Whether the user opted in to iCloud sync. Decides which `ModelContainer` the app opens at launch.
     static let isICloudSyncEnabled = "isICloudSyncEnabled"
+    // The appearance chosen in Settings: light, dark or auto.
+    static let appearanceMode = "appearanceMode"
+    // Written by versions that only had the light and dark options. Only read, to carry the old choice over.
+    static let legacyIsDarkMode = "isDarkMode"
 }

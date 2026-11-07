@@ -8,10 +8,9 @@
 
 import SwiftUI
 
-// Title of Home: today's day and month, in the style of the Insights and Settings titles. Unlike them it changes
+// Title of Home: the selected day and month, in the style of the Insights and Settings titles. Unlike them it changes
 // with the date.
 struct HeaderView: View {
-    @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale
 
     let date: Date
@@ -21,13 +20,8 @@ struct HeaderView: View {
     }
 
     var body: some View {
-        Text(headerDateText)
-            .lummiScaledFont(size: 28, weight: .bold, relativeTo: .largeTitle)
-            .foregroundColor(themeManager.currentTheme.textColor)
+        TabPageTitle(verbatim: headerDateText)
             .accessibilityIdentifier("HeaderDateText")
-            .accessibilityAddTraits(.isHeader)
-            .padding(.top, 10)
-            .padding(.horizontal, 20)
     }
 }
 

@@ -45,16 +45,49 @@ struct GlowCard: View {
     private static let maxTextScale: CGFloat = 1.5
     private var scale: CGFloat { min(textScale, Self.maxTextScale) }
 
-    var value: String
-    var subtitle: LocalizedStringResource
-    var systemImage: String
-    var gradientColors: [Color]
-    var metrics: Metrics
+    // The four highlights shown by both Insights and Trends: each has its own caption, icon and color.
+    enum Kind {
+        case joys
+        case activeDays
+        case streak
+        case joyfulHours
+
+        var subtitle: LocalizedStringResource {
+            switch self {
+            case .joys: "Joys"
+            case .activeDays: "Active Days"
+            case .streak: "Day Streak"
+            case .joyfulHours: "Joyful Hours"
+            }
+        }
+
+        var systemImage: String {
+            switch self {
+            case .joys: "star.fill"
+            case .activeDays: "calendar"
+            case .streak: "flame.fill"
+            case .joyfulHours: "sun.max.fill"
+            }
+        }
+
+        var gradientColors: [Color] {
+            switch self {
+            case .joys: AccentColors.joysGradient
+            case .activeDays: AccentColors.activeDaysGradient
+            case .streak: AccentColors.streakGradient
+            case .joyfulHours: AccentColors.joyfulHoursGradient
+            }
+        }
+    }
+
+    let kind: Kind
+    let value: String
+    let metrics: Metrics
 
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 30)
-                .fill(LinearGradient(colors: gradientColors, startPoint: .leading, endPoint: .trailing))
+                .fill(LinearGradient(colors: kind.gradientColors, startPoint: .leading, endPoint: .trailing))
 
             content
         }
@@ -64,11 +97,11 @@ struct GlowCard: View {
 
     private var subtitleLabel: some View {
         HStack(spacing: 4) {
-            Image(systemName: systemImage)
+            Image(systemName: kind.systemImage)
                 .font(.lummiFont(size: 11 * scale, weight: .semibold))
                 .foregroundColor(AccentColors.glowCardText)
 
-            Text(subtitle)
+            Text(kind.subtitle)
                 .font(.lummiFont(size: 12 * scale))
                 .foregroundColor(AccentColors.glowCardText.opacity(Self.captionOpacity))
                 .lineLimit(1)
@@ -99,60 +132,17 @@ struct GlowCard: View {
     }
 }
 
-// Shared presets for the cards shown by both Insights and Trends.
-extension GlowCard {
-    static func joys(value: String, metrics: Metrics) -> GlowCard {
-        GlowCard(
-            value: value,
-            subtitle: "Joys",
-            systemImage: "star.fill",
-            gradientColors: AccentColors.joysGradient,
-            metrics: metrics
-        )
-    }
-
-    static func activeDays(value: String, metrics: Metrics) -> GlowCard {
-        GlowCard(
-            value: value,
-            subtitle: "Active Days",
-            systemImage: "calendar",
-            gradientColors: AccentColors.activeDaysGradient,
-            metrics: metrics
-        )
-    }
-
-    static func streak(value: String, metrics: Metrics) -> GlowCard {
-        GlowCard(
-            value: value,
-            subtitle: "Day Streak",
-            systemImage: "flame.fill",
-            gradientColors: AccentColors.streakGradient,
-            metrics: metrics
-        )
-    }
-
-    static func joyfulHours(value: String, metrics: Metrics) -> GlowCard {
-        GlowCard(
-            value: value,
-            subtitle: "Joyful Hours",
-            systemImage: "sun.max.fill",
-            gradientColors: AccentColors.joyfulHoursGradient,
-            metrics: metrics
-        )
-    }
-}
-
 #if DEBUG
 #Preview {
     VStack(spacing: 15) {
         HStack(spacing: 15) {
-            GlowCard.joys(value: "42", metrics: .insights)
-            GlowCard.joyfulHours(value: "18:00 - 21:00", metrics: .insights)
+            GlowCard(kind: .joys, value: "42", metrics: .insights)
+            GlowCard(kind: .joyfulHours, value: "18:00 - 21:00", metrics: .insights)
         }
         HStack(spacing: 15) {
-            GlowCard.joys(value: "42", metrics: .trends)
-            GlowCard.activeDays(value: "17", metrics: .trends)
-            GlowCard.streak(value: "5", metrics: .trends)
+            GlowCard(kind: .joys, value: "42", metrics: .trends)
+            GlowCard(kind: .activeDays, value: "17", metrics: .trends)
+            GlowCard(kind: .streak, value: "5", metrics: .trends)
         }
     }
     .padding(20)
@@ -161,8 +151,8 @@ extension GlowCard {
 
 #Preview("Largest text") {
     HStack(spacing: 15) {
-        GlowCard.joys(value: "42", metrics: .insights)
-        GlowCard.joyfulHours(value: "18:00 - 21:00", metrics: .insights)
+        GlowCard(kind: .joys, value: "42", metrics: .insights)
+        GlowCard(kind: .joyfulHours, value: "18:00 - 21:00", metrics: .insights)
     }
     .padding(20)
     .dynamicTypeSize(DynamicTypeSize.lummiSupportedRange.upperBound)

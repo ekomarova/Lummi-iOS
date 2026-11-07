@@ -17,6 +17,8 @@ struct LummiApp: App {
     @AppStorage(SettingsKey.appLanguage) private var selectedLanguage: AppLanguage = .systemDefault
     @AppStorage(SettingsKey.isICloudSyncEnabled) private var isICloudSyncEnabled: Bool = false
 
+    // One for the whole app, so the main content and the storage error screen share the appearance.
+    @State private var themeManager = ThemeManager()
     @State private var container: ModelContainer
     @State private var containerError: (any Error)?
     // Set when no persistent store could be opened. The app then shows an error screen instead of the content.
@@ -26,28 +28,30 @@ struct LummiApp: App {
 
     init() {
         TabBarAppearance.configure()
-        // Read the initial state from UserDefaults before AppStorage is fully available.
-        // AppStorage persists in the simulator across app relaunches, so without this
-        // reset a UI test that enables sync would leak that state into whichever test
-        // runs next on the same simulator. Every UI test run should start from a clean,
-        // deterministic "sync off" state regardless of what a previous test left behind.
-        #if DEBUG
-        let isUITesting = ProcessInfo.processInfo.arguments.contains(where: { $0.hasPrefix("-UI_TESTING") })
-        // `-UI_TESTING_SYNC_ENABLED_AT_LAUNCH` lets a test start with sync on, to exercise the launch fallback.
-        let startsWithSync = isUITesting && ProcessInfo.processInfo.arguments.contains("-UI_TESTING_SYNC_ENABLED_AT_LAUNCH")
-        if isUITesting {
-            UserDefaults.standard.set(startsWithSync, forKey: SettingsKey.isICloudSyncEnabled)
-        }
-        let isScreenshots = MockDataManager.isScreenshotsMode
-        let isSyncEnabled = startsWithSync || (!isUITesting && !isScreenshots && UserDefaults.standard.bool(forKey: SettingsKey.isICloudSyncEnabled))
-        #else
-        let isSyncEnabled = UserDefaults.standard.bool(forKey: SettingsKey.isICloudSyncEnabled)
-        #endif
+        let isSyncEnabled = Self.isSyncEnabledAtLaunch()
         let result = Self.openStorage(isICloudSyncEnabled: isSyncEnabled)
         _container = State(initialValue: result.container)
         _containerError = State(initialValue: result.syncError)
         _storageError = State(initialValue: result.storageError)
         _isSyncActive = State(initialValue: result.isICloudSyncActive)
+    }
+
+    // Reads the saved sync preference from UserDefaults before AppStorage is fully available.
+    // Debug builds let launch arguments decide instead, see `TestLaunchArguments`.
+    private static func isSyncEnabledAtLaunch() -> Bool {
+        let storedPreference = UserDefaults.standard.bool(forKey: SettingsKey.isICloudSyncEnabled)
+        #if DEBUG
+        // AppStorage persists in the simulator across app relaunches, so without this reset a UI test that
+        // enables sync would leak that state into whichever test runs next on the same simulator. Every UI test
+        // run should start from a clean, deterministic "sync off" state regardless of what a previous test left
+        // behind.
+        if TestLaunchArguments.isUITesting {
+            UserDefaults.standard.set(TestLaunchArguments.syncEnabledAtLaunch.isSet, forKey: SettingsKey.isICloudSyncEnabled)
+        }
+        return TestLaunchArguments.isSyncEnabledAtLaunch(storedPreference: storedPreference)
+        #else
+        return storedPreference
+        #endif
     }
 
     // Opens the store with the fallbacks from `ContainerBootstrap`.
@@ -86,12 +90,8 @@ struct LummiApp: App {
         let schema = Schema(versionedSchema: LummiSchemaV1.self)
 
         #if DEBUG
-        let args = ProcessInfo.processInfo.arguments
-        let isUITesting = args.contains(where: { $0.hasPrefix("-UI_TESTING") })
-        // `-UI_TESTING_FORCE_STORE_ERROR` makes every attempt fail; the `_ONCE` variant fails only the first one,
-        // so a test can tap "Try Again" and see the app recover.
-        if args.contains("-UI_TESTING_FORCE_STORE_ERROR")
-            || (args.contains("-UI_TESTING_FORCE_STORE_ERROR_ONCE") && !hasSimulatedStoreFailure) {
+        if TestLaunchArguments.forceStoreError.isSet
+            || (TestLaunchArguments.forceStoreErrorOnce.isSet && !hasSimulatedStoreFailure) {
             hasSimulatedStoreFailure = true
             throw NSError(
                 domain: "com.lummi.testing",
@@ -99,7 +99,7 @@ struct LummiApp: App {
                 userInfo: [NSLocalizedDescriptionKey: "Simulated storage failure"]
             )
         }
-        if args.contains("-UI_TESTING_FORCE_SYNC_ERROR") && isICloudSyncEnabled {
+        if TestLaunchArguments.forceSyncError.isSet && isICloudSyncEnabled {
             throw NSError(
                 domain: "com.lummi.testing",
                 code: -1,
@@ -111,7 +111,7 @@ struct LummiApp: App {
         #if DEBUG
         // UI tests and screenshots mode use a throwaway in-memory store, so real data is never touched.
         // Release builds ignore these launch arguments.
-        if isUITesting || MockDataManager.isScreenshotsMode {
+        if TestLaunchArguments.isUITesting || TestLaunchArguments.screenshots.isSet {
             return try makeInMemoryContainer()
         }
         #endif
@@ -127,9 +127,9 @@ struct LummiApp: App {
         WindowGroup {
             Group {
                 if let storageError {
-                    StorageErrorView(error: storageError, onRetry: retryOpeningStorage)
+                    StorageErrorView(themeManager: themeManager, error: storageError, onRetry: retryOpeningStorage)
                 } else {
-                    ContentView(syncError: $containerError)
+                    ContentView(themeManager: themeManager, syncError: $containerError)
                 }
             }
             .environment(\.locale, Locale(identifier: selectedLanguage.rawValue))
