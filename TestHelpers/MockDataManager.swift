@@ -140,7 +140,7 @@ struct MockDataManager {
         try? context.save()
     }
 
-    // Trends "All Time": 3 distinct days in the current year and 3 in the year before it, so the
+    // Trends and All Joys years: 3 distinct days in the current year and 3 in the year before it, so the
     // year list shows both years and each year's page has non-empty cards and charts.
     private static func insertTrendsMultiYearEntries(_ context: ModelContext) {
         let now = Date()

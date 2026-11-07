@@ -17,7 +17,7 @@ struct TrendsChartsView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(\.locale) var locale
 
-    // Only the entries of `range`, fetched by the store instead of filtered from the whole journal.
+    // Only the entries of `year`, fetched by the store instead of filtered from the whole journal.
     @Query private var rangedEntries: [JoyEntry]
 
     let year: Int

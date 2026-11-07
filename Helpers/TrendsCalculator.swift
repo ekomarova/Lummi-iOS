@@ -31,7 +31,7 @@ struct WeekdayCount: Identifiable, Equatable {
 }
 
 // Pure calculations behind the Trends screen: which entries fall in a selected range, chart-ready
-// data points for it, the weekday distribution used by the habit chart, and the "All Time" year list.
+// data points for it, the weekday distribution used by the habit chart, and the list of years on record.
 struct TrendsCalculator {
 
     // MARK: - Range
@@ -102,7 +102,7 @@ struct TrendsCalculator {
     // MARK: - Year list
 
     // Every calendar year from the oldest entry's year through the current one, newest first, for the
-    // "All Time" list that opens a year's detail page. Always includes at least the current year, even
+    // year lists of Trends and All Joys, each row opening a year's page. Always includes at least the current year, even
     // with no entries yet, so the list is never empty.
     static func availableYears(oldestEntryDate: Date?, now: Date = Date(), calendar: Calendar = .current) -> [Int] {
         let currentYear = calendar.component(.year, from: now)

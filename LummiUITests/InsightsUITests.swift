@@ -111,7 +111,7 @@ final class InsightsUITests: XCTestCase {
         assertAllJoys(prefix: "Current month joy", shown: 2, hidden: "Previous month joy")
     }
 
-    // All Joys mirrors Trends: an empty journal shows the placeholder in both the Month and All Time tabs
+    // An empty journal shows the placeholder in both the Month and All Time tabs of All Joys
     func test_AllJoysEmptyStateInBothTabs() throws {
         launchApp(with: [.uiTesting])
         openAllJoys()

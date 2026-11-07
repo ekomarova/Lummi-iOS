@@ -8,15 +8,15 @@
 
 import SwiftUI
 
-// The two top-level tabs shared by Trends and All Joys. Kept separate from `TrendsRange` (the chart calculator's
-// own month-vs-year granularity), since picking "All Time" opens a year list rather than a chart directly.
+// The two tabs of All Joys: this month's joys, or the list of years on record. Kept separate from `TrendsRange`,
+// which is a window of time to fetch, since "All Time" opens a year list rather than one window.
 enum PeriodTab: Hashable {
     case month
     case allTime
 }
 
-// "Month"/"All Time" switcher used at the top of Trends and All Joys. It is the system segmented control, which gets
-// the Liquid Glass look on iOS 26.
+// "Month"/"All Time" switcher at the top of All Joys. It is the system segmented control, which gets the Liquid Glass
+// look on iOS 26.
 struct PeriodTabPicker: View {
     @Binding var selection: PeriodTab
 

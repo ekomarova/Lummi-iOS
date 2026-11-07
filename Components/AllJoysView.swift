@@ -9,7 +9,7 @@
 import SwiftUI
 
 // All Joys screen, opened from the Insights screen: a "Month" tab listing this month's joys, and an "All Time" tab
-// listing every calendar year on record, each opening its own `YearJoysView` page — mirroring Trends.
+// listing every calendar year on record, each opening its own `YearJoysView` page, like the years in Trends.
 struct AllJoysView: View {
     // Opens a year's page on the Insights tab's stack.
     let onOpenYear: (Int) -> Void

@@ -10,7 +10,7 @@ import SwiftUI
 import SwiftData
 
 // The calendar years on record as tappable rows, or the empty state when the journal has no entries. Owns the query,
-// so the "All Time" tab of All Joys and Trends do not each repeat it.
+// so Trends and the "All Time" tab of All Joys do not each repeat it.
 struct YearsListSection: View {
     // Prefix of each row's accessibility identifier, see `YearsListView`.
     let accessibilityIDPrefix: String

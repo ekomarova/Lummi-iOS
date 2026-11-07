@@ -8,12 +8,12 @@
 
 import SwiftUI
 
-// One calendar year's trends, opened by tapping a year in Trends' "All Time" list.
+// One calendar year's trends, opened by tapping a year in the Trends list.
 struct YearTrendsView: View {
     let year: Int
 
     var body: some View {
-        YearPage(year: year, top: PageSpacing.topBelowControl) {
+        YearPage(year: year, top: PageSpacing.topBelowList) {
             TrendsChartsView(year: year)
         }
     }

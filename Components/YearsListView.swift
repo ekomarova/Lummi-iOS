@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-// One tappable row per calendar year, used by the "All Time" tab of Trends and All Joys.
+// One tappable row per calendar year, used by Trends and by the "All Time" tab of All Joys.
 struct YearsListView: View {
     let years: [Int]
     // Prefix of each row's accessibility identifier; the year is appended, e.g. "TrendsYearRow_2026".

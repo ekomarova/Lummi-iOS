@@ -133,7 +133,7 @@ private struct ScrollHeaderBackgroundModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .frame(maxWidth: .infinity, alignment: alignment)
-            // The gap under the status bar that `tabPage` used to add, now inside the zone so the zone reaches the screen top.
+            // A gap under the status bar, inside the zone so the zone reaches the screen top.
             .padding(.top, 8)
             .padding(.bottom, extraHeight)
             .background(themeManager.currentTheme.backgroundColor.opacity(opacity).ignoresSafeArea(edges: .top))
