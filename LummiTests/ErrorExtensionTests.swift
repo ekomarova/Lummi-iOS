@@ -36,6 +36,68 @@ struct ErrorExtensionTests {
         #expect(error.technicalCode == "NSURLErrorDomain -1009")
     }
 
+    // MARK: - Underlying errors
+
+    private func wrap(_ error: Error, times: Int = 1) -> NSError {
+        var wrapped = error
+        for level in 0..<times {
+            wrapped = NSError(domain: "Wrapper\(level)", code: level, userInfo: [NSUnderlyingErrorKey: wrapped])
+        }
+        return wrapped as NSError
+    }
+
+    @Test func underlyingErrors_ofAnErrorWithoutOne_isJustTheError() {
+        let chain = NSError(domain: "Test", code: 1).underlyingErrors()
+
+        #expect(chain.count == 1)
+        #expect((chain.first as NSError?)?.domain == "Test")
+    }
+
+    @Test func underlyingErrors_listsTheChainOutermostFirst() {
+        let inner = NSError(domain: "Inner", code: 3)
+        let middle = NSError(domain: "Middle", code: 2, userInfo: [NSUnderlyingErrorKey: inner])
+        let outer = NSError(domain: "Outer", code: 1, userInfo: [NSUnderlyingErrorKey: middle])
+
+        let domains = outer.underlyingErrors().map { ($0 as NSError).domain }
+
+        #expect(domains == ["Outer", "Middle", "Inner"])
+    }
+
+    @Test func underlyingErrors_ofASwiftError_isJustTheError() {
+        #expect(SampleError.first.underlyingErrors().count == 1)
+    }
+
+    @Test func underlyingErrors_isCutOffAtTheDefaultDepth() {
+        let chain = wrap(NSError(domain: "Bottom", code: 0), times: 20).underlyingErrors()
+
+        #expect(chain.count == maxUnderlyingErrorDepth)
+        #expect(!chain.contains { ($0 as NSError).domain == "Bottom" })
+    }
+
+    @Test(arguments: [1, 2, 3])
+    func underlyingErrors_isCutOffAtTheGivenDepth(maxDepth: Int) {
+        let chain = wrap(NSError(domain: "Bottom", code: 0), times: 6).underlyingErrors(maxDepth: maxDepth)
+
+        #expect(chain.count == maxDepth)
+    }
+
+    @Test func underlyingErrors_withDepthZero_isEmpty() {
+        #expect(NSError(domain: "Test", code: 1).underlyingErrors(maxDepth: 0).isEmpty)
+    }
+
+    @Test func underlyingErrors_keepsTheWholeChainWhenItFitsTheDepth() {
+        let chain = wrap(NSError(domain: "Bottom", code: 0), times: 3).underlyingErrors(maxDepth: 4)
+
+        #expect(chain.count == 4)
+        #expect((chain.last as NSError?)?.domain == "Bottom")
+    }
+
+    @Test func underlyingErrors_ignoresAnUnderlyingValueThatIsNotAnError() {
+        let error = NSError(domain: "Test", code: 1, userInfo: [NSUnderlyingErrorKey: "not an error"])
+
+        #expect(error.underlyingErrors().count == 1)
+    }
+
     // MARK: - Device storage full
 
     @Test(arguments: [

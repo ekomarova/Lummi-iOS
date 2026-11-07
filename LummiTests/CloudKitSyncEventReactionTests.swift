@@ -66,6 +66,44 @@ struct CloudKitSyncEventReactionTests {
         #expect(CloudKitSyncEventReaction.state(for: error) == nil)
     }
 
+    // The depth limit counts every wrapper and every partial-failure level, root being depth 0: depth 4 is still read,
+    // depth 5 is not.
+    @Test func codeAtTheLastReadDepthInTheChainIsFound() {
+        var error: Error = CKError(.quotaExceeded)
+        for _ in 0..<4 { error = wrapped(error) }
+
+        #expect(CloudKitSyncEventReaction.state(for: error) == .storageFull)
+    }
+
+    @Test func codeBeyondTheDepthLimitInTheChainIsIgnored() {
+        var error: Error = CKError(.quotaExceeded)
+        for _ in 0..<5 { error = wrapped(error) }
+
+        #expect(CloudKitSyncEventReaction.state(for: error) == nil)
+    }
+
+    @Test func itemErrorAtTheLastReadDepthIsFound() {
+        // Three wrappers put the partial failure at depth 3, so its item errors sit at depth 4.
+        var error: Error = partialFailure(["a": CKError(.quotaExceeded)])
+        for _ in 0..<3 { error = wrapped(error) }
+
+        #expect(CloudKitSyncEventReaction.state(for: error) == .storageFull)
+    }
+
+    @Test func itemErrorBeyondTheDepthLimitIsIgnored() {
+        var error: Error = partialFailure(["a": CKError(.quotaExceeded)])
+        for _ in 0..<4 { error = wrapped(error) }
+
+        #expect(CloudKitSyncEventReaction.state(for: error) == nil)
+    }
+
+    @Test func nestedPartialFailuresShareOneDepthLimit() {
+        var error: Error = CKError(.quotaExceeded)
+        for _ in 0..<5 { error = partialFailure(["a": error]) }
+
+        #expect(CloudKitSyncEventReaction.state(for: error) == nil)
+    }
+
     @Test func collectsCodesFromWholeErrorTree() {
         let error = wrapped(partialFailure(["a": CKError(.quotaExceeded), "b": CKError(.zoneBusy)]))
 
