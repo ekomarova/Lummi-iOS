@@ -102,14 +102,14 @@ struct TrendsChartsView: View {
 
     @ViewBuilder
     private func countCards(_ stats: TrendsPerformanceStats) -> some View {
-        GlowCard.joys(value: "\(stats.entryCount)", metrics: .trends)
-        GlowCard.activeDays(value: "\(stats.daysJournaled)", metrics: .trends)
-        GlowCard.streak(value: "\(stats.bestStreak)", metrics: .trends)
+        GlowCard(kind: .joys, value: "\(stats.entryCount)", metrics: .trends)
+        GlowCard(kind: .activeDays, value: "\(stats.daysJournaled)", metrics: .trends)
+        GlowCard(kind: .streak, value: "\(stats.bestStreak)", metrics: .trends)
     }
 
     // Full-width on iPhone, since its value doesn't fit the three-across row above (see `Metrics.trendsJoyfulHours`).
     private func joyfulHoursCard(_ stats: TrendsPerformanceStats) -> some View {
-        GlowCard.joyfulHours(value: stats.joyfulHours, metrics: .trendsJoyfulHours)
+        GlowCard(kind: .joyfulHours, value: stats.joyfulHours, metrics: .trendsJoyfulHours)
     }
 
     // MARK: - Charts

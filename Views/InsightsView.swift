@@ -80,19 +80,20 @@ private struct InsightsMonthView: View {
     // MARK: - Highlight Cards
 
     private var joysCard: some View {
-        GlowCard.joys(value: "\(monthlyEntries.count)", metrics: .insights)
+        GlowCard(kind: .joys, value: "\(monthlyEntries.count)", metrics: .insights)
     }
 
     private var activeDaysCard: some View {
-        GlowCard.activeDays(value: "\(InsightsCalculator.uniqueDaysCount(in: monthlyEntries))", metrics: .insights)
+        GlowCard(kind: .activeDays, value: "\(InsightsCalculator.uniqueDaysCount(in: monthlyEntries))", metrics: .insights)
     }
 
     private var streakCard: some View {
-        GlowCard.streak(value: "\(InsightsCalculator.longestStreak(in: monthlyEntries))", metrics: .insights)
+        GlowCard(kind: .streak, value: "\(InsightsCalculator.longestStreak(in: monthlyEntries))", metrics: .insights)
     }
 
     private var joyfulHoursCard: some View {
-        GlowCard.joyfulHours(
+        GlowCard(
+            kind: .joyfulHours,
             value: InsightsCalculator.joyfulHours(entries: monthlyEntries, locale: locale),
             metrics: .insights
         )

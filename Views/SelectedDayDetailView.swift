@@ -149,7 +149,7 @@ private extension SelectedDayDetailView {
     }
 
     var noteCellEditField: some View {
-        NoteBubble(sharpCorner: .bottomTrailing, fillsWidth: true) {
+        NoteBubble(sharpCorner: .bottomTrailing, alignment: .trailing, fillsWidth: true) {
             TextField("", text: Bindable(session).editingText, axis: .vertical)
                 .accessibilityLabel("Record text")
                 .accessibilityIdentifier("EditRecordTextField")
@@ -160,7 +160,7 @@ private extension SelectedDayDetailView {
     }
 
     func noteCellTextDisplay(entry: JoyEntry, index: Int, proxy: ScrollViewProxy) -> some View {
-        NoteBubble(sharpCorner: .bottomTrailing) {
+        NoteBubble(sharpCorner: .bottomTrailing, alignment: .trailing) {
             Text(entry.text)
                 .lummiScaledFont(size: 17, relativeTo: .body)
         }
