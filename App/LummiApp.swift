@@ -17,6 +17,8 @@ struct LummiApp: App {
     @AppStorage(SettingsKey.appLanguage) private var selectedLanguage: AppLanguage = .systemDefault
     @AppStorage(SettingsKey.isICloudSyncEnabled) private var isICloudSyncEnabled: Bool = false
 
+    // One for the whole app, so the main content and the storage error screen share the appearance.
+    @State private var themeManager = ThemeManager()
     @State private var container: ModelContainer
     @State private var containerError: (any Error)?
     // Set when no persistent store could be opened. The app then shows an error screen instead of the content.
@@ -125,9 +127,9 @@ struct LummiApp: App {
         WindowGroup {
             Group {
                 if let storageError {
-                    StorageErrorView(error: storageError, onRetry: retryOpeningStorage)
+                    StorageErrorView(themeManager: themeManager, error: storageError, onRetry: retryOpeningStorage)
                 } else {
-                    ContentView(syncError: $containerError)
+                    ContentView(themeManager: themeManager, syncError: $containerError)
                 }
             }
             .environment(\.locale, Locale(identifier: selectedLanguage.rawValue))

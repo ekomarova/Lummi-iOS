@@ -7,12 +7,12 @@ import SwiftUI
 @Suite(.serialized)
 struct ThemeManagerTests {
 
-    private let modeKey = "appearanceMode"
-    private let legacyKey = "isDarkMode"
+    private let modeKey = SettingsKey.appearanceMode
+    private let legacyKey = SettingsKey.legacyIsDarkMode
 
     init() {
-        UserDefaults.standard.removeObject(forKey: "appearanceMode")
-        UserDefaults.standard.removeObject(forKey: "isDarkMode")
+        UserDefaults.standard.removeObject(forKey: SettingsKey.appearanceMode)
+        UserDefaults.standard.removeObject(forKey: SettingsKey.legacyIsDarkMode)
     }
 
     @Test func defaultTheme_isDarkWhenNoPreviousPreference() {
@@ -126,5 +126,31 @@ struct ThemeManagerTests {
         #expect(manager.preferredColorScheme == .light)
         manager.mode = .dark
         #expect(manager.preferredColorScheme == .dark)
+    }
+
+    // MARK: - Brand color
+
+    @Test func brandBlue_isSharedByTheSelectedTabInBothThemesAndTheDarkBubbles() {
+        #expect(DarkTheme().selectedTabColor == AccentColors.brandBlue)
+        #expect(LightTheme().selectedTabColor == AccentColors.brandBlue)
+        #expect(DarkTheme().bubbleColor == AccentColors.brandBlue)
+        #expect(LightTheme().bubbleColor != AccentColors.brandBlue)
+    }
+
+    // MARK: - Initial theme
+
+    @Test func init_autoStartsWithTheDarkThemeUntilTheSystemIsReported() {
+        UserDefaults.standard.set("auto", forKey: modeKey)
+        let manager = ThemeManager()
+        #expect(manager.currentTheme is DarkTheme)
+    }
+
+    @Test func init_themeMatchesEverySavedMode() {
+        for (saved, isDark) in [("light", false), ("dark", true)] {
+            UserDefaults.standard.set(saved, forKey: modeKey)
+            let manager = ThemeManager()
+            #expect(manager.isDark == isDark)
+            #expect(manager.currentTheme is DarkTheme == isDark)
+        }
     }
 }

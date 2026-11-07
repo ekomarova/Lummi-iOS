@@ -15,9 +15,9 @@ struct DarkTheme: AppTheme {
 
     var textColor: Color = .white
 
-    var bubbleColor: Color = Color(red: 0.10, green: 0.40, blue: 0.80)
+    var bubbleColor: Color = AccentColors.brandBlue
 
-    var selectedTabColor: Color = Color(red: 0.10, green: 0.40, blue: 0.80)
+    var selectedTabColor: Color = AccentColors.brandBlue
 }
 
 struct LightTheme: AppTheme {
@@ -30,5 +30,5 @@ struct LightTheme: AppTheme {
     var bubbleColor: Color = Color(red: 0.52, green: 0.76, blue: 1.0)
 
     // Darker than the bubbles: a pale icon would barely show on the light background
-    var selectedTabColor: Color = Color(red: 0.10, green: 0.40, blue: 0.80)
+    var selectedTabColor: Color = AccentColors.brandBlue
 }

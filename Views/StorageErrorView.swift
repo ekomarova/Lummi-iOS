@@ -11,8 +11,8 @@ import SwiftUI
 // Full-screen message shown when the store on the device cannot be opened. It replaces the app content instead of
 // letting the user add joys to a throwaway store, and offers a retry because the cause is often temporary.
 struct StorageErrorView: View {
-    @State private var themeManager = ThemeManager()
-
+    // Shared with the main content, so this screen follows the same appearance.
+    let themeManager: ThemeManager
     let error: any Error
     let onRetry: () -> Void
 
@@ -62,6 +62,7 @@ struct StorageErrorView: View {
 #if DEBUG
 #Preview {
     StorageErrorView(
+        themeManager: ThemeManager(),
         error: NSError(
             domain: NSCocoaErrorDomain,
             code: 134_110,

@@ -31,13 +31,9 @@ enum AppearanceMode: String, CaseIterable {
 @MainActor
 @Observable
 final class ThemeManager {
-    private static let modeKey = "appearanceMode"
-    // Written by versions that only had the light and dark options.
-    private static let legacyIsDarkKey = "isDarkMode"
-
     var mode: AppearanceMode {
         didSet {
-            UserDefaults.standard.set(mode.rawValue, forKey: Self.modeKey)
+            UserDefaults.standard.set(mode.rawValue, forKey: SettingsKey.appearanceMode)
             updateTheme()
         }
     }
@@ -47,7 +43,7 @@ final class ThemeManager {
         didSet { updateTheme() }
     }
 
-    private(set) var currentTheme: AppTheme
+    private(set) var currentTheme: AppTheme = DarkTheme()
 
     var isDark: Bool {
         switch mode {
@@ -67,9 +63,8 @@ final class ThemeManager {
     }
 
     init() {
-        let mode = Self.savedMode()
-        self.mode = mode
-        self.currentTheme = mode == .light ? LightTheme() : DarkTheme()
+        mode = Self.savedMode()
+        updateTheme()
     }
 
     private func updateTheme() {
@@ -79,10 +74,10 @@ final class ThemeManager {
     // Dark stays the default for a fresh install, and an old light/dark choice carries over.
     private static func savedMode() -> AppearanceMode {
         let defaults = UserDefaults.standard
-        if let raw = defaults.string(forKey: modeKey), let mode = AppearanceMode(rawValue: raw) {
+        if let raw = defaults.string(forKey: SettingsKey.appearanceMode), let mode = AppearanceMode(rawValue: raw) {
             return mode
         }
-        if let legacyIsDark = defaults.object(forKey: legacyIsDarkKey) as? Bool {
+        if let legacyIsDark = defaults.object(forKey: SettingsKey.legacyIsDarkMode) as? Bool {
             return legacyIsDark ? .dark : .light
         }
         return .dark

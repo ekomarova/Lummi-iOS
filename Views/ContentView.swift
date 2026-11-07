@@ -13,9 +13,10 @@ import SwiftData
 // Root view: owns the theme and navigation, shows the top-level screens in a native tab bar. Each tab has its own
 // `NavigationStack`, and the record page is pushed onto the current one, so the system swipe-back gesture works.
 struct ContentView: View {
+    // Shared with the storage error screen, so both follow the same appearance.
+    let themeManager: ThemeManager
     var syncError: Binding<(any Error)?> = .constant(nil)
 
-    @State private var themeManager = ThemeManager()
     @Environment(\.modelContext) private var modelContext
 
     @State private var navigation = NavigationState()
@@ -199,12 +200,12 @@ private extension ContentView {
 
 #if DEBUG
 #Preview {
-    ContentView()
+    ContentView(themeManager: ThemeManager())
         .modelContainer(PreviewSupport.makeContainer())
 }
 
 #Preview("Smallest text") {
-    ContentView()
+    ContentView(themeManager: ThemeManager())
         .dynamicTypeSize(DynamicTypeSize.lummiSupportedRange.lowerBound)
         .modelContainer(PreviewSupport.makeContainer())
 }
