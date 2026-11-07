@@ -36,6 +36,7 @@
 		47BB00A12FC0A5EA008B5DA1 /* ErrorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB00A22FC0A5EA008B5DA2 /* ErrorExtension.swift */; };
 		47BB00A32FC0A5EA008B5DA3 /* ErrorMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB00A42FC0A5EA008B5DA4 /* ErrorMessages.swift */; };
 		4A11C0DE0000000000000012 /* JoyEntryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11C0DE0000000000000002 /* JoyEntryStore.swift */; };
+		A1B2C3D41000000000000F51 /* RecordInputRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D40000000000000F51 /* RecordInputRules.swift */; };
 		4A11C0DE0000000000000013 /* PreviewSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11C0DE0000000000000003 /* PreviewSupport.swift */; };
 		4A11C0DE00000000000000A2 /* NavigationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11C0DE00000000000000A1 /* NavigationState.swift */; };
 		4A11C0DE00000000000000B2 /* TabBarAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11C0DE00000000000000B1 /* TabBarAppearance.swift */; };
@@ -127,6 +128,7 @@
 		47BB00A22FC0A5EA008B5DA2 /* ErrorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorExtension.swift; sourceTree = "<group>"; };
 		47BB00A42FC0A5EA008B5DA4 /* ErrorMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorMessages.swift; sourceTree = "<group>"; };
 		4A11C0DE0000000000000002 /* JoyEntryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoyEntryStore.swift; sourceTree = "<group>"; };
+		A1B2C3D40000000000000F51 /* RecordInputRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordInputRules.swift; sourceTree = "<group>"; };
 		4A11C0DE0000000000000003 /* PreviewSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewSupport.swift; sourceTree = "<group>"; };
 		4A11C0DE00000000000000A1 /* NavigationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationState.swift; sourceTree = "<group>"; };
 		4A11C0DE00000000000000B1 /* TabBarAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarAppearance.swift; sourceTree = "<group>"; };
@@ -345,6 +347,7 @@
 				4766220C303F8AAC00041521 /* CloudKitSyncMonitor.swift */,
 				47981EAC2FA5473E005ADAB1 /* InsightsCalculator.swift */,
 				4A11C0DE0000000000000002 /* JoyEntryStore.swift */,
+				A1B2C3D40000000000000F51 /* RecordInputRules.swift */,
 				5E771A6000000000000000A3 /* EntryEditSession.swift */,
 				470FC4E6304A309F00F50A7A /* ModelContextSave.swift */,
 				47BB00A42FC0A5EA008B5DA4 /* ErrorMessages.swift */,
@@ -552,6 +555,7 @@
 				47BB00A32FC0A5EA008B5DA3 /* ErrorMessages.swift in Sources */,
 				A1B2C3D42FB0000202 /* ContainerBootstrap.swift in Sources */,
 				4A11C0DE0000000000000012 /* JoyEntryStore.swift in Sources */,
+				A1B2C3D41000000000000F51 /* RecordInputRules.swift in Sources */,
 				5E771A6000000000000000A4 /* EntryEditSession.swift in Sources */,
 				4A11C0DE00000000000000A2 /* NavigationState.swift in Sources */,
 				4A11C0DE00000000000000B2 /* TabBarAppearance.swift in Sources */,

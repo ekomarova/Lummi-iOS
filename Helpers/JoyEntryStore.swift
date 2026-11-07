@@ -8,31 +8,6 @@
 import Foundation
 import SwiftData
 
-// Input rules for the record text field.
-enum RecordInputRules {
-    static let maxLength = 280
-    // How many characters before `maxLength` the counter starts to stand out.
-    static let warningThreshold = 20
-
-    static func clamped(_ text: String) -> String {
-        text.count > maxLength ? String(text.prefix(maxLength)) : text
-    }
-
-    // True once the text is within `warningThreshold` characters of the limit, or past it.
-    static func isNearLimit(_ text: String) -> Bool {
-        text.count > maxLength - warningThreshold
-    }
-
-    // The text as stored: cut to `maxLength`, then stripped of surrounding whitespace and newlines.
-    static func normalized(_ text: String) -> String {
-        clamped(text).trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-
-    static func canSave(_ text: String) -> Bool {
-        !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-    }
-}
-
 // Create / edit / delete / clear rules for entries. Every failed save is rolled back and rethrown,
 // so the caller only decides how to show the error.
 struct JoyEntryStore {
