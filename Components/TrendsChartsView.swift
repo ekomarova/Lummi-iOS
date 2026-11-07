@@ -9,6 +9,7 @@
 import SwiftUI
 import SwiftData
 import Charts
+import OSLog
 
 // Summary cards plus the "Joys By Month" and "Joys By Weekday" charts for one calendar year.
 // Used by `YearTrendsView`'s single-year page.
@@ -39,18 +40,25 @@ struct TrendsChartsView: View {
         )
     }
 
-    private var stats: TrendsPerformanceStats {
-        TrendsPerformanceStats.make(
-            from: rangedEntries,
-            year: year,
-            locale: locale,
-            now: now,
-            calendar: .lummiCalendar(locale: locale)
-        )
+    #if DEBUG
+    // Shows in Instruments (Points of Interest) how often the body runs and how often the statistics are really calculated.
+    private static let signposter = OSSignposter(subsystem: "io.github.ekomarova.Lummi", category: .pointsOfInterest)
+    #endif
+
+    private func stats(calendar: Calendar) -> TrendsPerformanceStats {
+        #if DEBUG
+        let interval = Self.signposter.beginInterval("TrendsStats calculation")
+        defer { Self.signposter.endInterval("TrendsStats calculation", interval) }
+        #endif
+        return TrendsPerformanceStats.make(from: rangedEntries, year: year, locale: locale, now: now, calendar: calendar)
     }
 
     var body: some View {
-        let stats = stats
+        #if DEBUG
+        Self.signposter.emitEvent("TrendsChartsView body")
+        #endif
+        let calendar = Calendar.lummiCalendar(locale: locale)
+        let stats = stats(calendar: calendar)
         // Side by side on iPad, where two full-width charts would be needlessly wide and tall.
         let chartsLayout = AdaptiveLayout.isPad
             ? AnyLayout(HStackLayout(alignment: .top, spacing: 20))
@@ -64,7 +72,7 @@ struct TrendsChartsView: View {
                 }
 
                 TrendsSection(title: "Joys By Weekday") {
-                    weekdayChart(stats)
+                    weekdayChart(stats, calendar: calendar)
                 }
             }
         }
@@ -134,12 +142,12 @@ struct TrendsChartsView: View {
         .accessibilityValue(Text("\(stats.entryCount)"))
     }
 
-    private func weekdayChart(_ stats: TrendsPerformanceStats) -> some View {
+    private func weekdayChart(_ stats: TrendsPerformanceStats, calendar: Calendar) -> some View {
         // `shortWeekdaySymbols` (e.g. "Tue", "Thu"), not `veryShortWeekdaySymbols`: the single-letter form
         // repeats a letter for two weekdays in English ("T" for Tuesday and Thursday, "S" for Saturday and
         // Sunday) and German, and a bar chart's x-axis is categorical by that string, so the second weekday
         // silently lands on top of the first bar instead of getting its own.
-        let symbols = Calendar.lummiCalendar(locale: locale).shortWeekdaySymbols
+        let symbols = calendar.shortWeekdaySymbols
         return Chart(stats.weekdayCounts) { item in
             BarMark(
                 x: .value("Weekday", symbols[item.weekday - 1]),

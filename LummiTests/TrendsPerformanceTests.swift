@@ -3,11 +3,12 @@ import SwiftData
 @testable import Lummi
 
 // Measures the Trends calculations on a 5,000-entry in-memory store, with no UI involved.
-// Compares three ways, for a year's page:
+// Compares these ways, for a year's page:
 //   legacy     the old `TrendsChartsView`: every card and chart filters the whole journal again (7 passes);
 //   singlePass `TrendsPerformanceStats` over the whole journal: the calculation alone, one pass;
 //   asInApp    what `TrendsChartsView` does today: the store returns only the entries of the range
-//              (`JoyEntry.predicate(in:)`, like its `@Query`), then `TrendsPerformanceStats` makes one pass over them.
+//              (`JoyEntry.predicate(in:)`, like its `@Query`), then `TrendsPerformanceStats` makes one pass over them;
+//   recompute  just that one pass over the year's entries, without the fetch: what each render of the page costs.
 //
 // Manual only: every test is skipped unless RUN_PERFORMANCE_TESTS=1 is set. From the terminal:
 //   TEST_RUNNER_RUN_PERFORMANCE_TESTS=1 xcodebuild test -scheme Lummi -destination 'platform=iOS Simulator,name=iPhone 17' \
@@ -106,6 +107,31 @@ final class TrendsPerformanceTests: XCTestCase {
             + stats.dataPoints.count + stats.weekdayCounts.count + stats.entryCount
     }
 
+    // The entries of the current year, fetched like the page's `@Query` does (sorted by date).
+    private func currentYearEntries() throws -> [JoyEntry] {
+        let descriptor = FetchDescriptor<JoyEntry>(
+            predicate: JoyEntry.predicate(in: TrendsCalculator.dateRange(for: .year(currentYear), now: Date())),
+            sortBy: [SortDescriptor(\.date)]
+        )
+        return try context.fetch(descriptor)
+    }
+
+    private func makeYearStats(from yearEntries: [JoyEntry]) -> TrendsPerformanceStats {
+        TrendsPerformanceStats.make(
+            from: yearEntries,
+            year: currentYear,
+            locale: locale,
+            calendar: .lummiCalendar(locale: locale)
+        )
+    }
+
+    func test_Perf_TrendsYear_recompute() throws {
+        let yearEntries = try currentYearEntries()
+        measure(metrics: metrics, options: options) {
+            XCTAssertGreaterThan(checksum(of: makeYearStats(from: yearEntries)), 0)
+        }
+    }
+
     func test_Perf_TrendsYear_legacy() {
         measure(metrics: metrics, options: options) {
             XCTAssertGreaterThan(legacyStats(year: currentYear), 0)
@@ -129,5 +155,6 @@ final class TrendsPerformanceTests: XCTestCase {
         let legacy = legacyStats(year: currentYear)
         XCTAssertEqual(legacy, singlePassStats(year: currentYear))
         XCTAssertEqual(legacy, try asInAppStats(year: currentYear))
+        XCTAssertEqual(legacy, checksum(of: makeYearStats(from: try currentYearEntries())))
     }
 }
